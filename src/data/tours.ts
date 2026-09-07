@@ -163,6 +163,9 @@ export const tours: Tour[] = [
       '30/45/60/90 min: safety gear',
       '2 hrs: safety gear, water, transfers',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Luan Fonseca', username: 'luanfonsecavisuals' },
   },
   {
     slug: 'explorer-tour',
@@ -173,6 +176,9 @@ export const tours: Tour[] = [
     duration: '2h30min',
     note: 'Pick-up time 8h30, Sundays 9h30',
     included: ['Transfers', 'Safety gear', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1542762002-45279e010961?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Andre Mouton', username: 'andremouton' },
   },
   {
     slug: 'breakfast-run',
@@ -183,6 +189,9 @@ export const tours: Tour[] = [
     duration: '3 hrs',
     note: 'Minimum 2 pax',
     included: ['Transfers', 'Safety gear', 'Breakfast at Rossmund Golf Estate'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1742237281790-a0f480af2f91?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Humphrey M', username: 'good_citizen' },
   },
   {
     slug: 'paragliding',
@@ -191,6 +200,9 @@ export const tours: Tour[] = [
     description:
       "With the fresh southwesterly winds and a nice, soft place to land, the dunes around Swakopmund can be considered a fantastic paragliding site. Soar over dunes and watch the Atlantic while you're up there — we doubt you'll get a better view in Namibia!",
     included: ['Transfers', 'All gear'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1773769730380-ba3b225c27e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Alberto Lung', username: 'albertolung' },
   },
   {
     slug: 'camel-ride',
@@ -200,6 +212,9 @@ export const tours: Tour[] = [
       'This is such a fun experience and a must-try for the whole family. A great idea for photoshoots too. Our guide will take you through the Swakopmund river, to the start of the Namib Desert, where you can take plenty of pictures, before heading back to our Adventure Centre.',
     duration: '30 min',
     included: ['No equipment needed'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1547234936-74a4b1ee7f42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Juli Kosolapova', username: 'yuli_superson' },
   },
   {
     slug: 'special-quad-90min',
@@ -210,6 +225,9 @@ export const tours: Tour[] = [
     duration: '90 min',
     note: 'Minimum 2 pax. Pick-up time from 16h00–16h30. Tour ends by 6pm.',
     included: ['Safety gear', 'Transfers', 'Non-alcoholic champagne', 'Fresh oysters'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1771148884276-2f101fcadcb1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'quentin touvard', username: 'qt_picture' },
   },
   {
     slug: 'sandboarding',
@@ -219,6 +237,9 @@ export const tours: Tour[] = [
       'Those wanting speed and an adrenaline-filled activity should choose this! We offer lie-down or stand-up sandboarding. No experience needed. Check out our combo deals for more sandboarding options.',
     note: 'Lie-down or stand-up. Pick-up time from 9h30, tour completed around 13h30. Minimum 4 pax.',
     included: ['Transfers', 'Safety gear', 'All equipment', 'Water', 'Light lunch'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1715876068166-51cffcbb0405?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Jorge Otero', username: 'oterex' },
   },
   {
     slug: 'living-desert-tour',
@@ -229,6 +250,9 @@ export const tours: Tour[] = [
     duration: '+/-3 hrs',
     note: 'Pick-up from 8h30',
     included: ['Transfers', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1761071149747-db3277fb8615?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Nadine Marfurt', username: 'nadine3' },
   },
   {
     slug: 'township-tour',
@@ -239,6 +263,9 @@ export const tours: Tour[] = [
     duration: '3 hrs',
     note: 'Pick-up 10h00 or 15h00',
     included: ['Transfers', 'Traditional meal', 'Drinks'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1603703182693-51a19941fa59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Ken kahiri', username: 'kahiriken' },
   },
   {
     slug: 'dolphin-seal-catamaran-cruise',
@@ -255,6 +282,9 @@ export const tours: Tour[] = [
       'Variety of drinks',
       'Transfers available at additional cost (subject to availability, please enquire)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1440020143730-090579c4d53c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Talia Cohen', username: 'taliacohen' },
   },
   {
     slug: 'sandwich-harbour-half-day',
@@ -268,6 +298,9 @@ export const tours: Tour[] = [
       'Drinks',
       'Transfers available at additional cost (subject to availability, please enquire)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1667666670938-4e89397d7c06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Florian Delée', username: 'florian_delee' },
   },
   {
     slug: 'kayaking',
@@ -284,6 +317,9 @@ export const tours: Tour[] = [
       'All equipment',
       'Transfers at additional cost',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1782110112270-9f19439ad5dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Erwan Hesry', username: 'erwanhesry' },
   },
   {
     slug: 'fat-bike-tour',
@@ -293,6 +329,9 @@ export const tours: Tour[] = [
       'A unique Namibian cycling experience! Balloon-like tyres on our fat bikes make pedaling through the desert effortless. Enjoy a quiet and adventurous tour, fun for the whole family!',
     note: 'Regular or e-bike',
     included: ['All gear and water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1772114010042-9ba2a9e1206c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Karel Delvoije', username: 'velo1901' },
   },
   {
     slug: 'fishing',
@@ -302,6 +341,9 @@ export const tours: Tour[] = [
       'Shore or boat options are available to enjoy this fishing experience. Good catches can be expected all year round. The following species can be caught: Kabeljou, Steenbras, Barbel, Galjoen, Garrick and various sharks. Are you feeling lucky?',
     note: 'Boat or shore. Pick-up from 08h15, tour ends around 13h00.',
     included: ['Transfers', 'All equipment and permits', 'Lunch', 'Drinks'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1622713486130-aa0177e64542?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Paul Einerhand', username: 'pauleinerhand' },
   },
   {
     slug: 'tandem-skydive',
@@ -311,6 +353,9 @@ export const tours: Tour[] = [
       "How's this for a bucket list activity! Sky-dive over the scenic Namib, an experience you'll never forget. A 35-minute scenic flight takes you up to 10,000 feet — exit the plane and spend 30–35 seconds free-falling at 220km/h, then enjoy 5–8 minutes descending to a tiptoe landing.",
     note: 'Video camera available as an add-on. Jumps are weather permitting.',
     included: ['Transfers', 'Safety gear'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1659901981145-dbc056431a8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Kamil Pietrzak', username: 'kamilpphotos' },
   },
   {
     slug: 'moonlandscape-tour',
@@ -320,6 +365,9 @@ export const tours: Tour[] = [
       'As you venture into the valleys of the Swakop River you will get to a spectacular and unusual moonscape. Learn about the minerals and the plants of the area. A stop will be made to see the variety of lichen in the area and the indigenous Welwitschia plant.',
     duration: '4 hrs',
     included: ['Transfers', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1766470956586-2b969d67b391?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Abhi Verma', username: 'abhiver' },
   },
   {
     slug: 'cape-cross',
@@ -330,6 +378,9 @@ export const tours: Tour[] = [
     duration: '4 hrs',
     note: 'Departs at 08h00',
     included: ['Transfers', 'Water', 'Park fees'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1782841027397-1ffc35ea9eef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Trenton Alarcon', username: 'tatertots4robots' },
   },
 
   // --- Combo deals ---
@@ -342,6 +393,9 @@ export const tours: Tour[] = [
     duration: '3h30min',
     note: 'Pick-up time 8h30, Sundays 9h30',
     included: ['Transfers', 'Safety gear', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1765416320238-910536a59da3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Margaret Szarzynski', username: 'margoszar' },
   },
   {
     slug: 'unity-combo',
@@ -357,6 +411,9 @@ export const tours: Tour[] = [
       'Sparkling wine',
       'Transfers at additional cost (subject to availability)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1593536284003-ef3103cff953?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Alix Greenman', username: 'alixgreenman' },
   },
   {
     slug: 'freedom-combo',
@@ -372,6 +429,9 @@ export const tours: Tour[] = [
       'Sparkling wine',
       'Transfers at additional cost (subject to availability)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1535190823090-3c159ed10a97?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Y K', username: 'yokeboy' },
   },
   {
     slug: 'quad-bike-sandboarding-combo',
@@ -381,6 +441,9 @@ export const tours: Tour[] = [
       'Want to get the ultimate desert experience while in Namibia? Try our combo deal! You can choose between a 2 or 3 hour excursion. Both options offer 1hr lie-down sandboarding, and the rest of the time is for you to enjoy on your quad bike!',
     duration: '2 hrs or 3 hrs',
     included: ['Transfers', 'Safety gear', 'All equipment', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1742237281789-c37c5b38e0a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Humphrey M', username: 'good_citizen' },
   },
   {
     slug: 'surf-and-turf',
@@ -396,6 +459,9 @@ export const tours: Tour[] = [
       'Sparkling wine',
       'Transfers at additional cost (subject to availability)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1504813205186-380b1235a5d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Matthias Jordan', username: 'iammatthias' },
   },
   {
     slug: 'kayak-catamaran-combo',
@@ -409,6 +475,9 @@ export const tours: Tour[] = [
       'Catamaran: snacks, oysters, hot/cold beverages, sparkling wine',
       'Transfers at additional cost (subject to availability)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1778379591293-36b4cb24324f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Amanda Swanepoel', username: 'amandaswanepoel' },
   },
   {
     slug: 'kayak-sandwich-harbour-combo',
@@ -422,6 +491,9 @@ export const tours: Tour[] = [
       'Sandwich Harbour: refreshments',
       'Transfers at additional cost (subject to availability)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1762947240379-150d9a6ee659?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Jan Suchánek', username: 'johnny_slav' },
   },
   {
     slug: 'catamaran-sandwich-harbour-combo',
@@ -435,6 +507,9 @@ export const tours: Tour[] = [
       'Catamaran: snacks, oysters, hot/cold beverages, sparkling wine',
       'Transfers at additional cost (subject to availability)',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1717054373388-b405bfd27707?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Jay Alexander', username: 'jasont378' },
   },
 ];
 

@@ -30,6 +30,29 @@ const { tour, featured = false } = Astro.props;
     Tap for details
   </button>
 
+  {
+    tour.imageCredit && (
+      <p class="adventure-card__credit">
+        Photo:{' '}
+        <a
+          href={`https://unsplash.com/@${tour.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {tour.imageCredit.name}
+        </a>{' '}
+        /{' '}
+        <a
+          href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Unsplash
+        </a>
+      </p>
+    )
+  }
+
   <div class="adventure-card__content">
     <h3 class="adventure-card__title">{tour.name}</h3>
 
@@ -138,6 +161,27 @@ const { tour, featured = false } = Astro.props;
 
   .adventure-card__included-label {
     font-weight: 600;
+    color: var(--color-text-on-dark);
+  }
+
+  .adventure-card__credit {
+    position: absolute;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    z-index: 2;
+    margin: 0;
+    font-size: 0.65rem;
+    color: rgba(251, 247, 241, 0.6);
+    line-height: 1;
+  }
+
+  .adventure-card__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .adventure-card__credit a:hover {
     color: var(--color-text-on-dark);
   }
 
