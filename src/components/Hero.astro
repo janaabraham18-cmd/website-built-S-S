@@ -19,7 +19,9 @@ const {
 ---
 
 <section class="hero full-bleed" style={imageUrl ? `--hero-image: url(${imageUrl});` : undefined}>
-  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__bg-wrap" aria-hidden="true">
+    <div class="hero__bg"></div>
+  </div>
   <div class="hero__overlay" aria-hidden="true"></div>
 
   <div class="hero__content container">
@@ -44,6 +46,13 @@ const {
     overflow: hidden;
   }
 
+  .hero__bg-wrap {
+    position: absolute;
+    /* Extra vertical bleed so the parallax translate never exposes an edge. */
+    inset: -15% 0;
+    will-change: transform;
+  }
+
   .hero__bg {
     position: absolute;
     inset: 0;
@@ -52,6 +61,7 @@ const {
     background-position: center;
     background-color: var(--color-earth-700);
     background-blend-mode: multiply;
+    will-change: transform;
   }
 
   .hero__bg::before {
@@ -67,6 +77,19 @@ const {
     position: absolute;
     inset: 0;
     background: var(--gradient-overlay-photo);
+  }
+
+  /* Soft feather at the bottom edge so the hero bleeds into the page
+     background instead of cutting hard against the section below. */
+  .hero::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: var(--space-2xl);
+    background: linear-gradient(to top, var(--color-bg) 0%, transparent 100%);
+    pointer-events: none;
   }
 
   .hero__content {

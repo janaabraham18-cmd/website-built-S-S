@@ -54,7 +54,7 @@ function initials(name: string) {
 
 <section id={id} class="reviews reveal">
   <div class="container">
-    <div class="reviews__intro">
+    <div class="reviews__intro reveal-item">
       <p class="reviews__eyebrow">{eyebrow}</p>
       <h2 class="reviews__heading">{heading}</h2>
     </div>
@@ -62,7 +62,7 @@ function initials(name: string) {
     <ul class="reviews__track">
       {
         reviews.map((review) => (
-          <li class="review-card">
+          <li class="review-card reveal-item">
             <div class="review-card__rating" aria-label={`${review.rating ?? 5} out of 5 stars`}>
               {Array.from({ length: 5 }).map((_, i) => (
                 <svg

@@ -20,7 +20,7 @@ const {
   id={id}
   class:list={['about', reverse && 'about--reverse', 'reveal']}
 >
-  <div class="about__media">
+  <div class="about__media reveal-item">
     {
       imageUrl ? (
         <img src={imageUrl} alt="" loading="lazy" />
@@ -33,9 +33,9 @@ const {
   </div>
 
   <div class="about__content">
-    <p class="about__eyebrow">{eyebrow}</p>
-    <h2 class="about__heading">{heading}</h2>
-    <div class="about__body">
+    <p class="about__eyebrow reveal-item">{eyebrow}</p>
+    <h2 class="about__heading reveal-item">{heading}</h2>
+    <div class="about__body reveal-item">
       <slot>
         <p>
           Placeholder paragraph introducing the people and philosophy
@@ -50,7 +50,7 @@ const {
       </slot>
     </div>
 
-    <dl class="about__stats">
+    <dl class="about__stats reveal-item">
       <div class="about__stat">
         <dt>10+</dt>
         <dd>Years guiding tours</dd>

@@ -5,6 +5,7 @@ interface Props {
   imageUrl?: string;
   align?: 'left' | 'center';
   theme?: 'light' | 'photo';
+  pin?: boolean;
   id?: string;
 }
 
@@ -14,6 +15,7 @@ const {
   imageUrl = '',
   align = 'left',
   theme = 'light',
+  pin = false,
   id,
 } = Astro.props;
 ---
@@ -26,20 +28,32 @@ const {
     `section--align-${align}`,
     'full-bleed',
     'reveal',
+    pin && 'section--pinned',
   ]}
-  style={imageUrl ? `--section-image: url(${imageUrl});` : undefined}
 >
-  {theme === 'photo' && (
-    <>
-      <div class="section__bg" aria-hidden="true"></div>
-      <div class="section__overlay" aria-hidden="true"></div>
-    </>
-  )}
+  {
+    theme === 'photo' && (
+      <>
+        {imageUrl ? (
+          <img
+            class="section__bg"
+            src={imageUrl}
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div class="section__bg" aria-hidden="true" />
+        )}
+        <div class="section__overlay" aria-hidden="true" />
+      </>
+    )
+  }
 
   <div class="section__inner container">
-    {eyebrow && <p class="section__eyebrow">{eyebrow}</p>}
-    {heading && <h2 class="section__heading">{heading}</h2>}
-    <div class="section__body">
+    {eyebrow && <p class="section__eyebrow reveal-item">{eyebrow}</p>}
+    {heading && <h2 class="section__heading reveal-item">{heading}</h2>}
+    <div class="section__body reveal-item">
       <slot />
     </div>
   </div>
@@ -66,10 +80,14 @@ const {
   .section__bg {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
     background-image: var(--section-image, none);
     background-size: cover;
     background-position: center;
     background-color: var(--color-earth-700);
+    will-change: transform;
   }
 
   .section__overlay {
@@ -78,9 +96,32 @@ const {
     background: var(--gradient-overlay-photo-strong);
   }
 
+  /* Soft feather at the top/bottom edges of a photo section so it bleeds
+     into the page background instead of cutting hard against it. */
+  .section--photo::before,
+  .section--photo::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: var(--space-2xl);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .section--photo::before {
+    top: 0;
+    background: linear-gradient(to bottom, var(--color-bg) 0%, transparent 100%);
+  }
+
+  .section--photo::after {
+    bottom: 0;
+    background: linear-gradient(to top, var(--color-bg) 0%, transparent 100%);
+  }
+
   .section__inner {
     position: relative;
-    z-index: 1;
+    z-index: 2;
   }
 
   .section--align-center .section__inner {

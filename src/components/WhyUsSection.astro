@@ -57,7 +57,7 @@ const icons: Record<string, string> = {
 
 <section id={id} class="why-us reveal">
   <div class="container">
-    <div class="why-us__intro">
+    <div class="why-us__intro reveal-item">
       <p class="why-us__eyebrow">{eyebrow}</p>
       <h2 class="why-us__heading">{heading}</h2>
     </div>
@@ -65,7 +65,7 @@ const icons: Record<string, string> = {
     <ul class="why-us__grid">
       {
         features.map((feature) => (
-          <li class="why-us__item">
+          <li class="why-us__item reveal-item">
             <span class="why-us__icon" aria-hidden="true">
               <svg
                 viewBox="0 0 24 24"

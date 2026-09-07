@@ -119,9 +119,9 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+/* No CSS scroll-behavior: Lenis (src/scripts/motion.ts) owns smooth
+   scrolling, including anchor links, when JS is active. Native instant
+   jumps remain the fallback if JS fails or motion is reduced. */
 
 body {
   margin: 0;
@@ -271,19 +271,13 @@ p {
 }
 
 /* =========================================================
-   Scroll-reveal animation (paired with IntersectionObserver JS)
+   Scroll-reveal animation
+   `.reveal` sections and their `.reveal-item` children start at their
+   natural, visible CSS state — src/scripts/motion.ts (GSAP + ScrollTrigger)
+   hides them via gsap.set() and animates them in on scroll. This keeps
+   content visible by default if JS never runs (progressive enhancement)
+   instead of risking permanently-invisible content.
    ========================================================= */
-.reveal {
-  opacity: 0;
-  transform: translateY(28px);
-  transition: opacity var(--duration-slow) var(--ease-out),
-    transform var(--duration-slow) var(--ease-out);
-}
-
-.reveal.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
 
 /* =========================================================
    Forms
