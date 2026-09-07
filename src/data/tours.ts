@@ -14,6 +14,7 @@ export interface Tour {
   note?: string;
   included: string[];
   imageUrl?: string;
+  imageCredit?: { name: string; username: string };
 }
 
 export const categoryLabels: Record<Tour['category'], { label: string; description: string }> = {
@@ -49,6 +50,9 @@ export const tours: Tour[] = [
       'Accommodation in Outjo (shared rooms)',
       'Return trip to Swakop',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1636099487113-ce0a5565b578?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'Chris Stenger', username: 'chrisstenger' },
   },
   {
     slug: 'sossusvlei-tour',
@@ -64,6 +68,9 @@ export const tours: Tour[] = [
       'Champagne stop',
       'Driver/guide',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1707470121585-23ecf4671684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'm_oros', username: 'm_oros' },
   },
   {
     slug: 'skeleton-coast-tour',
@@ -79,6 +86,9 @@ export const tours: Tour[] = [
       'Champagne stop',
       'Driver/guide',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1551176968-bf1e434355f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'Sam Power', username: 'sampowerphoto' },
   },
   {
     slug: 'sandwich-harbour-full-day',
@@ -96,6 +106,9 @@ export const tours: Tour[] = [
       'Picnic (food/snacks)',
       'Champagne & other beverages',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
   },
   {
     slug: 'spitzkoppe-tour',
@@ -112,6 +125,9 @@ export const tours: Tour[] = [
       'Champagne stop',
       'Driver/guide',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'm_oros', username: 'm_oros' },
   },
   {
     slug: 'pelican-point-tour',
@@ -130,6 +146,9 @@ export const tours: Tour[] = [
       'Explore the lagoon up close',
       'Relax & enjoy the pristine beaches',
     ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1705065277882-b0604ec13dca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
   },
 
   // --- Adventures ---
