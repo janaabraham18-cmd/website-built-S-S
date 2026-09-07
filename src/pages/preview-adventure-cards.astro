@@ -1,0 +1,84 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AdventureCard from '../components/AdventureCard.astro';
+import { tours } from '../data/tours';
+
+const slugs = [
+  'quad-bike-tour',
+  'dolphin-seal-catamaran-cruise',
+  'tandem-skydive',
+  'sandboarding',
+  'camel-ride',
+  'living-desert-tour',
+  'kayaking',
+  'explorer-combo',
+];
+
+const featuredSlugs = new Set([
+  'quad-bike-tour',
+  'dolphin-seal-catamaran-cruise',
+  'tandem-skydive',
+]);
+
+const items = slugs
+  .map((slug) => tours.find((tour) => tour.slug === slug))
+  .filter((tour) => tour !== undefined);
+---
+
+<BaseLayout
+  title="Preview: Adventure Cards"
+  description="Design preview of the adventure/combo grid card component."
+>
+  <div class="preview-intro container">
+    <p class="preview-intro__eyebrow">Component preview</p>
+    <h1>Adventure cards</h1>
+    <p>
+      A representative sample — 8 of the ~25 adventures and combos —
+      showing the grid rhythm with three featured spans (Quad Bike Tour,
+      Dolphin &amp; Seal Catamaran Cruise, Tandem Skydive). Scroll each
+      card into and out of view to see the reversible dim/fade.
+    </p>
+  </div>
+
+  <div class="adventure-grid container">
+    {items.map((tour) => <AdventureCard tour={tour} featured={featuredSlugs.has(tour.slug)} />)}
+  </div>
+</BaseLayout>
+
+<style>
+  .preview-intro {
+    padding-block: var(--space-2xl) var(--space-xl);
+    max-width: var(--content-width-narrow);
+  }
+
+  .preview-intro__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .adventure-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 240px;
+    grid-auto-flow: dense;
+    gap: var(--space-md);
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  @media (max-width: 960px) {
+    .adventure-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .adventure-grid {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 280px;
+    }
+  }
+</style>

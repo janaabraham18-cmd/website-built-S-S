@@ -1,0 +1,181 @@
+---
+import type { Tour } from '../data/tours';
+
+interface Props {
+  tour: Tour;
+  featured?: boolean;
+}
+
+const { tour, featured = false } = Astro.props;
+---
+
+<article class:list={['adventure-card', featured && 'adventure-card--featured']}>
+  {
+    tour.imageUrl ? (
+      <img class="adventure-card__img" src={tour.imageUrl} alt="" loading="lazy" decoding="async" />
+    ) : (
+      <div class="adventure-card__img adventure-card__img--placeholder" aria-hidden="true" />
+    )
+  }
+
+  <div class="adventure-card__scrim" aria-hidden="true"></div>
+  <div class="adventure-card__scrim-strong" aria-hidden="true"></div>
+
+  <button
+    type="button"
+    class="adventure-card__tap-hint"
+    aria-expanded="false"
+    data-adventure-toggle
+  >
+    Tap for details
+  </button>
+
+  <div class="adventure-card__content">
+    <h3 class="adventure-card__title">{tour.name}</h3>
+
+    <div class="adventure-card__details" data-adventure-details>
+      <p class="adventure-card__desc">{tour.description}</p>
+      <p class="adventure-card__included">
+        <span class="adventure-card__included-label">Includes</span> {tour.included.join(', ')}
+      </p>
+    </div>
+  </div>
+</article>
+
+<style>
+  .adventure-card {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  .adventure-card--featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .adventure-card__img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .adventure-card__img--placeholder {
+    background: var(--gradient-warm);
+  }
+
+  .adventure-card__scrim {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay-photo);
+  }
+
+  .adventure-card__scrim-strong {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay-photo-strong);
+  }
+
+  .adventure-card__content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: var(--space-md);
+  }
+
+  .adventure-card__title {
+    font-size: var(--fs-lg);
+    color: var(--color-text-on-dark);
+    margin: 0;
+  }
+
+  .adventure-card--featured .adventure-card__title {
+    font-size: var(--fs-2xl);
+  }
+
+  .adventure-card__details {
+    margin-top: var(--space-xs);
+  }
+
+  .adventure-card__desc {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-100);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .adventure-card--featured .adventure-card__desc {
+    font-size: var(--fs-base);
+  }
+
+  .adventure-card__included {
+    font-size: var(--fs-xs);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-200);
+    margin: 0;
+  }
+
+  .adventure-card__included-label {
+    font-weight: 600;
+    color: var(--color-text-on-dark);
+  }
+
+  .adventure-card__tap-hint {
+    display: none;
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    z-index: 2;
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--color-text-on-dark);
+    background: rgba(58, 35, 28, 0.65);
+    border: 1px solid rgba(251, 247, 241, 0.4);
+    border-radius: 999px;
+    padding: var(--space-3xs) var(--space-sm);
+    cursor: pointer;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .adventure-card__tap-hint {
+      display: inline-flex;
+    }
+
+    .adventure-card__scrim-strong {
+      opacity: 0;
+      transition: opacity var(--duration-fast) ease;
+    }
+
+    .adventure-card__details {
+      opacity: 0;
+      transition: opacity var(--duration-fast) ease;
+    }
+
+    .adventure-card__scrim-strong.is-expanded,
+    .adventure-card__details.is-expanded {
+      opacity: 1;
+    }
+  }
+
+  @media (max-width: 960px) {
+    .adventure-card--featured {
+      grid-column: span 2;
+      grid-row: span 1;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .adventure-card--featured {
+      grid-column: span 1;
+      grid-row: span 1;
+    }
+  }
+</style>

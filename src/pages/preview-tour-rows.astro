@@ -1,0 +1,39 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TourCard from '../components/TourCard.astro';
+import { toursByCategory } from '../data/tours';
+
+const heroTours = toursByCategory('tour');
+---
+
+<BaseLayout
+  title="Preview: Tour Rows"
+  description="Design preview of the editorial tour row component."
+>
+  <div class="preview-intro container">
+    <p class="preview-intro__eyebrow">Component preview</p>
+    <h1>Tour rows</h1>
+    <p>
+      Editorial alternating full-width rows for the six hero tours.
+      Scroll down slowly to trigger each panel's reveal.
+    </p>
+  </div>
+
+  {heroTours.map((tour, index) => <TourCard tour={tour} reverse={index % 2 === 1} />)}
+</BaseLayout>
+
+<style>
+  .preview-intro {
+    padding-block: var(--space-2xl) var(--space-xl);
+    max-width: var(--content-width-narrow);
+  }
+
+  .preview-intro__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+</style>

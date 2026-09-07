@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import TourCard from '../components/TourCard.astro';
+import TourGridCard from '../components/TourGridCard.astro';
 import { toursByCategory, categoryLabels, type Tour } from '../data/tours';
 
 const categories: Tour['category'][] = ['tour', 'adventure', 'combo'];
@@ -34,7 +34,7 @@ const categories: Tour['category'][] = ['tour', 'adventure', 'combo'];
 
           <div class="tour-category__grid">
             {toursByCategory(category).map((tour) => (
-              <TourCard tour={tour} />
+              <TourGridCard tour={tour} />
             ))}
           </div>
         </div>

@@ -13,6 +13,7 @@ export interface Tour {
   duration?: string;
   note?: string;
   included: string[];
+  imageUrl?: string;
 }
 
 export const categoryLabels: Record<Tour['category'], { label: string; description: string }> = {
