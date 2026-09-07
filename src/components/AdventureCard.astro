@@ -102,6 +102,20 @@ const { tour, featured = false } = Astro.props;
 
   .adventure-card__details {
     margin-top: var(--space-xs);
+    /* Capped so long copy can never grow past the card's fixed height and
+       push the title (a flex sibling under justify-content: flex-end) up
+       and out of the visible box — opacity: 0 hides content but doesn't
+       remove it from flex layout, so uncapped text still counts toward
+       flex sizing even while "invisible". Overflow fades out softly
+       instead of clipping mid-line. */
+    max-height: 8rem;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
+  }
+
+  .adventure-card--featured .adventure-card__details {
+    max-height: 14rem;
   }
 
   .adventure-card__desc {
