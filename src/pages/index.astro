@@ -2,6 +2,9 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
+import AboutSection from '../components/AboutSection.astro';
+import WhyUsSection from '../components/WhyUsSection.astro';
+import ReviewsSection from '../components/ReviewsSection.astro';
 ---
 
 <BaseLayout title="Home" description="Placeholder homepage description.">
@@ -9,17 +12,9 @@ import Section from '../components/Section.astro';
 
   <div id="scroll-target"></div>
 
-  <Section
-    eyebrow="Placeholder eyebrow"
-    heading="Every trip has a story"
-    align="left"
-  >
-    <p>
-      Placeholder copy introducing the brand's approach to travel. This
-      section will describe the philosophy behind each tour once real
-      content is available.
-    </p>
-  </Section>
+  <AboutSection />
+
+  <WhyUsSection />
 
   <Section
     eyebrow="Featured destination"
@@ -43,6 +38,8 @@ import Section from '../components/Section.astro';
       will be added later and linked from cards in this section.
     </p>
   </Section>
+
+  <ReviewsSection />
 
   <Section
     eyebrow="Ready when you are"

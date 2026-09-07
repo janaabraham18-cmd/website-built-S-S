@@ -1,0 +1,166 @@
+---
+interface Feature {
+  title: string;
+  description: string;
+  icon?: 'compass' | 'shield' | 'users' | 'leaf';
+}
+
+interface Props {
+  eyebrow?: string;
+  heading?: string;
+  features?: Feature[];
+  id?: string;
+}
+
+const {
+  eyebrow = 'Why travel with us',
+  heading = 'What sets our tours apart',
+  features = [
+    {
+      title: 'Placeholder benefit one',
+      description:
+        'Placeholder description explaining the first reason travelers choose us.',
+      icon: 'compass',
+    },
+    {
+      title: 'Placeholder benefit two',
+      description:
+        'Placeholder description covering guides, safety, or expertise.',
+      icon: 'shield',
+    },
+    {
+      title: 'Placeholder benefit three',
+      description:
+        'Placeholder description about small groups or personal attention.',
+      icon: 'users',
+    },
+    {
+      title: 'Placeholder benefit four',
+      description:
+        'Placeholder description about sustainability or local impact.',
+      icon: 'leaf',
+    },
+  ],
+  id,
+} = Astro.props;
+
+const icons: Record<string, string> = {
+  compass:
+    '<circle cx="12" cy="12" r="9"/><path d="M15.5 8.5 13 13l-4.5 2.5L11 11z"/>',
+  shield:
+    '<path d="M12 3l7 3v6c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/>',
+  users:
+    '<circle cx="9" cy="9" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><circle cx="17" cy="9" r="2.6"/><path d="M15.5 14a5.5 5.5 0 0 1 5.5 6"/>',
+  leaf: '<path d="M5 19c8 0 14-6 14-14 0 0-12-1-14 8-1 4 0 6 0 6z"/><path d="M5 19c0-4 2-8 6-10"/>',
+};
+---
+
+<section id={id} class="why-us reveal">
+  <div class="container">
+    <div class="why-us__intro">
+      <p class="why-us__eyebrow">{eyebrow}</p>
+      <h2 class="why-us__heading">{heading}</h2>
+    </div>
+
+    <ul class="why-us__grid">
+      {
+        features.map((feature) => (
+          <li class="why-us__item">
+            <span class="why-us__icon" aria-hidden="true">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                set:html={icons[feature.icon ?? 'compass']}
+              />
+            </span>
+            <h3 class="why-us__item-title">{feature.title}</h3>
+            <p class="why-us__item-desc">{feature.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .why-us {
+    padding-block: var(--space-2xl);
+  }
+
+  .why-us__intro {
+    max-width: var(--content-width-narrow);
+    margin-bottom: var(--space-xl);
+  }
+
+  .why-us__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .why-us__heading {
+    margin: 0;
+  }
+
+  .why-us__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-xl) var(--space-lg);
+  }
+
+  .why-us__item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .why-us__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: var(--radius-md);
+    background: var(--color-sand-100);
+    color: var(--color-accent-strong);
+  }
+
+  .why-us__icon svg {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+
+  .why-us__item-title {
+    font-size: var(--fs-lg);
+    margin: 0;
+  }
+
+  .why-us__item-desc {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 960px) {
+    .why-us__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 560px) {
+    .why-us__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

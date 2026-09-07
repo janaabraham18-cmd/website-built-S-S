@@ -51,6 +51,33 @@ const pageTitle = `${title} | Wayfarer Tours`;
         for (const el of revealEls) {
           observer.observe(el);
         }
+
+        // Fallback for scroll jumps the observer can miss entirely (anchor
+        // links, End key, Ctrl+F, momentum-scroll flicks) — a target that's
+        // never rendered mid-transit never fires an intersection, so it
+        // would otherwise stay invisible forever.
+        let ticking = false;
+        const catchMissed = () => {
+          ticking = false;
+          for (const el of revealEls) {
+            if (el.classList.contains('is-visible')) continue;
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight && rect.bottom > 0) {
+              el.classList.add('is-visible');
+              observer.unobserve(el);
+            }
+          }
+        };
+        window.addEventListener(
+          'scroll',
+          () => {
+            if (!ticking) {
+              ticking = true;
+              requestAnimationFrame(catchMissed);
+            }
+          },
+          { passive: true }
+        );
       }
     </script>
   </body>
