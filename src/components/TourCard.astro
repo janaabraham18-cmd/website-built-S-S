@@ -36,11 +36,9 @@ const { tour, imageUrl, showCategory = false } = Astro.props;
       </p>
     )}
 
-    <ul class="tour-card__included">
-      {tour.included.map((item) => (
-        <li>{item}</li>
-      ))}
-    </ul>
+    <p class="tour-card__included">
+      <span class="tour-card__included-label">Includes</span> {tour.included.join(', ')}
+    </p>
   </div>
 </article>
 
@@ -104,20 +102,17 @@ const { tour, imageUrl, showCategory = false } = Astro.props;
   }
 
   .tour-card__included {
-    list-style: none;
-    margin: var(--space-2xs) 0 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2xs);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0;
+    margin-top: auto;
+    padding-top: var(--space-sm);
+    border-top: 1px solid var(--color-border);
   }
 
-  .tour-card__included li {
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
-    background: var(--color-bg-alt);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: var(--space-3xs) var(--space-xs);
+  .tour-card__included-label {
+    font-weight: 600;
+    color: var(--color-text);
   }
 </style>
