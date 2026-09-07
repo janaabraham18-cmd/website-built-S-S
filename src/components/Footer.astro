@@ -5,21 +5,27 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="container site-footer__inner">
     <div class="site-footer__brand">
-      <p class="site-footer__logo">Wayfarer&nbsp;Tours</p>
-      <p class="site-footer__tagline">Placeholder tagline goes here.</p>
+      <p class="site-footer__logo">Salt &amp; Sun Tours</p>
+      <p class="site-footer__tagline">Where Life and Light Meet Adventure</p>
     </div>
 
     <nav class="site-footer__nav" aria-label="Footer">
       <ul>
         <li><a href="/">Home</a></li>
+        <li><a href="/tours">Tours</a></li>
         <li><a href="/booking">Booking</a></li>
         <li><a href="/contact">Contact</a></li>
       </ul>
     </nav>
 
     <div class="site-footer__meta">
-      <p>hello@example.com</p>
-      <p>&copy; {year} Wayfarer Tours. All rights reserved.</p>
+      <p>
+        <a href="tel:+264817540940">+264 81 754 0940</a><br />
+        <a href="tel:+264818242282">+264 81 824 2282</a>
+      </p>
+      <p><a href="mailto:bookings@saltandsuntours.com.na">bookings@saltandsuntours.com.na</a></p>
+      <p>1st Street East, Walvis Bay, Namibia</p>
+      <p>&copy; {year} Salt &amp; Sun Tours. All rights reserved.</p>
     </div>
   </div>
 </footer>
@@ -75,6 +81,15 @@ const year = new Date().getFullYear();
 
   .site-footer__meta p {
     margin: 0 0 var(--space-2xs);
+  }
+
+  .site-footer__meta a {
+    text-decoration: none;
+  }
+
+  .site-footer__meta a:hover {
+    color: var(--color-ochre-400);
+    text-decoration: underline;
   }
 
   @media (max-width: 640px) {

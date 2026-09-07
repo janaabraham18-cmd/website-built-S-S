@@ -1,0 +1,107 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TourCard from '../components/TourCard.astro';
+import { toursByCategory, categoryLabels, type Tour } from '../data/tours';
+
+const categories: Tour['category'][] = ['tour', 'adventure', 'combo'];
+---
+
+<BaseLayout
+  title="Tours & Adventures"
+  description="The full lineup of tours, adventures, and combo deals from Salt & Sun Tours in Swakopmund and Walvis Bay, Namibia."
+>
+  <header class="tours-header">
+    <div class="container">
+      <p class="tours-header__eyebrow">Salt &amp; Sun Tours</p>
+      <h1 class="tours-header__heading">Tours &amp; Adventures</h1>
+      <p class="tours-header__body">
+        Every excursion we run out of Swakopmund and Walvis Bay, from
+        full-day trips into Etosha and Sossusvlei to short desert
+        adventures and combo packages. Pricing is being finalized and
+        will appear here shortly — get in touch for current rates.
+      </p>
+    </div>
+  </header>
+
+  {
+    categories.map((category) => (
+      <section class="tour-category reveal" id={category}>
+        <div class="container">
+          <div class="tour-category__intro reveal-item">
+            <h2>{categoryLabels[category].label}</h2>
+            <p>{categoryLabels[category].description}</p>
+          </div>
+
+          <div class="tour-category__grid">
+            {toursByCategory(category).map((tour) => (
+              <TourCard tour={tour} />
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+</BaseLayout>
+
+<style>
+  .tours-header {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .tours-header__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .tours-header__heading {
+    margin-bottom: var(--space-md);
+  }
+
+  .tours-header__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
+  }
+
+  .tour-category {
+    padding-block: var(--space-xl);
+    scroll-margin-top: 5rem;
+  }
+
+  .tour-category__intro {
+    max-width: var(--content-width-narrow);
+    margin-bottom: var(--space-lg);
+  }
+
+  .tour-category__intro h2 {
+    margin-bottom: var(--space-2xs);
+  }
+
+  .tour-category__intro p {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .tour-category__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  @media (max-width: 960px) {
+    .tour-category__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tour-category__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -5,6 +5,20 @@ import Section from '../components/Section.astro';
 import AboutSection from '../components/AboutSection.astro';
 import WhyUsSection from '../components/WhyUsSection.astro';
 import ReviewsSection from '../components/ReviewsSection.astro';
+import TourCard from '../components/TourCard.astro';
+import { tours } from '../data/tours';
+
+const teaserSlugs = [
+  'etosha-tour',
+  'sossusvlei-tour',
+  'sandwich-harbour-full-day',
+  'quad-bike-tour',
+  'dolphin-seal-catamaran-cruise',
+  'tandem-skydive',
+];
+const teaserTours = teaserSlugs
+  .map((slug) => tours.find((tour) => tour.slug === slug))
+  .filter((tour) => tour !== undefined);
 ---
 
 <BaseLayout title="Home" description="Placeholder homepage description.">
@@ -29,16 +43,27 @@ import ReviewsSection from '../components/ReviewsSection.astro';
     </p>
   </Section>
 
-  <Section
-    eyebrow="Placeholder eyebrow"
-    heading="A few of our tours"
-    align="center"
-  >
-    <p>
-      Placeholder teaser copy for the tour catalog. Individual tour pages
-      will be added later and linked from cards in this section.
-    </p>
-  </Section>
+  <section class="tours-teaser reveal">
+    <div class="container">
+      <div class="tours-teaser__intro reveal-item">
+        <p class="tours-teaser__eyebrow">Our offering</p>
+        <h2>A few of our tours</h2>
+        <p class="tours-teaser__body">
+          A sample of what we run out of Swakopmund and Walvis Bay — see
+          the full lineup, including every adventure and combo deal, on
+          the tours page.
+        </p>
+      </div>
+
+      <div class="tours-teaser__grid">
+        {teaserTours.map((tour) => <TourCard tour={tour} showCategory />)}
+      </div>
+
+      <div class="tours-teaser__cta reveal-item">
+        <a class="btn btn-outline" href="/tours">View all tours</a>
+      </div>
+    </div>
+  </section>
 
   <ReviewsSection />
 
@@ -54,3 +79,53 @@ import ReviewsSection from '../components/ReviewsSection.astro';
     <a class="btn btn-primary" href="/booking">Start booking</a>
   </Section>
 </BaseLayout>
+
+<style>
+  .tours-teaser {
+    padding-block: var(--space-2xl);
+  }
+
+  .tours-teaser__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .tours-teaser__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .tours-teaser__body {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .tours-teaser__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .tours-teaser__cta {
+    text-align: center;
+    margin-top: var(--space-xl);
+  }
+
+  @media (max-width: 960px) {
+    .tours-teaser__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .tours-teaser__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

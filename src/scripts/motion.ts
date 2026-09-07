@@ -6,13 +6,24 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Staggered scroll-tied rise/fade for a `.reveal` section and its
 // `.reveal-item` children (falls back to animating the section itself
-// when it has no marked children).
-function setupReveals(opts: { y: number; duration: number; ease: string; stagger: number }) {
+// when it has no marked children). The per-item stagger is capped by a
+// total cascade budget so a long list (e.g. 17 tour cards) still fully
+// resolves in about a second instead of dragging out linearly with count.
+function setupReveals(opts: {
+  y: number;
+  duration: number;
+  ease: string;
+  stagger: number;
+  maxCascade: number;
+}) {
   const sections = gsap.utils.toArray<HTMLElement>('.reveal');
 
   for (const section of sections) {
     const items = section.querySelectorAll<HTMLElement>('.reveal-item');
     const targets: HTMLElement[] = items.length ? Array.from(items) : [section];
+    const perItemStagger = items.length
+      ? Math.min(opts.stagger, opts.maxCascade / items.length)
+      : 0;
 
     gsap.set(targets, { opacity: 0, y: opts.y });
 
@@ -21,7 +32,7 @@ function setupReveals(opts: { y: number; duration: number; ease: string; stagger
       y: 0,
       duration: opts.duration,
       ease: opts.ease,
-      stagger: items.length ? opts.stagger : 0,
+      stagger: perItemStagger,
       scrollTrigger: {
         trigger: section,
         start: 'top 85%',
@@ -121,7 +132,7 @@ export function initMotion() {
       });
     }
 
-    setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12 });
+    setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
 
     // Pinned section: background holds and scales while content sits in
     // place for a beat before the page releases back into normal scroll.
@@ -162,7 +173,7 @@ export function initMotion() {
 
   // Reduced motion: simple opacity fades, no parallax, no pin, no autoplay drift.
   mm.add('(prefers-reduced-motion: reduce)', () => {
-    setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05 });
+    setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
