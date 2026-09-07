@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+import BookingForm from '../components/BookingForm.astro';
+---
+
+<BaseLayout title="Booking" description="Request a tour booking.">
+  <Section
+    eyebrow="Reserve your spot"
+    heading="Book your tour"
+    align="left"
+  >
+    <p>
+      Placeholder intro copy for the booking page. Fill out the form below
+      and we'll follow up to confirm details.
+    </p>
+    <BookingForm />
+  </Section>
+</BaseLayout>

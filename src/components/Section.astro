@@ -1,0 +1,129 @@
+---
+interface Props {
+  heading?: string;
+  eyebrow?: string;
+  imageUrl?: string;
+  align?: 'left' | 'center';
+  theme?: 'light' | 'photo';
+  id?: string;
+}
+
+const {
+  heading,
+  eyebrow,
+  imageUrl = '',
+  align = 'left',
+  theme = 'light',
+  id,
+} = Astro.props;
+---
+
+<section
+  id={id}
+  class:list={[
+    'section',
+    `section--${theme}`,
+    `section--align-${align}`,
+    'full-bleed',
+    'reveal',
+  ]}
+  style={imageUrl ? `--section-image: url(${imageUrl});` : undefined}
+>
+  {theme === 'photo' && (
+    <>
+      <div class="section__bg" aria-hidden="true"></div>
+      <div class="section__overlay" aria-hidden="true"></div>
+    </>
+  )}
+
+  <div class="section__inner container">
+    {eyebrow && <p class="section__eyebrow">{eyebrow}</p>}
+    {heading && <h2 class="section__heading">{heading}</h2>}
+    <div class="section__body">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: hidden;
+  }
+
+  .section--light {
+    background: transparent;
+  }
+
+  .section--photo {
+    color: var(--color-text-on-dark);
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .section__bg {
+    position: absolute;
+    inset: 0;
+    background-image: var(--section-image, none);
+    background-size: cover;
+    background-position: center;
+    background-color: var(--color-earth-700);
+  }
+
+  .section__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay-photo-strong);
+  }
+
+  .section__inner {
+    position: relative;
+    z-index: 1;
+  }
+
+  .section--align-center .section__inner {
+    text-align: center;
+    margin-inline: auto;
+    max-width: var(--content-width-narrow);
+  }
+
+  .section__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .section--photo .section__eyebrow {
+    color: var(--color-sand-100);
+  }
+
+  .section__heading {
+    margin-bottom: var(--space-md);
+  }
+
+  .section__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
+  }
+
+  .section--align-center .section__body {
+    margin-inline: auto;
+  }
+
+  .section--photo .section__body {
+    color: var(--color-sand-100);
+  }
+
+  @media (max-width: 640px) {
+    .section {
+      padding-block: var(--space-xl);
+    }
+  }
+</style>

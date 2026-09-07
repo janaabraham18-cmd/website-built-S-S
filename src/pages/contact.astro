@@ -1,0 +1,19 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+import ContactForm from '../components/ContactForm.astro';
+---
+
+<BaseLayout title="Contact" description="Get in touch with us.">
+  <Section
+    eyebrow="Say hello"
+    heading="Get in touch"
+    align="left"
+  >
+    <p>
+      Placeholder intro copy for the contact page. Send a message and
+      we'll get back to you.
+    </p>
+    <ContactForm />
+  </Section>
+</BaseLayout>

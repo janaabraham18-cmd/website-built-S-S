@@ -1,0 +1,158 @@
+---
+interface Props {
+  eyebrow?: string;
+  headline?: string;
+  subhead?: string;
+  ctaLabel?: string;
+  ctaHref?: string;
+  imageUrl?: string;
+}
+
+const {
+  eyebrow = 'Placeholder eyebrow',
+  headline = 'Journeys worth remembering',
+  subhead = 'Placeholder subheading copy describing the experience — swap in real copy later.',
+  ctaLabel = 'Book your tour',
+  ctaHref = '/booking',
+  imageUrl = '',
+} = Astro.props;
+---
+
+<section class="hero full-bleed" style={imageUrl ? `--hero-image: url(${imageUrl});` : undefined}>
+  <div class="hero__bg" aria-hidden="true"></div>
+  <div class="hero__overlay" aria-hidden="true"></div>
+
+  <div class="hero__content container">
+    <p class="hero__eyebrow">{eyebrow}</p>
+    <h1 class="hero__headline">{headline}</h1>
+    <p class="hero__subhead">{subhead}</p>
+    <a class="btn btn-primary hero__cta" href={ctaHref}>{ctaLabel}</a>
+  </div>
+
+  <a href="#scroll-target" class="hero__scroll-cue" aria-label="Scroll to content">
+    <span class="hero__scroll-cue-line"></span>
+  </a>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-on-dark);
+    overflow: hidden;
+  }
+
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    background-image: var(--hero-image, none);
+    background-size: cover;
+    background-position: center;
+    background-color: var(--color-earth-700);
+    background-blend-mode: multiply;
+  }
+
+  .hero__bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-warm);
+    opacity: 0.55;
+    mix-blend-mode: multiply;
+  }
+
+  .hero__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay-photo);
+  }
+
+  .hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 46rem;
+    padding-block: var(--space-3xl);
+  }
+
+  .hero__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-sand-100);
+    margin-bottom: var(--space-sm);
+  }
+
+  .hero__headline {
+    font-family: var(--font-display);
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+    color: var(--color-text-on-dark);
+    margin-bottom: var(--space-md);
+    text-wrap: balance;
+  }
+
+  .hero__subhead {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-100);
+    max-width: 34rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero__cta {
+    font-size: var(--fs-sm);
+  }
+
+  .hero__scroll-cue {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 24px;
+    height: 40px;
+    border: 2px solid rgba(251, 247, 241, 0.7);
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  .hero__scroll-cue-line {
+    width: 3px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-sand-100);
+    animation: scroll-cue 1.8s ease-in-out infinite;
+  }
+
+  @keyframes scroll-cue {
+    0% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    70% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll-cue-line {
+      animation: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .hero__content {
+      padding-block: var(--space-2xl);
+    }
+  }
+</style>

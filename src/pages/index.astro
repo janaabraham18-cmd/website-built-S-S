@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import Section from '../components/Section.astro';
+---
+
+<BaseLayout title="Home" description="Placeholder homepage description.">
+  <Hero />
+
+  <div id="scroll-target"></div>
+
+  <Section
+    eyebrow="Placeholder eyebrow"
+    heading="Every trip has a story"
+    align="left"
+  >
+    <p>
+      Placeholder copy introducing the brand's approach to travel. This
+      section will describe the philosophy behind each tour once real
+      content is available.
+    </p>
+  </Section>
+
+  <Section
+    eyebrow="Featured destination"
+    heading="Placeholder place name"
+    theme="photo"
+    align="left"
+  >
+    <p>
+      Placeholder description of a highlighted place or experience — full
+      bleed photography will go here in the next pass.
+    </p>
+  </Section>
+
+  <Section
+    eyebrow="Placeholder eyebrow"
+    heading="A few of our tours"
+    align="center"
+  >
+    <p>
+      Placeholder teaser copy for the tour catalog. Individual tour pages
+      will be added later and linked from cards in this section.
+    </p>
+  </Section>
+
+  <Section
+    eyebrow="Ready when you are"
+    heading="Plan your journey"
+    align="center"
+  >
+    <p>
+      Placeholder closing copy encouraging visitors to book. Includes a
+      call to action below.
+    </p>
+    <a class="btn btn-primary" href="/booking">Start booking</a>
+  </Section>
+</BaseLayout>

@@ -1,0 +1,23 @@
+---
+// Replace YOUR_FORM_ID with the real Formspree endpoint once created.
+const FORMSPREE_ID = 'YOUR_FORM_ID';
+---
+
+<form class="form" action={`https://formspree.io/f/${FORMSPREE_ID}`} method="POST">
+  <div class="form-row">
+    <label for="contact-name">Full name</label>
+    <input type="text" id="contact-name" name="name" autocomplete="name" required />
+  </div>
+
+  <div class="form-row">
+    <label for="contact-email">Email</label>
+    <input type="email" id="contact-email" name="email" autocomplete="email" required />
+  </div>
+
+  <div class="form-row">
+    <label for="contact-message">Message</label>
+    <textarea id="contact-message" name="message" required></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary form-submit">Send message</button>
+</form>

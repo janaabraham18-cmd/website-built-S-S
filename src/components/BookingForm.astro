@@ -1,0 +1,46 @@
+---
+// Replace YOUR_FORM_ID with the real Formspree endpoint once created.
+const FORMSPREE_ID = 'YOUR_FORM_ID';
+---
+
+<form class="form" action={`https://formspree.io/f/${FORMSPREE_ID}`} method="POST">
+  <div class="form-row-group">
+    <div class="form-row">
+      <label for="name">Full name</label>
+      <input type="text" id="name" name="name" autocomplete="name" required />
+    </div>
+    <div class="form-row">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" autocomplete="email" required />
+    </div>
+  </div>
+
+  <div class="form-row-group">
+    <div class="form-row">
+      <label for="phone">Phone</label>
+      <input type="tel" id="phone" name="phone" autocomplete="tel" />
+    </div>
+    <div class="form-row">
+      <label for="guests">Number of guests</label>
+      <input type="number" id="guests" name="guests" min="1" step="1" required />
+    </div>
+  </div>
+
+  <div class="form-row">
+    <label for="tour-date">Preferred tour / date</label>
+    <input
+      type="text"
+      id="tour-date"
+      name="tour_date"
+      placeholder="e.g. Coastal Trail Tour — first week of October"
+      required
+    />
+  </div>
+
+  <div class="form-row">
+    <label for="message">Message</label>
+    <textarea id="message" name="message" placeholder="Anything else we should know?"></textarea>
+  </div>
+
+  <button type="submit" class="btn btn-primary form-submit">Request booking</button>
+</form>
