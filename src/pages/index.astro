@@ -40,10 +40,28 @@ const teaserTours = teaserSlugs
 
   <div id="scroll-target"></div>
 
+  <div class="tg-ladder-zone" id="tg-ladder-zone" aria-hidden="true">
+    <svg class="tg-ladder" viewBox="0 0 32 200" preserveAspectRatio="xMidYMax meet">
+      <rect x="2" y="0" width="4" height="200" fill="var(--color-earth-700)" />
+      <rect x="26" y="0" width="4" height="200" fill="var(--color-earth-700)" />
+      <rect x="2" y="16" width="28" height="4" fill="var(--color-earth-700)" />
+      <rect x="2" y="52" width="28" height="4" fill="var(--color-earth-700)" />
+      <rect x="2" y="88" width="28" height="4" fill="var(--color-earth-700)" />
+      <rect x="2" y="124" width="28" height="4" fill="var(--color-earth-700)" />
+      <rect x="2" y="160" width="28" height="4" fill="var(--color-earth-700)" />
+    </svg>
+  </div>
+
   <AboutSection
     imageUrl="https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1000"
     imageCredit={{ name: 'm_oros', username: 'm_oros' }}
   />
+
+  <div class="tg-ramp-zone" id="tg-ramp-zone" aria-hidden="true">
+    <svg class="tg-ramp" viewBox="0 0 200 120" preserveAspectRatio="none">
+      <line x1="10" y1="10" x2="150" y2="110" stroke="var(--color-earth-700)" stroke-width="6" stroke-linecap="round" />
+    </svg>
+  </div>
 
   <WhyUsSection />
 
@@ -109,6 +127,47 @@ const teaserTours = teaserSlugs
 </BaseLayout>
 
 <style>
+  /* Props the tour guide sprite interacts with — see setupTourGuideSprite()
+     in scripts/motion.ts for the choreography. Purely decorative backdrop
+     pieces; hidden on narrow screens along with the sprite itself. */
+  .tg-ladder-zone {
+    position: relative;
+    height: 220px;
+    display: flex;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .tg-ladder {
+    width: 32px;
+    height: 200px;
+  }
+
+  .tg-ramp-zone {
+    position: relative;
+    height: 140px;
+    margin-top: -70px;
+    max-width: var(--content-width);
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+    pointer-events: none;
+  }
+
+  .tg-ramp {
+    position: absolute;
+    left: clamp(var(--space-md), 6vw, 4rem);
+    top: 0;
+    width: 200px;
+    height: 120px;
+  }
+
+  @media (max-width: 860px) {
+    .tg-ladder-zone,
+    .tg-ramp-zone {
+      display: none;
+    }
+  }
+
   .tours-teaser {
     /* Generous top space specifically: the section right above this one
        (Skeleton Coast) is itself a pinned/scrubbed scroll effect, and the
