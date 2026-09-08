@@ -74,20 +74,6 @@ const { tour, featured = false } = Astro.props;
     grid-row: span 1;
   }
 
-  /* Soft edge vignette feathering the photo into the page's own sand
-     tone, so the image reads as part of the surrounding surface rather
-     than a hard-edged tile. */
-  .adventure-card::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(
-      ellipse farthest-side at 50% 50%,
-      transparent 55%,
-      rgba(var(--color-sand-100-rgb), 0.3) 100%
-    );
-  }
-
   .adventure-card--featured {
     grid-column: span 2;
     grid-row: span 2;
