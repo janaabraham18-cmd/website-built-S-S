@@ -1,29 +1,39 @@
 ---
-// A small pixel-art tourist that glides across the homepage as you scroll
-// and switches to a running pose in a fixed spot above the tour-card
-// slider while that section is pinned — the cards visibly sliding beneath
-// him reads as a treadmill. Purely decorative: aria-hidden, never carries
-// content, and disappears entirely under reduced motion or on narrow
-// screens (see the media query below and the width guard in
-// setupTourGuideSprite() in scripts/motion.ts).
+// A small pixel-art tourist that walks/runs across the homepage in step
+// with real scroll activity, jumps and turns to land on top of the
+// tour-card slider while that section is pinned, and freezes into an
+// idle stand/sit pose the moment scrolling actually stops — see
+// setupTourGuideSprite() in scripts/motion.ts for the state machine.
+// Purely decorative: aria-hidden, never carries content, and disappears
+// entirely under reduced motion or on narrow screens.
 ---
 
-<div class="tour-guide" aria-hidden="true">
-  <svg class="tour-guide__svg" viewBox="0 0 12 14" shape-rendering="crispEdges">
-    <g class="tour-guide__body">
-      <rect x="4" y="0" width="4" height="1" fill="var(--color-accent-strong)" />
-      <rect x="2" y="1" width="8" height="1" fill="var(--color-accent-strong)" />
-      <rect x="4" y="2" width="4" height="3" fill="#f0c9a0" />
-      <rect x="9" y="5" width="2" height="4" fill="var(--color-earth-700)" />
-      <rect x="3" y="5" width="6" height="4" fill="var(--color-accent)" />
-    </g>
-    <g class="tour-guide__leg tour-guide__leg--left">
-      <rect x="3" y="9" width="2" height="4" fill="#8a7452" />
-      <rect x="3" y="13" width="2" height="1" fill="var(--color-earth-900)" />
-    </g>
-    <g class="tour-guide__leg tour-guide__leg--right">
-      <rect x="7" y="9" width="2" height="4" fill="#8a7452" />
-      <rect x="7" y="13" width="2" height="1" fill="var(--color-earth-900)" />
+<div class="tour-guide is-idle" aria-hidden="true">
+  <svg class="tour-guide__svg" viewBox="0 0 12 16" overflow="visible">
+    <g class="tour-guide__rig">
+      <!-- back leg (drawn first so it sits behind the front leg) -->
+      <g class="tour-guide__leg tour-guide__leg--back">
+        <rect x="3.4" y="9" width="1.6" height="4.4" fill="#7a6142" shape-rendering="crispEdges" />
+        <rect x="3.3" y="13" width="1.8" height="1" fill="var(--color-earth-900)" shape-rendering="crispEdges" />
+      </g>
+
+      <!-- upper body: hat, head, torso, backpack, arm -->
+      <g class="tour-guide__upper">
+        <rect x="8.4" y="5" width="2" height="4.2" fill="var(--color-earth-700)" shape-rendering="crispEdges" />
+        <g class="tour-guide__arm">
+          <rect x="7.9" y="5.6" width="1.3" height="3" fill="var(--color-accent-strong)" shape-rendering="crispEdges" />
+        </g>
+        <rect x="3" y="5" width="5.4" height="4" fill="var(--color-accent)" shape-rendering="crispEdges" />
+        <rect x="4" y="2" width="4" height="3" fill="#f0c9a0" shape-rendering="crispEdges" />
+        <rect x="4" y="0" width="4" height="1" fill="var(--color-accent-strong)" shape-rendering="crispEdges" />
+        <rect x="2" y="1" width="8" height="1" fill="var(--color-accent-strong)" shape-rendering="crispEdges" />
+      </g>
+
+      <!-- front leg -->
+      <g class="tour-guide__leg tour-guide__leg--front">
+        <rect x="6.6" y="9" width="1.6" height="4.4" fill="#8a7452" shape-rendering="crispEdges" />
+        <rect x="6.5" y="13" width="1.8" height="1" fill="var(--color-earth-900)" shape-rendering="crispEdges" />
+      </g>
     </g>
   </svg>
 </div>
@@ -35,7 +45,7 @@
     bottom: 28px;
     z-index: 40;
     width: 40px;
-    height: 47px;
+    height: 53px;
     pointer-events: none;
   }
 
@@ -43,70 +53,214 @@
     display: block;
     width: 100%;
     height: 100%;
-    overflow: visible;
   }
 
-  .tour-guide__leg,
-  .tour-guide__body {
-    transform-box: fill-box;
-  }
-
+  /* The whole rig flips for left/right facing; individual limb groups
+     pivot around their own joints (hip, shoulder, hip-center) so they
+     genuinely swing/bend rather than just sliding up and down. */
+  .tour-guide__rig,
+  .tour-guide__upper,
+  .tour-guide__arm,
   .tour-guide__leg {
-    transform-origin: top center;
+    transform-box: view-box;
   }
 
-  .tour-guide__body {
-    transform-origin: bottom center;
+  .tour-guide__rig {
+    transform-origin: 6px 9px;
   }
 
-  @keyframes tour-guide-leg-a {
+  .tour-guide__upper {
+    transform-origin: 6px 9px;
+  }
+
+  .tour-guide__arm {
+    transform-origin: 8.55px 5.6px;
+  }
+
+  .tour-guide__leg--back {
+    transform-origin: 4.2px 9px;
+  }
+
+  .tour-guide__leg--front {
+    transform-origin: 7.4px 9px;
+  }
+
+  .tour-guide.facing-left .tour-guide__rig {
+    transform: scaleX(-1);
+  }
+
+  /* ---------- Idle: standing ---------- */
+  @keyframes tg-idle-breathe {
     0%,
     100% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-1.4px);
+      transform: translateY(-0.4px);
     }
   }
 
-  @keyframes tour-guide-leg-b {
+  .is-idle .tour-guide__upper {
+    animation: tg-idle-breathe 2.6s ease-in-out infinite;
+  }
+
+  .is-idle .tour-guide__leg--back,
+  .is-idle .tour-guide__leg--front,
+  .is-idle .tour-guide__arm {
+    animation: none;
+    transform: rotate(0deg);
+  }
+
+  /* ---------- Idle: sitting (on the card, scroll stopped) ---------- */
+  @keyframes tg-sit-breathe {
     0%,
     100% {
-      transform: translateY(-1.4px);
+      transform: translateY(2.4px);
     }
     50% {
-      transform: translateY(0);
+      transform: translateY(2px);
     }
   }
 
-  @keyframes tour-guide-bob {
+  .is-sitting .tour-guide__upper {
+    animation: tg-sit-breathe 2.6s ease-in-out infinite;
+  }
+
+  .is-sitting .tour-guide__leg--back {
+    animation: none;
+    transform: rotate(78deg);
+  }
+
+  .is-sitting .tour-guide__leg--front {
+    animation: none;
+    transform: rotate(-78deg);
+  }
+
+  .is-sitting .tour-guide__arm {
+    animation: none;
+    transform: rotate(55deg);
+  }
+
+  /* ---------- Walking ---------- */
+  @keyframes tg-walk-back {
+    0%,
+    100% {
+      transform: rotate(-24deg);
+    }
+    50% {
+      transform: rotate(24deg);
+    }
+  }
+  @keyframes tg-walk-front {
+    0%,
+    100% {
+      transform: rotate(24deg);
+    }
+    50% {
+      transform: rotate(-24deg);
+    }
+  }
+  @keyframes tg-walk-arm {
+    0%,
+    100% {
+      transform: rotate(-28deg);
+    }
+    50% {
+      transform: rotate(28deg);
+    }
+  }
+  @keyframes tg-walk-bob {
     0%,
     100% {
       transform: translateY(0);
     }
     50% {
-      transform: translateY(-1px);
+      transform: translateY(-0.7px);
     }
   }
 
-  .tour-guide__leg--left {
-    animation: tour-guide-leg-a 0.55s ease-in-out infinite;
+  .is-walking .tour-guide__leg--back {
+    animation: tg-walk-back 0.56s ease-in-out infinite;
+  }
+  .is-walking .tour-guide__leg--front {
+    animation: tg-walk-front 0.56s ease-in-out infinite;
+  }
+  .is-walking .tour-guide__arm {
+    animation: tg-walk-arm 0.56s ease-in-out infinite;
+  }
+  .is-walking .tour-guide__upper {
+    animation: tg-walk-bob 0.56s ease-in-out infinite;
   }
 
-  .tour-guide__leg--right {
-    animation: tour-guide-leg-b 0.55s ease-in-out infinite;
+  /* ---------- Running: bigger stride, forward lean, much faster ---------- */
+  @keyframes tg-run-back {
+    0%,
+    100% {
+      transform: rotate(-46deg);
+    }
+    50% {
+      transform: rotate(40deg);
+    }
+  }
+  @keyframes tg-run-front {
+    0%,
+    100% {
+      transform: rotate(40deg);
+    }
+    50% {
+      transform: rotate(-46deg);
+    }
+  }
+  @keyframes tg-run-arm {
+    0%,
+    100% {
+      transform: rotate(-50deg);
+    }
+    50% {
+      transform: rotate(50deg);
+    }
+  }
+  @keyframes tg-run-bob {
+    0%,
+    100% {
+      transform: translateY(0) rotate(10deg);
+    }
+    50% {
+      transform: translateY(-1.3px) rotate(10deg);
+    }
   }
 
-  .tour-guide__body {
-    animation: tour-guide-bob 0.55s ease-in-out infinite;
+  .is-running .tour-guide__leg--back {
+    animation: tg-run-back 0.2s ease-in-out infinite;
+  }
+  .is-running .tour-guide__leg--front {
+    animation: tg-run-front 0.2s ease-in-out infinite;
+  }
+  .is-running .tour-guide__arm {
+    animation: tg-run-arm 0.2s ease-in-out infinite;
+  }
+  .is-running .tour-guide__upper {
+    animation: tg-run-bob 0.2s ease-in-out infinite;
   }
 
-  /* Running: same cycle, much faster — the "treadmill" pace while the
-     card slider is pinned and scrolling underneath him. */
-  .tour-guide.is-running .tour-guide__leg--left,
-  .tour-guide.is-running .tour-guide__leg--right,
-  .tour-guide.is-running .tour-guide__body {
-    animation-duration: 0.2s;
+  /* ---------- Jump: brief tucked pose used only mid-transition, driven
+     by a GSAP timeline (see motion.ts) that also arcs and turns the
+     whole sprite — this class just sets the silhouette for that arc. ---------- */
+  .is-jumping .tour-guide__leg--back {
+    animation: none;
+    transform: rotate(-55deg);
+  }
+  .is-jumping .tour-guide__leg--front {
+    animation: none;
+    transform: rotate(60deg);
+  }
+  .is-jumping .tour-guide__arm {
+    animation: none;
+    transform: rotate(-70deg);
+  }
+  .is-jumping .tour-guide__upper {
+    animation: none;
+    transform: translateY(-0.6px) rotate(-6deg);
   }
 
   @media (max-width: 860px), (prefers-reduced-motion: reduce) {
