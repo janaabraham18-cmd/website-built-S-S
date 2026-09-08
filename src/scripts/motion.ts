@@ -157,6 +157,43 @@ function setupAdventureTilt() {
   }
 }
 
+// Scattered-photos entrance for the homepage "More ways to spend a day"
+// grid: cards start loose — rotated, offset, faded — like a handful of
+// photo prints dropped on a table, then settle into the grid in a random
+// order as the section scrolls into view. Runs once; scoped to this one
+// grid rather than every AdventureCard on the site.
+function setupAdventureScatter() {
+  const grid = document.querySelector<HTMLElement>('.homepage-adventures__grid');
+  if (!grid) return;
+
+  const cards = gsap.utils.toArray<HTMLElement>('.adventure-card', grid);
+  if (!cards.length) return;
+
+  gsap.set(cards, {
+    opacity: 0,
+    scale: 0.85,
+    rotation: () => gsap.utils.random(-16, 16),
+    x: () => gsap.utils.random(-50, 50),
+    y: () => gsap.utils.random(50, 90),
+  });
+
+  gsap.to(cards, {
+    opacity: 1,
+    scale: 1,
+    rotation: 0,
+    x: 0,
+    y: 0,
+    duration: 0.9,
+    ease: 'power3.out',
+    stagger: { each: 0.08, from: 'random' },
+    scrollTrigger: {
+      trigger: grid,
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+  });
+}
+
 // Homepage tour teaser: an edge-to-edge row of cards that slides
 // horizontally while the section stays pinned, driven by ordinary vertical
 // scroll — desktop only. The row is natively horizontally scrollable by
@@ -306,6 +343,7 @@ export function initMotion() {
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureTilt();
+    setupAdventureScatter();
 
     // Pinned section: background holds and scales while content sits in
     // place for a beat before the page releases back into normal scroll.
