@@ -338,9 +338,9 @@ export function initMotion() {
     setupAdventureTilt();
     setupAdventureRise();
 
-    // Pinned section: background holds and scales while content sits in
-    // place for a beat before the page releases back into normal scroll.
-    // This must be set up — and its pin-spacer inserted — before any later
+    // Pinned section: background pans slowly while content sits in place
+    // for a beat before the page releases back into normal scroll. This
+    // must be set up — and its pin-spacer inserted — before any later
     // scroll-triggered element (e.g. the tours teaser slider) is measured,
     // otherwise that later trigger's start position is calculated without
     // accounting for the space this pin reserves and ends up firing a full
@@ -358,20 +358,20 @@ export function initMotion() {
       });
 
       if (bg) {
-        gsap.fromTo(
-          bg,
-          { scale: 1 },
-          {
-            scale: 1.18,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: pinned,
-              start: 'top top',
-              end: '+=100%',
-              scrub: true,
-            },
-          }
-        );
+        // A static scale gives the pan some headroom to drift within
+        // (nothing is exposed at the edges) without the zoom-in feel the
+        // old scale-over-scroll version had — this scale never animates.
+        gsap.set(bg, { scale: 1.15, yPercent: -6 });
+        gsap.to(bg, {
+          yPercent: 6,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: pinned,
+            start: 'top top',
+            end: '+=100%',
+            scrub: true,
+          },
+        });
       }
     }
 
