@@ -9,7 +9,18 @@ const navLinks = [
 
 <header class="site-header">
   <div class="site-header__inner container">
-    <a href="/" class="site-header__logo">Salt &amp; Sun Tours</a>
+    <a href="/" class="site-header__logo">
+      <svg class="site-header__mark" viewBox="0 0 32 32" fill="none" aria-hidden="true">
+        <path
+          d="M3 23c3.2-6.4 8.4-9.6 13-9.6s9.8 3.2 13 9.6"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+        />
+        <circle cx="16" cy="12.5" r="4.5" stroke="currentColor" stroke-width="1.6" />
+      </svg>
+      Salt &amp; Sun Tours
+    </a>
 
     <nav class="site-header__nav" aria-label="Primary">
       <ul class="site-header__links">
@@ -54,7 +65,11 @@ const navLinks = [
     position: sticky;
     top: 0;
     z-index: 50;
-    background: rgba(251, 247, 241, 0.9);
+    /* A whisper of the same ochre glow as the page background (see
+       --gradient-page-glow), so the sticky bar reads as part of the page
+       rather than a flat UI chrome slapped on top of it. */
+    background: linear-gradient(180deg, rgba(211, 162, 79, 0.14) 0%, rgba(251, 247, 241, 0.92) 65%),
+      rgba(251, 247, 241, 0.85);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--color-border);
   }
@@ -67,11 +82,21 @@ const navLinks = [
   }
 
   .site-header__logo {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
     font-family: var(--font-display);
     font-size: var(--fs-lg);
     text-decoration: none;
     color: var(--color-earth-900);
     letter-spacing: 0.02em;
+  }
+
+  .site-header__mark {
+    width: 22px;
+    height: 22px;
+    color: var(--color-accent-strong);
+    flex-shrink: 0;
   }
 
   .site-header__links {
@@ -83,17 +108,36 @@ const navLinks = [
   }
 
   .site-header__links a {
+    position: relative;
+    display: inline-block;
     text-decoration: none;
     font-size: var(--fs-sm);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-muted);
+    padding-bottom: 3px;
     transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-header__links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--color-accent-strong);
+    transform: scaleX(0);
+    transition: transform var(--duration-fast) var(--ease-out);
   }
 
   .site-header__links a:hover {
     color: var(--color-accent-strong);
+  }
+
+  .site-header__links a:hover::after {
+    transform: scaleX(1);
   }
 
   .site-header__toggle {
