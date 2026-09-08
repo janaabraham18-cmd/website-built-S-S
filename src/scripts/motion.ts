@@ -153,6 +153,66 @@ function setupToursTeaserSlide() {
   });
 }
 
+// Pixel tourist companion: glides left-to-right along the bottom of the
+// screen in step with overall page scroll progress, then swaps to a fixed
+// spot just above the tour-card slider — running in place — for exactly
+// as long as that section is pinned, so the cards sliding underneath him
+// read as a treadmill. Desktop only (matches the slider itself).
+function setupTourGuideSprite() {
+  if (!window.matchMedia('(min-width: 861px)').matches) return;
+
+  const guide = document.querySelector<HTMLElement>('.tour-guide');
+  if (!guide) return;
+
+  const glideLeft = () => Math.max(0, window.innerWidth - guide.offsetWidth - 24);
+
+  const glideTween = gsap.to(guide, {
+    left: glideLeft,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: document.body,
+      start: 'top top',
+      end: 'bottom bottom',
+      scrub: true,
+      invalidateOnRefresh: true,
+    },
+  });
+  const glideTrigger = glideTween.scrollTrigger;
+
+  const pinEl = document.querySelector<HTMLElement>('.tours-teaser__pin');
+  const track = document.querySelector<HTMLElement>('.tours-teaser__track');
+  const header = document.querySelector<HTMLElement>('.site-header');
+  if (!pinEl || !track || !glideTrigger) return;
+
+  const getDistance = () => Math.max(0, track.scrollWidth - pinEl.clientWidth);
+  const getHeaderOffset = () => header?.getBoundingClientRect().height ?? 0;
+  const runTop = () => getHeaderOffset() + 10;
+  const runLeft = () => window.innerWidth * 0.32;
+
+  const startRunning = () => {
+    glideTrigger.disable(false);
+    guide.classList.add('is-running');
+    gsap.set(guide, { left: runLeft(), top: runTop(), bottom: 'auto' });
+  };
+
+  const stopRunning = () => {
+    guide.classList.remove('is-running');
+    gsap.set(guide, { top: 'auto', bottom: 28 });
+    glideTrigger.enable();
+    ScrollTrigger.refresh();
+  };
+
+  ScrollTrigger.create({
+    trigger: pinEl,
+    start: () => `top ${getHeaderOffset()}px`,
+    end: () => `+=${getDistance()}`,
+    onEnter: startRunning,
+    onLeave: stopRunning,
+    onEnterBack: startRunning,
+    onLeaveBack: stopRunning,
+  });
+}
+
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
 // "Tap for details" button (shown via CSS under prefers-reduced-motion)
 // toggles full info instantly instead.
@@ -305,6 +365,7 @@ export function initMotion() {
     }
 
     setupToursTeaserSlide();
+    setupTourGuideSprite();
 
     // Every scroll-triggered pin above is now registered, so recalculate
     // all of their positions once against the final layout instead of

@@ -1,0 +1,117 @@
+---
+// A small pixel-art tourist that glides across the homepage as you scroll
+// and switches to a running pose in a fixed spot above the tour-card
+// slider while that section is pinned — the cards visibly sliding beneath
+// him reads as a treadmill. Purely decorative: aria-hidden, never carries
+// content, and disappears entirely under reduced motion or on narrow
+// screens (see the media query below and the width guard in
+// setupTourGuideSprite() in scripts/motion.ts).
+---
+
+<div class="tour-guide" aria-hidden="true">
+  <svg class="tour-guide__svg" viewBox="0 0 12 14" shape-rendering="crispEdges">
+    <g class="tour-guide__body">
+      <rect x="4" y="0" width="4" height="1" fill="var(--color-accent-strong)" />
+      <rect x="2" y="1" width="8" height="1" fill="var(--color-accent-strong)" />
+      <rect x="4" y="2" width="4" height="3" fill="#f0c9a0" />
+      <rect x="9" y="5" width="2" height="4" fill="var(--color-earth-700)" />
+      <rect x="3" y="5" width="6" height="4" fill="var(--color-accent)" />
+    </g>
+    <g class="tour-guide__leg tour-guide__leg--left">
+      <rect x="3" y="9" width="2" height="4" fill="#8a7452" />
+      <rect x="3" y="13" width="2" height="1" fill="var(--color-earth-900)" />
+    </g>
+    <g class="tour-guide__leg tour-guide__leg--right">
+      <rect x="7" y="9" width="2" height="4" fill="#8a7452" />
+      <rect x="7" y="13" width="2" height="1" fill="var(--color-earth-900)" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .tour-guide {
+    position: fixed;
+    left: 0;
+    bottom: 28px;
+    z-index: 40;
+    width: 40px;
+    height: 47px;
+    pointer-events: none;
+  }
+
+  .tour-guide__svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .tour-guide__leg,
+  .tour-guide__body {
+    transform-box: fill-box;
+  }
+
+  .tour-guide__leg {
+    transform-origin: top center;
+  }
+
+  .tour-guide__body {
+    transform-origin: bottom center;
+  }
+
+  @keyframes tour-guide-leg-a {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-1.4px);
+    }
+  }
+
+  @keyframes tour-guide-leg-b {
+    0%,
+    100% {
+      transform: translateY(-1.4px);
+    }
+    50% {
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes tour-guide-bob {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-1px);
+    }
+  }
+
+  .tour-guide__leg--left {
+    animation: tour-guide-leg-a 0.55s ease-in-out infinite;
+  }
+
+  .tour-guide__leg--right {
+    animation: tour-guide-leg-b 0.55s ease-in-out infinite;
+  }
+
+  .tour-guide__body {
+    animation: tour-guide-bob 0.55s ease-in-out infinite;
+  }
+
+  /* Running: same cycle, much faster — the "treadmill" pace while the
+     card slider is pinned and scrolling underneath him. */
+  .tour-guide.is-running .tour-guide__leg--left,
+  .tour-guide.is-running .tour-guide__leg--right,
+  .tour-guide.is-running .tour-guide__body {
+    animation-duration: 0.2s;
+  }
+
+  @media (max-width: 860px), (prefers-reduced-motion: reduce) {
+    .tour-guide {
+      display: none;
+    }
+  }
+</style>
