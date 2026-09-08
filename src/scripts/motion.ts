@@ -261,10 +261,14 @@ export function initMotion() {
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
     setupTourRows(false);
     setupAdventureCards();
-    setupToursTeaserSlide();
 
     // Pinned section: background holds and scales while content sits in
     // place for a beat before the page releases back into normal scroll.
+    // This must be set up — and its pin-spacer inserted — before any later
+    // scroll-triggered element (e.g. the tours teaser slider) is measured,
+    // otherwise that later trigger's start position is calculated without
+    // accounting for the space this pin reserves and ends up firing a full
+    // pin-duration too early, overlapping the two effects.
     const pinned = document.querySelector<HTMLElement>('.section--pinned');
     if (pinned) {
       const bg = pinned.querySelector<HTMLElement>('.section__bg');
@@ -294,6 +298,13 @@ export function initMotion() {
         );
       }
     }
+
+    setupToursTeaserSlide();
+
+    // Every scroll-triggered pin above is now registered, so recalculate
+    // all of their positions once against the final layout instead of
+    // waiting for the window 'load' listener further down.
+    ScrollTrigger.refresh();
 
     return () => {
       lenis?.destroy();

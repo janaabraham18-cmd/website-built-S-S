@@ -107,14 +107,19 @@ const teaserTours = teaserSlugs
 
 <style>
   .tours-teaser {
-    padding-block: var(--space-2xl);
+    /* Generous top space specifically: the section right above this one
+       (Skeleton Coast) is itself a pinned/scrubbed scroll effect, and the
+       cards below are a second one (see setupToursTeaserSlide()). Without
+       real breathing room here the two scroll-jacked moments run straight
+       into each other with no normal scrolling in between. */
+    padding-block: clamp(6rem, 14vw, 11rem) var(--space-2xl);
   }
 
   .tours-teaser__intro {
     text-align: center;
     max-width: var(--content-width-narrow);
     margin-inline: auto;
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-2xl);
   }
 
   .tours-teaser__eyebrow {
