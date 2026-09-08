@@ -153,36 +153,16 @@ function setupToursTeaserSlide() {
   });
 }
 
-// Pixel tourist companion — a small rigged character (see
-// TourGuideSprite.astro) driven by a real state machine rather than a
-// smooth scroll-bound glide:
-//   - "walking" / "running" only while the page is actually moving
-//     (Lenis's scroll event is the activity signal; ~220ms of no scroll
-//     events means it stopped)
-//   - the moment it stops, he freezes into idle-stand, or idle-sit if
-//     he's currently parked on the card row, until scrolling resumes
-//   - crossing between the normal page and the pinned card row is a real
-//     jump — a short GSAP timeline that arcs him up and back down with a
-//     turn, landing pose picked up on completion — instead of a teleport
-//     or a smooth slide.
-// Desktop only (matches the slider itself).
-function setupTourGuideSprite(lenis: Lenis | undefined) {
+// Pixel tourist companion: glides left-to-right along the bottom of the
+// screen in step with overall page scroll progress, then swaps to a fixed
+// spot just above the tour-card slider — running in place — for exactly
+// as long as that section is pinned, so the cards sliding underneath him
+// read as a treadmill. Desktop only (matches the slider itself).
+function setupTourGuideSprite() {
   if (!window.matchMedia('(min-width: 861px)').matches) return;
 
   const guide = document.querySelector<HTMLElement>('.tour-guide');
   if (!guide) return;
-
-  // Position purely via `top` from here on (never mix with `bottom`) so
-  // every subsequent tween — including relative ones in the jump — has a
-  // real numeric value to work from.
-  const restTop = () => window.innerHeight - 28 - guide.offsetHeight;
-  gsap.set(guide, { top: restTop(), bottom: 'auto' });
-
-  let zone: 'glide' | 'card' = 'glide';
-  let isScrolling = false;
-  let isJumping = false;
-  let facingLeft = false;
-  let idleTimer: ReturnType<typeof setTimeout> | undefined;
 
   const glideLeft = () => Math.max(0, window.innerWidth - guide.offsetWidth - 24);
 
@@ -199,61 +179,6 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
   });
   const glideTrigger = glideTween.scrollTrigger;
 
-  function setPose(pose: 'is-walking' | 'is-running' | 'is-idle' | 'is-sitting' | 'is-jumping') {
-    guide!.classList.remove('is-walking', 'is-running', 'is-idle', 'is-sitting', 'is-jumping');
-    guide!.classList.add(pose);
-  }
-
-  function applyCurrentPose() {
-    if (isJumping) return; // the jump timeline owns the pose class while it runs
-    if (zone === 'card') setPose(isScrolling ? 'is-running' : 'is-sitting');
-    else setPose(isScrolling ? 'is-walking' : 'is-idle');
-  }
-
-  function faceDirection(movingLeft: boolean) {
-    if (movingLeft === facingLeft) return;
-    facingLeft = movingLeft;
-    guide!.classList.toggle('facing-left', facingLeft);
-  }
-
-  function pingActivity() {
-    if (!isScrolling) {
-      isScrolling = true;
-      applyCurrentPose();
-    }
-    clearTimeout(idleTimer);
-    idleTimer = setTimeout(() => {
-      isScrolling = false;
-      applyCurrentPose();
-    }, 220);
-  }
-
-  lenis?.on('scroll', pingActivity);
-  applyCurrentPose();
-
-  // A real jump: brief anticipation crouch (CSS, via the is-jumping
-  // pose), an eased arc up then down across to the target spot, a turn
-  // if the direction changed, and a small landing squash.
-  function jumpTo(targetLeft: number, targetTop: number) {
-    isJumping = true;
-    const startLeft = parseFloat(getComputedStyle(guide!).left) || 0;
-    faceDirection(targetLeft < startLeft);
-    setPose('is-jumping');
-
-    gsap
-      .timeline({
-        onComplete: () => {
-          isJumping = false;
-          applyCurrentPose();
-        },
-      })
-      .to(guide, { top: '-=16', duration: 0.16, ease: 'power2.out' }, 0)
-      .to(guide, { left: targetLeft, duration: 0.34, ease: 'power1.inOut' }, 0)
-      .to(guide, { top: targetTop, duration: 0.18, ease: 'power2.in' }, 0.16)
-      .to(guide, { scaleY: 0.8, duration: 0.07, ease: 'power1.out' }, 0.34)
-      .to(guide, { scaleY: 1, duration: 0.14, ease: 'back.out(2)' }, 0.41);
-  }
-
   const pinEl = document.querySelector<HTMLElement>('.tours-teaser__pin');
   const track = document.querySelector<HTMLElement>('.tours-teaser__track');
   const header = document.querySelector<HTMLElement>('.site-header');
@@ -264,15 +189,15 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
   const runTop = () => getHeaderOffset() + 10;
   const runLeft = () => window.innerWidth * 0.32;
 
-  const enterCard = () => {
-    zone = 'card';
+  const startRunning = () => {
     glideTrigger.disable(false);
-    jumpTo(runLeft(), runTop());
+    guide.classList.add('is-running');
+    gsap.set(guide, { left: runLeft(), top: runTop(), bottom: 'auto' });
   };
 
-  const exitCard = () => {
-    zone = 'glide';
-    jumpTo(glideLeft(), restTop());
+  const stopRunning = () => {
+    guide.classList.remove('is-running');
+    gsap.set(guide, { top: 'auto', bottom: 28 });
     glideTrigger.enable();
     ScrollTrigger.refresh();
   };
@@ -281,10 +206,10 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
     trigger: pinEl,
     start: () => `top ${getHeaderOffset()}px`,
     end: () => `+=${getDistance()}`,
-    onEnter: enterCard,
-    onLeave: exitCard,
-    onEnterBack: enterCard,
-    onLeaveBack: exitCard,
+    onEnter: startRunning,
+    onLeave: stopRunning,
+    onEnterBack: startRunning,
+    onLeaveBack: stopRunning,
   });
 }
 
@@ -440,7 +365,7 @@ export function initMotion() {
     }
 
     setupToursTeaserSlide();
-    setupTourGuideSprite(lenis);
+    setupTourGuideSprite();
 
     // Every scroll-triggered pin above is now registered, so recalculate
     // all of their positions once against the final layout instead of
