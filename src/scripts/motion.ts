@@ -128,18 +128,23 @@ function setupToursTeaserSlide() {
 
   const pinEl = document.querySelector<HTMLElement>('.tours-teaser__pin');
   const track = document.querySelector<HTMLElement>('.tours-teaser__track');
+  const header = document.querySelector<HTMLElement>('.site-header');
   if (!pinEl || !track) return;
 
   pinEl.classList.add('tours-teaser__pin--pinned');
 
   const getDistance = () => Math.max(0, track.scrollWidth - pinEl.clientWidth);
+  // Pin just below the sticky header instead of at the true viewport top —
+  // otherwise the header (z-index: 50) sits over the top slice of the
+  // pinned cards for the whole slide.
+  const getHeaderOffset = () => header?.getBoundingClientRect().height ?? 0;
 
   gsap.to(track, {
     x: () => -getDistance(),
     ease: 'none',
     scrollTrigger: {
       trigger: pinEl,
-      start: 'top top',
+      start: () => `top ${getHeaderOffset()}px`,
       end: () => `+=${getDistance()}`,
       pin: true,
       scrub: 1,
