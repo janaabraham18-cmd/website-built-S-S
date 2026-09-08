@@ -157,6 +157,33 @@ function setupAdventureTilt() {
   }
 }
 
+// Rising-stagger entrance for the homepage "More ways to spend a day"
+// grid: cards rise and fade in together, with a diagonal stagger running
+// top-left to bottom-right across the grid rather than row by row. Runs
+// once; scoped to this one grid rather than every AdventureCard on the site.
+function setupAdventureRise() {
+  const grid = document.querySelector<HTMLElement>('.homepage-adventures__grid');
+  if (!grid) return;
+
+  const cards = gsap.utils.toArray<HTMLElement>('.adventure-card', grid);
+  if (!cards.length) return;
+
+  gsap.set(cards, { opacity: 0, y: 36 });
+
+  gsap.to(cards, {
+    opacity: 1,
+    y: 0,
+    duration: 0.7,
+    ease: 'power2.out',
+    stagger: { each: 0.07, grid: 'auto', from: 'start' },
+    scrollTrigger: {
+      trigger: grid,
+      start: 'top 80%',
+      toggleActions: 'play none none none',
+    },
+  });
+}
+
 // Homepage tour teaser: an edge-to-edge row of cards that slides
 // horizontally while the section stays pinned, driven by ordinary vertical
 // scroll — desktop only. The row is natively horizontally scrollable by
@@ -306,6 +333,7 @@ export function initMotion() {
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureTilt();
+    setupAdventureRise();
 
     // Pinned section: background holds and scales while content sits in
     // place for a beat before the page releases back into normal scroll.
