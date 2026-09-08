@@ -85,6 +85,20 @@ const { tour, reverse = false } = Astro.props;
     z-index: 1;
   }
 
+  /* Soft edge vignette feathering the photo into the page's own sand
+     tone, so the image reads as part of the surrounding surface rather
+     than a hard-edged rectangle. */
+  .tour-row__media::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+      ellipse farthest-side at 50% 50%,
+      transparent 60%,
+      rgba(var(--color-sand-100-rgb), 0.3) 100%
+    );
+  }
+
   .tour-row__media img,
   .tour-row__media-placeholder {
     position: absolute;

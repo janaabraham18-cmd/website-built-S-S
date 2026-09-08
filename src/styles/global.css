@@ -15,6 +15,7 @@
   --color-terracotta-600: #9c4d33;
   --color-earth-700: #6b3a2c;
   --color-earth-900: #3a231c;
+  --color-sand-100-rgb: 246, 237, 225;
 
   /* --- Color: semantic roles --- */
   --color-bg: var(--color-sand-50);
@@ -106,6 +107,9 @@
   --shadow-sm: 0 2px 8px rgba(58, 35, 28, 0.08);
   --shadow-md: 0 8px 30px rgba(58, 35, 28, 0.14);
   --shadow-lg: 0 20px 60px rgba(58, 35, 28, 0.22);
+
+  /* --- Grain texture (see .grain-overlay) --- */
+  --grain-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 
   color-scheme: light;
 }
@@ -213,6 +217,27 @@ p {
 .full-bleed {
   width: 100%;
   position: relative;
+}
+
+/* One grain layer per section: sits above every photo and the section's
+   own background alike, so both read as a single textured surface rather
+   than separately-filtered images. Deliberately not applied per-image. */
+.grain-overlay {
+  position: relative;
+  isolation: isolate;
+}
+
+.grain-overlay::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  background-image: var(--grain-svg);
+  background-repeat: repeat;
+  background-size: 160px 160px;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
 }
 
 .visually-hidden {

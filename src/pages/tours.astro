@@ -34,7 +34,7 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
     </div>
   </header>
 
-  <section class="tour-rows-section" id="tour">
+  <section class="tour-rows-section grain-overlay" id="tour">
     <div class="container tour-rows-section__intro reveal">
       <p class="tour-rows-section__eyebrow reveal-item">{categoryLabels.tour.label}</p>
       <p class="tour-rows-section__desc reveal-item">{categoryLabels.tour.description}</p>
@@ -43,7 +43,7 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
     {heroTours.map((tour, index) => <TourCard tour={tour} reverse={index % 2 === 1} />)}
   </section>
 
-  <section class="adventure-section" id="adventure">
+  <section class="adventure-section grain-overlay" id="adventure">
     <div class="container">
       <div class="adventure-section__intro reveal">
         <h2 class="reveal-item">{categoryLabels.adventure.label}</h2>
@@ -60,7 +60,7 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
     </div>
   </section>
 
-  <section class="adventure-section" id="combo">
+  <section class="adventure-section grain-overlay" id="combo">
     <div class="container">
       <div class="adventure-section__intro reveal">
         <h2 class="reveal-item">{categoryLabels.combo.label}</h2>
