@@ -161,12 +161,10 @@ function setupToursTeaserSlide() {
 //     events means it stopped)
 //   - the moment it stops, he freezes into idle-stand, or idle-sit if
 //     he's currently parked on the card row, until scrolling resumes
-//   - crossing between the normal page and a set-piece zone (the ladder,
-//     the ramp, the pinned card row) is a real jump — a short GSAP
-//     timeline that arcs him up and back down with a turn — rather than a
-//     teleport; inside the ladder/ramp zones a separate scrub tween then
-//     carries him along the prop as you keep scrolling; leaving the card
-//     row is a bigger, slower dive into whatever comes next.
+//   - crossing between the normal page and the pinned card row is a real
+//     jump — a short GSAP timeline that arcs him up and back down with a
+//     turn, landing pose picked up on completion — instead of a teleport
+//     or a smooth slide.
 // Desktop only (matches the slider itself).
 function setupTourGuideSprite(lenis: Lenis | undefined) {
   if (!window.matchMedia('(min-width: 861px)').matches) return;
@@ -180,8 +178,7 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
   const restTop = () => window.innerHeight - 28 - guide.offsetHeight;
   gsap.set(guide, { top: restTop(), bottom: 'auto' });
 
-  type Zone = 'glide' | 'ladder' | 'ramp' | 'card';
-  let zone: Zone = 'glide';
+  let zone: 'glide' | 'card' = 'glide';
   let isScrolling = false;
   let isJumping = false;
   let facingLeft = false;
@@ -200,51 +197,17 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
       invalidateOnRefresh: true,
     },
   });
-  if (!glideTween.scrollTrigger) return;
-  const glideTrigger: ScrollTrigger = glideTween.scrollTrigger;
+  const glideTrigger = glideTween.scrollTrigger;
 
-  type Pose =
-    | 'is-walking'
-    | 'is-running'
-    | 'is-idle'
-    | 'is-sitting'
-    | 'is-jumping'
-    | 'is-climbing'
-    | 'is-rolling'
-    | 'is-diving';
-  const allPoses: Pose[] = [
-    'is-walking',
-    'is-running',
-    'is-idle',
-    'is-sitting',
-    'is-jumping',
-    'is-climbing',
-    'is-rolling',
-    'is-diving',
-  ];
-
-  function setPose(pose: Pose) {
-    guide!.classList.remove(...allPoses);
+  function setPose(pose: 'is-walking' | 'is-running' | 'is-idle' | 'is-sitting' | 'is-jumping') {
+    guide!.classList.remove('is-walking', 'is-running', 'is-idle', 'is-sitting', 'is-jumping');
     guide!.classList.add(pose);
   }
 
-  // Zones with their own continuous set-piece animation (ladder, ramp)
-  // hold that pose regardless of activity, but pause the animation in
-  // place — rather than snapping to idle-stand/sit — while scrolling is
-  // stopped, so he's genuinely clinging to the rail or curled up
-  // mid-tumble instead of just disappearing into a different pose.
   function applyCurrentPose() {
-    if (isJumping) return; // the jump/dive timeline owns the pose class while it runs
-    if (zone === 'card') {
-      setPose(isScrolling ? 'is-running' : 'is-sitting');
-      guide!.classList.remove('tg-paused');
-    } else if (zone === 'ladder' || zone === 'ramp') {
-      setPose(zone === 'ladder' ? 'is-climbing' : 'is-rolling');
-      guide!.classList.toggle('tg-paused', !isScrolling);
-    } else {
-      setPose(isScrolling ? 'is-walking' : 'is-idle');
-      guide!.classList.remove('tg-paused');
-    }
+    if (isJumping) return; // the jump timeline owns the pose class while it runs
+    if (zone === 'card') setPose(isScrolling ? 'is-running' : 'is-sitting');
+    else setPose(isScrolling ? 'is-walking' : 'is-idle');
   }
 
   function faceDirection(movingLeft: boolean) {
@@ -270,11 +233,8 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
 
   // A real jump: brief anticipation crouch (CSS, via the is-jumping
   // pose), an eased arc up then down across to the target spot, a turn
-  // if the direction changed, and a small landing squash. `onLanded`
-  // lets a caller take over the pose instead of falling back to
-  // whatever applyCurrentPose() would normally pick (used to hand off
-  // into the ladder/ramp's own scrub-driven descent).
-  function jumpTo(targetLeft: number, targetTop: number, onLanded?: () => void) {
+  // if the direction changed, and a small landing squash.
+  function jumpTo(targetLeft: number, targetTop: number) {
     isJumping = true;
     const startLeft = parseFloat(getComputedStyle(guide!).left) || 0;
     faceDirection(targetLeft < startLeft);
@@ -284,8 +244,7 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
       .timeline({
         onComplete: () => {
           isJumping = false;
-          if (onLanded) onLanded();
-          else applyCurrentPose();
+          applyCurrentPose();
         },
       })
       .to(guide, { top: '-=16', duration: 0.16, ease: 'power2.out' }, 0)
@@ -295,129 +254,10 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
       .to(guide, { scaleY: 1, duration: 0.14, ease: 'back.out(2)' }, 0.41);
   }
 
-  // A bigger, slower cousin of jumpTo used only for leaving the tour
-  // cards: a proper dive — higher rise, longer flight, the diving
-  // silhouette — into whatever section comes next.
-  function diveOff(targetLeft: number, targetTop: number) {
-    isJumping = true;
-    const startLeft = parseFloat(getComputedStyle(guide!).left) || 0;
-    faceDirection(targetLeft < startLeft);
-    setPose('is-diving');
-
-    gsap
-      .timeline({
-        onComplete: () => {
-          isJumping = false;
-          applyCurrentPose();
-        },
-      })
-      .to(guide, { top: '-=30', duration: 0.22, ease: 'power2.out' }, 0)
-      .to(guide, { left: targetLeft, duration: 0.62, ease: 'power1.inOut' }, 0)
-      .to(guide, { top: targetTop, duration: 0.4, ease: 'power2.in' }, 0.22)
-      .to(guide, { scaleY: 0.72, duration: 0.08, ease: 'power1.out' }, 0.6)
-      .to(guide, { scaleY: 1, duration: 0.16, ease: 'back.out(2)' }, 0.68);
-  }
-
-  // A set piece he slides/rolls along: jumping on at one end (direction-
-  // aware, so scrolling back up lands him at the far end instead), then
-  // a scrub tween — enabled only once he's actually landed — carries him
-  // the rest of the way as the zone scrolls past.
-  function setupPropZone(
-    zoneEl: HTMLElement,
-    zoneName: 'ladder' | 'ramp',
-    getStartX: () => number,
-    getStartY: () => number,
-    getEndX: () => number,
-    getEndY: () => number
-  ) {
-    const descend = gsap.fromTo(
-      guide,
-      { left: getStartX, top: getStartY },
-      {
-        left: getEndX,
-        top: getEndY,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: zoneEl,
-          start: 'top 70%',
-          end: 'bottom 30%',
-          scrub: true,
-          invalidateOnRefresh: true,
-        },
-      }
-    );
-    const descendTrigger = descend.scrollTrigger!;
-    descendTrigger.disable(false);
-
-    const enterForward = () => {
-      zone = zoneName;
-      glideTrigger.disable(false);
-      jumpTo(getStartX(), getStartY(), () => {
-        applyCurrentPose();
-        descendTrigger.enable();
-      });
-    };
-
-    const enterBackward = () => {
-      zone = zoneName;
-      glideTrigger.disable(false);
-      jumpTo(getEndX(), getEndY(), () => {
-        applyCurrentPose();
-        descendTrigger.enable();
-      });
-    };
-
-    const exit = () => {
-      descendTrigger.disable(false);
-      zone = 'glide';
-      jumpTo(glideLeft(), restTop());
-      glideTrigger.enable();
-      ScrollTrigger.refresh();
-    };
-
-    ScrollTrigger.create({
-      trigger: zoneEl,
-      start: 'top 70%',
-      end: 'bottom 30%',
-      onEnter: enterForward,
-      onEnterBack: enterBackward,
-      onLeave: exit,
-      onLeaveBack: exit,
-    });
-  }
-
-  const ladderZone = document.querySelector<HTMLElement>('#tg-ladder-zone');
-  const ladderSvg = document.querySelector<HTMLElement>('.tg-ladder');
-  if (ladderZone && ladderSvg) {
-    const rect = () => ladderSvg.getBoundingClientRect();
-    setupPropZone(
-      ladderZone,
-      'ladder',
-      () => rect().left + rect().width / 2 - guide.offsetWidth / 2,
-      () => rect().top - 8,
-      () => rect().left + rect().width / 2 - guide.offsetWidth / 2,
-      () => rect().bottom - guide.offsetHeight + 6
-    );
-  }
-
-  const rampZone = document.querySelector<HTMLElement>('#tg-ramp-zone');
-  const rampSvg = document.querySelector<HTMLElement>('.tg-ramp');
-  if (rampZone && rampSvg) {
-    const rect = () => rampSvg.getBoundingClientRect();
-    setupPropZone(
-      rampZone,
-      'ramp',
-      () => rect().left + rect().width * 0.05 - guide.offsetWidth / 2,
-      () => rect().top + rect().height * 0.08,
-      () => rect().left + rect().width * 0.75 - guide.offsetWidth / 2,
-      () => rect().top + rect().height * 0.92 - guide.offsetHeight
-    );
-  }
-
   const pinEl = document.querySelector<HTMLElement>('.tours-teaser__pin');
   const track = document.querySelector<HTMLElement>('.tours-teaser__track');
   const header = document.querySelector<HTMLElement>('.site-header');
-  if (!pinEl || !track) return;
+  if (!pinEl || !track || !glideTrigger) return;
 
   const getDistance = () => Math.max(0, track.scrollWidth - pinEl.clientWidth);
   const getHeaderOffset = () => header?.getBoundingClientRect().height ?? 0;
@@ -432,7 +272,7 @@ function setupTourGuideSprite(lenis: Lenis | undefined) {
 
   const exitCard = () => {
     zone = 'glide';
-    diveOff(glideLeft(), restTop());
+    jumpTo(glideLeft(), restTop());
     glideTrigger.enable();
     ScrollTrigger.refresh();
   };
