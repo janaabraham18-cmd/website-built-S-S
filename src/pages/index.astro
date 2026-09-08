@@ -62,24 +62,30 @@ const teaserTours = teaserSlugs
   </Section>
 
   <section class="tours-teaser reveal">
-    <div class="container">
-      <div class="tours-teaser__intro reveal-item">
-        <p class="tours-teaser__eyebrow">Our offering</p>
-        <h2>A few of our tours</h2>
-        <p class="tours-teaser__body">
-          A sample of what we run out of Swakopmund and Walvis Bay — see
-          the full lineup, including every adventure and combo deal, on
-          the tours page.
-        </p>
-      </div>
+    <div class="container tours-teaser__intro reveal-item">
+      <p class="tours-teaser__eyebrow">Our offering</p>
+      <h2>A few of our tours</h2>
+      <p class="tours-teaser__body">
+        A sample of what we run out of Swakopmund and Walvis Bay — see
+        the full lineup, including every adventure and combo deal, on
+        the tours page.
+      </p>
+    </div>
 
-      <div class="tours-teaser__grid">
-        {teaserTours.map((tour) => <AdventureCard tour={tour} />)}
+    <div class="tours-teaser__pin">
+      <div class="tours-teaser__track">
+        {
+          teaserTours.map((tour) => (
+            <div class="tours-teaser__item">
+              <AdventureCard tour={tour} />
+            </div>
+          ))
+        }
       </div>
+    </div>
 
-      <div class="tours-teaser__cta reveal-item">
-        <a class="btn btn-outline" href="/tours">View all tours</a>
-      </div>
+    <div class="container tours-teaser__cta reveal-item">
+      <a class="btn btn-outline" href="/tours">View all tours</a>
     </div>
   </section>
 
@@ -125,11 +131,50 @@ const teaserTours = teaserSlugs
     margin: 0;
   }
 
-  .tours-teaser__grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-auto-rows: 260px;
+  /* Edge-to-edge horizontal slider. Base state is a plain scrollable row
+     (works with no JS, under reduced motion, and on touch/mobile); the
+     motion controller upgrades it to a scroll-pinned slide on desktop
+     when the visitor hasn't asked for reduced motion — see
+     setupToursTeaserSlide() in scripts/motion.ts. */
+  .tours-teaser__pin {
+    position: relative;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .tours-teaser__pin::-webkit-scrollbar {
+    display: none;
+  }
+
+  .tours-teaser__pin--pinned {
+    overflow: hidden;
+  }
+
+  .tours-teaser__track {
+    display: flex;
     gap: var(--space-lg);
+    width: max-content;
+    padding-inline: clamp(1.25rem, 4vw, 2.5rem);
+    scroll-snap-type: x proximity;
+    will-change: transform;
+  }
+
+  .tours-teaser__pin--pinned .tours-teaser__track {
+    scroll-snap-type: none;
+  }
+
+  .tours-teaser__item {
+    flex: 0 0 min(78vw, 380px);
+    height: 420px;
+    scroll-snap-align: start;
+  }
+
+  .tours-teaser__item :global(.adventure-card) {
+    width: 100%;
+    height: 100%;
   }
 
   .tours-teaser__cta {
@@ -137,15 +182,9 @@ const teaserTours = teaserSlugs
     margin-top: var(--space-xl);
   }
 
-  @media (max-width: 960px) {
-    .tours-teaser__grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
   @media (max-width: 640px) {
-    .tours-teaser__grid {
-      grid-template-columns: 1fr;
+    .tours-teaser__item {
+      height: 340px;
     }
   }
 </style>

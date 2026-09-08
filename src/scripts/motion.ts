@@ -118,6 +118,36 @@ function setupAdventureCards() {
   }
 }
 
+// Homepage tour teaser: an edge-to-edge row of cards that slides
+// horizontally while the section stays pinned, driven by ordinary vertical
+// scroll — desktop only. The row is natively horizontally scrollable by
+// default (mobile, reduced motion, no-JS), so this only upgrades that base
+// behavior rather than replacing it.
+function setupToursTeaserSlide() {
+  if (!window.matchMedia('(min-width: 861px)').matches) return;
+
+  const pinEl = document.querySelector<HTMLElement>('.tours-teaser__pin');
+  const track = document.querySelector<HTMLElement>('.tours-teaser__track');
+  if (!pinEl || !track) return;
+
+  pinEl.classList.add('tours-teaser__pin--pinned');
+
+  const getDistance = () => Math.max(0, track.scrollWidth - pinEl.clientWidth);
+
+  gsap.to(track, {
+    x: () => -getDistance(),
+    ease: 'none',
+    scrollTrigger: {
+      trigger: pinEl,
+      start: 'top top',
+      end: () => `+=${getDistance()}`,
+      pin: true,
+      scrub: 1,
+      invalidateOnRefresh: true,
+    },
+  });
+}
+
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
 // "Tap for details" button (shown via CSS under prefers-reduced-motion)
 // toggles full info instantly instead.
@@ -231,6 +261,7 @@ export function initMotion() {
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
     setupTourRows(false);
     setupAdventureCards();
+    setupToursTeaserSlide();
 
     // Pinned section: background holds and scales while content sits in
     // place for a beat before the page releases back into normal scroll.
