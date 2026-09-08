@@ -19,6 +19,64 @@ const teaserSlugs = [
 const teaserTours = teaserSlugs
   .map((slug) => tours.find((tour) => tour.slug === slug))
   .filter((tour) => tour !== undefined);
+
+const adventureSlugs = [
+  'paragliding',
+  'camel-ride',
+  'sandboarding',
+  'kayaking',
+  'living-desert-tour',
+  'township-tour',
+  'fat-bike-tour',
+  'cape-cross',
+];
+const adventureTours = adventureSlugs
+  .map((slug) => tours.find((tour) => tour.slug === slug))
+  .filter((tour) => tour !== undefined);
+
+const gallerySlugs = [
+  'pelican-point-tour',
+  'explorer-tour',
+  'special-quad-90min',
+  'sandwich-harbour-half-day',
+  'fishing',
+  'moonlandscape-tour',
+  'surf-and-turf',
+  'kayak-catamaran-combo',
+];
+const galleryTours = gallerySlugs
+  .map((slug) => tours.find((tour) => tour.slug === slug))
+  .filter((tour) => tour !== undefined);
+
+const tourCount = tours.filter((tour) => tour.category === 'tour').length;
+const adventureCount = tours.filter((tour) => tour.category === 'adventure').length;
+const comboCount = tours.filter((tour) => tour.category === 'combo').length;
+
+const whyUsFeatures = [
+  {
+    title: 'Based right in Swakopmund',
+    description:
+      "No call center, no middleman — every tour starts close to home in Swakopmund and Walvis Bay.",
+    icon: 'compass' as const,
+  },
+  {
+    title: 'Desert and ocean, one lineup',
+    description:
+      "From the red dunes of Sossusvlei to the seal colonies of Pelican Point — few operators cover both ends of Namibia's landscape.",
+    icon: 'leaf' as const,
+  },
+  {
+    title: `${tourCount + adventureCount + comboCount} ways to mix and match`,
+    description: `${tourCount} signature tours, ${adventureCount} adventures, and ${comboCount} combo deals — pair a quad bike ride with a catamaran cruise, or build your own day.`,
+    icon: 'users' as const,
+  },
+  {
+    title: 'Guides who know the ground',
+    description:
+      'Hands-on local guides who know the dunes and the coastline — not a script read from a clipboard.',
+    icon: 'shield' as const,
+  },
+];
 ---
 
 <BaseLayout
@@ -42,7 +100,7 @@ const teaserTours = teaserSlugs
     imageCredit={{ name: 'm_oros', username: 'm_oros' }}
   />
 
-  <WhyUsSection />
+  <WhyUsSection features={whyUsFeatures} />
 
   <Section
     eyebrow="Featured destination"
@@ -86,6 +144,84 @@ const teaserTours = teaserSlugs
 
     <div class="container tours-teaser__cta reveal-item">
       <a class="btn btn-outline" href="/tours">View all tours</a>
+    </div>
+  </section>
+
+  <section class="stats-band reveal">
+    <div class="container stats-band__grid">
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number">{tourCount}</p>
+        <p class="stats-band__label">Signature tours</p>
+      </div>
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number">{adventureCount}</p>
+        <p class="stats-band__label">Adventures</p>
+      </div>
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number">{comboCount}</p>
+        <p class="stats-band__label">Combo deals</p>
+      </div>
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number">2</p>
+        <p class="stats-band__label">Home bases — Swakopmund &amp; Walvis Bay</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="homepage-adventures reveal">
+    <div class="container homepage-adventures__intro reveal-item">
+      <p class="homepage-adventures__eyebrow">Beyond the tours</p>
+      <h2>More ways to spend a day</h2>
+      <p class="homepage-adventures__body">
+        Shorter, activity-based excursions around Swakopmund and Walvis
+        Bay — the full lineup, including every combo deal, is on the
+        tours page.
+      </p>
+    </div>
+
+    <div class="container homepage-adventures__grid">
+      {adventureTours.map((tour) => <AdventureCard tour={tour} />)}
+    </div>
+
+    <div class="container homepage-adventures__cta reveal-item">
+      <a class="btn btn-outline" href="/tours#adventure">See every adventure</a>
+    </div>
+  </section>
+
+  <section class="gallery reveal">
+    <div class="container gallery__intro reveal-item">
+      <p class="gallery__eyebrow">A few more moments</p>
+      <h2>Namibia, in passing</h2>
+    </div>
+
+    <div class="container gallery__grid">
+      {
+        galleryTours.map((tour) => (
+          <figure class="gallery__item reveal-item">
+            {tour.imageUrl && <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />}
+            {tour.imageCredit && (
+              <figcaption class="gallery__credit">
+                Photo:{' '}
+                <a
+                  href={`https://unsplash.com/@${tour.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {tour.imageCredit.name}
+                </a>{' '}
+                /{' '}
+                <a
+                  href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Unsplash
+                </a>
+              </figcaption>
+            )}
+          </figure>
+        ))
+      }
     </div>
   </section>
 
@@ -190,6 +326,163 @@ const teaserTours = teaserSlugs
   @media (max-width: 640px) {
     .tours-teaser__item {
       height: 340px;
+    }
+  }
+
+  /* ---------- Stats band ---------- */
+  .stats-band {
+    padding-block: var(--space-xl);
+  }
+
+  .stats-band__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-lg);
+    text-align: center;
+  }
+
+  .stats-band__number {
+    font-family: var(--font-display);
+    font-size: var(--fs-2xl);
+    color: var(--color-accent-strong);
+    margin: 0;
+  }
+
+  .stats-band__label {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    margin: var(--space-3xs) 0 0;
+  }
+
+  @media (max-width: 760px) {
+    .stats-band__grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: var(--space-lg) var(--space-md);
+    }
+  }
+
+  /* ---------- Homepage adventures grid ---------- */
+  .homepage-adventures {
+    padding-block: var(--space-2xl);
+  }
+
+  .homepage-adventures__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .homepage-adventures__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .homepage-adventures__body {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .homepage-adventures__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 240px;
+    gap: var(--space-md);
+  }
+
+  .homepage-adventures__cta {
+    text-align: center;
+    margin-top: var(--space-xl);
+  }
+
+  @media (max-width: 960px) {
+    .homepage-adventures__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .homepage-adventures__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Gallery ---------- */
+  .gallery {
+    padding-block: var(--space-2xl);
+  }
+
+  .gallery__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .gallery__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .gallery__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 220px;
+    gap: var(--space-sm);
+  }
+
+  .gallery__item {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md);
+  }
+
+  .gallery__item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .gallery__item:hover img {
+    transform: scale(1.06);
+  }
+
+  .gallery__credit {
+    position: absolute;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    z-index: 1;
+    margin: 0;
+    font-size: 0.65rem;
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .gallery__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 960px) {
+    .gallery__grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 640px) {
+    .gallery__grid {
+      grid-template-columns: 1fr;
+      grid-auto-rows: 260px;
     }
   }
 </style>

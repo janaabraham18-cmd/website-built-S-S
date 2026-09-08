@@ -74,20 +74,11 @@ const {
       </slot>
     </div>
 
-    <dl class="about__stats reveal-item">
-      <div class="about__stat">
-        <dt>10+</dt>
-        <dd>Years guiding tours</dd>
-      </div>
-      <div class="about__stat">
-        <dt>2,000+</dt>
-        <dd>Travelers hosted</dd>
-      </div>
-      <div class="about__stat">
-        <dt>15</dt>
-        <dd>Destinations</dd>
-      </div>
-    </dl>
+    <ul class="about__tags reveal-item">
+      <li>Desert tours</li>
+      <li>Coastal adventures</li>
+      <li>Combo deals</li>
+    </ul>
   </div>
 </section>
 
@@ -177,24 +168,23 @@ const {
     max-width: 34rem;
   }
 
-  .about__stats {
+  .about__tags {
     display: flex;
-    gap: var(--space-xl);
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    list-style: none;
     margin: var(--space-lg) 0 0;
     padding-top: var(--space-lg);
     border-top: 1px solid var(--color-border);
   }
 
-  .about__stat dt {
-    font-family: var(--font-display);
-    font-size: var(--fs-xl);
-    color: var(--color-accent-strong);
-  }
-
-  .about__stat dd {
-    margin: var(--space-3xs) 0 0;
+  .about__tags li {
     font-size: var(--fs-sm);
-    color: var(--color-text-muted);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    background: var(--color-sand-100);
+    border-radius: 999px;
+    padding: var(--space-2xs) var(--space-sm);
   }
 
   @media (max-width: 860px) {
@@ -212,9 +202,5 @@ const {
       aspect-ratio: 16 / 10;
     }
 
-    .about__stats {
-      flex-wrap: wrap;
-      gap: var(--space-lg) var(--space-xl);
-    }
   }
 </style>
