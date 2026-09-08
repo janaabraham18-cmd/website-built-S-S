@@ -394,6 +394,18 @@ const whyUsFeatures = [
     gap: var(--space-md);
   }
 
+  /* Hover tilt — see setupAdventureTilt() in scripts/motion.ts, which
+     drives the rotate/scale transform itself; this just handles the
+     shadow lift and keeps the tilted card above its neighbors. */
+  .homepage-adventures__grid :global(.adventure-card) {
+    transition: box-shadow var(--duration-base) var(--ease-out);
+  }
+
+  .homepage-adventures__grid :global(.adventure-card.is-tilting) {
+    box-shadow: var(--shadow-lg);
+    z-index: 1;
+  }
+
   .homepage-adventures__cta {
     text-align: center;
     margin-top: var(--space-xl);

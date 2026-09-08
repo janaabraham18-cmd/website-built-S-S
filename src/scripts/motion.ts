@@ -118,6 +118,45 @@ function setupAdventureCards() {
   }
 }
 
+// Hover tilt for the homepage "More ways to spend a day" grid — cards
+// lean toward the cursor in 3D as it moves across them. Pointer-driven
+// rather than scroll-driven, an experiment scoped to just this one grid
+// for now rather than every AdventureCard on the site. Fine-pointer
+// devices only (hover doesn't mean anything on touch).
+function setupAdventureTilt() {
+  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+
+  const cards = gsap.utils.toArray<HTMLElement>('.homepage-adventures__grid .adventure-card');
+  const maxTilt = 10;
+
+  for (const card of cards) {
+    gsap.set(card, { transformPerspective: 800 });
+    const setRotateX = gsap.quickTo(card, 'rotationX', { duration: 0.5, ease: 'power3.out' });
+    const setRotateY = gsap.quickTo(card, 'rotationY', { duration: 0.5, ease: 'power3.out' });
+    const setScale = gsap.quickTo(card, 'scale', { duration: 0.5, ease: 'power3.out' });
+
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('is-tilting');
+      setScale(1.035);
+    });
+
+    card.addEventListener('mousemove', (event) => {
+      const rect = card.getBoundingClientRect();
+      const relX = (event.clientX - rect.left) / rect.width;
+      const relY = (event.clientY - rect.top) / rect.height;
+      setRotateY((relX - 0.5) * maxTilt * 2);
+      setRotateX(-(relY - 0.5) * maxTilt * 2);
+    });
+
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('is-tilting');
+      setRotateX(0);
+      setRotateY(0);
+      setScale(1);
+    });
+  }
+}
+
 // Homepage tour teaser: an edge-to-edge row of cards that slides
 // horizontally while the section stays pinned, driven by ordinary vertical
 // scroll — desktop only. The row is natively horizontally scrollable by
@@ -266,6 +305,7 @@ export function initMotion() {
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
     setupTourRows(false);
     setupAdventureCards();
+    setupAdventureTilt();
 
     // Pinned section: background holds and scales while content sits in
     // place for a beat before the page releases back into normal scroll.
