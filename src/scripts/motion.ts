@@ -219,6 +219,51 @@ function setupToursTeaserSlide() {
   });
 }
 
+// Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
+// "active" (wider, via flex-grow — see .hero__panel.is-active) so each
+// photo gets a turn filling most of the hero, like an expanding-photo
+// slideshow rather than a single static banner. Pauses on hover so a
+// visitor reading a panel's letter/photo isn't fighting the layout, and
+// under reduced motion it just holds on the first panel with no cycling.
+function setupHeroPanelSlideshow(reduceMotion: boolean) {
+  const track = document.querySelector<HTMLElement>('[data-hero-panels]');
+  if (!track) return;
+
+  const panels = Array.from(track.querySelectorAll<HTMLElement>('[data-hero-panel]'));
+  if (panels.length < 2) return;
+
+  const creditEl = document.querySelector<HTMLElement>('[data-hero-credit]');
+  const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
+
+  const setActive = (index: number) => {
+    panels.forEach((panel, i) => panel.classList.toggle('is-active', i === index));
+
+    const { creditName, creditUsername } = panels[index].dataset;
+    if (!creditEl || !creditLink) return;
+    if (creditName && creditUsername) {
+      creditLink.textContent = creditName;
+      creditLink.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+      creditEl.hidden = false;
+    } else {
+      creditEl.hidden = true;
+    }
+  };
+
+  if (reduceMotion) return;
+
+  let index = 0;
+  let timer: ReturnType<typeof setInterval>;
+  const advance = () => setActive((index = (index + 1) % panels.length));
+  const start = () => {
+    timer = setInterval(advance, 2800);
+  };
+  const stop = () => clearInterval(timer);
+
+  start();
+  track.addEventListener('mouseenter', stop);
+  track.addEventListener('mouseleave', start);
+}
+
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
 // "Tap for details" button (shown via CSS under prefers-reduced-motion)
 // toggles full info instantly instead.
@@ -243,6 +288,8 @@ export function initMotion() {
   const reduceMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
   ).matches;
+
+  setupHeroPanelSlideshow(reduceMotion);
 
   let lenis: Lenis | undefined;
 
@@ -269,51 +316,7 @@ export function initMotion() {
   // Full cinematic experience — only when the user hasn't asked for less motion.
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     const heroSection = document.querySelector<HTMLElement>('.hero');
-    const heroBgWrap = document.querySelector<HTMLElement>('.hero__bg-wrap');
-    const heroBg = document.querySelector<HTMLElement>('.hero__bg');
     const heroContent = document.querySelector<HTMLElement>('.hero__content');
-
-    // Ken Burns: slow autonomous drift, independent of scroll position.
-    // Paused while the hero is off-screen so it isn't burning GPU/battery
-    // on mobile for an element the user can't see.
-    if (heroBg) {
-      const kenBurns = gsap.to(heroBg, {
-        scale: 1.12,
-        xPercent: 2,
-        yPercent: -2,
-        duration: 22,
-        ease: 'sine.inOut',
-        repeat: -1,
-        yoyo: true,
-      });
-
-      if (heroSection) {
-        ScrollTrigger.create({
-          trigger: heroSection,
-          start: 'top bottom',
-          end: 'bottom top',
-          onEnter: () => kenBurns.play(),
-          onLeave: () => kenBurns.pause(),
-          onEnterBack: () => kenBurns.play(),
-          onLeaveBack: () => kenBurns.pause(),
-        });
-      }
-    }
-
-    // Scroll parallax: background drifts slower than the foreground content,
-    // which rises and fades faster — a depth cue, not a flat slide-away.
-    if (heroSection && heroBgWrap) {
-      gsap.to(heroBgWrap, {
-        yPercent: 18,
-        ease: 'none',
-        scrollTrigger: {
-          trigger: heroSection,
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true,
-        },
-      });
-    }
 
     if (heroSection && heroContent) {
       gsap.to(heroContent, {
