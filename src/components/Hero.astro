@@ -6,6 +6,7 @@ interface Props {
   ctaLabel?: string;
   ctaHref?: string;
   imageUrl?: string;
+  imageCredit?: { name: string; username: string };
 }
 
 const {
@@ -15,6 +16,7 @@ const {
   ctaLabel = 'Book your tour',
   ctaHref = '/booking',
   imageUrl = '',
+  imageCredit,
 } = Astro.props;
 ---
 
@@ -30,6 +32,29 @@ const {
     <p class="hero__subhead">{subhead}</p>
     <a class="btn btn-primary hero__cta" href={ctaHref}>{ctaLabel}</a>
   </div>
+
+  {
+    imageCredit && (
+      <p class="hero__credit">
+        Photo:{' '}
+        <a
+          href={`https://unsplash.com/@${imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {imageCredit.name}
+        </a>{' '}
+        /{' '}
+        <a
+          href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Unsplash
+        </a>
+      </p>
+    )
+  }
 
   <a href="#scroll-target" class="hero__scroll-cue" aria-label="Scroll to content">
     <span class="hero__scroll-cue-line"></span>
@@ -109,12 +134,34 @@ const {
   }
 
   .hero__headline {
-    font-family: var(--font-display);
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-weight: 600;
     font-size: var(--fs-hero);
     line-height: var(--lh-tight);
     color: var(--color-text-on-dark);
     margin-bottom: var(--space-md);
     text-wrap: balance;
+  }
+
+  .hero__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.65);
+  }
+
+  .hero__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .hero__credit a:hover {
+    color: var(--color-text-on-dark);
   }
 
   .hero__subhead {

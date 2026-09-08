@@ -3,6 +3,7 @@ interface Props {
   eyebrow?: string;
   heading?: string;
   imageUrl?: string;
+  imageCredit?: { name: string; username: string };
   reverse?: boolean;
   id?: string;
 }
@@ -11,6 +12,7 @@ const {
   eyebrow = 'About us',
   heading = 'Placeholder heading about the company',
   imageUrl = '',
+  imageCredit,
   reverse = false,
   id,
 } = Astro.props;
@@ -28,6 +30,28 @@ const {
         <div class="about__media-placeholder" aria-hidden="true">
           <span>Placeholder image</span>
         </div>
+      )
+    }
+    {
+      imageCredit && (
+        <p class="about__credit">
+          Photo:{' '}
+          <a
+            href={`https://unsplash.com/@${imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {imageCredit.name}
+          </a>{' '}
+          /{' '}
+          <a
+            href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Unsplash
+          </a>
+        </p>
       )
     }
   </div>
@@ -98,6 +122,26 @@ const {
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .about__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .about__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .about__credit a:hover {
+    color: var(--color-text-on-dark);
   }
 
   .about__media-placeholder {

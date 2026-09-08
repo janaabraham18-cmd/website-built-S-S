@@ -3,6 +3,7 @@ interface Props {
   heading?: string;
   eyebrow?: string;
   imageUrl?: string;
+  imageCredit?: { name: string; username: string };
   align?: 'left' | 'center';
   theme?: 'light' | 'photo';
   pin?: boolean;
@@ -13,6 +14,7 @@ const {
   heading,
   eyebrow,
   imageUrl = '',
+  imageCredit,
   align = 'left',
   theme = 'light',
   pin = false,
@@ -46,6 +48,26 @@ const {
           <div class="section__bg" aria-hidden="true" />
         )}
         <div class="section__overlay" aria-hidden="true" />
+        {imageCredit && (
+          <p class="section__credit">
+            Photo:{' '}
+            <a
+              href={`https://unsplash.com/@${imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {imageCredit.name}
+            </a>{' '}
+            /{' '}
+            <a
+              href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Unsplash
+            </a>
+          </p>
+        )}
       </>
     )
   }
@@ -148,6 +170,29 @@ const {
   }
 
   .section--photo .section__heading {
+    color: var(--color-text-on-dark);
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .section__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 2;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.65);
+  }
+
+  .section__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .section__credit a:hover {
     color: var(--color-text-on-dark);
   }
 

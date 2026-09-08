@@ -21,26 +21,44 @@ const teaserTours = teaserSlugs
   .filter((tour) => tour !== undefined);
 ---
 
-<BaseLayout title="Home" description="Placeholder homepage description.">
-  <Hero />
+<BaseLayout
+  title="Home"
+  description="Desert and coastal tours from Swakopmund and Walvis Bay, Namibia — Etosha, Sossusvlei, Skeleton Coast, and more with Salt & Sun Tours."
+>
+  <Hero
+    eyebrow="Salt & Sun Tours"
+    headline="Where Life and Light Meet Adventure"
+    subhead="Desert and coastal adventures out of Swakopmund and Walvis Bay — from towering red dunes to seal colonies at Pelican Point."
+    ctaLabel="Explore our tours"
+    ctaHref="/tours"
+    imageUrl="https://images.unsplash.com/photo-1707470121585-23ecf4671684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
+    imageCredit={{ name: 'm_oros', username: 'm_oros' }}
+  />
 
   <div id="scroll-target"></div>
 
-  <AboutSection />
+  <AboutSection
+    imageUrl="https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1000"
+    imageCredit={{ name: 'm_oros', username: 'm_oros' }}
+  />
 
   <WhyUsSection />
 
   <Section
     eyebrow="Featured destination"
-    heading="Placeholder place name"
+    heading="Skeleton Coast"
     theme="photo"
     align="left"
     pin
+    imageUrl="https://images.unsplash.com/photo-1551176968-bf1e434355f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
+    imageCredit={{ name: 'Sam Power', username: 'sampowerphoto' }}
   >
     <p>
-      Placeholder description of a highlighted place or experience — full
-      bleed photography will go here in the next pass.
+      Namibia's most mysterious coastline — dramatic shorelines, shipwrecks,
+      seal colonies, and the raw beauty of the Atlantic, a few hours north of
+      Swakopmund.
     </p>
+    <a class="btn btn-outline" href="/tours#tour">Explore this tour</a>
   </Section>
 
   <section class="tours-teaser reveal">
@@ -73,8 +91,9 @@ const teaserTours = teaserSlugs
     align="center"
   >
     <p>
-      Placeholder closing copy encouraging visitors to book. Includes a
-      call to action below.
+      Ready to see the dunes, the coastline, and everything in between?
+      Get in touch and we'll help you build the right day — or days —
+      around Swakopmund and Walvis Bay.
     </p>
     <a class="btn btn-primary" href="/booking">Start booking</a>
   </Section>
