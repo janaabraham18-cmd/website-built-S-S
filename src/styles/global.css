@@ -35,6 +35,20 @@
     var(--color-sand-100) 45%,
     var(--color-beige-300) 100%
   );
+  /* Soft warmth pooling just below the hero, like low sun, then bleeding
+     out as the page continues — layered over --gradient-page rather than
+     replacing it. Centered at 100vh (roughly where the full-bleed, 100vh
+     hero ends) rather than the page top, since the hero is opaque and
+     would otherwise hide the glow entirely; it reads as depth in the page
+     chrome (gutters, gaps between sections) without competing with the
+     photos those sections carry. */
+  --gradient-page-glow: radial-gradient(
+      1400px 900px at 50% 100vh,
+      rgba(211, 162, 79, 0.3) 0%,
+      rgba(211, 162, 79, 0.14) 40%,
+      rgba(211, 162, 79, 0) 70%
+    ),
+    var(--gradient-page);
   --gradient-warm: linear-gradient(
     135deg,
     var(--color-ochre-400) 0%,
@@ -127,7 +141,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--gradient-page);
+  background: var(--gradient-page-glow);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--fs-base);
