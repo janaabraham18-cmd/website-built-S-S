@@ -1,0 +1,174 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+---
+
+<BaseLayout
+  title="Our Story"
+  description="A letter from our founder, Lenga — the story and purpose behind Salt & Sun Tours in Swakopmund and Walvis Bay, Namibia."
+>
+  <Section
+    eyebrow="Salt & Sun Tours"
+    heading="More Than a Journey"
+    theme="photo"
+    align="center"
+    imageUrl="https://images.unsplash.com/photo-1667254650752-34cdd1106dc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
+    imageCredit={{ name: 'Joshua Kettle', username: 'joshuakettle' }}
+  >
+    <p>A letter from our founder, Lenga.</p>
+  </Section>
+
+  <article class="letter">
+    <div class="letter__body">
+      <p class="letter__intro">My name is Lenga, and Lenga means King.</p>
+
+      <p>
+        My roots are in Etosha, where the earth carries one of Namibia's
+        greatest wonders — the Etosha salt pan. That is where the heart of
+        Salt &amp; Sun Tours begins: from the salt of the earth, under the
+        Namibian sun, and grounded in a purpose greater than tourism.
+      </p>
+
+      <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+
+      <p>
+        For us, a tour is not simply about driving through the dunes,
+        watching wildlife, camping beneath the stars, enjoying a picnic, or
+        experiencing the thrill of an adventure.
+      </p>
+
+      <p class="letter__emphasis">It is about the person you become along the way.</p>
+
+      <p>
+        Life leaves people carrying stories that are often never spoken —
+        pain, disappointment, loss, rejection, fear, and experiences that
+        shape who we become. My own journey taught me that sometimes
+        healing begins when we finally have a safe place to be heard.
+      </p>
+
+      <p>That is what we want Salt &amp; Sun Tours to be.</p>
+
+      <ul class="letter__lines">
+        <li>A place where strangers can become companions.</li>
+        <li>Where conversations go deeper than the road ahead.</li>
+        <li>Where stories can be shared without judgement.</li>
+        <li>
+          Where we can laugh, reflect, encourage one another, and sometimes
+          simply sit in silence beneath the African sky.
+        </li>
+      </ul>
+
+      <p class="letter__emphasis">
+        You may arrive looking for Namibia.<br />
+        You may leave having found a little more of yourself.
+      </p>
+
+      <p>
+        We believe that every person has value, regardless of their past,
+        their mistakes, or what they have been through. And sometimes, one
+        person's testimony can become another person's reason to keep
+        going.
+      </p>
+
+      <p class="letter__emphasis">
+        So when you travel with us, you are not just booking a tour.<br />
+        You are joining a journey of connection, discovery, healing and
+        transformation.
+      </p>
+
+      <ul class="letter__lines letter__lines--calls">
+        <li>Come experience the salt.</li>
+        <li>Feel the sun.</li>
+        <li>Meet the wilderness.</li>
+        <li>Share the journey.</li>
+      </ul>
+
+      <p>
+        And perhaps, somewhere between the desert and the stars, you will
+        discover that the greatest destination was never a place — it was
+        becoming who you were created to be.
+      </p>
+
+      <p class="letter__signature">
+        Salt &amp; Sun Tours
+        <span>More than a tour. A journey that leaves a mark.</span>
+      </p>
+    </div>
+
+    <div class="letter__cta">
+      <a class="btn btn-primary" href="/tours">Explore our tours</a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .letter {
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    padding: var(--space-2xl) var(--space-md);
+  }
+
+  .letter__body p {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .letter__intro,
+  .letter__emphasis {
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-size: var(--fs-lg);
+    line-height: var(--lh-snug);
+    color: var(--color-earth-900) !important;
+  }
+
+  .letter__lines {
+    list-style: none;
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) 0 var(--space-sm) var(--space-md);
+    border-left: 2px solid var(--color-border);
+    display: grid;
+    gap: var(--space-2xs);
+  }
+
+  .letter__lines li {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  .letter__lines--calls {
+    border-left-color: var(--color-accent);
+  }
+
+  .letter__lines--calls li {
+    font-weight: 600;
+    color: var(--color-accent-strong);
+  }
+
+  .letter__signature {
+    margin-top: var(--space-lg) !important;
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    color: var(--color-earth-900) !important;
+  }
+
+  .letter__signature span {
+    display: block;
+    margin-top: var(--space-3xs);
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    letter-spacing: 0.02em;
+  }
+
+  .letter__cta {
+    margin-top: var(--space-xl);
+    text-align: center;
+  }
+</style>
