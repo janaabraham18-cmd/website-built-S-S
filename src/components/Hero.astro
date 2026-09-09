@@ -206,9 +206,15 @@ const firstBg = tourData[0].bg;
     margin-inline: 0;
     padding-inline: var(--space-md);
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    /* The first column used to be an even 1fr share, which on a wide
+       screen gave it noticeably more track width than the text actually
+       needs (it's capped at 34rem below) — that slack pushed the gap, and
+       so the card stack, further right than necessary. Sizing the column
+       to the text's own max width and letting the second column take
+       everything else pulls the cards back in against the text. */
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
     align-items: center;
-    gap: clamp(2rem, 6vw, 5rem);
+    gap: clamp(1.5rem, 4vw, 3rem);
     min-height: min(72vh, 640px);
   }
 
@@ -302,7 +308,7 @@ const firstBg = tourData[0].bg;
   .hero__gallery {
     position: relative;
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
   }
 
   .hero__stack {
@@ -412,6 +418,7 @@ const firstBg = tourData[0].bg;
     }
 
     .hero__gallery {
+      justify-content: center;
       margin-top: var(--space-2xl);
     }
 
