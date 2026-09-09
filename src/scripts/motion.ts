@@ -219,33 +219,6 @@ function setupToursTeaserSlide() {
   });
 }
 
-// Hero -> About curved reveal: a dark scalloped shape sits over the top
-// of the About section on load and peels up and away — sliding out of
-// view while it scales up, so more of its rounded edge sweeps past — as
-// the visitor scrolls from the hero into that section. Driven entirely by
-// scroll position (scrub), not a fixed-duration animation. Desktop and
-// mobile alike; reduced motion hides the shape via CSS instead, so there's
-// nothing to wire up here in that case.
-function setupHeroSectionReveal() {
-  const wrap = document.querySelector<HTMLElement>('[data-scroll-reveal]');
-  const shape = wrap?.querySelector<HTMLElement>('.scroll-reveal__shape');
-  if (!wrap || !shape) return;
-
-  gsap.set(shape, { yPercent: 0, scale: 1 });
-
-  gsap.to(shape, {
-    yPercent: -140,
-    scale: 1.2,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: wrap,
-      start: 'top bottom',
-      end: 'top top',
-      scrub: 0.6,
-    },
-  });
-}
-
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
 // "active" (wider, via flex-grow — see .hero__panel.is-active) so each
 // photo gets a turn filling most of the hero, like an expanding-photo
@@ -359,7 +332,6 @@ export function initMotion() {
       });
     }
 
-    setupHeroSectionReveal();
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
     setupTourRows(false);
     setupAdventureCards();

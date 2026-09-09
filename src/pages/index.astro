@@ -146,17 +146,6 @@ const whyUsFeatures = [
 
   <div id="scroll-target"></div>
 
-  <div class="scroll-reveal" data-scroll-reveal aria-hidden="true">
-    <svg
-      class="scroll-reveal__shape"
-      viewBox="0 0 1440 420"
-      preserveAspectRatio="none"
-      focusable="false"
-    >
-      <path d="M0,0 H1440 V210 C1300,210 1300,360 720,360 C140,360 140,210 0,210 Z" />
-    </svg>
-  </div>
-
   <AboutSection
     imageUrl="https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1000"
     imageCredit={{ name: 'm_oros', username: 'm_oros' }}
@@ -304,51 +293,6 @@ const whyUsFeatures = [
 </BaseLayout>
 
 <style>
-  /* ---------- Hero -> About curved scroll reveal ---------- */
-  /* A dark curved shape overlaps the top of the About section on load
-     (via the negative margin pulling it up so it consumes no extra
-     document height), then peels away as the visitor scrolls past the
-     hero, tied to scroll position via GSAP scrub — see
-     setupHeroSectionReveal() in scripts/motion.ts. Reduced motion just
-     hides it outright so About is visible immediately, no animation. */
-  .scroll-reveal {
-    position: relative;
-    height: 42vh;
-    min-height: 260px;
-    margin-bottom: -42vh;
-    z-index: 5;
-    overflow: visible;
-    pointer-events: none;
-  }
-
-  .scroll-reveal__shape {
-    position: absolute;
-    inset: 0;
-    display: block;
-    width: 100%;
-    height: 100%;
-    transform-origin: 50% 0%;
-    will-change: transform;
-  }
-
-  .scroll-reveal__shape path {
-    fill: var(--color-earth-900);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .scroll-reveal {
-      display: none;
-    }
-  }
-
-  @media (max-width: 640px) {
-    .scroll-reveal {
-      height: 30vh;
-      min-height: 170px;
-      margin-bottom: -30vh;
-    }
-  }
-
   .tours-teaser {
     /* Generous top space specifically: the section right above this one
        (Skeleton Coast) is itself a pinned/scrubbed scroll effect, and the
