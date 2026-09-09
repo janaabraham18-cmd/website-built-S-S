@@ -1,81 +1,105 @@
 ---
-interface Panel {
-  imageUrl: string;
-  imageCredit?: { name: string; username: string };
-  letter: string;
-  alt: string;
-}
+import type { Tour } from '../data/tours';
 
 interface Props {
-  title?: string;
   eyebrow?: string;
-  subhead?: string;
   ctaLabel?: string;
-  ctaHref?: string;
-  panels: Panel[];
+  tours: Tour[];
 }
 
-const {
-  title = '',
-  eyebrow = 'Placeholder eyebrow',
-  subhead = 'Placeholder subheading copy describing the experience — swap in real copy later.',
-  ctaLabel = 'Book your tour',
-  ctaHref = '/booking',
-  panels,
-} = Astro.props;
+const { eyebrow = 'Salt & Sun Tours', ctaLabel = 'View tour', tours } = Astro.props;
 
-const firstCredit = panels[0]?.imageCredit;
+const first = tours[0];
+
+// Payload the client script swaps through on tour change — kept lean
+// (only what the hero itself renders) rather than re-shipping full Tour
+// objects with `included` lists, etc.
+const tourData = tours.map((tour) => ({
+  slug: tour.slug,
+  name: tour.name,
+  tagline: tour.tagline ?? tour.description,
+  gallery: tour.heroGallery ?? [],
+}));
 ---
 
-<section class="hero hero--panels full-bleed">
-  <h1 class="visually-hidden">{title}</h1>
+<section class="hero hero--tours full-bleed" data-tour-hero data-tours={JSON.stringify(tourData)}>
+  <h1 class="visually-hidden">Salt &amp; Sun Tours — six signature Namibian tours</h1>
 
-  <div class="hero__panels" data-hero-panels aria-hidden="true">
-    {
-      panels.map((panel, i) => (
-        <div
-          class:list={['hero__panel', i === 0 && 'is-active']}
-          data-hero-panel
-          data-credit-name={panel.imageCredit?.name}
-          data-credit-username={panel.imageCredit?.username}
-          style={`background-image: url(${panel.imageUrl});`}
+  <div class="container hero__grid">
+    <div class="hero__panel">
+      <p class="hero__eyebrow">{eyebrow}</p>
+
+      <h2 class="hero__tour-name" data-hero-name>{first.name}</h2>
+      <p class="hero__tour-tagline" data-hero-tagline>{first.tagline ?? first.description}</p>
+
+      <a class="btn btn-primary hero__cta" data-hero-cta href={`/tours#${first.slug}`}>
+        {ctaLabel}
+      </a>
+
+      <div class="hero__nav" data-hero-nav role="group" aria-label="Choose a tour">
+        {
+          tours.map((tour, i) => (
+            <button
+              type="button"
+              class:list={['hero__nav-btn', i === 0 && 'is-active']}
+              data-hero-nav-btn
+              data-index={i}
+              aria-current={i === 0 ? 'true' : 'false'}
+              aria-label={`Show ${tour.name}`}
+            >
+              {String(i + 1).padStart(2, '0')}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="hero__gallery">
+      <div class="hero__stack" data-hero-stack aria-hidden="true">
+        {
+          [0, 1, 2].map((i) => {
+            const photo = first.heroGallery?.[i];
+            return (
+              <div class={`hero__card hero__card--${i}`} data-hero-card data-index={i}>
+                {photo && (
+                  <img
+                    src={photo.imageUrl}
+                    alt={photo.alt}
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
+                  />
+                )}
+              </div>
+            );
+          })
+        }
+      </div>
+
+      <p class="hero__credit" data-hero-credit hidden={!first.heroGallery?.[0]?.imageCredit}>
+        Photo:{' '}
+        <a
+          data-hero-credit-name
+          href={
+            first.heroGallery?.[0]
+              ? `https://unsplash.com/@${first.heroGallery[0].imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`
+              : '#'
+          }
+          target="_blank"
+          rel="noopener noreferrer"
         >
-          <img class="visually-hidden" src={panel.imageUrl} alt={panel.alt} loading="eager" />
-          <span class="hero__panel-letter">{panel.letter}</span>
-        </div>
-      ))
-    }
+          {first.heroGallery?.[0]?.imageCredit.name}
+        </a>{' '}
+        /{' '}
+        <a
+          href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          Unsplash
+        </a>
+      </p>
+    </div>
   </div>
-
-  <div class="hero__content container">
-    <p class="hero__eyebrow">{eyebrow}</p>
-    <p class="hero__subhead">{subhead}</p>
-    <a class="btn btn-primary hero__cta" href={ctaHref}>{ctaLabel}</a>
-  </div>
-
-  <p class="hero__credit" data-hero-credit hidden={!firstCredit}>
-    Photo:{' '}
-    <a
-      data-hero-credit-name
-      href={firstCredit ? `https://unsplash.com/@${firstCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral` : '#'}
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      {firstCredit?.name}
-    </a>{' '}
-    /{' '}
-    <a
-      href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
-      Unsplash
-    </a>
-  </p>
-
-  <a href="#scroll-target" class="hero__scroll-cue" aria-label="Scroll to content">
-    <span class="hero__scroll-cue-line"></span>
-  </a>
 </section>
 
 <style>
@@ -91,77 +115,23 @@ const firstCredit = panels[0]?.imageCredit;
     border: 0;
   }
 
-  .hero {
-    position: relative;
-    min-height: 100vh;
-    display: flex;
-    align-items: flex-end;
-    color: var(--color-text-on-dark);
+  .hero--tours {
+    padding-block: clamp(3rem, 8vw, 6rem);
+    background: var(--gradient-page-glow);
     overflow: hidden;
   }
 
-  .hero__panels {
-    position: absolute;
-    inset: 0;
-    display: flex;
+  .hero__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
+    align-items: center;
+    gap: clamp(2rem, 6vw, 5rem);
+    min-height: min(72vh, 640px);
   }
 
+  /* ---------- Left panel ---------- */
   .hero__panel {
-    position: relative;
-    flex: 1 1 0%;
-    min-width: 0;
-    background-size: cover;
-    background-position: center;
-    background-color: var(--color-earth-700);
-    transition: flex-grow 1.2s var(--ease-out);
-  }
-
-  .hero__panel::before {
-    /* Per-panel scrim so every letter stays legible regardless of what's
-       behind it, brightest at top (where the letter sits) and bottom
-       (where the content bar sits), lighter through the middle so the
-       photo itself still reads. */
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(31, 18, 14, 0.55) 0%,
-      rgba(31, 18, 14, 0.15) 22%,
-      rgba(31, 18, 14, 0.1) 55%,
-      rgba(31, 18, 14, 0.75) 100%
-    );
-  }
-
-  .hero__panel:not(:last-child) {
-    box-shadow: inset -1px 0 0 rgba(251, 247, 241, 0.15);
-  }
-
-  .hero__panel.is-active {
-    flex-grow: 3.4;
-  }
-
-  .hero__panel-letter {
-    position: absolute;
-    top: 9%;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    font-family: var(--font-display);
-    font-size: clamp(1.5rem, 4.2vw, 3.25rem);
-    letter-spacing: 0.04em;
-    color: var(--color-text-on-dark);
-    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
-  }
-
-  .hero__content {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 40rem;
-    margin-inline: auto;
-    text-align: center;
-    padding: var(--space-xl) var(--space-md) var(--space-3xl);
+    max-width: 32rem;
   }
 
   .hero__eyebrow {
@@ -169,30 +139,144 @@ const firstCredit = panels[0]?.imageCredit;
     letter-spacing: 0.14em;
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--color-sand-100);
+    color: var(--color-accent-strong);
     margin-bottom: var(--space-sm);
   }
 
-  .hero__subhead {
+  .hero__tour-name {
+    font-size: var(--fs-hero);
+    line-height: var(--lh-tight);
+    margin-bottom: var(--space-md);
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .hero__tour-tagline {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-sand-100);
-    margin: 0 auto var(--space-lg);
-    max-width: 34rem;
+    color: var(--color-text-muted);
+    max-width: 30rem;
+    margin-bottom: var(--space-lg);
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .hero__panel.is-transitioning .hero__tour-name,
+  .hero__panel.is-transitioning .hero__tour-tagline {
+    opacity: 0;
   }
 
   .hero__cta {
     font-size: var(--fs-sm);
   }
 
+  .hero__nav {
+    display: flex;
+    gap: var(--space-xs);
+    margin-top: var(--space-xl);
+  }
+
+  .hero__nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    color: var(--color-text-muted);
+    font-family: var(--font-body);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      background var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .hero__nav-btn:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent-strong);
+  }
+
+  .hero__nav-btn.is-active {
+    background: var(--gradient-warm);
+    border-color: transparent;
+    color: var(--color-text-on-dark);
+    transform: scale(1.06);
+  }
+
+  /* ---------- Right gallery ---------- */
+  .hero__gallery {
+    position: relative;
+    display: flex;
+    justify-content: center;
+  }
+
+  .hero__stack {
+    position: relative;
+    width: min(80vw, 380px);
+    aspect-ratio: 3 / 4;
+  }
+
+  .hero__card {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+    background: var(--color-beige-300);
+    transition: opacity var(--duration-base) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out);
+  }
+
+  .hero__card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .hero__stack.is-transitioning .hero__card img {
+    opacity: 0;
+  }
+
+  .hero__card--0 {
+    z-index: 1;
+    transform: rotate(-9deg) translate(-14%, 5%) scale(0.9);
+  }
+
+  .hero__card--1 {
+    z-index: 2;
+    transform: rotate(8deg) translate(15%, 3%) scale(0.92);
+  }
+
+  .hero__card--2 {
+    z-index: 3;
+    transform: rotate(-1.5deg) translate(0, -3%) scale(1);
+  }
+
+  .hero__gallery:hover .hero__card--0 {
+    transform: rotate(-13deg) translate(-20%, 3%) scale(0.9);
+  }
+
+  .hero__gallery:hover .hero__card--1 {
+    transform: rotate(12deg) translate(21%, 1%) scale(0.92);
+  }
+
+  .hero__gallery:hover .hero__card--2 {
+    transform: rotate(-1.5deg) translate(0, -5%) scale(1.02);
+  }
+
   .hero__credit {
     position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-    z-index: 1;
+    right: 0;
+    bottom: -1.75rem;
+    z-index: 4;
     margin: 0;
     font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.65);
+    color: var(--color-text-muted);
   }
 
   .hero__credit a {
@@ -202,64 +286,45 @@ const firstCredit = panels[0]?.imageCredit;
   }
 
   .hero__credit a:hover {
-    color: var(--color-text-on-dark);
-  }
-
-  .hero__scroll-cue {
-    position: absolute;
-    bottom: var(--space-lg);
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1;
-    width: 24px;
-    height: 40px;
-    border: 2px solid rgba(251, 247, 241, 0.7);
-    border-radius: 999px;
-    display: flex;
-    justify-content: center;
-    padding-top: 8px;
-  }
-
-  .hero__scroll-cue-line {
-    width: 3px;
-    height: 8px;
-    border-radius: 999px;
-    background: var(--color-sand-100);
-    animation: scroll-cue 1.8s ease-in-out infinite;
-  }
-
-  @keyframes scroll-cue {
-    0% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    70% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
+    color: var(--color-accent-strong);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__scroll-cue-line {
-      animation: none;
-    }
-
-    .hero__panel {
+    .hero__card,
+    .hero__gallery:hover .hero__card--0,
+    .hero__gallery:hover .hero__card--1,
+    .hero__gallery:hover .hero__card--2 {
       transition: none;
     }
   }
 
-  @media (max-width: 640px) {
-    .hero__content {
-      padding: var(--space-lg) var(--space-md) var(--space-2xl);
+  @media (max-width: 900px) {
+    .hero__grid {
+      grid-template-columns: 1fr;
+      min-height: 0;
     }
 
-    .hero__panel-letter {
-      font-size: clamp(1.1rem, 6vw, 1.75rem);
+    .hero__panel {
+      max-width: none;
+      text-align: center;
+      margin-inline: auto;
+    }
+
+    .hero__nav {
+      justify-content: center;
+    }
+
+    .hero__gallery {
+      margin-top: var(--space-2xl);
+    }
+
+    .hero__stack {
+      width: min(70vw, 320px);
+    }
+
+    .hero__credit {
+      right: 50%;
+      transform: translateX(50%);
     }
   }
 </style>

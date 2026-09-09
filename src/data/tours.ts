@@ -15,6 +15,10 @@ export interface Tour {
   included: string[];
   imageUrl?: string;
   imageCredit?: { name: string; username: string };
+  /** One-line hook for the homepage hero — signature tours only. */
+  tagline?: string;
+  /** Three photos of this tour for the homepage hero's mini gallery — signature tours only. */
+  heroGallery?: { imageUrl: string; alt: string; imageCredit: { name: string; username: string } }[];
 }
 
 export const categoryLabels: Record<Tour['category'], { label: string; description: string }> = {
@@ -53,6 +57,27 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1636099487113-ce0a5565b578?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'Chris Stenger', username: 'chrisstenger' },
+    tagline: "Elephants, lions, and rhinos against Etosha's iconic pan — Namibia's premier wildlife park.",
+    heroGallery: [
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1636099487113-ce0a5565b578?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'Elephants at a waterhole in Etosha National Park',
+        imageCredit: { name: 'Chris Stenger', username: 'chrisstenger' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1739036176118-df66c49d2165?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A lone elephant taking a break at a watering hole in Etosha National Park',
+        imageCredit: { name: 'Tim G', username: 'tim1001' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1666723518861-92826b88401f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A herd of elephants walking across the Etosha plains',
+        imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      },
+    ],
   },
   {
     slug: 'sossusvlei-tour',
@@ -71,6 +96,27 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1707470121585-23ecf4671684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'm_oros', username: 'm_oros' },
+    tagline: "Towering red dunes, Deadvlei's ghost trees, and the silence of the Namib Desert.",
+    heroGallery: [
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1707470121585-23ecf4671684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: "Namibia's iconic red sand dunes and stunning desert landscape",
+        imageCredit: { name: 'm_oros', username: 'm_oros' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1667179704761-f309980a417d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'Visitors walking along the ridge of Big Daddy Dune above Deadvlei',
+        imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1763805769167-4c0cd9052621?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A lone dead tree standing against a towering orange sand dune',
+        imageCredit: { name: 'Kajetan Mozdzen', username: 'kajt' },
+      },
+    ],
   },
   {
     slug: 'skeleton-coast-tour',
@@ -89,6 +135,27 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1551176968-bf1e434355f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'Sam Power', username: 'sampowerphoto' },
+    tagline: "Shipwrecks, seal colonies, and Namibia's wildest, foggiest shoreline.",
+    heroGallery: [
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1551176968-bf1e434355f6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: "Namibia's rugged Skeleton Coast shoreline",
+        imageCredit: { name: 'Sam Power', username: 'sampowerphoto' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1601600989147-6ba95406ec1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A shipwreck rusting on the shore of the Skeleton Coast',
+        imageCredit: { name: 'Felipe Labate', username: 'felipelabate' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1669492154797-6750000cec29?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A rocky Skeleton Coast beach hiding a shipwreck in the distance',
+        imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      },
+    ],
   },
   {
     slug: 'sandwich-harbour-full-day',
@@ -109,6 +176,28 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+    tagline:
+      "Where 4x4 dunes plunge straight into the Atlantic — Namibia's most photographed meeting of desert and sea.",
+    heroGallery: [
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'Sand dunes meeting the Atlantic Ocean at Sandwich Harbour',
+        imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1666903997528-60f9bfd21cfa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'Waves crashing where the Namib Desert meets the ocean',
+        imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1766463309150-c3c5853780ec?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'Flamingos wading in the shallow lagoon waters near Walvis Bay',
+        imageCredit: { name: 'Ahmet Yüksek', username: 'ahmetyuksek' },
+      },
+    ],
   },
   {
     slug: 'spitzkoppe-tour',
@@ -128,6 +217,27 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'm_oros', username: 'm_oros' },
+    tagline: 'Ancient granite peaks, rock art, and wide-open desert skies.',
+    heroGallery: [
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: "Spitzkoppe's granite peaks rising from the Namib plains",
+        imageCredit: { name: 'm_oros', username: 'm_oros' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1772289935253-ffb028765564?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'Rounded granite boulders on the rocky slopes of Spitzkoppe',
+        imageCredit: { name: 'NIR HIMI', username: 'nirhimi' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1666993804910-60191605094f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A visitor dwarfed by the towering rock formations of Spitzkoppe',
+        imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      },
+    ],
   },
   {
     slug: 'pelican-point-tour',
@@ -149,6 +259,27 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1705065277882-b0604ec13dca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
+    tagline: 'Cape fur seals, pelicans, and the lagoon where desert meets ocean at Walvis Bay.',
+    heroGallery: [
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1705065277882-b0604ec13dca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'The sandy spit of Pelican Point stretching into Walvis Bay',
+        imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1772290226248-156cc5fe4f9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A young Cape fur seal resting at Pelican Point',
+        imageCredit: { name: 'NIR HIMI', username: 'nirhimi' },
+      },
+      {
+        imageUrl:
+          'https://images.unsplash.com/photo-1779280441059-488798ed9238?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+        alt: 'A pelican flying low over the water near the shoreline',
+        imageCredit: { name: 'Francesca Fabian', username: 'franceeesca_f' },
+      },
+    ],
   },
 
   // --- Adventures ---
