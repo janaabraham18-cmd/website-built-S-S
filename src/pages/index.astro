@@ -2,7 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
-import AboutSection from '../components/AboutSection.astro';
+import FounderStory from '../components/FounderStory.astro';
 import WhyUsSection from '../components/WhyUsSection.astro';
 import ReviewsSection from '../components/ReviewsSection.astro';
 import AdventureCard from '../components/AdventureCard.astro';
@@ -146,9 +146,10 @@ const whyUsFeatures = [
 
   <div id="scroll-target"></div>
 
-  <AboutSection
-    imageUrl="https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1000"
-    imageCredit={{ name: 'm_oros', username: 'm_oros' }}
+  <FounderStory
+    imageUrl="https://images.unsplash.com/photo-1667254650752-34cdd1106dc9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1000"
+    imageAlt="A lone acacia tree standing on the Etosha salt pan"
+    imageCredit={{ name: 'Joshua Kettle', username: 'joshuakettle' }}
   />
 
   <WhyUsSection features={whyUsFeatures} />
