@@ -412,8 +412,7 @@ function setupAboutCarouselNotch() {
 
   const DESKTOP_BREAKPOINT = 860;
   const STRIP = 64; // matches --space-xl
-  const EASE_PCT = 5; // width, in % of slide width, of each curve transition
-  const MARGIN = 40; // matches --space-lg — cream gutter framing all 4 sides of the card
+  const EASE_PCT = 4; // width, in % of slide width, of each curve transition
 
   const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
 
@@ -456,16 +455,10 @@ function setupAboutCarouselNotch() {
       const textRect = text.getBoundingClientRect();
       if (slideRect.width === 0 || slideRect.height === 0) return;
 
-      const marginPct = (MARGIN / slideRect.width) * 100;
-      // Widen past the card's own edges on all 4 sides, so the photo opens
-      // up into a cream "window" that frames the card with a visible
-      // gutter — not just a curve that kisses its corners — and dips
-      // a bit past its top/bottom edge (hidden behind the card) so the
-      // two always overlap rather than merely touching.
-      const NL = Math.max(0, ((textRect.left - slideRect.left) / slideRect.width) * 100 - marginPct);
-      const NR = Math.min(100, ((textRect.right - slideRect.left) / slideRect.width) * 100 + marginPct);
-      const topDepth = Math.max(STRIP, textRect.top - slideRect.top + MARGIN);
-      const bottomDepth = Math.max(STRIP, slideRect.bottom - textRect.bottom + MARGIN);
+      const NL = ((textRect.left - slideRect.left) / slideRect.width) * 100;
+      const NR = ((textRect.right - slideRect.left) / slideRect.width) * 100;
+      const topDepth = Math.max(STRIP, textRect.top - slideRect.top);
+      const bottomDepth = Math.max(STRIP, slideRect.bottom - textRect.bottom);
       const H = slideRect.height;
 
       const topEdge = buildEdge(NL, NR, topDepth);
