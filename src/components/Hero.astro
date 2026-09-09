@@ -64,7 +64,7 @@ const firstBg = tourData[0].bg;
     <img class="hero__bg-layer" data-hero-bg-layer="1" alt="" loading="eager" decoding="async" />
   </div>
 
-  <div class="container hero__grid">
+  <div class="hero__grid">
     <div class="hero__panel">
       <p class="hero__eyebrow">{eyebrow}</p>
 
@@ -197,6 +197,14 @@ const firstBg = tourData[0].bg;
   .hero__grid {
     position: relative;
     z-index: 2;
+    width: 100%;
+    max-width: var(--content-width);
+    /* Left-anchored, unlike the shared .container (which centers with
+       margin-inline: auto) — on a wide screen that left the text panel
+       sitting in the middle third with empty background on both sides.
+       This keeps it pinned toward the actual left edge instead. */
+    margin-inline: 0;
+    padding-inline: var(--space-md);
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
     align-items: center;
