@@ -20,10 +20,22 @@ const tourData = tours.map((tour) => ({
   tagline: tour.tagline ?? tour.description,
   gallery: tour.heroGallery ?? [],
 }));
+
+// The full-bleed background reuses each tour's first gallery photo (its
+// primary site-wide image) rather than shipping a 4th unique photo per
+// tour — that photo already sits mostly hidden behind the other two cards
+// in the stack, so showing it large behind everything reads as the stack
+// "emerging" from it instead of as a duplicate.
+const firstBg = first.heroGallery?.[0];
 ---
 
 <section class="hero hero--tours full-bleed" data-tour-hero data-tours={JSON.stringify(tourData)}>
   <h1 class="visually-hidden">Salt &amp; Sun Tours — six signature Namibian tours</h1>
+
+  <div class="hero__bg" data-hero-bg aria-hidden="true">
+    {firstBg && <img src={firstBg.imageUrl} alt="" loading="eager" decoding="async" />}
+  </div>
+  <div class="hero__bg-scrim" aria-hidden="true"></div>
 
   <div class="container hero__grid">
     <div class="hero__panel">
@@ -116,12 +128,56 @@ const tourData = tours.map((tour) => ({
   }
 
   .hero--tours {
+    /* Slow, deliberate crossfade between tours — the JS swap delay
+       (setupTourHero in motion.ts) is timed to match this exactly, so the
+       old content is fully faded out (not just partway) before the new
+       content appears. Keeping both in one place avoids them drifting out
+       of sync and reintroducing a blink. */
+    --hero-crossfade: 900ms;
+    position: relative;
     padding-block: clamp(3rem, 8vw, 6rem);
     background: var(--gradient-page-glow);
     overflow: hidden;
   }
 
+  .hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+
+  .hero__bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: opacity var(--hero-crossfade) ease-in-out;
+  }
+
+  .hero__bg.is-transitioning img {
+    opacity: 0;
+  }
+
+  /* Fades from solid cream on the left (where the text panel sits) to the
+     photo showing through on the right (behind the card stack) — keeps the
+     full-bleed photo real without switching the panel to dark/photo text
+     treatment or carrying over any Pinterest-reference colors. */
+  .hero__bg-scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(
+      90deg,
+      var(--color-sand-50) 0%,
+      rgba(251, 247, 241, 0.94) 30%,
+      rgba(251, 247, 241, 0.6) 55%,
+      rgba(251, 247, 241, 0.18) 78%,
+      rgba(251, 247, 241, 0) 100%
+    );
+  }
+
   .hero__grid {
+    position: relative;
+    z-index: 2;
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(0, 0.85fr);
     align-items: center;
@@ -147,7 +203,7 @@ const tourData = tours.map((tour) => ({
     font-size: var(--fs-hero);
     line-height: var(--lh-tight);
     margin-bottom: var(--space-md);
-    transition: opacity var(--duration-base) var(--ease-out);
+    transition: opacity var(--hero-crossfade) ease-in-out;
   }
 
   .hero__tour-tagline {
@@ -156,7 +212,7 @@ const tourData = tours.map((tour) => ({
     color: var(--color-text-muted);
     max-width: 30rem;
     margin-bottom: var(--space-lg);
-    transition: opacity var(--duration-base) var(--ease-out);
+    transition: opacity var(--hero-crossfade) ease-in-out;
   }
 
   .hero__panel.is-transitioning .hero__tour-name,
@@ -235,7 +291,7 @@ const tourData = tours.map((tour) => ({
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: opacity var(--duration-base) var(--ease-out);
+    transition: opacity var(--hero-crossfade) ease-in-out;
   }
 
   .hero__stack.is-transitioning .hero__card img {
@@ -290,6 +346,7 @@ const tourData = tours.map((tour) => ({
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .hero__bg img,
     .hero__card,
     .hero__gallery:hover .hero__card--0,
     .hero__gallery:hover .hero__card--1,
@@ -299,6 +356,18 @@ const tourData = tours.map((tour) => ({
   }
 
   @media (max-width: 900px) {
+    /* Stacked layout puts the card stack below the text instead of beside
+       it, so the scrim fades top (opaque, behind the text) to bottom
+       (photo showing through, behind the cards) instead of left-to-right. */
+    .hero__bg-scrim {
+      background: linear-gradient(
+        180deg,
+        var(--color-sand-50) 0%,
+        rgba(251, 247, 241, 0.94) 45%,
+        rgba(251, 247, 241, 0.55) 100%
+      );
+    }
+
     .hero__grid {
       grid-template-columns: 1fr;
       min-height: 0;

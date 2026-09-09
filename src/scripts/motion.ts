@@ -251,10 +251,17 @@ function setupTourHero(reduceMotion: boolean) {
   const ctaEl = section.querySelector<HTMLAnchorElement>('[data-hero-cta]');
   const stack = section.querySelector<HTMLElement>('[data-hero-stack]');
   const cards = Array.from(section.querySelectorAll<HTMLImageElement>('[data-hero-card] img'));
+  const bg = section.querySelector<HTMLElement>('[data-hero-bg]');
+  const bgImg = bg?.querySelector<HTMLImageElement>('img');
   const navBtns = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-hero-nav-btn]'));
   const creditEl = section.querySelector<HTMLElement>('[data-hero-credit]');
   const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
   if (!panel || !nameEl || !taglineEl || !ctaEl || !stack) return;
+
+  // Must match the --hero-crossfade CSS custom property on .hero--tours —
+  // content is only swapped once the fade-out transition has fully
+  // finished (opacity: 0), not partway through, so nothing blinks.
+  const CROSSFADE_MS = 900;
 
   let index = 0;
   let swapTimer: ReturnType<typeof setTimeout> | undefined;
@@ -271,6 +278,11 @@ function setupTourHero(reduceMotion: boolean) {
       img.src = photo.imageUrl;
       img.alt = photo.alt;
     });
+
+    if (bgImg) {
+      const bgPhoto = tour.gallery[0];
+      if (bgPhoto) bgImg.src = bgPhoto.imageUrl;
+    }
 
     const firstCredit = tour.gallery[0]?.imageCredit;
     if (creditEl && creditLink && firstCredit) {
@@ -300,11 +312,13 @@ function setupTourHero(reduceMotion: boolean) {
     clearTimeout(swapTimer);
     panel.classList.add('is-transitioning');
     stack.classList.add('is-transitioning');
+    bg?.classList.add('is-transitioning');
     swapTimer = setTimeout(() => {
       applyContent(i);
       panel.classList.remove('is-transitioning');
       stack.classList.remove('is-transitioning');
-    }, 250);
+      bg?.classList.remove('is-transitioning');
+    }, CROSSFADE_MS);
   };
 
   navBtns.forEach((btn) => {
