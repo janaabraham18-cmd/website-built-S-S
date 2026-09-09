@@ -284,12 +284,100 @@ function setupAdventureCardsReducedMotion() {
   }
 }
 
+// Homepage "About us" carousel: two full-bleed slides in a track twice the
+// viewport's width, moved with a plain CSS transform. Advances via the
+// pagination dots or a horizontal drag/swipe (pointer events cover touch,
+// mouse, and pen in one API) — an axis lock means a vertical drag that
+// starts inside the scrollable text card falls through to native scroll
+// instead of being hijacked as a swipe.
+function setupAboutCarousel() {
+  const section = document.querySelector<HTMLElement>('[data-carousel]');
+  const track = section?.querySelector<HTMLElement>('[data-carousel-track]');
+  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-carousel] [data-slide]'));
+  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-carousel-dots] button'));
+  if (!section || !track || slides.length < 2) return;
+
+  let index = 0;
+
+  const goTo = (i: number) => {
+    index = Math.max(0, Math.min(slides.length - 1, i));
+    track.style.transform = `translateX(-${(index * 100) / slides.length}%)`;
+    dots.forEach((dot, di) => {
+      const active = di === index;
+      dot.classList.toggle('is-active', active);
+      dot.setAttribute('aria-selected', String(active));
+    });
+    slides.forEach((slide, si) => slide.setAttribute('aria-hidden', String(si !== index)));
+  };
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => goTo(Number(dot.dataset.dot)));
+  });
+
+  section.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight') goTo(index + 1);
+    if (event.key === 'ArrowLeft') goTo(index - 1);
+  });
+
+  let startX = 0;
+  let startY = 0;
+  let lastX = 0;
+  let dragging = false;
+  let axis: 'x' | 'y' | null = null;
+
+  section.addEventListener('pointerdown', (event) => {
+    dragging = true;
+    axis = null;
+    startX = lastX = event.clientX;
+    startY = event.clientY;
+  });
+
+  section.addEventListener('pointermove', (event) => {
+    if (!dragging) return;
+    const dx = event.clientX - startX;
+    const dy = event.clientY - startY;
+
+    if (axis === null) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
+      if (axis === 'x') track.style.transition = 'none';
+    }
+    if (axis !== 'x') return;
+
+    event.preventDefault();
+    lastX = event.clientX;
+    const basePercent = -(index * 100) / slides.length;
+    const dragPercent = (dx / section.clientWidth) * (100 / slides.length);
+    track.style.transform = `translateX(${basePercent + dragPercent}%)`;
+  });
+
+  const endDrag = () => {
+    if (!dragging) return;
+    dragging = false;
+    track.style.transition = '';
+    if (axis !== 'x') return;
+
+    const delta = lastX - startX;
+    const threshold = 50;
+    if (delta < -threshold) goTo(index + 1);
+    else if (delta > threshold) goTo(index - 1);
+    else goTo(index);
+  };
+
+  section.addEventListener('pointerup', endDrag);
+  section.addEventListener('pointerleave', endDrag);
+  section.addEventListener('pointercancel', endDrag);
+
+  goTo(0);
+}
+
 export function initMotion() {
   const reduceMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
   setupHeroPanelSlideshow(reduceMotion);
+  setupAboutCarousel();
 
   let lenis: Lenis | undefined;
 

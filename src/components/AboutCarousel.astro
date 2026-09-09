@@ -1,0 +1,448 @@
+---
+// Slide 1 (coastal) picks up the letter's opening — who Lenga is and why
+// Salt & Sun Tours exists. Slide 2 (inland/desert) picks up where the
+// letter turns from origin story to the experience itself, closing on
+// its own "desert and the stars" line — the natural point where its
+// imagery already shifts from founding purpose to open landscape.
+const slide1BgCredit = { name: 'Marc Wieland', username: 'mawiswiss' };
+const slide1PolaroidACredit = { name: 'Alfonso Betancourt', username: 'tigredemar' };
+const slide1PolaroidBCredit = { name: 'Luan Fonseca', username: 'luanfonsecavisuals' };
+
+const slide2BgCredit = { name: 'Joe McDaniel', username: 'bookcrafters' };
+const slide2PolaroidACredit = { name: 'Craig Marshall', username: 'marshallartz' };
+const slide2PolaroidBCredit = { name: 'Taylor Wright', username: 'taylorwright22' };
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+---
+
+<section id="about" class="about-carousel reveal" data-carousel tabindex="0" aria-roledescription="carousel" aria-label="About Salt & Sun Tours">
+  <div class="about-carousel__viewport reveal-item">
+    <div class="about-carousel__track" data-carousel-track>
+      <!-- Slide 1: coastal -->
+      <div class="about-carousel__slide" data-slide aria-hidden="false">
+        <img
+          class="about-carousel__bg"
+          src="https://images.unsplash.com/photo-1774281160210-fff3a2f69228?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
+          alt="Sand dunes meeting the Atlantic Ocean along the Namibian coast"
+          loading="eager"
+          decoding="async"
+        />
+
+        <div class="about-carousel__inner container">
+          <div class="about-carousel__polaroids" aria-hidden="true">
+            <figure class="polaroid polaroid--a">
+              <img
+                src="https://images.unsplash.com/photo-1723167131725-d4be117e1769?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=500"
+                alt="A group of flamingos wading in a shallow lagoon"
+                loading="eager"
+                decoding="async"
+              />
+            </figure>
+            <figure class="polaroid polaroid--b">
+              <img
+                src="https://images.unsplash.com/photo-1782927166832-8d330e525bdf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=500"
+                alt="Two flamingos wading in calm water"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          </div>
+
+          <div class="about-carousel__text">
+            <p class="about-carousel__eyebrow">Salt &amp; Sun Tours</p>
+            <h2 class="about-carousel__heading">More Than a Journey</h2>
+
+            <div class="about-carousel__body">
+              <p class="about-carousel__intro">My name is Lenga, and Lenga means King.</p>
+              <p>
+                My roots are in Etosha, where the earth carries one of
+                Namibia's greatest wonders — the Etosha salt pan. That is
+                where the heart of Salt &amp; Sun Tours begins: from the
+                salt of the earth, under the Namibian sun, and grounded in
+                a purpose greater than tourism.
+              </p>
+              <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+              <p>
+                For us, a tour is not simply about driving through the
+                dunes, watching wildlife, camping beneath the stars,
+                enjoying a picnic, or experiencing the thrill of an
+                adventure.
+              </p>
+              <p class="about-carousel__emphasis">It is about the person you become along the way.</p>
+              <p>
+                Life leaves people carrying stories that are often never
+                spoken — pain, disappointment, loss, rejection, fear, and
+                experiences that shape who we become. My own journey
+                taught me that sometimes healing begins when we finally
+                have a safe place to be heard.
+              </p>
+              <p>That is what we want Salt &amp; Sun Tours to be.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="about-carousel__credit">
+          Photo:{' '}
+          <a href={creditHref(slide1BgCredit.username)} target="_blank" rel="noopener noreferrer">{slide1BgCredit.name}</a>,{' '}
+          <a href={creditHref(slide1PolaroidACredit.username)} target="_blank" rel="noopener noreferrer">{slide1PolaroidACredit.name}</a>,{' '}
+          <a href={creditHref(slide1PolaroidBCredit.username)} target="_blank" rel="noopener noreferrer">{slide1PolaroidBCredit.name}</a>{' '}
+          /{' '}
+          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </p>
+      </div>
+
+      <!-- Slide 2: inland -->
+      <div class="about-carousel__slide" data-slide aria-hidden="true">
+        <img
+          class="about-carousel__bg"
+          src="https://images.unsplash.com/photo-1506710507565-203b9f24669b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
+          alt="A lone oryx crossing the barren landscape of the Namib desert"
+          loading="lazy"
+          decoding="async"
+        />
+
+        <div class="about-carousel__inner container">
+          <div class="about-carousel__polaroids" aria-hidden="true">
+            <figure class="polaroid polaroid--a">
+              <img
+                src="https://images.unsplash.com/photo-1565774779430-3aa2a553080e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=500"
+                alt="Sossusvlei's red dunes seen from the air"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+            <figure class="polaroid polaroid--b">
+              <img
+                src="https://images.unsplash.com/photo-1696894134220-cfc38c3bf7a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=500"
+                alt="A towering orange sand dune in the Namib desert"
+                loading="lazy"
+                decoding="async"
+              />
+            </figure>
+          </div>
+
+          <div class="about-carousel__text">
+            <p class="about-carousel__eyebrow">Salt &amp; Sun Tours</p>
+            <h2 class="about-carousel__heading">Somewhere Between the Desert and the Stars</h2>
+
+            <div class="about-carousel__body">
+              <ul class="about-carousel__lines">
+                <li>A place where strangers can become companions.</li>
+                <li>Where conversations go deeper than the road ahead.</li>
+                <li>Where stories can be shared without judgement.</li>
+                <li>
+                  Where we can laugh, reflect, encourage one another, and
+                  sometimes simply sit in silence beneath the African sky.
+                </li>
+              </ul>
+
+              <p class="about-carousel__emphasis">
+                You may arrive looking for Namibia.<br />
+                You may leave having found a little more of yourself.
+              </p>
+
+              <p>
+                We believe that every person has value, regardless of
+                their past, their mistakes, or what they have been
+                through. And sometimes, one person's testimony can become
+                another person's reason to keep going.
+              </p>
+
+              <p class="about-carousel__emphasis">
+                So when you travel with us, you are not just booking a tour.<br />
+                You are joining a journey of connection, discovery, healing and transformation.
+              </p>
+
+              <ul class="about-carousel__lines about-carousel__lines--calls">
+                <li>Come experience the salt.</li>
+                <li>Feel the sun.</li>
+                <li>Meet the wilderness.</li>
+                <li>Share the journey.</li>
+              </ul>
+
+              <p>
+                And perhaps, somewhere between the desert and the stars,
+                you will discover that the greatest destination was never
+                a place — it was becoming who you were created to be.
+              </p>
+
+              <p class="about-carousel__signature">
+                Salt &amp; Sun Tours
+                <span>More than a tour. A journey that leaves a mark.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <p class="about-carousel__credit">
+          Photo:{' '}
+          <a href={creditHref(slide2BgCredit.username)} target="_blank" rel="noopener noreferrer">{slide2BgCredit.name}</a>,{' '}
+          <a href={creditHref(slide2PolaroidACredit.username)} target="_blank" rel="noopener noreferrer">{slide2PolaroidACredit.name}</a>,{' '}
+          <a href={creditHref(slide2PolaroidBCredit.username)} target="_blank" rel="noopener noreferrer">{slide2PolaroidBCredit.name}</a>{' '}
+          /{' '}
+          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-carousel__dots" data-carousel-dots role="tablist" aria-label="Choose a slide">
+    <button type="button" class="is-active" data-dot="0" role="tab" aria-selected="true" aria-label="Slide 1: coastal"></button>
+    <button type="button" data-dot="1" role="tab" aria-selected="false" aria-label="Slide 2: inland"></button>
+  </div>
+</section>
+
+<style>
+  .about-carousel {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .about-carousel__viewport {
+    overflow: hidden;
+  }
+
+  .about-carousel__track {
+    display: flex;
+    width: 200%;
+    transition: transform 650ms var(--ease-out);
+  }
+
+  .about-carousel__slide {
+    position: relative;
+    width: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    min-height: 85vh;
+    padding-block: var(--space-2xl);
+    overflow: hidden;
+  }
+
+  .about-carousel__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .about-carousel__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 0.8fr 1.1fr;
+    align-items: center;
+    gap: clamp(2rem, 6vw, 4rem);
+    width: 100%;
+  }
+
+  /* ---------- Polaroids ---------- */
+  .about-carousel__polaroids {
+    position: relative;
+    min-height: 20rem;
+  }
+
+  .polaroid {
+    position: absolute;
+    width: 12rem;
+    margin: 0;
+    background: #fff;
+    padding: 0.6rem 0.6rem 2rem;
+    border-radius: 3px;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .polaroid img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+  }
+
+  .polaroid--a {
+    top: 1rem;
+    left: 0;
+    transform: rotate(-6deg);
+    z-index: 1;
+  }
+
+  .polaroid--b {
+    top: 6rem;
+    left: 6.5rem;
+    transform: rotate(5deg);
+    z-index: 2;
+  }
+
+  /* ---------- Text card ---------- */
+  .about-carousel__text {
+    /* No max-height/scroll here on purpose — both slides stretch to match
+       the taller one's content (flex default align-items: stretch), and
+       .about-carousel__bg is absolutely positioned to fill whatever height
+       that ends up being, so the longer slide just makes the whole section
+       a little taller instead of needing its own scroll pane. */
+    background: rgba(251, 247, 241, 0.93);
+    backdrop-filter: blur(6px);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-xl);
+  }
+
+  .about-carousel__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .about-carousel__heading {
+    font-size: var(--fs-xl);
+    margin-bottom: var(--space-md);
+  }
+
+  .about-carousel__body p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .about-carousel__body p:last-child {
+    margin-bottom: 0;
+  }
+
+  .about-carousel__intro,
+  .about-carousel__emphasis {
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-size: var(--fs-md);
+    line-height: var(--lh-snug);
+    color: var(--color-earth-900) !important;
+  }
+
+  .about-carousel__lines {
+    list-style: none;
+    margin: 0 0 var(--space-sm);
+    padding: var(--space-2xs) 0 var(--space-2xs) var(--space-sm);
+    border-left: 2px solid var(--color-border);
+    display: grid;
+    gap: var(--space-3xs);
+  }
+
+  .about-carousel__lines li {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+  }
+
+  .about-carousel__lines--calls {
+    border-left-color: var(--color-accent);
+  }
+
+  .about-carousel__lines--calls li {
+    font-weight: 600;
+    color: var(--color-accent-strong);
+  }
+
+  .about-carousel__signature {
+    margin-top: var(--space-md) !important;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    color: var(--color-earth-900) !important;
+  }
+
+  .about-carousel__signature span {
+    display: block;
+    margin-top: var(--space-3xs);
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    letter-spacing: 0.02em;
+  }
+
+  /* ---------- Credit ---------- */
+  .about-carousel__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-lg);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.85);
+    text-shadow: 0 1px 6px rgba(31, 18, 14, 0.6);
+  }
+
+  .about-carousel__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .about-carousel__credit a:hover {
+    color: var(--color-text-on-dark);
+  }
+
+  /* ---------- Pagination dots ---------- */
+  .about-carousel__dots {
+    position: absolute;
+    left: 50%;
+    bottom: var(--space-md);
+    z-index: 2;
+    transform: translateX(-50%);
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .about-carousel__dots button {
+    width: 0.6rem;
+    height: 0.6rem;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: rgba(251, 247, 241, 0.55);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .about-carousel__dots button.is-active {
+    background: var(--color-accent);
+    transform: scale(1.3);
+  }
+
+  @media (max-width: 860px) {
+    .about-carousel__slide {
+      min-height: 0;
+      padding-block: var(--space-xl);
+    }
+
+    .about-carousel__inner {
+      grid-template-columns: 1fr;
+    }
+
+    .about-carousel__polaroids {
+      min-height: 14rem;
+      max-width: 16rem;
+      margin-inline: auto;
+    }
+
+    .polaroid {
+      width: 9rem;
+    }
+
+    .polaroid--b {
+      left: 4.5rem;
+      top: 4.5rem;
+    }
+
+    .about-carousel__text {
+      max-height: none;
+    }
+  }
+</style>
