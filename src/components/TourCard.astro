@@ -9,7 +9,7 @@ interface Props {
 const { tour, reverse = false } = Astro.props;
 ---
 
-<article id={tour.slug} class:list={['tour-row', reverse && 'tour-row--reverse']}>
+<article class:list={['tour-row', reverse && 'tour-row--reverse']}>
   <div class="tour-row__media">
     {
       tour.imageUrl ? (
@@ -69,7 +69,6 @@ const { tour, reverse = false } = Astro.props;
     grid-template-columns: 1fr 1fr;
     min-height: 85vh;
     overflow: hidden;
-    scroll-margin-top: 5rem;
   }
 
   .tour-row--reverse .tour-row__media {

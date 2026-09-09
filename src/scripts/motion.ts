@@ -219,175 +219,49 @@ function setupToursTeaserSlide() {
   });
 }
 
-// Homepage hero: cycles the left text panel and the right 3-photo stack
-// through the six signature tours together. Advances on a timer (paused on
-// hover/focus) and via the numbered nav buttons — deliberately not
-// scroll-driven, so it can't turn into the scroll-jacking hero concept that
-// was tried and reverted earlier. Under reduced motion there's no
-// auto-advance and swaps are instant (global CSS already zeroes transition
-// durations), but the nav buttons still work either way.
-interface HeroPhoto {
-  imageUrl: string;
-  alt: string;
-  imageCredit: { name: string; username: string };
-}
+// Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
+// "active" (wider, via flex-grow — see .hero__panel.is-active) so each
+// photo gets a turn filling most of the hero, like an expanding-photo
+// slideshow rather than a single static banner. Pauses on hover so a
+// visitor reading a panel's letter/photo isn't fighting the layout, and
+// under reduced motion it just holds on the first panel with no cycling.
+function setupHeroPanelSlideshow(reduceMotion: boolean) {
+  const track = document.querySelector<HTMLElement>('[data-hero-panels]');
+  if (!track) return;
 
-interface HeroTourData {
-  slug: string;
-  name: string;
-  tagline: string;
-  gallery: HeroPhoto[];
-  // Same photo as gallery[0], but at full-bleed resolution instead of the
-  // small card size — see toBackgroundUrl() in Hero.astro.
-  bg?: HeroPhoto;
-}
+  const panels = Array.from(track.querySelectorAll<HTMLElement>('[data-hero-panel]'));
+  if (panels.length < 2) return;
 
-// Fetches every photo the hero can show as soon as the page loads, so by
-// the time a tour comes up (on the timer, or a nav click) the browser
-// already has the bytes and can paint the new layer instantly instead of
-// leaving it blank while it downloads.
-function preloadTourImages(tours: HeroTourData[]) {
-  const seen = new Set<string>();
-  const preload = (photo?: HeroPhoto) => {
-    if (!photo || seen.has(photo.imageUrl)) return;
-    seen.add(photo.imageUrl);
-    const img = new Image();
-    img.src = photo.imageUrl;
-  };
-  for (const tour of tours) {
-    tour.gallery.forEach(preload);
-    preload(tour.bg);
-  }
-}
-
-// A two-layer crossfade for one photo slot (the hero background, or one
-// card in the stack): two stacked <img> elements where only one is
-// "active" (opacity 1) at a time. Swapping means loading the new photo
-// into the *inactive* layer and toggling which one is active — both
-// transition simultaneously, so something is always fully painted. A
-// single image fading itself out then back in (the old approach) leaves a
-// gap where neither photo is visible and the page background shows
-// through — that's the "turns white" bug this replaces.
-function createLayerSwapper(layers: HTMLImageElement[]) {
-  let active = 0;
-  return (photo?: HeroPhoto) => {
-    if (!photo || layers.length < 2) return;
-    const next = 1 - active;
-    const nextImg = layers[next];
-    nextImg.src = photo.imageUrl;
-    nextImg.alt = photo.alt;
-    layers[active].classList.remove('is-active');
-    nextImg.classList.add('is-active');
-    active = next;
-  };
-}
-
-function setupTourHero(reduceMotion: boolean) {
-  const section = document.querySelector<HTMLElement>('[data-tour-hero]');
-  if (!section) return;
-
-  let tours: HeroTourData[];
-  try {
-    tours = JSON.parse(section.dataset.tours ?? '[]');
-  } catch {
-    return;
-  }
-  if (tours.length < 2) return;
-
-  preloadTourImages(tours);
-
-  const panel = section.querySelector<HTMLElement>('.hero__panel');
-  const nameEl = section.querySelector<HTMLElement>('[data-hero-name]');
-  const taglineEl = section.querySelector<HTMLElement>('[data-hero-tagline]');
-  const ctaEl = section.querySelector<HTMLAnchorElement>('[data-hero-cta]');
-  const navBtns = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-hero-nav-btn]'));
-  const creditEl = section.querySelector<HTMLElement>('[data-hero-credit]');
+  const creditEl = document.querySelector<HTMLElement>('[data-hero-credit]');
   const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
-  if (!panel || !nameEl || !taglineEl || !ctaEl) return;
 
-  const swapBg = createLayerSwapper(
-    Array.from(section.querySelectorAll<HTMLImageElement>('[data-hero-bg-layer]'))
-  );
-  const swapCards = Array.from(section.querySelectorAll<HTMLElement>('[data-hero-card]')).map(
-    (card) => createLayerSwapper(Array.from(card.querySelectorAll<HTMLImageElement>('[data-hero-card-layer]')))
-  );
+  const setActive = (index: number) => {
+    panels.forEach((panel, i) => panel.classList.toggle('is-active', i === index));
 
-  // Text swap timing — must match the --hero-crossfade CSS custom property
-  // on .hero--tours, so the old name/tagline are only replaced once fully
-  // faded out (not partway through, which would blink). The photo layers
-  // don't need this: their crossfade is the transition itself.
-  const CROSSFADE_MS = 900;
-
-  let index = 0;
-  let swapTimer: ReturnType<typeof setTimeout> | undefined;
-
-  const applyTextContent = (tour: HeroTourData) => {
-    nameEl.textContent = tour.name;
-    taglineEl.textContent = tour.tagline;
-    ctaEl.href = `/tours#${tour.slug}`;
-
-    const firstCredit = tour.bg?.imageCredit;
-    if (creditEl && creditLink && firstCredit) {
-      creditLink.textContent = firstCredit.name;
-      creditLink.href = `https://unsplash.com/@${firstCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+    const { creditName, creditUsername } = panels[index].dataset;
+    if (!creditEl || !creditLink) return;
+    if (creditName && creditUsername) {
+      creditLink.textContent = creditName;
+      creditLink.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
       creditEl.hidden = false;
-    } else if (creditEl) {
+    } else {
       creditEl.hidden = true;
     }
   };
 
-  const setActive = (i: number) => {
-    if (i === index) return;
-    index = i;
-    const tour = tours[i];
+  if (reduceMotion) return;
 
-    swapBg(tour.bg);
-    swapCards.forEach((swap, cardIndex) => swap(tour.gallery[cardIndex]));
-
-    navBtns.forEach((btn, btnIndex) => {
-      const active = btnIndex === i;
-      btn.classList.toggle('is-active', active);
-      btn.setAttribute('aria-current', String(active));
-    });
-
-    if (reduceMotion) {
-      applyTextContent(tour);
-      return;
-    }
-
-    clearTimeout(swapTimer);
-    panel.classList.add('is-transitioning');
-    swapTimer = setTimeout(() => {
-      applyTextContent(tour);
-      panel.classList.remove('is-transitioning');
-    }, CROSSFADE_MS);
-  };
-
-  navBtns.forEach((btn) => {
-    btn.addEventListener('click', () => {
-      const i = Number(btn.dataset.index);
-      setActive(i);
-      restart();
-    });
-  });
-
-  let timer: ReturnType<typeof setInterval> | undefined;
-  const advance = () => setActive((index + 1) % tours.length);
+  let index = 0;
+  let timer: ReturnType<typeof setInterval>;
+  const advance = () => setActive((index = (index + 1) % panels.length));
   const start = () => {
-    if (reduceMotion) return;
-    timer = setInterval(advance, 5000);
+    timer = setInterval(advance, 2800);
   };
   const stop = () => clearInterval(timer);
-  const restart = () => {
-    stop();
-    start();
-  };
 
   start();
-  section.addEventListener('mouseenter', stop);
-  section.addEventListener('mouseleave', start);
-  section.addEventListener('focusin', stop);
-  section.addEventListener('focusout', start);
+  track.addEventListener('mouseenter', stop);
+  track.addEventListener('mouseleave', start);
 }
 
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
@@ -415,7 +289,7 @@ export function initMotion() {
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
-  setupTourHero(reduceMotion);
+  setupHeroPanelSlideshow(reduceMotion);
 
   let lenis: Lenis | undefined;
 
@@ -442,11 +316,11 @@ export function initMotion() {
   // Full cinematic experience — only when the user hasn't asked for less motion.
   mm.add('(prefers-reduced-motion: no-preference)', () => {
     const heroSection = document.querySelector<HTMLElement>('.hero');
-    const heroContent = document.querySelector<HTMLElement>('.hero__grid');
+    const heroContent = document.querySelector<HTMLElement>('.hero__content');
 
     if (heroSection && heroContent) {
       gsap.to(heroContent, {
-        yPercent: 12,
+        yPercent: 35,
         opacity: 0,
         ease: 'none',
         scrollTrigger: {

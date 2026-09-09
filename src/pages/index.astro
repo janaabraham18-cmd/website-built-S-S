@@ -6,7 +6,7 @@ import AboutSection from '../components/AboutSection.astro';
 import WhyUsSection from '../components/WhyUsSection.astro';
 import ReviewsSection from '../components/ReviewsSection.astro';
 import AdventureCard from '../components/AdventureCard.astro';
-import { tours, toursByCategory } from '../data/tours';
+import { tours } from '../data/tours';
 
 const teaserSlugs = [
   'etosha-tour',
@@ -48,7 +48,57 @@ const galleryTours = gallerySlugs
   .map((slug) => tours.find((tour) => tour.slug === slug))
   .filter((tour) => tour !== undefined);
 
-const signatureTours = toursByCategory('tour');
+const heroPanels = [
+  {
+    letter: 'N',
+    alt: 'A herd of desert-adapted elephants walking along a dry riverbed in Namibia',
+    imageUrl:
+      'https://images.unsplash.com/photo-1667389861341-3f1c749cdf39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'Elina Palm', username: 'drawmeasun' },
+  },
+  {
+    letter: 'A',
+    alt: 'A lone oryx crossing the Namib desert plain',
+    imageUrl:
+      'https://images.unsplash.com/photo-1727880283608-57880fa4edcc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'Arthur Souquet', username: 'arthursouquet' },
+  },
+  {
+    letter: 'M',
+    alt: 'Flamingos wading in the shallow waters of Walvis Bay',
+    imageUrl:
+      'https://images.unsplash.com/photo-1669805508900-d3eaed6e6c14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'Vladimir Oprisko', username: 'captoprisko' },
+  },
+  {
+    letter: 'I',
+    alt: 'A Cape fur seal resting on the Namibian coast',
+    imageUrl:
+      'https://images.unsplash.com/photo-1772290226248-156cc5fe4f9b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'NIR HIMI', username: 'nirhimi' },
+  },
+  {
+    letter: 'B',
+    alt: 'A cheetah in the Namibian bush',
+    imageUrl:
+      'https://images.unsplash.com/photo-1696894132788-d0b1af4c95a7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'Taylor Wright', username: 'taylorwright22' },
+  },
+  {
+    letter: 'I',
+    alt: 'Two zebras on the plains of Etosha National Park',
+    imageUrl:
+      'https://images.unsplash.com/photo-1579172342894-e6d751ec390c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'Geranimo', username: 'geraninmo' },
+  },
+  {
+    letter: 'A',
+    alt: 'Towering red sand dunes under a clear sky near Sossusvlei',
+    imageUrl:
+      'https://images.unsplash.com/photo-1613155358201-36bcf3ce695e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+    imageCredit: { name: 'Mareike Kramper', username: 'mareike_capetown' },
+  },
+];
 
 const tourCount = tours.filter((tour) => tour.category === 'tour').length;
 const adventureCount = tours.filter((tour) => tour.category === 'adventure').length;
@@ -85,7 +135,14 @@ const whyUsFeatures = [
   title="Home"
   description="Desert and coastal tours from Swakopmund and Walvis Bay, Namibia — Etosha, Sossusvlei, Skeleton Coast, and more with Salt & Sun Tours."
 >
-  <Hero eyebrow="Salt & Sun Tours" ctaLabel="View tour" tours={signatureTours} />
+  <Hero
+    title="Namibia"
+    eyebrow="Salt & Sun Tours"
+    subhead="Desert and coastal adventures out of Swakopmund and Walvis Bay — from towering red dunes to seal colonies at Pelican Point."
+    ctaLabel="Explore our tours"
+    ctaHref="/tours"
+    panels={heroPanels}
+  />
 
   <div id="scroll-target"></div>
 
