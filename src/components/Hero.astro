@@ -11,22 +11,37 @@ const { eyebrow = 'Salt & Sun Tours', ctaLabel = 'View tour', tours } = Astro.pr
 
 const first = tours[0];
 
+// heroGallery photos are fetched at w=800 — right for the ~380px card in
+// the stack, but the same photo also fills the full-bleed background,
+// which on most screens is 1400–2500px+ wide. Reusing the 800px file there
+// meant the browser upscaling it several times over (visibly soft/blurry).
+// This swaps in a much larger version of the same Unsplash photo for
+// background use, at full quality, while the card stack keeps the small
+// one it actually needs.
+const HERO_BG_WIDTH = 1920;
+const toBackgroundUrl = (url: string) => url.replace(/([?&]w=)\d+/, `$1${HERO_BG_WIDTH}`);
+
 // Payload the client script swaps through on tour change — kept lean
 // (only what the hero itself renders) rather than re-shipping full Tour
 // objects with `included` lists, etc.
-const tourData = tours.map((tour) => ({
-  slug: tour.slug,
-  name: tour.name,
-  tagline: tour.tagline ?? tour.description,
-  gallery: tour.heroGallery ?? [],
-}));
+const tourData = tours.map((tour) => {
+  const gallery = tour.heroGallery ?? [];
+  const bgPhoto = gallery[0];
+  return {
+    slug: tour.slug,
+    name: tour.name,
+    tagline: tour.tagline ?? tour.description,
+    gallery,
+    // The full-bleed background reuses each tour's first gallery photo
+    // (its primary site-wide image) rather than shipping a 4th unique
+    // photo per tour — that photo already sits mostly hidden behind the
+    // other two cards in the stack, so showing it large behind everything
+    // reads as the stack "emerging" from it instead of as a duplicate.
+    bg: bgPhoto ? { ...bgPhoto, imageUrl: toBackgroundUrl(bgPhoto.imageUrl) } : undefined,
+  };
+});
 
-// The full-bleed background reuses each tour's first gallery photo (its
-// primary site-wide image) rather than shipping a 4th unique photo per
-// tour — that photo already sits mostly hidden behind the other two cards
-// in the stack, so showing it large behind everything reads as the stack
-// "emerging" from it instead of as a duplicate.
-const firstBg = first.heroGallery?.[0];
+const firstBg = tourData[0].bg;
 ---
 
 <section class="hero hero--tours full-bleed" data-tour-hero data-tours={JSON.stringify(tourData)}>

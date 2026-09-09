@@ -237,6 +237,9 @@ interface HeroTourData {
   name: string;
   tagline: string;
   gallery: HeroPhoto[];
+  // Same photo as gallery[0], but at full-bleed resolution instead of the
+  // small card size — see toBackgroundUrl() in Hero.astro.
+  bg?: HeroPhoto;
 }
 
 // Fetches every photo the hero can show as soon as the page loads, so by
@@ -245,13 +248,15 @@ interface HeroTourData {
 // leaving it blank while it downloads.
 function preloadTourImages(tours: HeroTourData[]) {
   const seen = new Set<string>();
+  const preload = (photo?: HeroPhoto) => {
+    if (!photo || seen.has(photo.imageUrl)) return;
+    seen.add(photo.imageUrl);
+    const img = new Image();
+    img.src = photo.imageUrl;
+  };
   for (const tour of tours) {
-    for (const photo of tour.gallery) {
-      if (seen.has(photo.imageUrl)) continue;
-      seen.add(photo.imageUrl);
-      const img = new Image();
-      img.src = photo.imageUrl;
-    }
+    tour.gallery.forEach(preload);
+    preload(tour.bg);
   }
 }
 
@@ -336,7 +341,7 @@ function setupTourHero(reduceMotion: boolean) {
     index = i;
     const tour = tours[i];
 
-    swapBg(tour.gallery[0]);
+    swapBg(tour.bg);
     swapCards.forEach((swap, cardIndex) => swap(tour.gallery[cardIndex]));
 
     navBtns.forEach((btn, btnIndex) => {
