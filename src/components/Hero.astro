@@ -228,28 +228,30 @@ const firstBg = tourData[0].bg;
      text-shadow on each element instead, not a background overlay. */
   .hero__eyebrow {
     text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: var(--fs-sm);
-    font-weight: 600;
+    letter-spacing: 0.08em;
+    font-size: var(--fs-xs);
+    font-weight: 700;
     color: var(--color-sand-100);
-    text-shadow: 0 1px 10px rgba(31, 18, 14, 0.55);
+    text-shadow: 0 1px 8px rgba(31, 18, 14, 0.5);
     margin-bottom: var(--space-sm);
   }
 
   .hero__tour-name {
     font-size: var(--fs-hero);
-    line-height: var(--lh-tight);
+    line-height: 1.02;
+    letter-spacing: -0.015em;
     color: var(--color-text-on-dark);
-    text-shadow: 0 4px 24px rgba(31, 18, 14, 0.55), 0 1px 4px rgba(31, 18, 14, 0.7);
+    text-shadow: 0 6px 32px rgba(31, 18, 14, 0.4);
     margin-bottom: var(--space-md);
     transition: opacity var(--hero-crossfade) ease-in-out;
   }
 
   .hero__tour-tagline {
     font-size: var(--fs-md);
+    font-weight: 500;
     line-height: var(--lh-normal);
     color: var(--color-sand-100);
-    text-shadow: 0 2px 12px rgba(31, 18, 14, 0.6);
+    text-shadow: 0 2px 10px rgba(31, 18, 14, 0.5);
     max-width: 30rem;
     margin-bottom: var(--space-lg);
     transition: opacity var(--hero-crossfade) ease-in-out;
@@ -262,6 +264,11 @@ const firstBg = tourData[0].bg;
 
   .hero__cta {
     font-size: var(--fs-sm);
+    font-weight: 600;
+    text-transform: none;
+    letter-spacing: normal;
+    border-radius: 999px;
+    padding-inline: var(--space-xl);
   }
 
   .hero__nav {
@@ -277,29 +284,29 @@ const firstBg = tourData[0].bg;
     width: 2.75rem;
     height: 2.75rem;
     border-radius: 50%;
-    border: 1px solid var(--color-border);
+    border: none;
     background: var(--color-surface);
     color: var(--color-text-muted);
-    box-shadow: var(--shadow-sm);
+    box-shadow: var(--shadow-md);
     font-family: var(--font-body);
     font-size: var(--fs-xs);
     font-weight: 600;
     letter-spacing: 0.03em;
     cursor: pointer;
-    transition: border-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out),
+    transition: color var(--duration-fast) var(--ease-out),
       background var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out),
       transform var(--duration-fast) var(--ease-out);
   }
 
   .hero__nav-btn:hover {
-    border-color: var(--color-accent);
     color: var(--color-accent-strong);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-2px);
   }
 
   .hero__nav-btn.is-active {
     background: var(--gradient-warm);
-    border-color: transparent;
     color: var(--color-text-on-dark);
     transform: scale(1.06);
   }
