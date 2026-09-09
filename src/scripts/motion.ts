@@ -226,11 +226,55 @@ function setupToursTeaserSlide() {
 // was tried and reverted earlier. Under reduced motion there's no
 // auto-advance and swaps are instant (global CSS already zeroes transition
 // durations), but the nav buttons still work either way.
+interface HeroPhoto {
+  imageUrl: string;
+  alt: string;
+  imageCredit: { name: string; username: string };
+}
+
 interface HeroTourData {
   slug: string;
   name: string;
   tagline: string;
-  gallery: { imageUrl: string; alt: string; imageCredit: { name: string; username: string } }[];
+  gallery: HeroPhoto[];
+}
+
+// Fetches every photo the hero can show as soon as the page loads, so by
+// the time a tour comes up (on the timer, or a nav click) the browser
+// already has the bytes and can paint the new layer instantly instead of
+// leaving it blank while it downloads.
+function preloadTourImages(tours: HeroTourData[]) {
+  const seen = new Set<string>();
+  for (const tour of tours) {
+    for (const photo of tour.gallery) {
+      if (seen.has(photo.imageUrl)) continue;
+      seen.add(photo.imageUrl);
+      const img = new Image();
+      img.src = photo.imageUrl;
+    }
+  }
+}
+
+// A two-layer crossfade for one photo slot (the hero background, or one
+// card in the stack): two stacked <img> elements where only one is
+// "active" (opacity 1) at a time. Swapping means loading the new photo
+// into the *inactive* layer and toggling which one is active — both
+// transition simultaneously, so something is always fully painted. A
+// single image fading itself out then back in (the old approach) leaves a
+// gap where neither photo is visible and the page background shows
+// through — that's the "turns white" bug this replaces.
+function createLayerSwapper(layers: HTMLImageElement[]) {
+  let active = 0;
+  return (photo?: HeroPhoto) => {
+    if (!photo || layers.length < 2) return;
+    const next = 1 - active;
+    const nextImg = layers[next];
+    nextImg.src = photo.imageUrl;
+    nextImg.alt = photo.alt;
+    layers[active].classList.remove('is-active');
+    nextImg.classList.add('is-active');
+    active = next;
+  };
 }
 
 function setupTourHero(reduceMotion: boolean) {
@@ -245,44 +289,37 @@ function setupTourHero(reduceMotion: boolean) {
   }
   if (tours.length < 2) return;
 
+  preloadTourImages(tours);
+
   const panel = section.querySelector<HTMLElement>('.hero__panel');
   const nameEl = section.querySelector<HTMLElement>('[data-hero-name]');
   const taglineEl = section.querySelector<HTMLElement>('[data-hero-tagline]');
   const ctaEl = section.querySelector<HTMLAnchorElement>('[data-hero-cta]');
-  const stack = section.querySelector<HTMLElement>('[data-hero-stack]');
-  const cards = Array.from(section.querySelectorAll<HTMLImageElement>('[data-hero-card] img'));
-  const bg = section.querySelector<HTMLElement>('[data-hero-bg]');
-  const bgImg = bg?.querySelector<HTMLImageElement>('img');
   const navBtns = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-hero-nav-btn]'));
   const creditEl = section.querySelector<HTMLElement>('[data-hero-credit]');
   const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
-  if (!panel || !nameEl || !taglineEl || !ctaEl || !stack) return;
+  if (!panel || !nameEl || !taglineEl || !ctaEl) return;
 
-  // Must match the --hero-crossfade CSS custom property on .hero--tours —
-  // content is only swapped once the fade-out transition has fully
-  // finished (opacity: 0), not partway through, so nothing blinks.
+  const swapBg = createLayerSwapper(
+    Array.from(section.querySelectorAll<HTMLImageElement>('[data-hero-bg-layer]'))
+  );
+  const swapCards = Array.from(section.querySelectorAll<HTMLElement>('[data-hero-card]')).map(
+    (card) => createLayerSwapper(Array.from(card.querySelectorAll<HTMLImageElement>('[data-hero-card-layer]')))
+  );
+
+  // Text swap timing — must match the --hero-crossfade CSS custom property
+  // on .hero--tours, so the old name/tagline are only replaced once fully
+  // faded out (not partway through, which would blink). The photo layers
+  // don't need this: their crossfade is the transition itself.
   const CROSSFADE_MS = 900;
 
   let index = 0;
   let swapTimer: ReturnType<typeof setTimeout> | undefined;
 
-  const applyContent = (i: number) => {
-    const tour = tours[i];
+  const applyTextContent = (tour: HeroTourData) => {
     nameEl.textContent = tour.name;
     taglineEl.textContent = tour.tagline;
     ctaEl.href = `/tours#${tour.slug}`;
-
-    cards.forEach((img, cardIndex) => {
-      const photo = tour.gallery[cardIndex];
-      if (!photo) return;
-      img.src = photo.imageUrl;
-      img.alt = photo.alt;
-    });
-
-    if (bgImg) {
-      const bgPhoto = tour.gallery[0];
-      if (bgPhoto) bgImg.src = bgPhoto.imageUrl;
-    }
 
     const firstCredit = tour.gallery[0]?.imageCredit;
     if (creditEl && creditLink && firstCredit) {
@@ -292,32 +329,32 @@ function setupTourHero(reduceMotion: boolean) {
     } else if (creditEl) {
       creditEl.hidden = true;
     }
+  };
+
+  const setActive = (i: number) => {
+    if (i === index) return;
+    index = i;
+    const tour = tours[i];
+
+    swapBg(tour.gallery[0]);
+    swapCards.forEach((swap, cardIndex) => swap(tour.gallery[cardIndex]));
 
     navBtns.forEach((btn, btnIndex) => {
       const active = btnIndex === i;
       btn.classList.toggle('is-active', active);
       btn.setAttribute('aria-current', String(active));
     });
-  };
-
-  const setActive = (i: number) => {
-    if (i === index) return;
-    index = i;
 
     if (reduceMotion) {
-      applyContent(i);
+      applyTextContent(tour);
       return;
     }
 
     clearTimeout(swapTimer);
     panel.classList.add('is-transitioning');
-    stack.classList.add('is-transitioning');
-    bg?.classList.add('is-transitioning');
     swapTimer = setTimeout(() => {
-      applyContent(i);
+      applyTextContent(tour);
       panel.classList.remove('is-transitioning');
-      stack.classList.remove('is-transitioning');
-      bg?.classList.remove('is-transitioning');
     }, CROSSFADE_MS);
   };
 

@@ -33,7 +33,19 @@ const firstBg = first.heroGallery?.[0];
   <h1 class="visually-hidden">Salt &amp; Sun Tours — six signature Namibian tours</h1>
 
   <div class="hero__bg" data-hero-bg aria-hidden="true">
-    {firstBg && <img src={firstBg.imageUrl} alt="" loading="eager" decoding="async" />}
+    {/* Two stacked layers, not one — swapping a single image's src mid-fade
+        leaves a gap where neither photo is visible (the page background
+        shows through). Crossfading two real layers means something's
+        always fully painted. */}
+    <img
+      class="hero__bg-layer is-active"
+      data-hero-bg-layer="0"
+      src={firstBg?.imageUrl}
+      alt=""
+      loading="eager"
+      decoding="async"
+    />
+    <img class="hero__bg-layer" data-hero-bg-layer="1" alt="" loading="eager" decoding="async" />
   </div>
 
   <div class="container hero__grid">
@@ -72,14 +84,21 @@ const firstBg = first.heroGallery?.[0];
             const photo = first.heroGallery?.[i];
             return (
               <div class={`hero__card hero__card--${i}`} data-hero-card data-index={i}>
-                {photo && (
-                  <img
-                    src={photo.imageUrl}
-                    alt={photo.alt}
-                    loading={i === 0 ? 'eager' : 'lazy'}
-                    decoding="async"
-                  />
-                )}
+                <img
+                  class="hero__card-layer is-active"
+                  data-hero-card-layer="0"
+                  src={photo?.imageUrl}
+                  alt={photo?.alt}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+                <img
+                  class="hero__card-layer"
+                  data-hero-card-layer="1"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
               </div>
             );
           })
@@ -145,15 +164,18 @@ const firstBg = first.heroGallery?.[0];
     z-index: 0;
   }
 
-  .hero__bg img {
+  .hero__bg-layer {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0;
     transition: opacity var(--hero-crossfade) ease-in-out;
   }
 
-  .hero__bg.is-transitioning img {
-    opacity: 0;
+  .hero__bg-layer.is-active {
+    opacity: 1;
   }
 
   .hero__grid {
@@ -276,15 +298,18 @@ const firstBg = first.heroGallery?.[0];
       transform var(--duration-slow) var(--ease-out);
   }
 
-  .hero__card img {
+  .hero__card-layer {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    opacity: 0;
     transition: opacity var(--hero-crossfade) ease-in-out;
   }
 
-  .hero__stack.is-transitioning .hero__card img {
-    opacity: 0;
+  .hero__card-layer.is-active {
+    opacity: 1;
   }
 
   .hero__card--0 {
@@ -336,8 +361,9 @@ const firstBg = first.heroGallery?.[0];
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__bg img,
+    .hero__bg-layer,
     .hero__card,
+    .hero__card-layer,
     .hero__gallery:hover .hero__card--0,
     .hero__gallery:hover .hero__card--1,
     .hero__gallery:hover .hero__card--2 {
