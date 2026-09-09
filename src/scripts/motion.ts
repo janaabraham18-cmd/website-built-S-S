@@ -295,6 +295,8 @@ function setupAboutCarousel() {
   const track = section?.querySelector<HTMLElement>('[data-carousel-track]');
   const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-carousel] [data-slide]'));
   const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-carousel-dots] button'));
+  const prevBtn = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
+  const nextBtn = document.querySelector<HTMLButtonElement>('[data-carousel-next]');
   if (!section || !track || slides.length < 2) return;
 
   let index = 0;
@@ -307,17 +309,32 @@ function setupAboutCarousel() {
       dot.classList.toggle('is-active', active);
       dot.setAttribute('aria-selected', String(active));
     });
-    slides.forEach((slide, si) => slide.setAttribute('aria-hidden', String(si !== index)));
+    slides.forEach((slide, si) => {
+      const active = si === index;
+      slide.classList.toggle('is-active', active);
+      slide.setAttribute('aria-hidden', String(!active));
+    });
+    if (prevBtn) prevBtn.disabled = index === 0;
+    if (nextBtn) nextBtn.disabled = index === slides.length - 1;
   };
 
   dots.forEach((dot) => {
     dot.addEventListener('click', () => goTo(Number(dot.dataset.dot)));
   });
 
+  prevBtn?.addEventListener('click', () => goTo(index - 1));
+  nextBtn?.addEventListener('click', () => goTo(index + 1));
+
   section.addEventListener('keydown', (event) => {
     if (event.key === 'ArrowRight') goTo(index + 1);
     if (event.key === 'ArrowLeft') goTo(index - 1);
   });
+
+  // Belt-and-suspenders alongside draggable={false} on every <img> in the
+  // markup: without this, a mouse drag starting on the full-bleed photo
+  // triggers the browser's native "ghost image" drag instead of reaching
+  // the pointer handlers below, which is why swipe wasn't advancing.
+  section.addEventListener('dragstart', (event) => event.preventDefault());
 
   let startX = 0;
   let startY = 0;
@@ -326,10 +343,17 @@ function setupAboutCarousel() {
   let axis: 'x' | 'y' | null = null;
 
   section.addEventListener('pointerdown', (event) => {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    // A pointerdown that starts on a button or link (arrows, dots, the
+    // Unsplash credit) must not be claimed as a drag — setPointerCapture
+    // below retargets that pointer's later events to `section`, which was
+    // silently swallowing those controls' own click events.
+    if ((event.target as HTMLElement).closest('button, a')) return;
     dragging = true;
     axis = null;
     startX = lastX = event.clientX;
     startY = event.clientY;
+    section.setPointerCapture(event.pointerId);
   });
 
   section.addEventListener('pointermove', (event) => {
@@ -365,7 +389,6 @@ function setupAboutCarousel() {
   };
 
   section.addEventListener('pointerup', endDrag);
-  section.addEventListener('pointerleave', endDrag);
   section.addEventListener('pointercancel', endDrag);
 
   goTo(0);
