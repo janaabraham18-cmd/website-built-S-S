@@ -26,17 +26,18 @@ const toBackgroundUrl = (url: string) => url.replace(/([?&]w=)\d+/, `$1${HERO_BG
 // objects with `included` lists, etc.
 const tourData = tours.map((tour) => {
   const gallery = tour.heroGallery ?? [];
-  const bgPhoto = gallery[0];
+  // Most tours reuse their first gallery photo as the background (it
+  // already sits mostly hidden behind the other two cards in the stack, so
+  // showing it large behind everything reads as the stack "emerging" from
+  // it). A tour can set heroBg to use a different photo for the
+  // background instead — e.g. a wider establishing shot that wouldn't work
+  // as a small card.
+  const bgPhoto = tour.heroBg ?? gallery[0];
   return {
     slug: tour.slug,
     name: tour.name,
     tagline: tour.tagline ?? tour.description,
     gallery,
-    // The full-bleed background reuses each tour's first gallery photo
-    // (its primary site-wide image) rather than shipping a 4th unique
-    // photo per tour — that photo already sits mostly hidden behind the
-    // other two cards in the stack, so showing it large behind everything
-    // reads as the stack "emerging" from it instead of as a duplicate.
     bg: bgPhoto ? { ...bgPhoto, imageUrl: toBackgroundUrl(bgPhoto.imageUrl) } : undefined,
   };
 });
@@ -120,19 +121,19 @@ const firstBg = tourData[0].bg;
         }
       </div>
 
-      <p class="hero__credit" data-hero-credit hidden={!first.heroGallery?.[0]?.imageCredit}>
+      <p class="hero__credit" data-hero-credit hidden={!firstBg?.imageCredit}>
         Photo:{' '}
         <a
           data-hero-credit-name
           href={
-            first.heroGallery?.[0]
-              ? `https://unsplash.com/@${first.heroGallery[0].imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`
+            firstBg
+              ? `https://unsplash.com/@${firstBg.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`
               : '#'
           }
           target="_blank"
           rel="noopener noreferrer"
         >
-          {first.heroGallery?.[0]?.imageCredit.name}
+          {firstBg?.imageCredit.name}
         </a>{' '}
         /{' '}
         <a

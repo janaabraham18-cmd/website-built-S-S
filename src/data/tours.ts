@@ -19,6 +19,11 @@ export interface Tour {
   tagline?: string;
   /** Three photos of this tour for the homepage hero's mini gallery — signature tours only. */
   heroGallery?: { imageUrl: string; alt: string; imageCredit: { name: string; username: string } }[];
+  /**
+   * Override for the homepage hero's full-bleed background photo —
+   * signature tours only. Defaults to heroGallery[0] when unset.
+   */
+  heroBg?: { imageUrl: string; alt: string; imageCredit: { name: string; username: string } };
 }
 
 export const categoryLabels: Record<Tour['category'], { label: string; description: string }> = {
@@ -78,6 +83,12 @@ export const tours: Tour[] = [
         imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
       },
     ],
+    heroBg: {
+      imageUrl:
+        'https://images.unsplash.com/photo-1644219579565-27c787f905e5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+      alt: 'A lioness stalking through the dry grass of Etosha National Park',
+      imageCredit: { name: 'Ria Truter', username: 'metaldawn' },
+    },
   },
   {
     slug: 'sossusvlei-tour',
@@ -156,6 +167,12 @@ export const tours: Tour[] = [
         imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
       },
     ],
+    heroBg: {
+      imageUrl:
+        'https://images.unsplash.com/photo-1667506609659-599fb1f59f94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+      alt: 'The full wreck of the Shawnee shipwreck resting on the Skeleton Coast shoreline',
+      imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+    },
   },
   {
     slug: 'sandwich-harbour-full-day',
@@ -238,6 +255,12 @@ export const tours: Tour[] = [
         imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
       },
     ],
+    heroBg: {
+      imageUrl:
+        'https://images.unsplash.com/photo-1666993804910-60191605094f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=800',
+      alt: 'A visitor dwarfed by the towering rock formations of Spitzkoppe',
+      imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+    },
   },
   {
     slug: 'pelican-point-tour',

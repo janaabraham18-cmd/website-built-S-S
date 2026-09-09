@@ -326,7 +326,7 @@ function setupTourHero(reduceMotion: boolean) {
     taglineEl.textContent = tour.tagline;
     ctaEl.href = `/tours#${tour.slug}`;
 
-    const firstCredit = tour.gallery[0]?.imageCredit;
+    const firstCredit = tour.bg?.imageCredit;
     if (creditEl && creditLink && firstCredit) {
       creditLink.textContent = firstCredit.name;
       creditLink.href = `https://unsplash.com/@${firstCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
