@@ -310,7 +310,7 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
   .tour-journey__grid {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
-    align-items: center;
+    align-items: start;
     gap: var(--space-2xl);
   }
 
@@ -321,16 +321,20 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
   }
 
   /* Not sticky, not pinned — genuinely just sits in normal document
-     flow. Centering it (rather than anchoring to the top) is what
-     keeps it roughly in step with the reader across the whole 7-section
-     stack without any scroll-jacking: since the stack is far taller
-     than the map ever gets, an edge-anchored map would scroll out of
-     view for everything but the first section or two, whereas a
-     vertically centered one stays closest to the viewport around the
-     middle of the journey and is only off-screen at the very start and
-     very end. Its own height is driven entirely by how many pieces
-     have been placed (see setupTourMapGrowth), never by the height of
-     the sections beside it. */
+     flow, at the top of its column by default. A single fixed vertical
+     position (top-anchored or centered) doesn't work here: the map's
+     own assembled size stays compact (it's scaled to real geography,
+     not to page length) while the 7-section stack is many times
+     taller, so anywhere static leaves it stranded off-screen for most
+     of the scroll. Instead, setupTourMapGrowth() nudges this column's
+     margin-top once per section (at the same moment that section's
+     piece is placed) so the map re-centers on whichever section just
+     came into view. That's a one-shot reposition per trigger, not a
+     continuous scroll-follow — still ordinary box-model layout, not
+     position:fixed/sticky — but it keeps the map roughly paired with
+     the reader all the way down instead of only near one spot. Its
+     height is driven entirely by how many pieces have been placed.
+  */
   .tour-journey__map-col {
     position: static;
   }
@@ -339,6 +343,7 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
     position: relative;
     max-width: 100%;
     margin-inline: auto;
+    margin-top: 0;
     overflow: hidden;
   }
 

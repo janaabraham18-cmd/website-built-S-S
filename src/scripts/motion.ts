@@ -271,18 +271,33 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // container's own height grows to keep fitting whatever has landed so
 // far, so by the last section the map has simply finished assembling
 // itself rather than being swapped for a separate "complete" version.
+//
+// The map is explicitly not pinned/sticky, but it can't just sit at one
+// fixed vertical spot either: its assembled size stays compact (scaled
+// to real geography, not to page length) while the 7-section stack
+// beside it is many times taller, so any single static position leaves
+// it stranded off-screen for most of the scroll — a static top or
+// centered position both fail this the same way, they just fail for
+// different sections. So each trigger also nudges the map column's
+// margin-top to re-center the map on whichever section just came into
+// view. That's a one-shot reposition per section (matching the same
+// `once: true` cadence as the piece reveal), not a continuous
+// scroll-follow — still ordinary box-model layout, never
+// position:fixed/sticky.
+//
 // Reduced motion is intentionally not wired up here: the container's
-// default CSS state (full height, every piece opaque) already reads as
-// the finished map with nothing left to animate.
+// default CSS state (full height, every piece opaque, margin-top 0)
+// already reads as the finished map with nothing left to animate.
 function setupTourMapGrowth() {
   const container = document.querySelector<HTMLElement>('[data-map-growth]');
-  if (!container) return;
+  const grid = document.querySelector<HTMLElement>('.tour-journey__grid');
+  if (!container || !grid) return;
 
   const pieces = Array.from(container.querySelectorAll<HTMLElement>('[data-map-piece]'));
   const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-section]'));
   if (!pieces.length) return;
 
-  gsap.set(container, { height: 0 });
+  gsap.set(container, { height: 0, marginTop: 0 });
   gsap.set(pieces, { opacity: 0, y: -24 });
 
   pieces.forEach((piece) => {
@@ -299,8 +314,16 @@ function setupTourMapGrowth() {
 
         const bottom = piece.offsetTop + piece.offsetHeight;
         const current = parseFloat(gsap.getProperty(container, 'height') as string) || 0;
+        const nextHeight = Math.max(current, bottom);
+
+        const gridRect = grid.getBoundingClientRect();
+        const sectionRect = section.getBoundingClientRect();
+        const sectionCenter = sectionRect.top - gridRect.top + sectionRect.height / 2;
+        const nextMarginTop = Math.max(0, sectionCenter - nextHeight / 2);
+
         gsap.to(container, {
-          height: Math.max(current, bottom),
+          height: nextHeight,
+          marginTop: nextMarginTop,
           duration: 0.6,
           ease: 'power2.out',
         });
