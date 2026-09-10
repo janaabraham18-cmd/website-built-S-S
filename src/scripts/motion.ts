@@ -267,10 +267,13 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // hidden and the container collapsed to zero height — there is no
 // pre-existing "ghost" of the finished map. As each section scrolls
 // into view its piece floats down into its already-correct position
-// and stays there permanently (ScrollTrigger `once: true`), and the
-// container's own height grows to keep fitting whatever has landed so
-// far, so by the last section the map has simply finished assembling
-// itself rather than being swapped for a separate "complete" version.
+// and stays there, and the container's own height grows to keep
+// fitting whatever has landed so far, so by the last section the map
+// has simply finished assembling itself rather than being swapped for
+// a separate "complete" version. This runs the same in reverse: scroll
+// back up past a section and its piece un-attaches again, the map
+// shrinks back to fit whatever's left, and re-triggering that section
+// by scrolling back down re-places it — nothing is `once: true` here.
 //
 // The map is explicitly not pinned/sticky, but it can't just sit at one
 // fixed vertical spot either: its assembled size stays compact (scaled
@@ -278,12 +281,11 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // beside it is many times taller, so any single static position leaves
 // it stranded off-screen for most of the scroll — a static top or
 // centered position both fail this the same way, they just fail for
-// different sections. So each trigger also nudges the map column's
-// margin-top to re-center the map on whichever section just came into
-// view. That's a one-shot reposition per section (matching the same
-// `once: true` cadence as the piece reveal), not a continuous
-// scroll-follow — still ordinary box-model layout, never
-// position:fixed/sticky.
+// different sections. So every trigger (forward or backward) also
+// nudges the map column's margin-top to re-center the map on whichever
+// section is currently active. That's a reposition per section
+// crossing, not a continuous scroll-follow — still ordinary box-model
+// layout, never position:fixed/sticky.
 //
 // Reduced motion is intentionally not wired up here: the container's
 // default CSS state (full height, every piece opaque, margin-top 0)
@@ -300,6 +302,30 @@ function setupTourMapGrowth() {
   gsap.set(container, { height: 0, marginTop: 0 });
   gsap.set(pieces, { opacity: 0, y: -24 });
 
+  // Resizes/repositions the container to fit exactly pieces 0..activeIndex
+  // (inclusive) and re-centers it on that highest-index section — or, if
+  // activeIndex is -1 (scrolled back above the very first section), collapses
+  // back to the untouched starting state.
+  const syncTo = (activeIndex: number) => {
+    if (activeIndex < 0) {
+      gsap.to(container, { height: 0, marginTop: 0, duration: 0.5, ease: 'power2.inOut' });
+      return;
+    }
+
+    let height = 0;
+    for (let i = 0; i <= activeIndex; i++) {
+      height = Math.max(height, pieces[i].offsetTop + pieces[i].offsetHeight);
+    }
+
+    const anchorSection = sections[activeIndex];
+    const gridRect = grid.getBoundingClientRect();
+    const sectionRect = anchorSection.getBoundingClientRect();
+    const sectionCenter = sectionRect.top - gridRect.top + sectionRect.height / 2;
+    const marginTop = Math.max(0, sectionCenter - height / 2);
+
+    gsap.to(container, { height, marginTop, duration: 0.6, ease: 'power2.out' });
+  };
+
   pieces.forEach((piece) => {
     const index = Number(piece.dataset.mapPiece);
     const section = sections[index];
@@ -308,25 +334,13 @@ function setupTourMapGrowth() {
     ScrollTrigger.create({
       trigger: section,
       start: 'top 75%',
-      once: true,
       onEnter: () => {
         gsap.to(piece, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
-
-        const bottom = piece.offsetTop + piece.offsetHeight;
-        const current = parseFloat(gsap.getProperty(container, 'height') as string) || 0;
-        const nextHeight = Math.max(current, bottom);
-
-        const gridRect = grid.getBoundingClientRect();
-        const sectionRect = section.getBoundingClientRect();
-        const sectionCenter = sectionRect.top - gridRect.top + sectionRect.height / 2;
-        const nextMarginTop = Math.max(0, sectionCenter - nextHeight / 2);
-
-        gsap.to(container, {
-          height: nextHeight,
-          marginTop: nextMarginTop,
-          duration: 0.6,
-          ease: 'power2.out',
-        });
+        syncTo(index);
+      },
+      onLeaveBack: () => {
+        gsap.to(piece, { opacity: 0, y: -24, duration: 0.5, ease: 'power2.inOut' });
+        syncTo(index - 1);
       },
     });
   });
