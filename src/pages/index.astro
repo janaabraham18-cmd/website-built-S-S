@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
-import AboutCarousel from '../components/AboutCarousel.astro';
 import WhyUsSection from '../components/WhyUsSection.astro';
 import AdventureCard from '../components/AdventureCard.astro';
 import { tours } from '../data/tours';
@@ -144,8 +143,6 @@ const whyUsFeatures = [
   />
 
   <div id="scroll-target"></div>
-
-  <AboutCarousel />
 
   <WhyUsSection features={whyUsFeatures} />
 
