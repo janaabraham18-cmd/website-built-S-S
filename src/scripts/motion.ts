@@ -261,6 +261,68 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
   root.addEventListener('focusout', start);
 }
 
+// Tours page photo bleed: each tour section's photo is meant to run
+// flush with the actual browser edge, not just the edge of its own
+// (fairly narrow, deeply-nested-in-a-centered-container) grid column —
+// a pure-CSS vw-based breakout (`margin-left: calc(50% - 50vw)` and
+// its relatives) doesn't reach the true viewport edge from this deep a
+// level of nesting, since the percentage in that formula resolves
+// against the element's own containing block, not the viewport,
+// confirmed by testing the trick in isolation. So instead this measures
+// each photo's actual distance from the viewport's left edge and
+// cancels it with an equal negative margin, which works regardless of
+// nesting because it's based on the real rendered position rather than
+// a formula. Skipped below the 900px breakpoint, where the photo is
+// meant to sit in normal full-width flow instead (see the CSS).
+//
+// The CSS width (min(46vw, 560px)) is a viewport-relative target, but
+// the actual space available beside it isn't purely viewport-relative:
+// the map column next to it has its own fixed minimum width (the
+// growing map's real pixel dimensions, which don't shrink — its pieces
+// are absolutely positioned at fixed coordinates), so at narrower
+// desktop widths the sections column gets squeezed by more than the
+// viewport shrinking alone would suggest. Below, this also measures the
+// row's actual available width each time and caps the photo so the text
+// beside it always keeps a readable minimum, rather than trusting a
+// vw-based CSS value that has no way to know about that squeeze.
+const TOUR_PHOTO_MIN_BODY_WIDTH = 260;
+
+function setupTourPhotoBleed() {
+  const photos = Array.from(document.querySelectorAll<HTMLElement>('.tour-reveal__photo-wrap'));
+  if (!photos.length) return;
+
+  const align = () => {
+    const isDesktop = window.matchMedia('(min-width: 901px)').matches;
+
+    photos.forEach((photo) => {
+      if (!isDesktop) {
+        photo.style.marginLeft = '';
+        photo.style.width = '';
+        return;
+      }
+
+      const row = photo.parentElement;
+      if (row) {
+        photo.style.width = '';
+        const rowStyle = getComputedStyle(row);
+        const gap = parseFloat(rowStyle.columnGap || rowStyle.gap) || 0;
+        const rowWidth = row.getBoundingClientRect().width;
+        const cssWidth = photo.getBoundingClientRect().width;
+        const maxPhotoWidth = Math.max(0, rowWidth - gap - TOUR_PHOTO_MIN_BODY_WIDTH);
+        photo.style.width = `${Math.min(cssWidth, maxPhotoWidth)}px`;
+      }
+
+      photo.style.marginLeft = '0px';
+      const offset = photo.getBoundingClientRect().left;
+      photo.style.marginLeft = `${-offset}px`;
+    });
+  };
+
+  align();
+  window.addEventListener('resize', align);
+  window.addEventListener('load', align);
+}
+
 // Tours page growing map: each of the 7 tour sections owns one piece
 // of the shared Namibia map, laid out server-side at its true relative
 // position (see TourMapJourney.astro's pieceBoxStyle) but starting
@@ -568,6 +630,7 @@ export function initMotion() {
 
   setupHeroPanelSlideshow(reduceMotion);
   setupAboutCarousel();
+  setupTourPhotoBleed();
 
   let lenis: Lenis | undefined;
 

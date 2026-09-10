@@ -103,12 +103,12 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 </section>
 
 <div class="tour-journey">
-  <div class="container tour-journey__grid">
+  <div class="tour-journey__grid">
     <div class="tour-journey__sections">
       {
         stopsWithTours.map(({ pin, tour }, i) => (
           <section
-            class:list={['tour-reveal', 'reveal', i % 2 === 1 && 'tour-reveal--reverse']}
+            class:list={['tour-reveal', 'reveal']}
             data-tour-section={i}
             id={i === 0 ? 'tour' : undefined}
           >
@@ -338,17 +338,32 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     padding-block: var(--space-2xl);
   }
 
+  /* Deliberately not the sitewide .container (max-width: 1180px, sized
+     for reading-width paragraph text) — a section built around a photo
+     that bleeds to the actual browser edge and reaches toward the
+     middle of the screen needs a much wider budget than that, so this
+     gets its own, considerably wider one. The map column's real content
+     has a fixed pixel width (it doesn't reshape — its pieces are placed
+     at fixed coordinates), so `auto` sizes that column to exactly what
+     it needs and `minmax(0, 1fr)` lets the photo+text column claim
+     everything left over, rather than the two fighting over fr shares
+     the map's fixed width would just override anyway. */
   .tour-journey__grid {
     display: grid;
-    grid-template-columns: 1.6fr 1fr;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
     gap: var(--space-2xl);
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: var(--space-md);
   }
 
   .tour-journey__sections {
     display: flex;
     flex-direction: column;
     gap: var(--space-3xl);
+    min-width: 0;
   }
 
   /* Not sticky, not pinned — genuinely just sits in normal document
@@ -406,32 +421,32 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   }
 
   /* ---------- Per-tour reveal sections ---------- */
+  /* Flex rather than grid: the photo is meant to break out past its own
+     column all the way to the actual browser edge (see
+     setupTourPhotoBleed in motion.ts, which measures and cancels the
+     real offset via a negative margin-left — a pure-CSS vw-based
+     breakout doesn't reliably reach the viewport edge from this deep a
+     level of nesting, confirmed by testing it in isolation). A CSS
+     grid's fr-tracks resist that kind of intentionally-oversized child
+     well; flex with an explicit fixed-ish photo width and a flexible
+     text column handles it predictably. */
   .tour-reveal__inner {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    display: flex;
     align-items: center;
-    gap: var(--space-xl);
-  }
-
-  .tour-reveal--reverse .tour-reveal__inner {
-    grid-template-columns: 1fr 1.4fr;
+    gap: var(--space-lg);
+    min-width: 0;
   }
 
   .tour-reveal__photo-wrap {
     position: relative;
-    order: 1;
-  }
-
-  .tour-reveal--reverse .tour-reveal__photo-wrap {
-    order: 2;
+    flex: 0 0 auto;
+    width: min(46vw, 560px);
+    min-width: 0;
   }
 
   .tour-reveal__body {
-    order: 2;
-  }
-
-  .tour-reveal--reverse .tour-reveal__body {
-    order: 1;
+    flex: 1 1 0%;
+    min-width: 0;
   }
 
   .tour-reveal__photo {
@@ -489,16 +504,13 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
       display: none;
     }
 
-    .tour-reveal__inner,
-    .tour-reveal--reverse .tour-reveal__inner {
-      grid-template-columns: 1fr;
+    .tour-reveal__inner {
+      flex-direction: column;
+      align-items: stretch;
     }
 
-    .tour-reveal__photo-wrap,
-    .tour-reveal--reverse .tour-reveal__photo-wrap,
-    .tour-reveal__body,
-    .tour-reveal--reverse .tour-reveal__body {
-      order: initial;
+    .tour-reveal__photo-wrap {
+      width: 100%;
     }
 
     .tour-reveal__photo {
