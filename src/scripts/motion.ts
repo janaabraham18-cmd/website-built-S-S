@@ -394,97 +394,6 @@ function setupAboutCarousel() {
   goTo(0);
 }
 
-/**
- * Shapes each carousel slide's background photo so the cream top/bottom
- * strip isn't a flat bar the full width — it narrows inward right above
- * the text card's left/right corners and continues as a cream band behind
- * the card all the way to its top and bottom edges, so the card reads as
- * an extension of the break rather than a photo card floating separately
- * on top of the photo. The card's position depends on its own content
- * height (the two slides' letters are different lengths), so the notch
- * depth is measured per slide at runtime rather than hard-coded.
- */
-function setupAboutCarouselNotch() {
-  const slides = Array.from(
-    document.querySelectorAll<HTMLElement>('[data-carousel] [data-slide]')
-  );
-  if (!slides.length) return;
-
-  const DESKTOP_BREAKPOINT = 860;
-  const STRIP = 64; // matches --space-xl
-  const EASE_PCT = 4; // width, in % of slide width, of each curve transition
-
-  const ease = (t: number) => t * t * (3 - 2 * t); // smoothstep
-
-  const buildEdge = (NL: number, NR: number, depth: number) => {
-    const pts: [number, number][] = [];
-    const startCurve = Math.max(0, NL - EASE_PCT);
-    const endCurve = Math.min(100, NR + EASE_PCT);
-    pts.push([0, STRIP]);
-    pts.push([startCurve, STRIP]);
-    const steps = 6;
-    for (let i = 1; i < steps; i++) {
-      const t = i / steps;
-      pts.push([startCurve + (NL - startCurve) * t, STRIP + (depth - STRIP) * ease(t)]);
-    }
-    pts.push([NL, depth]);
-    pts.push([NR, depth]);
-    for (let i = 1; i < steps; i++) {
-      const t = i / steps;
-      pts.push([NR + (endCurve - NR) * t, depth + (STRIP - depth) * ease(t)]);
-    }
-    pts.push([endCurve, STRIP]);
-    pts.push([100, STRIP]);
-    return pts;
-  };
-
-  const apply = () => {
-    const isDesktop = window.innerWidth > DESKTOP_BREAKPOINT;
-
-    slides.forEach((slide) => {
-      const bg = slide.querySelector<HTMLElement>('.about-carousel__bg');
-      const text = slide.querySelector<HTMLElement>('.about-carousel__text');
-      if (!bg || !text) return;
-
-      if (!isDesktop) {
-        bg.style.clipPath = '';
-        return;
-      }
-
-      const slideRect = slide.getBoundingClientRect();
-      const textRect = text.getBoundingClientRect();
-      if (slideRect.width === 0 || slideRect.height === 0) return;
-
-      const NL = ((textRect.left - slideRect.left) / slideRect.width) * 100;
-      const NR = ((textRect.right - slideRect.left) / slideRect.width) * 100;
-      const topDepth = Math.max(STRIP, textRect.top - slideRect.top);
-      const bottomDepth = Math.max(STRIP, slideRect.bottom - textRect.bottom);
-      const H = slideRect.height;
-
-      const topEdge = buildEdge(NL, NR, topDepth);
-      const bottomEdge = buildEdge(NL, NR, bottomDepth)
-        .slice()
-        .reverse()
-        .map(([x, y]) => [x, H - y] as [number, number]);
-
-      const points = [...topEdge, ...bottomEdge]
-        .map(([x, y]) => `${x.toFixed(2)}% ${y.toFixed(1)}px`)
-        .join(', ');
-
-      bg.style.clipPath = `polygon(${points})`;
-    });
-  };
-
-  apply();
-
-  let resizeFrame = 0;
-  window.addEventListener('resize', () => {
-    cancelAnimationFrame(resizeFrame);
-    resizeFrame = requestAnimationFrame(apply);
-  });
-  window.addEventListener('load', apply);
-}
-
 export function initMotion() {
   const reduceMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
@@ -492,7 +401,6 @@ export function initMotion() {
 
   setupHeroPanelSlideshow(reduceMotion);
   setupAboutCarousel();
-  setupAboutCarouselNotch();
 
   let lenis: Lenis | undefined;
 

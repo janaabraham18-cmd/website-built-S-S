@@ -248,18 +248,10 @@ const creditHref = (username: string) =>
 
   .about-carousel__bg {
     position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
+    /* Top/bottom inset leaves a cream breathing strip above and below the
+       photo; left/right stay 0 so it's still full-bleed horizontally. */
+    inset: var(--space-xl) 0;
     object-fit: cover;
-    /* Baseline: a flat cream strip top and bottom (left/right stay full
-       bleed). setupAboutCarouselNotch() in motion.ts progressively
-       enhances this into a shape that narrows inward above the text
-       card's corners and reaches all the way to the card's top/bottom
-       edges, so the card reads as an extension of the cream break rather
-       than a separate panel floating on the photo. This static fallback
-       keeps the plain breathing-room strip if JS doesn't run. */
-    clip-path: inset(var(--space-xl) 0 round 0);
   }
 
   /* Images are draggable by default in every browser — since the
