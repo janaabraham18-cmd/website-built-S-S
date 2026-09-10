@@ -28,8 +28,8 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
       <p class="tours-header__body">
         Every excursion we run out of Swakopmund and Walvis Bay, from
         full-day trips into Etosha and Sossusvlei to short desert
-        adventures and combo packages. Pricing is being finalized and
-        will appear here shortly — get in touch for current rates.
+        adventures and combo packages. <a href="/contact">Contact us for
+        current rates</a> and we'll help you build the right day.
       </p>
     </div>
   </header>
@@ -101,6 +101,13 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
     line-height: var(--lh-normal);
     color: var(--color-text-muted);
     max-width: var(--content-width-narrow);
+  }
+
+  .tours-header__body a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .tour-rows-section {

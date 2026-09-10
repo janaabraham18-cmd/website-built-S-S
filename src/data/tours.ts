@@ -40,6 +40,7 @@ export const tours: Tour[] = [
     name: 'Etosha Tour',
     description:
       "Are you eager for an unforgettable wildlife experience? Join our Etosha Tour to explore one of Namibia's most iconic national parks, home to elephants, lions, rhinos, giraffes, and rich birdlife, set against breathtaking natural landscapes.",
+    duration: 'Overnight · 2 days',
     included: [
       'Comfortable transport',
       'Professional guide',
@@ -60,6 +61,7 @@ export const tours: Tour[] = [
     name: 'Sossusvlei Tour',
     description:
       "Join us to explore Namibia's iconic red dunes and stunning desert landscapes. Join our Sossusvlei Tour to experience towering sand dunes, Deadvlei, and the unique beauty of the Namib Desert.",
+    duration: 'Full-day',
     included: [
       'Transport',
       'Scenic desert drive',
@@ -78,6 +80,7 @@ export const tours: Tour[] = [
     name: 'Skeleton Coast Tour',
     description:
       "Are you eager to discover Namibia's most mysterious coastline? Join our Skeleton Coast Tour to explore dramatic shorelines, shipwrecks, seal colonies, and the raw beauty of the Atlantic Ocean.",
+    duration: 'Full-day',
     included: [
       'Transport',
       'Scenic desert & coastal drive',
@@ -96,6 +99,7 @@ export const tours: Tour[] = [
     name: 'Sandwich Harbour Tour (Full-day)',
     description:
       'This iconic tour is a photographer\'s dream. This is a 4×4 tour past the Salt Pans and into the Namib-Naukluft Park "where ocean and desert meet." Our last stop is the Sandwich Harbour Lagoon. This is an exciting tour where guides will show off their skills while scaling gigantic sand dunes.',
+    duration: 'Full-day',
     included: [
       '4x4 scenic dune drive',
       'Pink Lake',
@@ -116,6 +120,7 @@ export const tours: Tour[] = [
     name: 'Spitzkoppe Tour',
     description:
       "Ready to explore Namibia's stunning granite peaks? Join our Spitzkoppe Tour to experience breathtaking rock formations, ancient rock art, and stunning desert landscapes under wide open skies.",
+    duration: 'Full-day',
     included: [
       'Transport',
       'Scenic desert & mountain drive',
@@ -135,6 +140,7 @@ export const tours: Tour[] = [
     name: 'Pelican Point Tour',
     description:
       "Are you eager to explore Walvis Bay's scenic Pelican Point? Join our Pelican Point Tour to experience Cape fur seals, pelicans, flamingos, and breathtaking views where the desert meets the Atlantic Ocean.",
+    duration: 'Full-day',
     note: 'Minimum 4 people',
     included: [
       'Pick-up & drop-off',

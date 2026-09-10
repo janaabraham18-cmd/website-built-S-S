@@ -4,7 +4,6 @@ import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
 import AboutCarousel from '../components/AboutCarousel.astro';
 import WhyUsSection from '../components/WhyUsSection.astro';
-import ReviewsSection from '../components/ReviewsSection.astro';
 import AdventureCard from '../components/AdventureCard.astro';
 import { tours } from '../data/tours';
 
@@ -273,7 +272,40 @@ const whyUsFeatures = [
     </div>
   </section>
 
-  <ReviewsSection />
+  <section class="trust-band reveal">
+    <div class="container trust-band__inner">
+      <div class="trust-band__intro reveal-item">
+        <p class="trust-band__eyebrow">Why travelers choose us</p>
+        <h2>Straight answers from people who know the ground</h2>
+      </div>
+
+      <ul class="trust-band__grid">
+        <li class="trust-band__item reveal-item">
+          <h3>Local, not outsourced</h3>
+          <p>
+            Every tour starts and ends in Swakopmund or Walvis Bay, run by
+            the same small team from your first message to the final
+            drop-off.
+          </p>
+        </li>
+        <li class="trust-band__item reveal-item">
+          <h3>Built for how you want to travel</h3>
+          <p>
+            {tourCount + adventureCount + comboCount} tours, adventures, and combo deals — from a
+            30-minute quad ride to a full day in Etosha, mixed and matched
+            to your trip.
+          </p>
+        </li>
+        <li class="trust-band__item reveal-item">
+          <h3>A straight answer, fast</h3>
+          <p>
+            No call center. Reach out and you'll hear back from someone
+            who actually knows the dunes and the coastline.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
 
   <Section
     eyebrow="Ready when you are"
@@ -374,6 +406,67 @@ const whyUsFeatures = [
   @media (max-width: 640px) {
     .tours-teaser__item {
       height: 340px;
+    }
+  }
+
+  /* ---------- Trust band (replaces fabricated testimonials) ---------- */
+  .trust-band {
+    padding-block: var(--space-2xl);
+  }
+
+  .trust-band__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .trust-band__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .trust-band__intro h2 {
+    margin: 0;
+  }
+
+  .trust-band__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .trust-band__item {
+    text-align: center;
+    padding: var(--space-lg);
+    border-top: 2px solid var(--color-accent-soft);
+  }
+
+  .trust-band__item h3 {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .trust-band__item p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .trust-band__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
     }
   }
 
