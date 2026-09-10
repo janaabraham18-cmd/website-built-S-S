@@ -157,39 +157,6 @@ function setupAdventureTilt() {
   }
 }
 
-// Gallery corkboard: each polaroid drops in and settles at its resting
-// tilt, instead of the generic fade-up every other `.reveal-item` gets —
-// a section built entirely around a "pinned snapshot" idea deserves its
-// own motion signature rather than reusing setupReveals(). The GSAP
-// `rotation` writes an inline transform that supersedes the CSS class's
-// static rotate(), so the two never fight — GSAP owns the final angle.
-function setupGalleryPins() {
-  const pins = gsap.utils.toArray<HTMLElement>('[data-gallery-pin]');
-  if (!pins.length) return;
-
-  for (const pin of pins) {
-    const frame = pin.querySelector<HTMLElement>('.polaroid-frame');
-    if (!frame) continue;
-
-    const restRotation = pin.classList.contains('gallery__pin--l') ? -4 : 3;
-
-    gsap.set(frame, { opacity: 0, y: -36, rotation: restRotation * -1.5 });
-
-    gsap.to(frame, {
-      opacity: 1,
-      y: 0,
-      rotation: restRotation,
-      duration: 0.7,
-      ease: 'back.out(1.6)',
-      scrollTrigger: {
-        trigger: pin,
-        start: 'top 88%',
-        toggleActions: 'play none none none',
-      },
-    });
-  }
-}
-
 // Rising-stagger entrance for the homepage "More ways to spend a day"
 // grid: cards rise and fade in together, with a diagonal stagger running
 // top-left to bottom-right across the grid rather than row by row. Runs
@@ -282,41 +249,19 @@ function setupHeroPanelSlideshow(reduceMotion: boolean) {
     }
   };
 
-  let index = 0;
-
-  // Each panel is a real <button> now — clicking/tapping one features it
-  // directly, restarting the autoplay clock from there. This is the part
-  // that was missing for touch devices: hover-to-pause (below) means
-  // nothing on a phone or tablet, so without a tap handler a touch visitor
-  // had zero control over a slideshow that never stops moving on them.
-  panels.forEach((panel, i) => {
-    panel.addEventListener('click', () => {
-      index = i;
-      setActive(index);
-      if (!reduceMotion) restart();
-    });
-  });
-
   if (reduceMotion) return;
 
+  let index = 0;
   let timer: ReturnType<typeof setInterval>;
   const advance = () => setActive((index = (index + 1) % panels.length));
   const start = () => {
     timer = setInterval(advance, 2800);
   };
   const stop = () => clearInterval(timer);
-  const restart = () => {
-    stop();
-    start();
-  };
 
   start();
   track.addEventListener('mouseenter', stop);
   track.addEventListener('mouseleave', start);
-  // :focus-within covers keyboard users tabbing through the panel buttons —
-  // hover alone (above) misses both them and touch visitors.
-  track.addEventListener('focusin', stop);
-  track.addEventListener('focusout', start);
 }
 
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
@@ -503,7 +448,6 @@ export function initMotion() {
     setupAdventureCards();
     setupAdventureTilt();
     setupAdventureRise();
-    setupGalleryPins();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
