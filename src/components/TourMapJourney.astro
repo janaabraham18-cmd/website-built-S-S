@@ -35,6 +35,20 @@ const stopsWithTours = mapJourney.map((pin) => {
 const creditHref = (username: string) =>
   `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 
+// 2-4 highlight phrases per tour, each lifted directly from that tour's
+// own description in tours.ts (never invented) — a scannable recap of
+// concrete things you'll see/do, distinct from the Includes line below
+// it (which is about what's provided/logistics, not the experience).
+const highlightsBySlug: Record<string, string[]> = {
+  'etosha-tour': ['Elephants', 'Lions', 'Rhinos', 'Giraffes'],
+  'sossusvlei-tour': ['Towering red sand dunes', 'Deadvlei', 'Namib Desert landscapes'],
+  'skeleton-coast-tour': ['Dramatic shoreline', 'Shipwrecks', 'Seal colonies', 'Atlantic Ocean views'],
+  'sandwich-harbour-full-day': ['Salt Pans', 'Namib-Naukluft Park', 'Sandwich Harbour Lagoon', 'Dune driving'],
+  'spitzkoppe-tour': ['Granite rock formations', 'Ancient rock art', 'Desert landscapes'],
+  'pelican-point-tour': ['Cape fur seals', 'Pelicans', 'Flamingos', 'Desert-meets-ocean views'],
+  'dolphin-seal-catamaran-cruise': ['Dolphins', 'Rescue seals & pelicans', 'Whales', 'Turtles & Mola fish'],
+};
+
 // Every piece is the same fixed-size crop (in map units) of the exact
 // same coordinate system NamibiaMap.astro's 14 region polygons are
 // drawn against — only the pan target (centered on each pin) differs —
@@ -132,9 +146,25 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
               </div>
 
               <div class="tour-reveal__body reveal-item">
+                <span class="tour-reveal__ghost-number" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+
                 <p class="tour-reveal__region">{pin.regionLabel}</p>
                 <h2 class="tour-reveal__title">{tour.name}</h2>
                 <p class="tour-reveal__desc">{tour.description}</p>
+
+                {highlightsBySlug[tour.slug] && (
+                  <ul class="tour-reveal__highlights">
+                    {highlightsBySlug[tour.slug].map((item) => <li>{item}</li>)}
+                  </ul>
+                )}
+
+                <p class="tour-reveal__quickfacts">
+                  {tour.duration && <span class="tour-reveal__duration">{tour.duration}</span>}
+                  <span class="tour-reveal__included">
+                    <span class="tour-reveal__included-label">Includes</span> {tour.included.join(', ')}
+                  </span>
+                </p>
+
                 <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
 
                 {/* Mobile-only fallback: a small static piece map inline
@@ -445,8 +475,82 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   }
 
   .tour-reveal__body {
+    position: relative;
     flex: 1 1 0%;
     min-width: 0;
+  }
+
+  /* Purely decorative — 01 through 07, one per section, reinforcing the
+     "seven tours" count as you scroll. z-index: -1 (rather than DOM
+     order alone) is what actually guarantees it paints behind the text
+     content beside it: an auto/0 z-index on an absolutely positioned
+     element still paints above ordinary in-flow siblings regardless of
+     source order, so without the negative value this would sit on top
+     of the copy instead of behind it. */
+  .tour-reveal__ghost-number {
+    position: absolute;
+    top: 50%;
+    right: -0.25rem;
+    transform: translateY(-50%);
+    z-index: -1;
+    font-family: var(--font-display);
+    font-size: clamp(6rem, 9vw, 11rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-earth-900);
+    opacity: 0.07;
+    pointer-events: none;
+    user-select: none;
+    white-space: nowrap;
+  }
+
+  .tour-reveal__highlights {
+    list-style: none;
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .tour-reveal__highlights li {
+    position: relative;
+    padding-left: var(--space-md);
+    font-size: var(--fs-sm);
+    color: var(--color-text);
+  }
+
+  .tour-reveal__highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent-strong);
+  }
+
+  .tour-reveal__quickfacts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .tour-reveal__duration {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: var(--color-accent-strong);
+  }
+
+  .tour-reveal__included-label {
+    font-weight: 600;
+    color: var(--color-earth-900);
   }
 
   .tour-reveal__photo {
@@ -515,6 +619,19 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
     .tour-reveal__photo {
       aspect-ratio: 4 / 3;
+    }
+
+    /* Vertically centering behind a whole stacked column of text (as
+       happens on desktop, where there's a tall photo beside a shorter
+       block of copy) tends to land the number across several lines of
+       running text at this width instead of the shorter title/region
+       lines up top, since everything stacks in one column here — so on
+       mobile it's anchored to the top instead. */
+    .tour-reveal__ghost-number {
+      top: -0.5rem;
+      right: 0;
+      transform: none;
+      font-size: clamp(4rem, 22vw, 5.5rem);
     }
 
     .tour-reveal__piece-mobile {
