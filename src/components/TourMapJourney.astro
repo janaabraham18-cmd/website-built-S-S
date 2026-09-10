@@ -69,13 +69,13 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
 };
 
 // Once all 7 pieces have landed, the collage settles into one clean,
-// unbroken map of the whole country (NamibiaMap's full 0 0 600 740
+// unbroken map of the whole country (NamibiaMap's full 0 0 751 740
 // viewBox) with all 7 tours pinned at once, so it's actually legible as
 // a map rather than a scrapbook of overlapping crops — the point being
 // a tourist can now see exactly where each tour sits relative to the
 // others. Kept at the same width as the collage so the settle reads as
 // one continuous object, just resolving into focus.
-const FULL_MAP_H = Math.round(growthWidth * (740 / 600));
+const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 ---
 
 <section class="tour-hero full-bleed">
@@ -544,7 +544,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 600));
       display: block;
       width: 100%;
       max-width: 320px;
-      aspect-ratio: 600 / 740;
+      aspect-ratio: 751 / 740;
       margin: 0 auto var(--space-lg);
       border-radius: var(--radius-md);
       overflow: hidden;
