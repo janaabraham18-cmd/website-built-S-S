@@ -219,6 +219,71 @@ function setupToursTeaserSlide() {
   });
 }
 
+// Tours page map journey: pins the map+card panel and steps through 7
+// waypoints (4 Erongo, 2 Kunene, 1 Hardap) as the visitor scrolls through
+// a reserved scroll distance sized in JS (waypoints carry no layout
+// height of their own — see TourMapJourney.astro). Desktop + motion-ok
+// only; the .astro component's own CSS shows the stacked mobile
+// fallback instead below 861px or under reduced motion, so this
+// function simply doesn't run in either of those cases.
+function setupTourMapJourney() {
+  if (!window.matchMedia('(min-width: 861px)').matches) return;
+
+  const section = document.querySelector<HTMLElement>('[data-map-journey]');
+  const pinArea = section?.querySelector<HTMLElement>('.map-journey__pin-area');
+  const zoomGroup = section?.querySelector<SVGGElement>('[data-map-zoom-group]');
+  const waypoints = Array.from(section?.querySelectorAll<HTMLElement>('[data-map-waypoint]') ?? []);
+  const cards = Array.from(section?.querySelectorAll<HTMLElement>('[data-map-card]') ?? []);
+  const pins = Array.from(section?.querySelectorAll<SVGGElement>('[data-map-pin]') ?? []);
+  const regionLabel = section?.querySelector<HTMLElement>('[data-map-region-label]');
+  if (!section || !pinArea || !zoomGroup || !waypoints.length) return;
+
+  const VIEWBOX_W = 600;
+  const VIEWBOX_H = 740;
+  const STEP_VH = 0.9;
+
+  const stepPx = () => window.innerHeight * STEP_VH;
+  const totalPx = () => stepPx() * waypoints.length;
+
+  let activeIndex = -1;
+
+  const goToStep = (i: number) => {
+    if (i === activeIndex) return;
+    activeIndex = i;
+
+    const wp = waypoints[i];
+    const { slug, regionLabel: label, zoomX, zoomY, zoomScale } = wp.dataset;
+    const scale = Number(zoomScale);
+
+    gsap.to(zoomGroup, {
+      x: VIEWBOX_W / 2 - Number(zoomX) * scale,
+      y: VIEWBOX_H / 2 - Number(zoomY) * scale,
+      scale,
+      transformOrigin: '0px 0px',
+      duration: 1,
+      ease: 'power2.inOut',
+    });
+
+    cards.forEach((card) => card.classList.toggle('is-active', card.dataset.mapCard === slug));
+    pins.forEach((pin) => pin.classList.toggle('namibia-map__pin--active', pin.dataset.mapPin === slug));
+    if (regionLabel && label) regionLabel.textContent = label;
+  };
+
+  goToStep(0);
+
+  ScrollTrigger.create({
+    trigger: pinArea,
+    start: 'top top',
+    end: () => `+=${totalPx()}`,
+    pin: true,
+    invalidateOnRefresh: true,
+    onUpdate: (self) => {
+      const idx = Math.min(waypoints.length - 1, Math.floor(self.progress * waypoints.length));
+      goToStep(idx);
+    },
+  });
+}
+
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
 // "active" (wider, via flex-grow — see .hero__panel.is-active) so each
 // photo gets a turn filling most of the hero, like an expanding-photo
@@ -487,6 +552,7 @@ export function initMotion() {
     }
 
     setupToursTeaserSlide();
+    setupTourMapJourney();
 
     // Every scroll-triggered pin above is now registered, so recalculate
     // all of their positions once against the final layout instead of

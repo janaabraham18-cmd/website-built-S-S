@@ -156,6 +156,29 @@ export const tours: Tour[] = [
       'https://images.unsplash.com/photo-1705065277882-b0604ec13dca?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
     imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
   },
+  {
+    // Recategorized from 'adventure' to 'tour' — this is a proper
+    // sightseeing tour departing Walvis Bay harbour like Pelican Point,
+    // not a short activity, so it belongs with the other destination
+    // tours rather than the Adventures grid.
+    slug: 'dolphin-seal-catamaran-cruise',
+    category: 'tour',
+    name: 'Dolphin & Seal Catamaran Cruise',
+    description:
+      "Cruise on a luxurious catamaran and have unforgettable encounters with Namibia's marine life. In addition to the rescue seals and pelicans who often join guests on the boat, dolphins, whales, Mola fish, and turtles can be seen on this cruise.",
+    duration: '3.5 hours',
+    note: 'Pick-up from 07h45, return to hotel around 13h00',
+    included: [
+      'Sparkling wine',
+      'Fresh oysters',
+      'Snacks',
+      'Variety of drinks',
+      'Transfers available at additional cost (subject to availability, please enquire)',
+    ],
+    imageUrl:
+      'https://images.unsplash.com/photo-1440020143730-090579c4d53c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Talia Cohen', username: 'taliacohen' },
+  },
 
   // --- Adventures ---
   {
@@ -272,25 +295,6 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1603703182693-51a19941fa59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Ken kahiri', username: 'kahiriken' },
-  },
-  {
-    slug: 'dolphin-seal-catamaran-cruise',
-    category: 'adventure',
-    name: 'Dolphin & Seal Catamaran Cruise',
-    description:
-      "Cruise on a luxurious catamaran and have unforgettable encounters with Namibia's marine life. In addition to the rescue seals and pelicans who often join guests on the boat, dolphins, whales, Mola fish, and turtles can be seen on this cruise.",
-    duration: '3.5 hours',
-    note: 'Pick-up from 07h45, return to hotel around 13h00',
-    included: [
-      'Sparkling wine',
-      'Fresh oysters',
-      'Snacks',
-      'Variety of drinks',
-      'Transfers available at additional cost (subject to availability, please enquire)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1440020143730-090579c4d53c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Talia Cohen', username: 'taliacohen' },
   },
   {
     slug: 'sandwich-harbour-half-day',

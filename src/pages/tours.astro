@@ -1,18 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import TourCard from '../components/TourCard.astro';
 import AdventureCard from '../components/AdventureCard.astro';
+import TourMapJourney from '../components/TourMapJourney.astro';
 import { toursByCategory, categoryLabels } from '../data/tours';
 
-const heroTours = toursByCategory('tour');
 const adventures = toursByCategory('adventure');
 const combos = toursByCategory('combo');
 
-const featuredAdventureSlugs = new Set([
-  'quad-bike-tour',
-  'dolphin-seal-catamaran-cruise',
-  'tandem-skydive',
-]);
+const featuredAdventureSlugs = new Set(['quad-bike-tour', 'tandem-skydive']);
 
 const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
 ---
@@ -21,27 +16,7 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
   title="Tours & Adventures"
   description="The full lineup of tours, adventures, and combo deals from Salt & Sun Tours in Swakopmund and Walvis Bay, Namibia."
 >
-  <header class="tours-header">
-    <div class="container">
-      <p class="tours-header__eyebrow">Salt &amp; Sun Tours</p>
-      <h1 class="tours-header__heading">Tours &amp; Adventures</h1>
-      <p class="tours-header__body">
-        Every excursion we run out of Swakopmund and Walvis Bay, from
-        full-day trips into Etosha and Sossusvlei to short desert
-        adventures and combo packages. <a href="/contact">Contact us for
-        current rates</a> and we'll help you build the right day.
-      </p>
-    </div>
-  </header>
-
-  <section class="tour-rows-section" id="tour">
-    <div class="container tour-rows-section__intro reveal">
-      <p class="tour-rows-section__eyebrow reveal-item">{categoryLabels.tour.label}</p>
-      <p class="tour-rows-section__desc reveal-item">{categoryLabels.tour.description}</p>
-    </div>
-
-    {heroTours.map((tour, index) => <TourCard tour={tour} reverse={index % 2 === 1} />)}
-  </section>
+  <TourMapJourney />
 
   <section class="adventure-section" id="adventure">
     <div class="container">
@@ -79,60 +54,6 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
 </BaseLayout>
 
 <style>
-  .tours-header {
-    padding-block: var(--space-2xl) var(--space-xl);
-  }
-
-  .tours-header__eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-accent-strong);
-    margin-bottom: var(--space-2xs);
-  }
-
-  .tours-header__heading {
-    margin-bottom: var(--space-md);
-  }
-
-  .tours-header__body {
-    font-size: var(--fs-md);
-    line-height: var(--lh-normal);
-    color: var(--color-text-muted);
-    max-width: var(--content-width-narrow);
-  }
-
-  .tours-header__body a {
-    color: var(--color-accent-strong);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .tour-rows-section {
-    scroll-margin-top: 5rem;
-  }
-
-  .tour-rows-section__intro {
-    padding-block: var(--space-lg);
-    max-width: var(--content-width-narrow);
-  }
-
-  .tour-rows-section__eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-accent-strong);
-    margin: 0 0 var(--space-2xs);
-  }
-
-  .tour-rows-section__desc {
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-
   .adventure-section {
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
