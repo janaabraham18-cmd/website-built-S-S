@@ -261,6 +261,54 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
   root.addEventListener('focusout', start);
 }
 
+// Tours page growing map: each of the 7 tour sections owns one piece
+// of the shared Namibia map, laid out server-side at its true relative
+// position (see TourMapJourney.astro's pieceBoxStyle) but starting
+// hidden and the container collapsed to zero height — there is no
+// pre-existing "ghost" of the finished map. As each section scrolls
+// into view its piece floats down into its already-correct position
+// and stays there permanently (ScrollTrigger `once: true`), and the
+// container's own height grows to keep fitting whatever has landed so
+// far, so by the last section the map has simply finished assembling
+// itself rather than being swapped for a separate "complete" version.
+// Reduced motion is intentionally not wired up here: the container's
+// default CSS state (full height, every piece opaque) already reads as
+// the finished map with nothing left to animate.
+function setupTourMapGrowth() {
+  const container = document.querySelector<HTMLElement>('[data-map-growth]');
+  if (!container) return;
+
+  const pieces = Array.from(container.querySelectorAll<HTMLElement>('[data-map-piece]'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-section]'));
+  if (!pieces.length) return;
+
+  gsap.set(container, { height: 0 });
+  gsap.set(pieces, { opacity: 0, y: -24 });
+
+  pieces.forEach((piece) => {
+    const index = Number(piece.dataset.mapPiece);
+    const section = sections[index];
+    if (!section) return;
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      once: true,
+      onEnter: () => {
+        gsap.to(piece, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+
+        const bottom = piece.offsetTop + piece.offsetHeight;
+        const current = parseFloat(gsap.getProperty(container, 'height') as string) || 0;
+        gsap.to(container, {
+          height: Math.max(current, bottom),
+          duration: 0.6,
+          ease: 'power2.out',
+        });
+      },
+    });
+  });
+}
+
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
 // "active" (wider, via flex-grow — see .hero__panel.is-active) so each
 // photo gets a turn filling most of the hero, like an expanding-photo
@@ -491,6 +539,7 @@ export function initMotion() {
     setupAdventureTilt();
     setupAdventureRise();
     setupTourRecapSlideshow(false);
+    setupTourMapGrowth();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This

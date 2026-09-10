@@ -1,14 +1,19 @@
 ---
-// Full-bleed hero leads straight into 7 ordinary (non-pinned) sections,
-// one per tour, each fading in via the sitewide .reveal/.reveal-item
-// scroll pattern as it's scrolled to — no scroll-jacking, no pinning.
-// Each section shows a dominant photo beside a small "piece" of the
-// Namibia map: a fixed-size crop of the exact same NamibiaMap
-// coordinate system centered on that tour's pin, so the pieces are all
-// consistently scaled/oriented (only panned, never rotated) and would
-// line up into one real map if you set them side by side in order. A
-// closing recap section shows the complete map with all 7 pins plus a
-// small auto-cycling photo slideshow of the 7 tours.
+// Full-bleed hero leads straight into a two-column journey: a left
+// column of 7 ordinary (non-pinned, non-sticky) sections — one per
+// tour, each fading in via the sitewide .reveal/.reveal-item pattern —
+// and a right-hand column holding a single map that literally grows as
+// you scroll. Nothing about the map is pre-rendered as a "ghost" of the
+// finished thing: each tour's piece (a small crop of the shared
+// NamibiaMap coordinate system, centered on that tour's pin) only
+// appears once its section scrolls into view, floating into its true
+// relative position next to whichever pieces already landed, and the
+// map's own container grows taller to fit. By the seventh section the
+// map has assembled itself from everything that accumulated — there's
+// no separate "complete map" reveal, that IS the complete map. A
+// closing slideshow of all 7 tour photos follows. Below ~900px there's
+// no room for two columns, so the growing map is hidden and each
+// section instead shows its own small static piece inline.
 import { tours } from '../data/tours';
 import { mapJourney } from '../data/tourRegions';
 import NamibiaMap from './NamibiaMap.astro';
@@ -27,15 +32,40 @@ const stopsWithTours = mapJourney.map((pin) => {
 const creditHref = (username: string) =>
   `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 
-// Every piece crop is the same fixed size in map units — only the pan
-// target (centered on each pin) changes — so scale/orientation stay
-// identical across all 7 and the crops are geographically compatible
-// with each other, even though only the final recap map ever actually
-// shows them assembled together.
+// Every piece is the same fixed-size crop (in map units) of the exact
+// same coordinate system NamibiaMap.astro's 14 region polygons are
+// drawn against — only the pan target (centered on each pin) differs —
+// so any two pieces placed at their true map-unit offsets tile
+// together correctly, like a puzzle, with no separate assembly step.
 const PIECE_W = 170;
 const PIECE_H = 210;
 const pieceViewBox = (pin: { x: number; y: number }) =>
   `${pin.x - PIECE_W / 2} ${pin.y - PIECE_H / 2} ${PIECE_W} ${PIECE_H}`;
+
+// Pixel layout for the growing map: lay out all 7 piece-crops at their
+// true relative map-unit positions, find the bounding box that
+// encloses all of them, then scale that box to a sensible on-page
+// size. This is computed once, up front — the pieces' final positions
+// never change, only how many of them are visible does.
+const SCALE = 1.3;
+const pieceRects = stopsWithTours.map(({ pin }) => ({
+  slug: pin.slug,
+  left: pin.x - PIECE_W / 2,
+  top: pin.y - PIECE_H / 2,
+}));
+const minLeft = Math.min(...pieceRects.map((r) => r.left));
+const minTop = Math.min(...pieceRects.map((r) => r.top));
+const maxRight = Math.max(...pieceRects.map((r) => r.left + PIECE_W));
+const maxBottom = Math.max(...pieceRects.map((r) => r.top + PIECE_H));
+const growthWidth = Math.round((maxRight - minLeft) * SCALE);
+const growthHeight = Math.round((maxBottom - minTop) * SCALE);
+const pieceBoxStyle = (pin: { x: number; y: number }) => {
+  const left = Math.round((pin.x - PIECE_W / 2 - minLeft) * SCALE);
+  const top = Math.round((pin.y - PIECE_H / 2 - minTop) * SCALE);
+  const w = Math.round(PIECE_W * SCALE);
+  const h = Math.round(PIECE_H * SCALE);
+  return `left:${left}px; top:${top}px; width:${w}px; height:${h}px;`;
+};
 ---
 
 <section class="tour-hero full-bleed">
@@ -62,54 +92,79 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
   <div class="tour-hero__scroll-cue" aria-hidden="true"><span></span></div>
 </section>
 
-<!-- Seven ordinary (non-pinned) sections, one per tour -->
-{
-  stopsWithTours.map(({ pin, tour }, i) => (
-    <section
-      class:list={['tour-reveal', 'reveal', i % 2 === 1 && 'tour-reveal--reverse']}
-      id={i === 0 ? 'tour' : undefined}
-    >
-      <div class="container tour-reveal__grid">
-        <div class="tour-reveal__photo-wrap reveal-item">
-          <img
-            class="tour-reveal__photo"
-            src={tour.imageUrl}
-            alt={tour.name}
-            loading={i === 0 ? 'eager' : 'lazy'}
-            decoding="async"
-          />
-          {tour.imageCredit && (
-            <p class="tour-reveal__credit">
-              Photo:{' '}
-              <a href={creditHref(tour.imageCredit.username)} target="_blank" rel="noopener noreferrer">{tour.imageCredit.name}</a>{' '}
-              /{' '}
-              <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-            </p>
-          )}
-        </div>
+<div class="tour-journey">
+  <div class="container tour-journey__grid">
+    <div class="tour-journey__sections">
+      {
+        stopsWithTours.map(({ pin, tour }, i) => (
+          <section
+            class:list={['tour-reveal', 'reveal', i % 2 === 1 && 'tour-reveal--reverse']}
+            data-tour-section={i}
+            id={i === 0 ? 'tour' : undefined}
+          >
+            <div class="tour-reveal__inner">
+              <div class="tour-reveal__photo-wrap reveal-item">
+                <img
+                  class="tour-reveal__photo"
+                  src={tour.imageUrl}
+                  alt={tour.name}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+                {tour.imageCredit && (
+                  <p class="tour-reveal__credit">
+                    Photo:{' '}
+                    <a href={creditHref(tour.imageCredit.username)} target="_blank" rel="noopener noreferrer">{tour.imageCredit.name}</a>{' '}
+                    /{' '}
+                    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                  </p>
+                )}
+              </div>
 
-        <div class="tour-reveal__side reveal-item">
-          <div class="tour-reveal__piece">
-            <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
-          </div>
-          <p class="tour-reveal__region">{pin.regionLabel}</p>
-          <h2 class="tour-reveal__title">{tour.name}</h2>
-          <p class="tour-reveal__desc">{tour.description}</p>
-          <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
-        </div>
-      </div>
-    </section>
-  ))
-}
+              <div class="tour-reveal__body reveal-item">
+                <p class="tour-reveal__region">{pin.regionLabel}</p>
+                <h2 class="tour-reveal__title">{tour.name}</h2>
+                <p class="tour-reveal__desc">{tour.description}</p>
+                <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
 
-<!-- Closing recap: the complete map with all 7 pins, plus a small
-     auto-cycling slideshow through all 7 tour photos -->
-<section class="tour-recap reveal">
-  <div class="container tour-recap__grid">
-    <div class="tour-recap__map-wrap reveal-item">
-      <NamibiaMap pins={mapJourney} />
-      <p class="tour-recap__caption">Seven tours, three regions</p>
+                {/* Mobile-only fallback: a small static piece map inline
+                    with its own section, in place of the desktop growing
+                    map column, which has nowhere sensible to sit below
+                    the two-column breakpoint. */}
+                <div class="tour-reveal__piece-mobile" aria-hidden="true">
+                  <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
+                </div>
+              </div>
+            </div>
+          </section>
+        ))
+      }
     </div>
+
+    <aside class="tour-journey__map-col" aria-hidden="true">
+      <div
+        class="tour-map-growth"
+        data-map-growth
+        style={`width:${growthWidth}px; height:${growthHeight}px;`}
+      >
+        {
+          stopsWithTours.map(({ pin }, i) => (
+            <div class="tour-map-growth__piece" data-map-piece={i} style={pieceBoxStyle(pin)}>
+              <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
+            </div>
+          ))
+        }
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- Closing slideshow: a small auto-cycling run through all 7 tour
+     photos. No separate "complete map" reveal here — the growing map
+     above has already reached its finished state by the last section. -->
+<section class="tour-recap reveal">
+  <div class="container">
+    <h2 class="tour-recap__heading reveal-item">Seven tours, three regions</h2>
 
     <div class="tour-recap__slideshow reveal-item" data-tour-slideshow>
       <div class="tour-recap__slides">
@@ -247,20 +302,63 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
     70%, 100% { opacity: 0; transform: translateY(10px); }
   }
 
-  /* ---------- Per-tour reveal sections ---------- */
-  .tour-reveal {
+  /* ---------- Two-column journey ---------- */
+  .tour-journey {
     padding-block: var(--space-2xl);
   }
 
-  .tour-reveal__grid {
+  .tour-journey__grid {
     display: grid;
-    grid-template-columns: 1.7fr 1fr;
+    grid-template-columns: 1.6fr 1fr;
     align-items: center;
     gap: var(--space-2xl);
   }
 
-  .tour-reveal--reverse .tour-reveal__grid {
-    grid-template-columns: 1fr 1.7fr;
+  .tour-journey__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+  }
+
+  /* Not sticky, not pinned — genuinely just sits in normal document
+     flow. Centering it (rather than anchoring to the top) is what
+     keeps it roughly in step with the reader across the whole 7-section
+     stack without any scroll-jacking: since the stack is far taller
+     than the map ever gets, an edge-anchored map would scroll out of
+     view for everything but the first section or two, whereas a
+     vertically centered one stays closest to the viewport around the
+     middle of the journey and is only off-screen at the very start and
+     very end. Its own height is driven entirely by how many pieces
+     have been placed (see setupTourMapGrowth), never by the height of
+     the sections beside it. */
+  .tour-journey__map-col {
+    position: static;
+  }
+
+  .tour-map-growth {
+    position: relative;
+    max-width: 100%;
+    margin-inline: auto;
+    overflow: hidden;
+  }
+
+  .tour-map-growth__piece {
+    position: absolute;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ---------- Per-tour reveal sections ---------- */
+  .tour-reveal__inner {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+    gap: var(--space-xl);
+  }
+
+  .tour-reveal--reverse .tour-reveal__inner {
+    grid-template-columns: 1fr 1.4fr;
   }
 
   .tour-reveal__photo-wrap {
@@ -272,11 +370,11 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
     order: 2;
   }
 
-  .tour-reveal__side {
+  .tour-reveal__body {
     order: 2;
   }
 
-  .tour-reveal--reverse .tour-reveal__side {
+  .tour-reveal--reverse .tour-reveal__body {
     order: 1;
   }
 
@@ -303,19 +401,6 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
     text-underline-offset: 2px;
   }
 
-  /* Fixed-size crop of the exact same NamibiaMap coordinate system used
-     everywhere else — only the pan target changes per tour, so every
-     piece is scaled/oriented identically to the others. */
-  .tour-reveal__piece {
-    width: 100%;
-    max-width: 220px;
-    aspect-ratio: 170 / 210;
-    border-radius: var(--radius-md);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    margin-bottom: var(--space-sm);
-  }
-
   .tour-reveal__region {
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -335,16 +420,28 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
     margin: 0 0 var(--space-md);
   }
 
-  @media (max-width: 768px) {
-    .tour-reveal__grid,
-    .tour-reveal--reverse .tour-reveal__grid {
+  .tour-reveal__piece-mobile {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .tour-journey__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tour-journey__map-col {
+      display: none;
+    }
+
+    .tour-reveal__inner,
+    .tour-reveal--reverse .tour-reveal__inner {
       grid-template-columns: 1fr;
     }
 
     .tour-reveal__photo-wrap,
     .tour-reveal--reverse .tour-reveal__photo-wrap,
-    .tour-reveal__side,
-    .tour-reveal--reverse .tour-reveal__side {
+    .tour-reveal__body,
+    .tour-reveal--reverse .tour-reveal__body {
       order: initial;
     }
 
@@ -352,8 +449,15 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
       aspect-ratio: 4 / 3;
     }
 
-    .tour-reveal__piece {
-      max-width: 160px;
+    .tour-reveal__piece-mobile {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      aspect-ratio: 170 / 210;
+      margin: var(--space-md) 0 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
     }
   }
 
@@ -363,25 +467,9 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
     background: var(--color-bg-alt);
   }
 
-  .tour-recap__grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    gap: var(--space-2xl);
-  }
-
-  .tour-recap__map-wrap {
-    max-width: 380px;
-    margin-inline: auto;
-    width: 100%;
-  }
-
-  .tour-recap__caption {
+  .tour-recap__heading {
     text-align: center;
-    margin: var(--space-sm) 0 0;
-    font-family: var(--font-display-italic);
-    font-style: italic;
-    color: var(--color-earth-700);
+    margin: 0 0 var(--space-lg);
   }
 
   .tour-recap__slideshow {
@@ -448,12 +536,6 @@ const pieceViewBox = (pin: { x: number; y: number }) =>
 
   .tour-recap__dots button.is-active {
     background: var(--color-accent-strong);
-  }
-
-  @media (max-width: 768px) {
-    .tour-recap__grid {
-      grid-template-columns: 1fr;
-    }
   }
 
   @media (max-width: 640px) {
