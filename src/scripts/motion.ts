@@ -275,12 +275,20 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // shrinks back to fit whatever's left, and re-triggering that section
 // by scrolling back down re-places it — nothing is `once: true` here.
 //
+// Scrolling on past the 7th tour into the closing recap slot settles
+// the collage into one clean, unbroken map (same coordinate space, same
+// width, just the seamless version) with all 7 tours pinned at once —
+// the point being a tourist can actually read where everything sits
+// relative to everything else, which the overlapping crops don't
+// really give you. Scrolling back up out of the recap slot reverses
+// that the same way every other step here does.
+//
 // The map is explicitly not pinned/sticky, but it can't just sit at one
 // fixed vertical spot either: its assembled size stays compact (scaled
-// to real geography, not to page length) while the 7-section stack
-// beside it is many times taller, so any single static position leaves
-// it stranded off-screen for most of the scroll — a static top or
-// centered position both fail this the same way, they just fail for
+// to real geography, not to page length) while the 7-section-plus-recap
+// stack beside it is many times taller, so any single static position
+// leaves it stranded off-screen for most of the scroll — a static top
+// or centered position both fail this the same way, they just fail for
 // different sections. So every trigger (forward or backward) also
 // nudges the map column's margin-top to re-center the map on whichever
 // section is currently active. That's a reposition per section
@@ -288,18 +296,27 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // layout, never position:fixed/sticky.
 //
 // Reduced motion is intentionally not wired up here: the container's
-// default CSS state (full height, every piece opaque, margin-top 0)
-// already reads as the finished map with nothing left to animate.
+// default CSS state (the complete map, full height, margin-top 0)
+// already reads as the finished result with nothing left to animate —
+// there's no reason to make a reduced-motion visitor sit through the
+// collage phase at all when the useful end state is right there.
 function setupTourMapGrowth() {
   const container = document.querySelector<HTMLElement>('[data-map-growth]');
   const grid = document.querySelector<HTMLElement>('.tour-journey__grid');
-  if (!container || !grid) return;
+  const piecesLayer = container?.querySelector<HTMLElement>('[data-map-pieces]');
+  const fullLayer = container?.querySelector<HTMLElement>('[data-map-full-layer]');
+  const finalSlot = document.querySelector<HTMLElement>('[data-map-final]');
+  if (!container || !grid || !piecesLayer || !fullLayer) return;
 
-  const pieces = Array.from(container.querySelectorAll<HTMLElement>('[data-map-piece]'));
+  const pieces = Array.from(piecesLayer.querySelectorAll<HTMLElement>('[data-map-piece]'));
   const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-section]'));
   if (!pieces.length) return;
 
+  const fullHeight = Number(container.dataset.fullHeight) || container.offsetHeight;
+
   gsap.set(container, { height: 0, marginTop: 0 });
+  gsap.set(fullLayer, { opacity: 0, scale: 1.04 });
+  gsap.set(piecesLayer, { opacity: 1 });
   gsap.set(pieces, { opacity: 0, y: -24 });
 
   // Resizes/repositions the container to fit exactly pieces 0..activeIndex
@@ -344,6 +361,29 @@ function setupTourMapGrowth() {
       },
     });
   });
+
+  if (finalSlot) {
+    ScrollTrigger.create({
+      trigger: finalSlot,
+      start: 'top 75%',
+      onEnter: () => {
+        gsap.to(piecesLayer, { opacity: 0, scale: 0.94, duration: 0.6, ease: 'power2.inOut' });
+        gsap.to(fullLayer, { opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out', delay: 0.15 });
+
+        const gridRect = grid.getBoundingClientRect();
+        const slotRect = finalSlot.getBoundingClientRect();
+        const slotCenter = slotRect.top - gridRect.top + slotRect.height / 2;
+        const marginTop = Math.max(0, slotCenter - fullHeight / 2);
+
+        gsap.to(container, { height: fullHeight, marginTop, duration: 0.7, ease: 'power2.out' });
+      },
+      onLeaveBack: () => {
+        gsap.to(fullLayer, { opacity: 0, scale: 1.04, duration: 0.5, ease: 'power2.inOut' });
+        gsap.to(piecesLayer, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out', delay: 0.1 });
+        syncTo(pieces.length - 1);
+      },
+    });
+  }
 }
 
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is

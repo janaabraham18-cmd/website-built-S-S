@@ -9,11 +9,14 @@
 // appears once its section scrolls into view, floating into its true
 // relative position next to whichever pieces already landed, and the
 // map's own container grows taller to fit. By the seventh section the
-// map has assembled itself from everything that accumulated — there's
-// no separate "complete map" reveal, that IS the complete map. A
-// closing slideshow of all 7 tour photos follows. Below ~900px there's
-// no room for two columns, so the growing map is hidden and each
-// section instead shows its own small static piece inline.
+// map has assembled itself from everything that accumulated. Scrolling
+// on to the closing slot settles that collage into one clean, unbroken
+// map of the whole country with all 7 tours pinned at once — so a
+// tourist can actually read where everything is — alongside a small
+// auto-cycling slideshow of all 7 tour photos. Below ~900px there's no
+// room for two columns, so the growing map is hidden: each tour section
+// shows its own small static piece inline, and the closing slot shows
+// the same complete map as a plain static image.
 import { tours } from '../data/tours';
 import { mapJourney } from '../data/tourRegions';
 import NamibiaMap from './NamibiaMap.astro';
@@ -56,9 +59,7 @@ const pieceRects = stopsWithTours.map(({ pin }) => ({
 const minLeft = Math.min(...pieceRects.map((r) => r.left));
 const minTop = Math.min(...pieceRects.map((r) => r.top));
 const maxRight = Math.max(...pieceRects.map((r) => r.left + PIECE_W));
-const maxBottom = Math.max(...pieceRects.map((r) => r.top + PIECE_H));
 const growthWidth = Math.round((maxRight - minLeft) * SCALE);
-const growthHeight = Math.round((maxBottom - minTop) * SCALE);
 const pieceBoxStyle = (pin: { x: number; y: number }) => {
   const left = Math.round((pin.x - PIECE_W / 2 - minLeft) * SCALE);
   const top = Math.round((pin.y - PIECE_H / 2 - minTop) * SCALE);
@@ -66,6 +67,15 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
   const h = Math.round(PIECE_H * SCALE);
   return `left:${left}px; top:${top}px; width:${w}px; height:${h}px;`;
 };
+
+// Once all 7 pieces have landed, the collage settles into one clean,
+// unbroken map of the whole country (NamibiaMap's full 0 0 600 740
+// viewBox) with all 7 tours pinned at once, so it's actually legible as
+// a map rather than a scrapbook of overlapping crops — the point being
+// a tourist can now see exactly where each tour sits relative to the
+// others. Kept at the same width as the collage so the settle reads as
+// one continuous object, just resolving into focus.
+const FULL_MAP_H = Math.round(growthWidth * (740 / 600));
 ---
 
 <section class="tour-hero full-bleed">
@@ -139,60 +149,81 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
           </section>
         ))
       }
+
+      <!-- Closing slot: once the growing map has assembled all 7 pieces,
+           scrolling to this slot settles it into one clean complete map
+           (see setupTourMapGrowth's finalTrigger) alongside a small
+           auto-cycling slideshow of all 7 tour photos. Lives inside the
+           same left column/grid row as the 7 tour sections (rather than
+           as its own section after .tour-journey) so the map column
+           beside it can keep using the same non-sticky
+           margin-top-repositioning trick to end up level with it. -->
+      <div class="tour-recap reveal" data-map-final>
+        <h2 class="tour-recap__heading reveal-item">Seven tours, three regions</h2>
+        <p class="tour-recap__lede reveal-item">
+          Every tour, together on one map — see exactly where each one takes you.
+        </p>
+
+        {/* Mobile-only fallback: the desktop map column (with its
+            settle-into-a-full-map moment) is hidden below the
+            breakpoint, so mobile gets the same complete map as a plain
+            static image instead. */}
+        <div class="tour-recap__map-mobile reveal-item" aria-hidden="true">
+          <NamibiaMap pins={mapJourney} />
+        </div>
+
+        <div class="tour-recap__slideshow reveal-item" data-tour-slideshow>
+          <div class="tour-recap__slides">
+            {
+              stopsWithTours.map(({ tour }, i) => (
+                <figure class:list={['tour-recap__slide', i === 0 && 'is-active']} data-tour-slide={i}>
+                  <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
+                  <figcaption>{tour.name}</figcaption>
+                </figure>
+              ))
+            }
+          </div>
+
+          <div class="tour-recap__dots" data-tour-slideshow-dots role="tablist" aria-label="Choose a tour photo">
+            {
+              stopsWithTours.map(({ tour }, i) => (
+                <button
+                  type="button"
+                  class:list={[i === 0 && 'is-active']}
+                  data-dot={i}
+                  aria-label={`Show ${tour.name}`}
+                />
+              ))
+            }
+          </div>
+        </div>
+      </div>
     </div>
 
     <aside class="tour-journey__map-col" aria-hidden="true">
       <div
         class="tour-map-growth"
         data-map-growth
-        style={`width:${growthWidth}px; height:${growthHeight}px;`}
+        data-full-height={FULL_MAP_H}
+        style={`width:${growthWidth}px; height:${FULL_MAP_H}px;`}
       >
-        {
-          stopsWithTours.map(({ pin }, i) => (
-            <div class="tour-map-growth__piece" data-map-piece={i} style={pieceBoxStyle(pin)}>
-              <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
-            </div>
-          ))
-        }
+        <div class="tour-map-growth__pieces" data-map-pieces>
+          {
+            stopsWithTours.map(({ pin }, i) => (
+              <div class="tour-map-growth__piece" data-map-piece={i} style={pieceBoxStyle(pin)}>
+                <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="tour-map-growth__full" data-map-full-layer aria-hidden="true">
+          <NamibiaMap pins={mapJourney} />
+        </div>
       </div>
     </aside>
   </div>
 </div>
-
-<!-- Closing slideshow: a small auto-cycling run through all 7 tour
-     photos. No separate "complete map" reveal here — the growing map
-     above has already reached its finished state by the last section. -->
-<section class="tour-recap reveal">
-  <div class="container">
-    <h2 class="tour-recap__heading reveal-item">Seven tours, three regions</h2>
-
-    <div class="tour-recap__slideshow reveal-item" data-tour-slideshow>
-      <div class="tour-recap__slides">
-        {
-          stopsWithTours.map(({ tour }, i) => (
-            <figure class:list={['tour-recap__slide', i === 0 && 'is-active']} data-tour-slide={i}>
-              <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
-              <figcaption>{tour.name}</figcaption>
-            </figure>
-          ))
-        }
-      </div>
-
-      <div class="tour-recap__dots" data-tour-slideshow-dots role="tablist" aria-label="Choose a tour photo">
-        {
-          stopsWithTours.map(({ tour }, i) => (
-            <button
-              type="button"
-              class:list={[i === 0 && 'is-active']}
-              data-dot={i}
-              aria-label={`Show ${tour.name}`}
-            />
-          ))
-        }
-      </div>
-    </div>
-  </div>
-</section>
 
 <style>
   /* ---------- Hero ---------- */
@@ -347,6 +378,26 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
     overflow: hidden;
   }
 
+  /* Two stacked layers sharing the same box: the piece-by-piece collage
+     (default hidden — see setupTourMapGrowth, which only takes over
+     once full motion is confirmed) and the single clean complete map
+     it eventually settles into. Without JS, or under reduced motion,
+     the complete map is just shown outright — a more useful static
+     fallback than a half-finished scrapbook. */
+  .tour-map-growth__pieces {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform-origin: center center;
+  }
+
+  .tour-map-growth__full {
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transform-origin: center center;
+  }
+
   .tour-map-growth__piece {
     position: absolute;
     border-radius: var(--radius-md);
@@ -468,13 +519,37 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
 
   /* ---------- Closing recap ---------- */
   .tour-recap {
-    padding-block: var(--space-2xl) var(--space-3xl);
-    background: var(--color-bg-alt);
+    padding-block: var(--space-3xl) var(--space-xl);
+    margin-top: var(--space-xl);
+    border-top: 1px solid var(--color-sand-200);
   }
 
   .tour-recap__heading {
     text-align: center;
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .tour-recap__lede {
+    text-align: center;
+    color: var(--color-text-muted);
     margin: 0 0 var(--space-lg);
+  }
+
+  .tour-recap__map-mobile {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .tour-recap__map-mobile {
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 600 / 740;
+      margin: 0 auto var(--space-lg);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
   }
 
   .tour-recap__slideshow {
