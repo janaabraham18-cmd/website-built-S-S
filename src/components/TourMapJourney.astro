@@ -1,14 +1,16 @@
 ---
-// Replaces the old flat TourCard-row list for the 7 sightseeing "Tours"
-// with a full-bleed hero that leads straight into a scroll-driven map
-// journey — no separate generic hero block in between. Desktop pins the
-// map+card panel and steps through 7 waypoints (4 in Erongo, 2 in
-// Kunene, 1 in Hardap) as the visitor scrolls; under prefers-reduced-
-// motion or below the 860px breakpoint (where a pinned sticky map isn't
-// workable), it falls back to a stacked sequence with a small static
-// cropped map thumbnail per tour instead of the interactive pinned one.
+// Full-bleed hero leads straight into 7 ordinary (non-pinned) sections,
+// one per tour, each fading in via the sitewide .reveal/.reveal-item
+// scroll pattern as it's scrolled to — no scroll-jacking, no pinning.
+// Each section shows a dominant photo beside a small "piece" of the
+// Namibia map: a fixed-size crop of the exact same NamibiaMap
+// coordinate system centered on that tour's pin, so the pieces are all
+// consistently scaled/oriented (only panned, never rotated) and would
+// line up into one real map if you set them side by side in order. A
+// closing recap section shows the complete map with all 7 pins plus a
+// small auto-cycling photo slideshow of the 7 tours.
 import { tours } from '../data/tours';
-import { mapStops, mapJourney } from '../data/tourRegions';
+import { mapJourney } from '../data/tourRegions';
 import NamibiaMap from './NamibiaMap.astro';
 
 const heroImage = {
@@ -25,13 +27,15 @@ const stopsWithTours = mapJourney.map((pin) => {
 const creditHref = (username: string) =>
   `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 
-// Mobile mini-map crop: a tight viewBox centered on that stop's zoom
-// target, reusing the exact same region shapes/pins as the desktop map.
-const miniViewBox = (zoom: { x: number; y: number; scale: number }) => {
-  const w = 600 / zoom.scale;
-  const h = 740 / zoom.scale;
-  return `${zoom.x - w / 2} ${zoom.y - h / 2} ${w} ${h}`;
-};
+// Every piece crop is the same fixed size in map units — only the pan
+// target (centered on each pin) changes — so scale/orientation stay
+// identical across all 7 and the crops are geographically compatible
+// with each other, even though only the final recap map ever actually
+// shows them assembled together.
+const PIECE_W = 170;
+const PIECE_H = 210;
+const pieceViewBox = (pin: { x: number; y: number }) =>
+  `${pin.x - PIECE_W / 2} ${pin.y - PIECE_H / 2} ${PIECE_W} ${PIECE_H}`;
 ---
 
 <section class="tour-hero full-bleed">
@@ -58,73 +62,80 @@ const miniViewBox = (zoom: { x: number; y: number; scale: number }) => {
   <div class="tour-hero__scroll-cue" aria-hidden="true"><span></span></div>
 </section>
 
-<!-- Desktop / motion-ok: pinned interactive map journey -->
-<section class="map-journey" data-map-journey id="tour">
-  <div class="map-journey__pin-area">
-    <div class="container map-journey__grid">
-      <div class="map-journey__map-panel">
-        <NamibiaMap pins={mapJourney} />
-        <p class="map-journey__region-label" data-map-region-label>{mapStops[0].regionLabel}</p>
+<!-- Seven ordinary (non-pinned) sections, one per tour -->
+{
+  stopsWithTours.map(({ pin, tour }, i) => (
+    <section
+      class:list={['tour-reveal', 'reveal', i % 2 === 1 && 'tour-reveal--reverse']}
+      id={i === 0 ? 'tour' : undefined}
+    >
+      <div class="container tour-reveal__grid">
+        <div class="tour-reveal__photo-wrap reveal-item">
+          <img
+            class="tour-reveal__photo"
+            src={tour.imageUrl}
+            alt={tour.name}
+            loading={i === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+          {tour.imageCredit && (
+            <p class="tour-reveal__credit">
+              Photo:{' '}
+              <a href={creditHref(tour.imageCredit.username)} target="_blank" rel="noopener noreferrer">{tour.imageCredit.name}</a>{' '}
+              /{' '}
+              <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+            </p>
+          )}
+        </div>
+
+        <div class="tour-reveal__side reveal-item">
+          <div class="tour-reveal__piece">
+            <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
+          </div>
+          <p class="tour-reveal__region">{pin.regionLabel}</p>
+          <h2 class="tour-reveal__title">{tour.name}</h2>
+          <p class="tour-reveal__desc">{tour.description}</p>
+          <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
+        </div>
+      </div>
+    </section>
+  ))
+}
+
+<!-- Closing recap: the complete map with all 7 pins, plus a small
+     auto-cycling slideshow through all 7 tour photos -->
+<section class="tour-recap reveal">
+  <div class="container tour-recap__grid">
+    <div class="tour-recap__map-wrap reveal-item">
+      <NamibiaMap pins={mapJourney} />
+      <p class="tour-recap__caption">Seven tours, three regions</p>
+    </div>
+
+    <div class="tour-recap__slideshow reveal-item" data-tour-slideshow>
+      <div class="tour-recap__slides">
+        {
+          stopsWithTours.map(({ tour }, i) => (
+            <figure class:list={['tour-recap__slide', i === 0 && 'is-active']} data-tour-slide={i}>
+              <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
+              <figcaption>{tour.name}</figcaption>
+            </figure>
+          ))
+        }
       </div>
 
-      <div class="map-journey__card-panel">
+      <div class="tour-recap__dots" data-tour-slideshow-dots role="tablist" aria-label="Choose a tour photo">
         {
-          stopsWithTours.map(({ pin, tour }, i) => (
-            <article class:list={['map-journey__card', i === 0 && 'is-active']} data-map-card={pin.slug}>
-              <img class="map-journey__card-img" src={tour.imageUrl} alt={tour.name} loading={i === 0 ? 'eager' : 'lazy'} decoding="async" />
-              <p class="map-journey__card-region">{pin.regionLabel}</p>
-              <h2 class="map-journey__card-title">{tour.name}</h2>
-              <p class="map-journey__card-desc">{tour.description}</p>
-              <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
-              {tour.imageCredit && (
-                <p class="map-journey__card-credit">
-                  Photo:{' '}
-                  <a href={creditHref(tour.imageCredit.username)} target="_blank" rel="noopener noreferrer">{tour.imageCredit.name}</a>{' '}
-                  /{' '}
-                  <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-                </p>
-              )}
-            </article>
+          stopsWithTours.map(({ tour }, i) => (
+            <button
+              type="button"
+              class:list={[i === 0 && 'is-active']}
+              data-dot={i}
+              aria-label={`Show ${tour.name}`}
+            />
           ))
         }
       </div>
     </div>
-  </div>
-
-  <div class="map-journey__waypoints">
-    {
-      stopsWithTours.map(({ pin }, i) => (
-        <div
-          class="map-journey__waypoint"
-          data-map-waypoint={i}
-          data-slug={pin.slug}
-          data-region-label={pin.regionLabel}
-          data-zoom-x={pin.zoom.x}
-          data-zoom-y={pin.zoom.y}
-          data-zoom-scale={pin.zoom.scale}
-        />
-      ))
-    }
-  </div>
-</section>
-
-<!-- Mobile / reduced-motion fallback: stacked sequence, static mini-map per tour -->
-<section class="map-journey-mobile" data-map-journey-mobile>
-  <div class="container">
-    {
-      stopsWithTours.map(({ pin, tour }) => (
-        <article class="map-journey-mobile__item">
-          <div class="map-journey-mobile__mini-map">
-            <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={miniViewBox(pin.zoom)} />
-          </div>
-          <img class="map-journey-mobile__img" src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
-          <p class="map-journey-mobile__region">{pin.regionLabel}</p>
-          <h3 class="map-journey-mobile__title">{tour.name}</h3>
-          <p class="map-journey-mobile__desc">{tour.description}</p>
-          <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
-        </article>
-      ))
-    }
   </div>
 </section>
 
@@ -236,80 +247,76 @@ const miniViewBox = (zoom: { x: number; y: number; scale: number }) => {
     70%, 100% { opacity: 0; transform: translateY(10px); }
   }
 
-  /* ---------- Map journey (desktop / motion-ok) ---------- */
-  .map-journey {
-    position: relative;
+  /* ---------- Per-tour reveal sections ---------- */
+  .tour-reveal {
+    padding-block: var(--space-2xl);
   }
 
-  .map-journey__pin-area {
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    background: var(--color-bg-alt);
-  }
-
-  .map-journey__grid {
+  .tour-reveal__grid {
     display: grid;
-    grid-template-columns: 1.1fr 1fr;
+    grid-template-columns: 1.7fr 1fr;
     align-items: center;
     gap: var(--space-2xl);
-    width: 100%;
   }
 
-  .map-journey__map-panel {
+  .tour-reveal--reverse .tour-reveal__grid {
+    grid-template-columns: 1fr 1.7fr;
+  }
+
+  .tour-reveal__photo-wrap {
     position: relative;
-    aspect-ratio: 600 / 740;
-    max-height: 78vh;
-    margin-inline: auto;
+    order: 1;
+  }
+
+  .tour-reveal--reverse .tour-reveal__photo-wrap {
+    order: 2;
+  }
+
+  .tour-reveal__side {
+    order: 2;
+  }
+
+  .tour-reveal--reverse .tour-reveal__side {
+    order: 1;
+  }
+
+  .tour-reveal__photo {
     width: 100%;
-    max-width: 420px;
-  }
-
-  .map-journey__region-label {
-    position: absolute;
-    top: var(--space-sm);
-    left: var(--space-sm);
-    margin: 0;
-    padding: var(--space-3xs) var(--space-sm);
-    background: var(--color-earth-900);
-    color: var(--color-text-on-dark);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    border-radius: 999px;
-  }
-
-  .map-journey__card-panel {
-    position: relative;
-    min-height: 28rem;
-  }
-
-  .map-journey__card {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 500ms var(--ease-out);
-  }
-
-  .map-journey__card.is-active {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  .map-journey__card-img {
-    width: 100%;
-    aspect-ratio: 16 / 10;
+    aspect-ratio: 5 / 4;
     object-fit: cover;
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-lg);
   }
 
-  .map-journey__card-region {
+  .tour-reveal__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.85);
+  }
+
+  .tour-reveal__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  /* Fixed-size crop of the exact same NamibiaMap coordinate system used
+     everywhere else — only the pan target changes per tour, so every
+     piece is scaled/oriented identically to the others. */
+  .tour-reveal__piece {
+    width: 100%;
+    max-width: 220px;
+    aspect-ratio: 170 / 210;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .tour-reveal__region {
     text-transform: uppercase;
     letter-spacing: 0.1em;
     font-size: var(--fs-xs);
@@ -318,101 +325,134 @@ const miniViewBox = (zoom: { x: number; y: number; scale: number }) => {
     margin: 0 0 var(--space-3xs);
   }
 
-  .map-journey__card-title {
+  .tour-reveal__title {
     margin: 0 0 var(--space-2xs);
   }
 
-  .map-journey__card-desc {
+  .tour-reveal__desc {
     color: var(--color-text-muted);
     line-height: var(--lh-normal);
     margin: 0 0 var(--space-md);
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
   }
 
-  .map-journey__card-credit {
-    margin: var(--space-sm) 0 0;
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
-  }
-
-  .map-journey__card-credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  /* Waypoints carry no visual layout of their own — they're pure data
-     (slug/region/zoom target) read by motion.ts. The pinned scroll
-     distance comes entirely from the ScrollTrigger's own `end` value
-     (computed in JS as steps × viewport height), not from these
-     elements taking up document space. */
-  .map-journey__waypoint {
-    position: absolute;
-    width: 0;
-    height: 0;
-  }
-
-  /* ---------- Mobile / reduced-motion fallback ---------- */
-  .map-journey-mobile {
-    display: none;
-    padding-block: var(--space-2xl);
-  }
-
-  .map-journey-mobile__item {
-    display: grid;
-    gap: var(--space-md);
-    padding-block: var(--space-xl);
-    border-bottom: 1px solid var(--color-border);
-  }
-
-  .map-journey-mobile__item:last-child {
-    border-bottom: none;
-  }
-
-  .map-journey-mobile__mini-map {
-    width: 96px;
-    aspect-ratio: 600 / 740;
-  }
-
-  .map-journey-mobile__img {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    object-fit: cover;
-    border-radius: var(--radius-lg);
-  }
-
-  .map-journey-mobile__region {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    color: var(--color-accent-strong);
-    margin: 0;
-  }
-
-  .map-journey-mobile__title {
-    margin: 0;
-  }
-
-  .map-journey-mobile__desc {
-    color: var(--color-text-muted);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-2xs);
-  }
-
-  /* Reduced-motion and narrow viewports both get the stacked fallback —
-     a pinned sticky map doesn't work at phone width, and scroll-jacked
-     zoom/pan isn't appropriate under reduced motion either. */
-  @media (max-width: 860px), (prefers-reduced-motion: reduce) {
-    .map-journey {
-      display: none;
+  @media (max-width: 768px) {
+    .tour-reveal__grid,
+    .tour-reveal--reverse .tour-reveal__grid {
+      grid-template-columns: 1fr;
     }
 
-    .map-journey-mobile {
-      display: block;
+    .tour-reveal__photo-wrap,
+    .tour-reveal--reverse .tour-reveal__photo-wrap,
+    .tour-reveal__side,
+    .tour-reveal--reverse .tour-reveal__side {
+      order: initial;
+    }
+
+    .tour-reveal__photo {
+      aspect-ratio: 4 / 3;
+    }
+
+    .tour-reveal__piece {
+      max-width: 160px;
+    }
+  }
+
+  /* ---------- Closing recap ---------- */
+  .tour-recap {
+    padding-block: var(--space-2xl) var(--space-3xl);
+    background: var(--color-bg-alt);
+  }
+
+  .tour-recap__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    gap: var(--space-2xl);
+  }
+
+  .tour-recap__map-wrap {
+    max-width: 380px;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .tour-recap__caption {
+    text-align: center;
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    color: var(--color-earth-700);
+  }
+
+  .tour-recap__slideshow {
+    max-width: 360px;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .tour-recap__slides {
+    position: relative;
+    aspect-ratio: 5 / 4;
+  }
+
+  .tour-recap__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 600ms var(--ease-out);
+  }
+
+  .tour-recap__slide.is-active {
+    opacity: 1;
+  }
+
+  .tour-recap__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .tour-recap__slide figcaption {
+    position: absolute;
+    left: var(--space-sm);
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+    margin: 0;
+    padding: var(--space-2xs) var(--space-sm);
+    background: rgba(58, 35, 28, 0.75);
+    color: var(--color-text-on-dark);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+  }
+
+  .tour-recap__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin-top: var(--space-md);
+  }
+
+  .tour-recap__dots button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--color-accent-strong);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .tour-recap__dots button.is-active {
+    background: var(--color-accent-strong);
+  }
+
+  @media (max-width: 768px) {
+    .tour-recap__grid {
+      grid-template-columns: 1fr;
     }
   }
 

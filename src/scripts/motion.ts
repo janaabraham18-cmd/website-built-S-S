@@ -219,69 +219,46 @@ function setupToursTeaserSlide() {
   });
 }
 
-// Tours page map journey: pins the map+card panel and steps through 7
-// waypoints (4 Erongo, 2 Kunene, 1 Hardap) as the visitor scrolls through
-// a reserved scroll distance sized in JS (waypoints carry no layout
-// height of their own — see TourMapJourney.astro). Desktop + motion-ok
-// only; the .astro component's own CSS shows the stacked mobile
-// fallback instead below 861px or under reduced motion, so this
-// function simply doesn't run in either of those cases.
-function setupTourMapJourney() {
-  if (!window.matchMedia('(min-width: 861px)').matches) return;
+// Tours page closing recap: small auto-cycling slideshow through the 7
+// tour photos next to the complete assembled map. Same accessibility
+// pattern as the hero panel slideshow below — click a dot to jump
+// there directly, pause on hover AND focus (not hover alone, which
+// means nothing on touch), respect reduced motion by leaving it on
+// slide 1 with no autoplay.
+function setupTourRecapSlideshow(reduceMotion: boolean) {
+  const root = document.querySelector<HTMLElement>('[data-tour-slideshow]');
+  if (!root) return;
 
-  const section = document.querySelector<HTMLElement>('[data-map-journey]');
-  const pinArea = section?.querySelector<HTMLElement>('.map-journey__pin-area');
-  const zoomGroup = section?.querySelector<SVGGElement>('[data-map-zoom-group]');
-  const waypoints = Array.from(section?.querySelectorAll<HTMLElement>('[data-map-waypoint]') ?? []);
-  const cards = Array.from(section?.querySelectorAll<HTMLElement>('[data-map-card]') ?? []);
-  const pins = Array.from(section?.querySelectorAll<SVGGElement>('[data-map-pin]') ?? []);
-  const regionLabel = section?.querySelector<HTMLElement>('[data-map-region-label]');
-  if (!section || !pinArea || !zoomGroup || !waypoints.length) return;
+  const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-tour-slide]'));
+  const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tour-slideshow-dots] button'));
+  if (slides.length < 2) return;
 
-  const VIEWBOX_W = 600;
-  const VIEWBOX_H = 740;
-  const STEP_VH = 0.9;
+  let index = 0;
 
-  const stepPx = () => window.innerHeight * STEP_VH;
-  const totalPx = () => stepPx() * waypoints.length;
-
-  let activeIndex = -1;
-
-  const goToStep = (i: number) => {
-    if (i === activeIndex) return;
-    activeIndex = i;
-
-    const wp = waypoints[i];
-    const { slug, regionLabel: label, zoomX, zoomY, zoomScale } = wp.dataset;
-    const scale = Number(zoomScale);
-
-    gsap.to(zoomGroup, {
-      x: VIEWBOX_W / 2 - Number(zoomX) * scale,
-      y: VIEWBOX_H / 2 - Number(zoomY) * scale,
-      scale,
-      transformOrigin: '0px 0px',
-      duration: 1,
-      ease: 'power2.inOut',
-    });
-
-    cards.forEach((card) => card.classList.toggle('is-active', card.dataset.mapCard === slug));
-    pins.forEach((pin) => pin.classList.toggle('namibia-map__pin--active', pin.dataset.mapPin === slug));
-    if (regionLabel && label) regionLabel.textContent = label;
+  const goTo = (i: number) => {
+    index = i;
+    slides.forEach((slide, si) => slide.classList.toggle('is-active', si === index));
+    dots.forEach((dot, di) => dot.classList.toggle('is-active', di === index));
   };
 
-  goToStep(0);
-
-  ScrollTrigger.create({
-    trigger: pinArea,
-    start: 'top top',
-    end: () => `+=${totalPx()}`,
-    pin: true,
-    invalidateOnRefresh: true,
-    onUpdate: (self) => {
-      const idx = Math.min(waypoints.length - 1, Math.floor(self.progress * waypoints.length));
-      goToStep(idx);
-    },
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => goTo(Number(dot.dataset.dot)));
   });
+
+  if (reduceMotion) return;
+
+  let timer: ReturnType<typeof setInterval>;
+  const advance = () => goTo((index + 1) % slides.length);
+  const start = () => {
+    timer = setInterval(advance, 3200);
+  };
+  const stop = () => clearInterval(timer);
+
+  start();
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('focusout', start);
 }
 
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
@@ -513,6 +490,7 @@ export function initMotion() {
     setupAdventureCards();
     setupAdventureTilt();
     setupAdventureRise();
+    setupTourRecapSlideshow(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -552,7 +530,6 @@ export function initMotion() {
     }
 
     setupToursTeaserSlide();
-    setupTourMapJourney();
 
     // Every scroll-triggered pin above is now registered, so recalculate
     // all of their positions once against the final layout instead of
@@ -569,6 +546,7 @@ export function initMotion() {
     setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
+    setupTourRecapSlideshow(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
