@@ -219,6 +219,107 @@ function setupToursTeaserSlide() {
   });
 }
 
+// Stats band: each number counts up from 0 to its real value once, the
+// first time the band scrolls into view. The server-rendered text is the
+// real value already (correct with no JS and under reduced motion, since
+// this is only ever called from the no-preference branch) — this just
+// zeroes it out first so there's something to animate toward.
+function setupStatsCountUp() {
+  const numbers = gsap.utils.toArray<HTMLElement>('.stats-band__number[data-count-to]');
+
+  for (const el of numbers) {
+    const target = Number(el.dataset.countTo);
+    if (!Number.isFinite(target)) continue;
+
+    const proxy = { value: 0 };
+    el.textContent = '0';
+
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () =>
+        gsap.to(proxy, {
+          value: target,
+          duration: 1.4,
+          ease: 'power1.out',
+          onUpdate: () => {
+            el.textContent = String(Math.round(proxy.value));
+          },
+        }),
+    });
+  }
+}
+
+// Our Story photo: a subtle scroll-scrubbed parallax drift. The wrap
+// clips overflow and the image is scaled up slightly so the vertical
+// drift never exposes empty space at its edges.
+function setupStoryParallax() {
+  const photo = document.querySelector<HTMLElement>('.team-story__photo');
+  if (!photo) return;
+
+  gsap.set(photo, { scale: 1.15, yPercent: -6 });
+  gsap.to(photo, {
+    yPercent: 6,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: photo,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    },
+  });
+}
+
+// Where We Go panels: instead of the generic uniform bottom-up reveal,
+// each of the three panels enters from a different side — desert from
+// the left, Etosha (last) from the right, the middle panel from below —
+// so the three settle into place like they're converging on the row
+// rather than all rising in lockstep.
+function setupWhereWeGoReveal(reduceMotion: boolean) {
+  const panels = gsap.utils.toArray<HTMLElement>('.where-we-go__panel');
+  // Below this width the grid stacks the panels to a single full-width
+  // column (see the matching breakpoint in index.astro's <style>), where a
+  // sideways xPercent shift would push a full-width panel off-canvas and
+  // cause horizontal scroll — fall back to the same vertical-only motion
+  // reduced motion uses instead of a direction per panel.
+  const isStacked = !window.matchMedia('(min-width: 861px)').matches;
+
+  panels.forEach((panel, i) => {
+    if (reduceMotion || isStacked) {
+      gsap.set(panel, { opacity: 0 });
+      ScrollTrigger.create({
+        trigger: panel,
+        start: 'top 85%',
+        once: true,
+        onEnter: () => gsap.to(panel, { opacity: 1, duration: 0.3, ease: 'power1.out' }),
+      });
+      return;
+    }
+
+    const fromVars =
+      i === 0
+        ? { opacity: 0, xPercent: -12 }
+        : i === panels.length - 1
+          ? { opacity: 0, xPercent: 12 }
+          : { opacity: 0, y: 40 };
+
+    gsap.set(panel, fromVars);
+    gsap.to(panel, {
+      opacity: 1,
+      xPercent: 0,
+      y: 0,
+      duration: 0.9,
+      ease: 'power2.out',
+      scrollTrigger: {
+        trigger: panel,
+        start: 'top 85%',
+        toggleActions: 'play none none none',
+      },
+    });
+  });
+}
+
 // Tours page closing recap: small auto-cycling slideshow through the 7
 // tour photos next to the complete assembled map. Same accessibility
 // pattern as the hero panel slideshow below — click a dot to jump
@@ -680,6 +781,9 @@ export function initMotion() {
     setupAdventureRise();
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
+    setupStatsCountUp();
+    setupStoryParallax();
+    setupWhereWeGoReveal(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -736,6 +840,7 @@ export function initMotion() {
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
     setupTourRecapSlideshow(true);
+    setupWhereWeGoReveal(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
