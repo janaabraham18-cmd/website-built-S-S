@@ -300,6 +300,96 @@ function setupWhereWeGoReveal(reduceMotion: boolean) {
   });
 }
 
+// Philosophy section: the six circular photo cutouts pop in with a
+// staggered scale/opacity entrance, and the constellation lines between
+// them "draw" in right after via stroke-dashoffset — once, on scroll into
+// view. Reduced motion drops both in favor of a plain one-shot fade,
+// matching the rest of the page's reduced-motion fallback.
+function setupPhilosophyCluster(reduceMotion: boolean) {
+  const section = document.querySelector<HTMLElement>('.philosophy');
+  if (!section) return;
+
+  const photos = gsap.utils.toArray<HTMLElement>('.philosophy__photo');
+  const lines = gsap.utils.toArray<SVGLineElement>('.philosophy__line');
+  const caption = section.querySelector<HTMLElement>('.philosophy__cluster-caption');
+  const fadeTargets = caption ? [...photos, caption] : photos;
+
+  if (reduceMotion) {
+    gsap.set(fadeTargets, { opacity: 0 });
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 85%',
+      once: true,
+      onEnter: () =>
+        gsap.to(fadeTargets, { opacity: 1, duration: 0.3, ease: 'power1.out', stagger: 0.05 }),
+    });
+    return;
+  }
+
+  gsap.set(photos, { opacity: 0, scale: 0.6 });
+  if (caption) gsap.set(caption, { opacity: 0, y: 10 });
+
+  lines.forEach((line) => {
+    const length = line.getTotalLength();
+    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
+  });
+
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: section,
+      start: 'top 75%',
+      toggleActions: 'play none none none',
+    },
+  });
+
+  tl.to(photos, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)', stagger: 0.12 }).to(
+    lines,
+    { strokeDashoffset: 0, duration: 0.8, ease: 'power1.inOut', stagger: 0.08 },
+    '<0.2'
+  );
+
+  if (caption) {
+    tl.to(caption, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3');
+  }
+}
+
+// Testimonials carousel: one placeholder review visible at a time, cycled
+// with prev/next buttons. Not gated behind reduced motion — this is
+// click-driven UI switching, not scroll motion, and the crossfade itself
+// is a plain CSS opacity transition on `.is-active` (see index.astro's
+// <style>), not a GSAP tween. The first item already carries `is-active`
+// server-side so a testimonial is visible even before this script runs.
+function setupTestimonialCarousel() {
+  const root = document.querySelector<HTMLElement>('[data-testimonial-carousel]');
+  if (!root) return;
+
+  const items = Array.from(root.querySelectorAll<HTMLElement>('.testimonials__carousel-item'));
+  const prevBtn = root.querySelector<HTMLButtonElement>('.testimonials__arrow--prev');
+  const nextBtn = root.querySelector<HTMLButtonElement>('.testimonials__arrow--next');
+  const counter = root.querySelector<HTMLElement>('[data-testimonial-current]');
+  if (!items.length || !prevBtn || !nextBtn) return;
+
+  let index = 0;
+
+  function render() {
+    items.forEach((item, i) => {
+      item.classList.toggle('is-active', i === index);
+      item.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+    });
+    if (counter) counter.textContent = String(index + 1);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    index = (index - 1 + items.length) % items.length;
+    render();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    index = (index + 1) % items.length;
+    render();
+  });
+}
+
 // Tours page closing recap: small auto-cycling slideshow through the 7
 // tour photos next to the complete assembled map. Same accessibility
 // pattern as the hero panel slideshow below — click a dot to jump
@@ -712,6 +802,7 @@ export function initMotion() {
   setupHeroPanelSlideshow(reduceMotion);
   setupAboutCarousel();
   setupTourPhotoBleed();
+  setupTestimonialCarousel();
 
   let lenis: Lenis | undefined;
 
@@ -763,6 +854,7 @@ export function initMotion() {
     setupTourMapGrowth();
     setupStatsCountUp();
     setupWhereWeGoReveal(false);
+    setupPhilosophyCluster(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -820,6 +912,7 @@ export function initMotion() {
     setupAdventureCardsReducedMotion();
     setupTourRecapSlideshow(true);
     setupWhereWeGoReveal(true);
+    setupPhilosophyCluster(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
