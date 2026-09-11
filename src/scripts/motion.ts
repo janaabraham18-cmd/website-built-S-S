@@ -251,26 +251,6 @@ function setupStatsCountUp() {
   }
 }
 
-// Our Story photo: a subtle scroll-scrubbed parallax drift. The wrap
-// clips overflow and the image is scaled up slightly so the vertical
-// drift never exposes empty space at its edges.
-function setupStoryParallax() {
-  const photo = document.querySelector<HTMLElement>('.team-story__photo');
-  if (!photo) return;
-
-  gsap.set(photo, { scale: 1.15, yPercent: -6 });
-  gsap.to(photo, {
-    yPercent: 6,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: photo,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    },
-  });
-}
-
 // Where We Go panels: instead of the generic uniform bottom-up reveal,
 // each of the three panels enters from a different side — desert from
 // the left, Etosha (last) from the right, the middle panel from below —
@@ -782,7 +762,6 @@ export function initMotion() {
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
     setupStatsCountUp();
-    setupStoryParallax();
     setupWhereWeGoReveal(false);
 
     // Pinned section: background pans slowly while content sits in place

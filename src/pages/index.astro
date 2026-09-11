@@ -241,39 +241,6 @@ const closingCtaPhoto = {
 
   <WhyUsSection features={whyUsFeatures} />
 
-  <section class="team-story reveal">
-    <div class="container team-story__grid">
-      <div class="team-story__photo-wrap reveal-item">
-        <img
-          class="team-story__photo"
-          src="https://images.unsplash.com/photo-1689918000763-73c97d502408?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600"
-          alt="A guide in the back of a safari vehicle out on the Namibian landscape"
-          loading="lazy"
-          decoding="async"
-        />
-        <p class="team-story__credit">
-          Photo:{' '}
-          <a href="https://unsplash.com/@ultimate_safaris_namibia?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Ultimate Safaris Namibia</a>{' '}
-          /{' '}
-          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-        </p>
-      </div>
-
-      <div class="team-story__body reveal-item">
-        <p class="team-story__eyebrow">Our story</p>
-        <h2>A small team, based right here</h2>
-        <p>
-          Placeholder copy — swap in the real story here. Salt &amp; Sun
-          Tours is run by a small, Swakopmund-based team who grew up on
-          this coastline and still lead most tours personally. We're
-          hands-on from your first message through to the drop-off at
-          the end of the day.
-        </p>
-        <a class="btn btn-outline" href="/contact">Get in touch</a>
-      </div>
-    </div>
-  </section>
-
   <section class="how-it-works reveal">
     <div class="container">
       <div class="how-it-works__intro reveal-item">
@@ -1000,77 +967,6 @@ const closingCtaPhoto = {
   @media (max-width: 640px) {
     .gallery__grid {
       columns: 1;
-    }
-  }
-
-  /* ---------- Meet the team / our story ---------- */
-  .team-story {
-    padding-block: var(--space-2xl);
-  }
-
-  .team-story__grid {
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    align-items: center;
-    gap: var(--space-2xl);
-  }
-
-  .team-story__photo-wrap {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .team-story__photo {
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
-    display: block;
-    will-change: transform;
-  }
-
-  .team-story__credit {
-    position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-    margin: 0;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.85);
-  }
-
-  .team-story__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .team-story__eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-accent-strong);
-    margin-bottom: var(--space-2xs);
-  }
-
-  .team-story__body h2 {
-    margin: 0 0 var(--space-md);
-  }
-
-  .team-story__body p {
-    color: var(--color-text-muted);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-lg);
-  }
-
-  @media (max-width: 860px) {
-    .team-story__grid {
-      grid-template-columns: 1fr;
-    }
-
-    .team-story__photo {
-      aspect-ratio: 4 / 3;
     }
   }
 
