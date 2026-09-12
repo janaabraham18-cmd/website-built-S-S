@@ -1,0 +1,168 @@
+---
+// Namibia's 14 regions, drawn against a real national outline rather
+// than a fully hand-guessed one: the outer boundary below is Namibia's
+// actual border polygon (equirectangular-projected lon/lat, cos-
+// corrected for latitude so shapes aren't stretched, then scaled to
+// this viewBox — see the projection math this was generated from in
+// the Tours-page map rework). The 14 internal region boundaries are
+// still hand-placed (no ADM1 dataset was reachable from this sandbox),
+// but they're now cut against a genuinely accurate silhouette — the
+// distinctive Zambezi/Caprivi panhandle, the coastline, the southern
+// border — instead of a shape invented from scratch. Erongo, Kunene,
+// and Hardap (the three regions the Tours page's map journey visits)
+// are styled distinctly from the other 11, which stay muted.
+import type { MapPin } from '../data/tourRegions';
+
+interface Props {
+  pins?: MapPin[];
+  activeSlug?: string;
+  viewBox?: string;
+  labels?: boolean;
+}
+
+const { pins = [], activeSlug, viewBox = '0 0 751 740', labels = false } = Astro.props;
+
+const regions: { id: string; active: boolean; points: string; labelPos?: [number, number] }[] = [
+  { id: 'omusati', active: false, points: '140,44 220,42 220,190 140,190', labelPos: [180, 120] },
+  { id: 'ohangwena', active: false, points: '220,42 300,41.5 300,150 220,150', labelPos: [258, 100] },
+  { id: 'oshana', active: false, points: '220,150 300,150 300,190 220,190', labelPos: [258, 172] },
+  { id: 'oshikoto', active: false, points: '300,41.5 390,45 390,190 300,190', labelPos: [345, 120] },
+  { id: 'kavango-west', active: false, points: '390,45 460,60 460,98 390,98', labelPos: [423, 74] },
+  { id: 'kavango-east', active: false, points: '460,60 513,76 508.5,95.8 460,98', labelPos: [485, 80] },
+  {
+    id: 'zambezi',
+    active: false,
+    points: '513,76 533.4,77.2 631.2,53.6 674.8,40.5 709.3,43.8 730.3,56.9 730.7,61.7 700.7,74.7 684.6,74.8 650.6,97.5 630.2,73.7 548.2,93.9 508.5,95.8',
+    labelPos: [620, 70],
+  },
+  {
+    id: 'kunene',
+    active: true,
+    points: '140,44 140,190 300,190 300,284 133.6,295.1 106.2,247.4 78.2,178 66.5,141.7 23.2,85.2 20,40.9',
+    labelPos: [140, 230],
+  },
+  {
+    id: 'otjozondjupa',
+    active: false,
+    points: '300,190 390,190 390,98 460,98 508.5,95.8 507,301.8 454.5,303.8 454.5,420 420,420 420,284 300,284',
+    labelPos: [420, 220],
+  },
+  {
+    id: 'erongo',
+    active: true,
+    points: '300,284 133.6,295.1 154.3,319 161.2,350.5 162.4,419.7 300,420',
+    labelPos: [220, 370],
+  },
+  { id: 'khomas', active: false, points: '300,284 420,284 420,420 300,420', labelPos: [360, 350] },
+  { id: 'omaheke', active: false, points: '420,420 454.5,420 454.5,472.6 454.45,620 420,620', labelPos: [435, 500] },
+  {
+    id: 'hardap',
+    active: true,
+    points: '162.4,419.7 300,420 420,420 420,560 193.3,550.7 180.2,508.8',
+    labelPos: [280, 480],
+  },
+  {
+    id: 'karas',
+    active: false,
+    points: '193.3,550.7 420,560 420,620 454.45,620 454.4,686.2 406.9,715.8 378.3,720 344.8,709.1 321,704.9 312,680.1 291,664.3 265.5,692.9 225.9,649.2 205.1,607',
+    labelPos: [320, 630],
+  },
+];
+---
+
+<svg class="namibia-map" viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Namibia highlighting the Erongo, Kunene, and Hardap regions">
+  <g data-map-zoom-group>
+    {
+      regions.map((region) => (
+        <polygon
+          class:list={['namibia-map__region', region.active && 'namibia-map__region--active']}
+          points={region.points}
+        />
+      ))
+    }
+
+    {
+      labels &&
+        regions.map((region) => (
+          <text class="namibia-map__label" x={region.labelPos?.[0]} y={region.labelPos?.[1]}>
+            {region.id}
+          </text>
+        ))
+    }
+
+    {
+      pins.map((pin) => (
+        <g
+          class:list={['namibia-map__pin', pin.slug === activeSlug && 'namibia-map__pin--active']}
+          data-map-pin={pin.slug}
+          transform={`translate(${pin.x}, ${pin.y})`}
+        >
+          <circle class="namibia-map__pin-pulse" r="14" />
+          <circle class="namibia-map__pin-dot" r="6" />
+        </g>
+      ))
+    }
+  </g>
+</svg>
+
+<style>
+  .namibia-map {
+    display: block;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .namibia-map__region {
+    fill: var(--color-sand-200);
+    stroke: var(--color-bg);
+    stroke-width: 2;
+  }
+
+  .namibia-map__region--active {
+    fill: var(--color-ochre-400);
+  }
+
+  .namibia-map__label {
+    font-size: 10px;
+    fill: var(--color-earth-900);
+    text-transform: capitalize;
+  }
+
+  .namibia-map__pin-dot {
+    fill: var(--color-terracotta-600);
+    stroke: var(--color-sand-50);
+    stroke-width: 2;
+  }
+
+  .namibia-map__pin-pulse {
+    fill: rgba(156, 77, 51, 0.25);
+    transform-origin: center;
+    transform-box: fill-box;
+  }
+
+  .namibia-map__pin--active .namibia-map__pin-dot {
+    fill: var(--color-terracotta-500);
+  }
+
+  .namibia-map__pin--active .namibia-map__pin-pulse {
+    animation: pin-pulse 1.8s ease-out infinite;
+  }
+
+  @keyframes pin-pulse {
+    0% {
+      transform: scale(0.6);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(1.8);
+      opacity: 0;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .namibia-map__pin-pulse {
+      animation: none;
+    }
+  }
+</style>

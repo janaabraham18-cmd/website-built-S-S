@@ -2,9 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import Section from '../components/Section.astro';
-import AboutSection from '../components/AboutSection.astro';
 import WhyUsSection from '../components/WhyUsSection.astro';
-import ReviewsSection from '../components/ReviewsSection.astro';
 import AdventureCard from '../components/AdventureCard.astro';
 import { tours } from '../data/tours';
 
@@ -104,6 +102,17 @@ const tourCount = tours.filter((tour) => tour.category === 'tour').length;
 const adventureCount = tours.filter((tour) => tour.category === 'adventure').length;
 const comboCount = tours.filter((tour) => tour.category === 'combo').length;
 
+// Reuses three tours' own already-credited photos rather than sourcing
+// new ones, since each is a genuine, strong shot of exactly the
+// landscape it's labeling here.
+const whereWeGoPanels = [
+  { label: 'Desert', copy: 'Placeholder copy: towering red dunes and the salt-white floor of Deadvlei.', slug: 'sossusvlei-tour' },
+  { label: 'Coast', copy: "Placeholder copy: shipwrecks, seal colonies, and Namibia's wild Atlantic edge.", slug: 'skeleton-coast-tour' },
+  { label: 'Etosha', copy: 'Placeholder copy: elephants, lions, and wide-open pans teeming with wildlife.', slug: 'etosha-tour' },
+]
+  .map(({ label, copy, slug }) => ({ label, copy, tour: tours.find((t) => t.slug === slug) }))
+  .filter((p): p is { label: string; copy: string; tour: NonNullable<typeof p.tour> } => !!p.tour);
+
 const whyUsFeatures = [
   {
     title: 'Based right in Swakopmund',
@@ -129,6 +138,127 @@ const whyUsFeatures = [
     icon: 'shield' as const,
   },
 ];
+
+// Fresh photography for sections that had none — each sourced separately
+// from every other photo already used on the page.
+const statsPhoto = {
+  imageUrl:
+    'https://images.unsplash.com/photo-1637336659714-50c42464957a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+  alt: 'A dirt road stretching toward distant desert mountains in Namibia',
+  credit: { name: 'katsuma tanaka', username: 'kt2080' },
+};
+
+const howItWorksPhotos = [
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1639402477646-e88e811eef21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    alt: 'An empty desert road stretching into the distance in Namibia',
+    credit: { name: 'Andrew Svk', username: 'andrew_svk' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1772289093693-60c4de650e65?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    alt: 'A safari vehicle driving through the Namibian desert',
+    credit: { name: 'NIR HIMI', username: 'nirhimi' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1592654365893-6f803cdb4913?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    alt: 'Coastal buildings by the harbor',
+    credit: { name: 'Grant Durr', username: 'grant_durr' },
+  },
+];
+
+const testimonialsPhoto = {
+  imageUrl:
+    'https://images.unsplash.com/photo-1511988617509-a57c8a288659?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+  alt: 'A group of friends laughing together outdoors',
+  credit: { name: 'Helena Lopes', username: 'helenalopesph' },
+};
+
+const closingCtaPhoto = {
+  imageUrl:
+    'https://images.unsplash.com/photo-1783679603167-4d6650f3cbd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+  credit: { name: 'GILLES GORLIER', username: 'gorlig_38' },
+};
+
+// About section: one wide full-bleed photo beneath the centered intro copy.
+const aboutPhoto = {
+  imageUrl:
+    'https://images.unsplash.com/photo-1645500664580-63a1c2ab5f56?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2000',
+  alt: 'A wide panorama of the Kalahari desert at sunset',
+  credit: { name: 'Bernd Dittrich', username: 'hdbernd' },
+};
+
+// Philosophy section: a loose constellation of circular photo cutouts,
+// each sourced separately from every other photo used on the page.
+const philosophyPhotos = [
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1545200381-89c298dea43d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    alt: 'Trees and mountains under a wide Namibian sky',
+    credit: { name: 'Alan J. Hendry', username: 'imedianamibia' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1611874156894-894081702a14?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    alt: 'A brown desert mountain under a blue sky',
+    credit: { name: 'Erik', username: 'brmr' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1639403169804-318fcb1d23ad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    alt: 'A cluster of trees in the Namib desert',
+    credit: { name: 'Andrew Svk', username: 'andrew_svk' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1644560781436-df5e5208bc13?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    alt: "Dead trees standing in Deadvlei's dry salt pan",
+    credit: { name: 'Bernd Dittrich', username: 'hdbernd' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1592136374773-71c09ea0fe25?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    alt: 'A silhouette standing on desert sand under a starry sky',
+    credit: { name: 'Howen', username: 'oweni' },
+  },
+  {
+    imageUrl:
+      'https://images.unsplash.com/photo-1607646710453-8655ed8a41b9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=600',
+    alt: 'Ocean waves crashing on a rocky coastline',
+    credit: { name: 'Valkyrie Pierce', username: 'valkyriepierce' },
+  },
+];
+
+// Placeholder reviews for the testimonials carousel — same four quotes as
+// before, now driving a one-at-a-time carousel instead of a static grid.
+const testimonials = [
+  {
+    quote:
+      "Placeholder quote — swap in a real review. Planning was easy and our guide clearly knew the desert inside out.",
+    name: 'Placeholder Name',
+    trip: 'Sossusvlei Tour',
+  },
+  {
+    quote:
+      "Placeholder quote — swap in a real review. We saw more wildlife in one day than we expected for the whole trip.",
+    name: 'Placeholder Name',
+    trip: 'Etosha Tour',
+  },
+  {
+    quote:
+      "Placeholder quote — swap in a real review. Dolphins right next to the boat, and the crew made the whole morning fun.",
+    name: 'Placeholder Name',
+    trip: 'Dolphin & Seal Catamaran Cruise',
+  },
+  {
+    quote:
+      "Placeholder quote — swap in a real review. Fast, friendly, and no hard sell — just a great day on the dunes.",
+    name: 'Placeholder Name',
+    trip: 'Quad Bike Tour',
+  },
+];
 ---
 
 <BaseLayout
@@ -146,29 +276,167 @@ const whyUsFeatures = [
 
   <div id="scroll-target"></div>
 
-  <AboutSection
-    imageUrl="https://images.unsplash.com/photo-1711092047480-4382d9626abc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1000"
-    imageCredit={{ name: 'm_oros', username: 'm_oros' }}
-  />
+  <section class="about reveal">
+    <div class="container about__intro reveal-item">
+      <p class="about__eyebrow">About us</p>
+      <h2>Placeholder heading about who we are</h2>
+      <p class="about__body">
+        Placeholder copy — swap in the real story here. Salt &amp; Sun
+        Tours is a small, Swakopmund-based team who grew up on this
+        coastline and still lead most tours personally, from your first
+        message through to the drop-off at the end of the day.
+      </p>
+    </div>
+
+    <div class="about__photo-wrap reveal-item">
+      <img
+        class="about__photo"
+        src={aboutPhoto.imageUrl}
+        alt={aboutPhoto.alt}
+        loading="lazy"
+        decoding="async"
+      />
+      <p class="about__credit">
+        Photo:{' '}
+        <a
+          href={`https://unsplash.com/@${aboutPhoto.credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          {aboutPhoto.credit.name}
+        </a>{' '}
+        /{' '}
+        <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="stats-band reveal">
+    <img
+      class="stats-band__bg"
+      src={statsPhoto.imageUrl}
+      alt={statsPhoto.alt}
+      loading="lazy"
+      decoding="async"
+    />
+    <div class="stats-band__overlay" aria-hidden="true" />
+    <p class="stats-band__credit">
+      Photo:{' '}
+      <a
+        href={`https://unsplash.com/@${statsPhoto.credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        {statsPhoto.credit.name}
+      </a>{' '}
+      /{' '}
+      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+    <div class="container stats-band__grid">
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number" data-count-to={tourCount}>{tourCount}</p>
+        <p class="stats-band__label">Signature tours</p>
+      </div>
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number" data-count-to={adventureCount}>{adventureCount}</p>
+        <p class="stats-band__label">Adventures</p>
+      </div>
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number" data-count-to={comboCount}>{comboCount}</p>
+        <p class="stats-band__label">Combo deals</p>
+      </div>
+      <div class="stats-band__stat reveal-item">
+        <p class="stats-band__number" data-count-to={2}>2</p>
+        <p class="stats-band__label">Home bases — Swakopmund &amp; Walvis Bay</p>
+      </div>
+    </div>
+  </section>
 
   <WhyUsSection features={whyUsFeatures} />
 
-  <Section
-    eyebrow="Featured destination"
-    heading="Sandwich Harbour"
-    theme="photo"
-    align="left"
-    pin
-    imageUrl="https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920"
-    imageCredit={{ name: 'Joshua Kettle', username: 'joshuakettle' }}
-  >
-    <p>
-      Where towering dunes plunge straight into the Atlantic — a 4x4 run past
-      salt pans and flamingo-filled lagoons to Namibia's most photographed
-      meeting of desert and ocean.
-    </p>
-    <a class="btn btn-outline" href="/tours#tour">Explore this tour</a>
-  </Section>
+  <section class="how-it-works reveal">
+    <div class="container">
+      <div class="how-it-works__intro reveal-item">
+        <p class="how-it-works__eyebrow">How it works</p>
+        <h2>Three simple steps</h2>
+      </div>
+
+      <ol class="how-it-works__grid">
+        <li class="how-it-works__item reveal-item">
+          <div class="how-it-works__photo-wrap">
+            <img
+              class="how-it-works__photo"
+              src={howItWorksPhotos[0].imageUrl}
+              alt={howItWorksPhotos[0].alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <p class="how-it-works__credit">
+              Photo:{' '}
+              <a href={`https://unsplash.com/@${howItWorksPhotos[0].credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{howItWorksPhotos[0].credit.name}</a>{' '}
+              /{' '}
+              <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+            </p>
+          </div>
+          <span class="how-it-works__step" aria-hidden="true">01</span>
+          <h3>Tell us your dates</h3>
+          <p>
+            Placeholder copy. Send us your travel dates and what you're
+            hoping to see, whether that's Etosha's wildlife or the
+            dunes at Sossusvlei.
+          </p>
+        </li>
+        <li class="how-it-works__item reveal-item">
+          <div class="how-it-works__photo-wrap">
+            <img
+              class="how-it-works__photo"
+              src={howItWorksPhotos[1].imageUrl}
+              alt={howItWorksPhotos[1].alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <p class="how-it-works__credit">
+              Photo:{' '}
+              <a href={`https://unsplash.com/@${howItWorksPhotos[1].credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{howItWorksPhotos[1].credit.name}</a>{' '}
+              /{' '}
+              <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+            </p>
+          </div>
+          <span class="how-it-works__step" aria-hidden="true">02</span>
+          <h3>We build your day around you</h3>
+          <p>
+            Placeholder copy. We put together a plan that fits your
+            dates, your pace, and the people you're traveling with —
+            no fixed package required.
+          </p>
+        </li>
+        <li class="how-it-works__item reveal-item">
+          <div class="how-it-works__photo-wrap">
+            <img
+              class="how-it-works__photo"
+              src={howItWorksPhotos[2].imageUrl}
+              alt={howItWorksPhotos[2].alt}
+              loading="lazy"
+              decoding="async"
+            />
+            <p class="how-it-works__credit">
+              Photo:{' '}
+              <a href={`https://unsplash.com/@${howItWorksPhotos[2].credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{howItWorksPhotos[2].credit.name}</a>{' '}
+              /{' '}
+              <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+            </p>
+          </div>
+          <span class="how-it-works__step" aria-hidden="true">03</span>
+          <h3>Meet us in Swakopmund</h3>
+          <p>
+            Placeholder copy. Meet your guide in Swakopmund or Walvis
+            Bay and head out — every tour starts and ends close to
+            home.
+          </p>
+        </li>
+      </ol>
+    </div>
+  </section>
 
   <section class="tours-teaser reveal">
     <div class="container tours-teaser__intro reveal-item">
@@ -198,25 +466,111 @@ const whyUsFeatures = [
     </div>
   </section>
 
-  <section class="stats-band reveal">
-    <div class="container stats-band__grid">
-      <div class="stats-band__stat reveal-item">
-        <p class="stats-band__number">{tourCount}</p>
-        <p class="stats-band__label">Signature tours</p>
+  <section class="where-we-go reveal">
+    <div class="container where-we-go__intro reveal-item">
+      <p class="where-we-go__eyebrow">Where we go</p>
+      <h2>Three landscapes, one coastline</h2>
+    </div>
+
+    <div class="container where-we-go__grid">
+      {
+        whereWeGoPanels.map(({ label, copy, tour }) => (
+          <figure class="where-we-go__panel">
+            {tour.imageUrl && <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />}
+            <div class="where-we-go__scrim" aria-hidden="true" />
+            <figcaption class="where-we-go__text">
+              <p class="where-we-go__label">{label}</p>
+              <p class="where-we-go__copy">{copy}</p>
+            </figcaption>
+            {tour.imageCredit && (
+              <p class="where-we-go__credit">
+                Photo:{' '}
+                <a
+                  href={`https://unsplash.com/@${tour.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {tour.imageCredit.name}
+                </a>{' '}
+                /{' '}
+                <a
+                  href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Unsplash
+                </a>
+              </p>
+            )}
+          </figure>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="philosophy reveal">
+    <div class="container philosophy__grid">
+      <div class="philosophy__text reveal-item">
+        <p class="philosophy__eyebrow">Why we do this</p>
+        <h2>Placeholder heading about our philosophy</h2>
+        <p class="philosophy__body">
+          Placeholder copy — swap in the real philosophy here. We didn't
+          start Salt &amp; Sun Tours to sell a checklist of sights. It's
+          about the pause when the dunes catch the light just right, the
+          quiet after the engine cuts on an empty stretch of coast — the
+          moments a tour can't script, only make room for.
+        </p>
       </div>
-      <div class="stats-band__stat reveal-item">
-        <p class="stats-band__number">{adventureCount}</p>
-        <p class="stats-band__label">Adventures</p>
-      </div>
-      <div class="stats-band__stat reveal-item">
-        <p class="stats-band__number">{comboCount}</p>
-        <p class="stats-band__label">Combo deals</p>
-      </div>
-      <div class="stats-band__stat reveal-item">
-        <p class="stats-band__number">2</p>
-        <p class="stats-band__label">Home bases — Swakopmund &amp; Walvis Bay</p>
+
+      <div class="philosophy__cluster">
+        <svg
+          class="philosophy__lines"
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          aria-hidden="true"
+        >
+          <line class="philosophy__line" x1="21" y1="17" x2="65" y2="17" />
+          <line class="philosophy__line" x1="65" y1="17" x2="86" y2="48" />
+          <line class="philosophy__line" x1="21" y1="17" x2="9" y2="49" />
+          <line class="philosophy__line" x1="9" y1="49" x2="39" y2="77" />
+          <line class="philosophy__line" x1="86" y1="48" x2="74" y2="86" />
+          <line class="philosophy__line" x1="39" y1="77" x2="74" y2="86" />
+        </svg>
+
+        {
+          philosophyPhotos.map((photo, i) => (
+            <div class={`philosophy__photo philosophy__photo--${i + 1}`}>
+              <img src={photo.imageUrl} alt={photo.alt} loading="lazy" decoding="async" />
+            </div>
+          ))
+        }
+
+        <p class="philosophy__cluster-caption">
+          Placeholder copy — a short line about the people and places
+          behind these tours.
+        </p>
       </div>
     </div>
+
+    <p class="container philosophy__credits">
+      Photos:{' '}
+      {
+        philosophyPhotos.map((photo, i) => (
+          <>
+            <a
+              href={`https://unsplash.com/@${photo.credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {photo.credit.name}
+            </a>
+            {i < philosophyPhotos.length - 1 ? ', ' : ' '}
+          </>
+        ))
+      }
+      /{' '}
+      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
   </section>
 
   <section class="homepage-adventures reveal">
@@ -276,19 +630,163 @@ const whyUsFeatures = [
     </div>
   </section>
 
-  <ReviewsSection />
+  <section class="testimonials reveal">
+    <div class="container testimonials__intro reveal-item">
+      <p class="testimonials__eyebrow">What guests say</p>
+      <h2>Placeholder — real reviews coming soon</h2>
+    </div>
+
+    <div class="container testimonials__carousel reveal-item" data-testimonial-carousel>
+      <div class="testimonials__photo-wrap">
+        <img
+          class="testimonials__photo"
+          src={testimonialsPhoto.imageUrl}
+          alt={testimonialsPhoto.alt}
+          loading="lazy"
+          decoding="async"
+        />
+        <p class="testimonials__photo-credit">
+          Photo:{' '}
+          <a
+            href={`https://unsplash.com/@${testimonialsPhoto.credit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {testimonialsPhoto.credit.name}
+          </a>{' '}
+          /{' '}
+          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </p>
+      </div>
+
+      <div class="testimonials__carousel-panel">
+        <ul class="testimonials__carousel-track">
+          {
+            testimonials.map((t, i) => (
+              <li
+                class:list={['testimonials__carousel-item', i === 0 && 'is-active']}
+                aria-hidden={i === 0 ? 'false' : 'true'}
+              >
+                <p class="testimonials__quote">"{t.quote}"</p>
+                <p class="testimonials__name">{t.name}</p>
+                <p class="testimonials__trip">{t.trip}</p>
+              </li>
+            ))
+          }
+        </ul>
+
+        <div class="testimonials__controls">
+          <button type="button" class="testimonials__arrow testimonials__arrow--prev" aria-label="Previous testimonial">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+          <p class="testimonials__counter">
+            <span data-testimonial-current>1</span> / {testimonials.length}
+          </p>
+          <button type="button" class="testimonials__arrow testimonials__arrow--next" aria-label="Next testimonial">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="trust-band reveal">
+    <div class="container trust-band__inner">
+      <div class="trust-band__intro reveal-item">
+        <p class="trust-band__eyebrow">Why travelers choose us</p>
+        <h2>Straight answers from people who know the ground</h2>
+      </div>
+
+      <ul class="trust-band__grid">
+        <li class="trust-band__item reveal-item">
+          <h3>Local, not outsourced</h3>
+          <p>
+            Every tour starts and ends in Swakopmund or Walvis Bay, run by
+            the same small team from your first message to the final
+            drop-off.
+          </p>
+        </li>
+        <li class="trust-band__item reveal-item">
+          <h3>Built for how you want to travel</h3>
+          <p>
+            {tourCount + adventureCount + comboCount} tours, adventures, and combo deals — from a
+            30-minute quad ride to a full day in Etosha, mixed and matched
+            to your trip.
+          </p>
+        </li>
+        <li class="trust-band__item reveal-item">
+          <h3>A straight answer, fast</h3>
+          <p>
+            No call center. Reach out and you'll hear back from someone
+            who actually knows the dunes and the coastline.
+          </p>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="faq-preview reveal">
+    <div class="container faq-preview__intro reveal-item">
+      <p class="faq-preview__eyebrow">Questions</p>
+      <h2>A few things people ask</h2>
+    </div>
+
+    <div class="container faq-preview__grid">
+      <div class="faq-preview__item reveal-item">
+        <h3>Do I need to book in advance?</h3>
+        <p>
+          Placeholder answer — most tours can be arranged with a few
+          days' notice, but popular dates fill up faster in peak
+          season.
+        </p>
+      </div>
+      <div class="faq-preview__item reveal-item">
+        <h3>Where do tours depart from?</h3>
+        <p>
+          Placeholder answer — most tours depart from Swakopmund or
+          Walvis Bay; we'll confirm your pick-up point when we plan
+          your day.
+        </p>
+      </div>
+      <div class="faq-preview__item reveal-item">
+        <h3>Can tours be combined?</h3>
+        <p>
+          Placeholder answer — yes, many guests pair a tour with a
+          shorter adventure or a combo deal; see the tours page for
+          options.
+        </p>
+      </div>
+      <div class="faq-preview__item reveal-item">
+        <h3>What should I bring?</h3>
+        <p>
+          Placeholder answer — comfortable shoes, sun protection, and
+          a camera; we'll flag anything tour-specific when we confirm
+          your booking.
+        </p>
+      </div>
+    </div>
+
+    <p class="faq-preview__more reveal-item">
+      Have a different question? <a href="/contact">Get in touch</a>.
+    </p>
+  </section>
 
   <Section
-    eyebrow="Ready when you are"
-    heading="Plan your journey"
     align="center"
+    theme="photo"
+    imageUrl={closingCtaPhoto.imageUrl}
+    imageCredit={closingCtaPhoto.credit}
   >
-    <p>
-      Ready to see the dunes, the coastline, and everything in between?
-      Get in touch and we'll help you build the right day — or days —
-      around Swakopmund and Walvis Bay.
-    </p>
-    <a class="btn btn-primary" href="/booking">Start booking</a>
+    <div class="cta-card">
+      <p class="cta-card__eyebrow">Ready when you are</p>
+      <h2 class="cta-card__heading">Plan your journey</h2>
+      <p class="cta-card__body">
+        Ready to see the dunes, the coastline, and everything in between?
+        Get in touch and we'll help you build the right day — or days —
+        around Swakopmund and Walvis Bay.
+      </p>
+      <a class="btn btn-primary" href="/booking">Start booking</a>
+    </div>
   </Section>
 </BaseLayout>
 
@@ -380,12 +878,175 @@ const whyUsFeatures = [
     }
   }
 
+  /* ---------- Trust band (replaces fabricated testimonials) ---------- */
+  .trust-band {
+    padding-block: var(--space-2xl);
+  }
+
+  .trust-band__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .trust-band__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .trust-band__intro h2 {
+    margin: 0;
+  }
+
+  .trust-band__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .trust-band__item {
+    text-align: center;
+    padding: var(--space-lg);
+    border-top: 2px solid var(--color-accent-soft);
+  }
+
+  .trust-band__item h3 {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .trust-band__item p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .trust-band__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-md);
+    }
+  }
+
+  /* ---------- About ---------- */
+  .about {
+    padding-block: var(--space-2xl);
+  }
+
+  .about__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .about__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .about__intro h2 {
+    margin: 0 0 var(--space-md);
+  }
+
+  .about__body {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0;
+  }
+
+  .about__photo-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 21 / 8;
+    overflow: hidden;
+  }
+
+  .about__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .about__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .about__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .about__photo-wrap {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
   /* ---------- Stats band ---------- */
   .stats-band {
-    padding-block: var(--space-xl);
+    position: relative;
+    padding-block: var(--space-2xl);
+    overflow: hidden;
+    color: var(--color-text-on-dark);
+  }
+
+  .stats-band__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .stats-band__overlay {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay-photo-strong);
+  }
+
+  .stats-band__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 2;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.65);
+  }
+
+  .stats-band__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .stats-band__grid {
+    position: relative;
+    z-index: 1;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-lg);
@@ -395,13 +1056,13 @@ const whyUsFeatures = [
   .stats-band__number {
     font-family: var(--font-display);
     font-size: var(--fs-2xl);
-    color: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
     margin: 0;
   }
 
   .stats-band__label {
     font-size: var(--fs-sm);
-    color: var(--color-text-muted);
+    color: var(--color-sand-100);
     margin: var(--space-3xs) 0 0;
   }
 
@@ -549,6 +1210,646 @@ const whyUsFeatures = [
   @media (max-width: 640px) {
     .gallery__grid {
       columns: 1;
+    }
+  }
+
+  /* ---------- How it works ---------- */
+  .how-it-works {
+    padding-block: var(--space-2xl);
+  }
+
+  .how-it-works__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .how-it-works__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .how-it-works__intro h2 {
+    margin: 0;
+  }
+
+  .how-it-works__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl) var(--space-lg);
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .how-it-works__item {
+    text-align: center;
+    padding: var(--space-lg);
+  }
+
+  .how-it-works__photo-wrap {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    margin-bottom: var(--space-sm);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .how-it-works__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .how-it-works__credit {
+    position: absolute;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    z-index: 1;
+    margin: 0;
+    font-size: 0.65rem;
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .how-it-works__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .how-it-works__step {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    margin-bottom: var(--space-sm);
+    border-radius: 50%;
+    background: var(--color-sand-100);
+    color: var(--color-accent-strong);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: var(--fs-base);
+  }
+
+  .how-it-works__item h3 {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .how-it-works__item p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .how-it-works__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+  }
+
+  /* ---------- Where we go ---------- */
+  .where-we-go {
+    padding-block: var(--space-2xl);
+  }
+
+  .where-we-go__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .where-we-go__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .where-we-go__intro h2 {
+    margin: 0;
+  }
+
+  .where-we-go__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-md);
+  }
+
+  .where-we-go__panel {
+    position: relative;
+    margin: 0;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .where-we-go__panel img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .where-we-go__panel:hover img {
+    transform: scale(1.06);
+  }
+
+  .where-we-go__scrim {
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-overlay-photo-strong);
+  }
+
+  .where-we-go__text {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: var(--space-md);
+  }
+
+  .where-we-go__label {
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-weight: 600;
+    font-size: var(--fs-xl);
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-3xs);
+  }
+
+  .where-we-go__copy {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-100);
+    margin: 0;
+  }
+
+  .where-we-go__credit {
+    position: absolute;
+    right: var(--space-2xs);
+    top: var(--space-2xs);
+    z-index: 1;
+    margin: 0;
+    font-size: 0.65rem;
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .where-we-go__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 860px) {
+    .where-we-go__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .where-we-go__panel {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  /* ---------- Philosophy ---------- */
+  .philosophy {
+    padding-block: var(--space-2xl);
+  }
+
+  .philosophy__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  .philosophy__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .philosophy__text h2 {
+    margin: 0 0 var(--space-md);
+  }
+
+  .philosophy__body {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0;
+  }
+
+  .philosophy__cluster {
+    position: relative;
+    width: 100%;
+    max-width: 34rem;
+    aspect-ratio: 1 / 1;
+    margin-inline: auto;
+  }
+
+  .philosophy__lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .philosophy__line {
+    fill: none;
+    stroke: var(--color-accent-strong);
+    stroke-width: 0.3;
+    stroke-dasharray: 1.4 2.2;
+    opacity: 0.5;
+  }
+
+  .philosophy__photo {
+    position: absolute;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    background: var(--color-sand-100);
+    z-index: 1;
+  }
+
+  .philosophy__photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .philosophy__photo--1 {
+    top: 2%;
+    left: 6%;
+    width: 30%;
+  }
+
+  .philosophy__photo--2 {
+    top: 6%;
+    left: 54%;
+    width: 22%;
+  }
+
+  .philosophy__photo--3 {
+    top: 40%;
+    left: 0%;
+    width: 18%;
+  }
+
+  .philosophy__photo--4 {
+    top: 32%;
+    left: 70%;
+    width: 32%;
+  }
+
+  .philosophy__photo--5 {
+    top: 64%;
+    left: 26%;
+    width: 26%;
+  }
+
+  .philosophy__photo--6 {
+    top: 78%;
+    left: 66%;
+    width: 16%;
+  }
+
+  .philosophy__cluster-caption {
+    position: absolute;
+    right: 2%;
+    bottom: 0;
+    z-index: 2;
+    width: 42%;
+    margin: 0;
+    padding: var(--space-2xs) var(--space-sm);
+    background: rgba(251, 247, 241, 0.85);
+    backdrop-filter: blur(4px);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-snug);
+    color: var(--color-text-muted);
+    text-align: right;
+  }
+
+  .philosophy__credits {
+    max-width: var(--content-width);
+    margin: var(--space-lg) auto 0;
+    text-align: center;
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+  }
+
+  .philosophy__credits a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 860px) {
+    .philosophy__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .philosophy__cluster {
+      max-width: 22rem;
+      margin-top: var(--space-lg);
+    }
+  }
+
+  /* ---------- Testimonials ---------- */
+  .testimonials {
+    padding-block: var(--space-2xl);
+  }
+
+  .testimonials__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .testimonials__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .testimonials__intro h2 {
+    margin: 0;
+  }
+
+  .testimonials__carousel {
+    display: grid;
+    grid-template-columns: 0.85fr 1.15fr;
+    align-items: center;
+    gap: var(--space-2xl);
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .testimonials__photo-wrap {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+  }
+
+  .testimonials__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .testimonials__photo-credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .testimonials__photo-credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .testimonials__carousel-panel {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .testimonials__carousel-track {
+    position: relative;
+    list-style: none;
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+    min-height: clamp(220px, 28vw, 260px);
+  }
+
+  .testimonials__carousel-item {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: var(--space-lg);
+    background: var(--color-bg-alt);
+    border-radius: var(--radius-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .testimonials__carousel-item.is-active {
+    position: relative;
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .testimonials__quote {
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text);
+    margin: 0 0 var(--space-md);
+  }
+
+  .testimonials__name {
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--color-earth-900);
+    margin: 0;
+  }
+
+  .testimonials__trip {
+    font-size: var(--fs-xs);
+    color: var(--color-accent-strong);
+    margin: var(--space-3xs) 0 0;
+  }
+
+  .testimonials__controls {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .testimonials__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-bg);
+    color: var(--color-accent-strong);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+      transform var(--duration-fast) var(--ease-out);
+  }
+
+  .testimonials__arrow svg {
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+
+  .testimonials__arrow:hover {
+    background: var(--color-accent);
+    color: var(--color-text-on-dark);
+    transform: scale(1.06);
+  }
+
+  .testimonials__counter {
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  @media (max-width: 860px) {
+    .testimonials__carousel {
+      grid-template-columns: 1fr;
+    }
+
+    .testimonials__photo-wrap {
+      aspect-ratio: 16 / 9;
+      max-width: 26rem;
+      margin-inline: auto;
+    }
+  }
+
+  /* ---------- FAQ preview ---------- */
+  .faq-preview {
+    padding-block: var(--space-2xl);
+  }
+
+  .faq-preview__intro {
+    text-align: center;
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    margin-bottom: var(--space-xl);
+  }
+
+  .faq-preview__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .faq-preview__intro h2 {
+    margin: 0;
+  }
+
+  .faq-preview__grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg) var(--space-xl);
+    max-width: var(--content-width);
+    margin-inline: auto;
+  }
+
+  .faq-preview__item h3 {
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .faq-preview__item p {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .faq-preview__more {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin: var(--space-xl) 0 0;
+  }
+
+  .faq-preview__more a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+  }
+
+  @media (max-width: 640px) {
+    .faq-preview__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Closing CTA card ---------- */
+  .cta-card {
+    max-width: 34rem;
+    margin-inline: auto;
+    padding: var(--space-xl);
+    border-radius: var(--radius-lg);
+    background: rgba(251, 247, 241, 0.12);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(251, 247, 241, 0.25);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .cta-card__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-sand-100);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .cta-card__heading {
+    font-family: var(--font-display-italic);
+    font-style: italic;
+    font-weight: 600;
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-md);
+  }
+
+  .cta-card__body {
+    color: var(--color-sand-100);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-lg);
+  }
+
+  @media (max-width: 640px) {
+    .cta-card {
+      padding: var(--space-lg);
     }
   }
 </style>

@@ -1,6 +1,13 @@
 ---
+import { categoryLabels, toursByCategory } from '../data/tours';
+
 // Replace YOUR_FORM_ID with the real Formspree endpoint once created.
 const FORMSPREE_ID = 'YOUR_FORM_ID';
+
+const categories = (['tour', 'adventure', 'combo'] as const).map((category) => ({
+  label: categoryLabels[category].label,
+  tours: toursByCategory(category),
+}));
 ---
 
 <form class="form" action={`https://formspree.io/f/${FORMSPREE_ID}`} method="POST">
@@ -26,15 +33,28 @@ const FORMSPREE_ID = 'YOUR_FORM_ID';
     </div>
   </div>
 
-  <div class="form-row">
-    <label for="tour-date">Preferred tour / date</label>
-    <input
-      type="text"
-      id="tour-date"
-      name="tour_date"
-      placeholder="e.g. Coastal Trail Tour — first week of October"
-      required
-    />
+  <div class="form-row-group">
+    <div class="form-row">
+      <label for="tour-select">Preferred tour</label>
+      <select id="tour-select" name="tour" required>
+        <option value="" disabled selected>Choose a tour, adventure, or combo</option>
+        {
+          categories.map((group) => (
+            <optgroup label={group.label}>
+              {group.tours.map((tour) => (
+                <option value={tour.name} data-slug={tour.slug}>
+                  {tour.name}
+                </option>
+              ))}
+            </optgroup>
+          ))
+        }
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="tour-date">Preferred date</label>
+      <input type="date" id="tour-date" name="tour_date" />
+    </div>
   </div>
 
   <div class="form-row">
@@ -44,3 +64,18 @@ const FORMSPREE_ID = 'YOUR_FORM_ID';
 
   <button type="submit" class="btn btn-primary form-submit">Request booking</button>
 </form>
+
+<script>
+  // Deep-link support: /booking?tour=<slug> (used by the "Book this tour"
+  // buttons on the tours page) pre-selects the matching option instead of
+  // leaving visitors to find it again in a long dropdown.
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('tour');
+
+  if (slug) {
+    const select = document.getElementById('tour-select') as HTMLSelectElement | null;
+    const options = Array.from(select?.options ?? []);
+    const match = options.find((option) => option.dataset.slug === slug);
+    if (select && match) select.value = match.value;
+  }
+</script>

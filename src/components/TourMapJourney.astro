@@ -1,0 +1,715 @@
+---
+// Full-bleed hero leads straight into a two-column journey: a left
+// column of 7 ordinary (non-pinned, non-sticky) sections — one per
+// tour, each fading in via the sitewide .reveal/.reveal-item pattern —
+// and a right-hand column holding a single map that literally grows as
+// you scroll. Nothing about the map is pre-rendered as a "ghost" of the
+// finished thing: each tour's piece (a small crop of the shared
+// NamibiaMap coordinate system, centered on that tour's pin) only
+// appears once its section scrolls into view, floating into its true
+// relative position next to whichever pieces already landed, and the
+// map's own container grows taller to fit. By the seventh section the
+// map has assembled itself from everything that accumulated. Scrolling
+// on to the closing slot settles that collage into one clean, unbroken
+// map of the whole country with all 7 tours pinned at once — so a
+// tourist can actually read where everything is — alongside a small
+// auto-cycling slideshow of all 7 tour photos. Below ~900px there's no
+// room for two columns, so the growing map is hidden: each tour section
+// shows its own small static piece inline, and the closing slot shows
+// the same complete map as a plain static image.
+import { tours } from '../data/tours';
+import { mapJourney } from '../data/tourRegions';
+import NamibiaMap from './NamibiaMap.astro';
+
+const heroImage = {
+  url: 'https://images.unsplash.com/photo-1489493887464-892be6d1daae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Ondrej Machart', username: 'ondrejmachart' },
+  alt: 'Aerial view of the Namib desert dunes meeting the Atlantic coastline',
+};
+
+const stopsWithTours = mapJourney.map((pin) => {
+  const tour = tours.find((t) => t.slug === pin.slug);
+  return { pin, tour };
+}).filter((s): s is { pin: typeof mapJourney[number]; tour: NonNullable<typeof s.tour> } => !!s.tour);
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+
+// 2-4 highlight phrases per tour, each lifted directly from that tour's
+// own description in tours.ts (never invented) — a scannable recap of
+// concrete things you'll see/do, distinct from the Includes line below
+// it (which is about what's provided/logistics, not the experience).
+const highlightsBySlug: Record<string, string[]> = {
+  'etosha-tour': ['Elephants', 'Lions', 'Rhinos', 'Giraffes'],
+  'sossusvlei-tour': ['Towering red sand dunes', 'Deadvlei', 'Namib Desert landscapes'],
+  'skeleton-coast-tour': ['Dramatic shoreline', 'Shipwrecks', 'Seal colonies', 'Atlantic Ocean views'],
+  'sandwich-harbour-full-day': ['Salt Pans', 'Namib-Naukluft Park', 'Sandwich Harbour Lagoon', 'Dune driving'],
+  'spitzkoppe-tour': ['Granite rock formations', 'Ancient rock art', 'Desert landscapes'],
+  'pelican-point-tour': ['Cape fur seals', 'Pelicans', 'Flamingos', 'Desert-meets-ocean views'],
+  'dolphin-seal-catamaran-cruise': ['Dolphins', 'Rescue seals & pelicans', 'Whales', 'Turtles & Mola fish'],
+};
+
+// Every piece is the same fixed-size crop (in map units) of the exact
+// same coordinate system NamibiaMap.astro's 14 region polygons are
+// drawn against — only the pan target (centered on each pin) differs —
+// so any two pieces placed at their true map-unit offsets tile
+// together correctly, like a puzzle, with no separate assembly step.
+const PIECE_W = 170;
+const PIECE_H = 210;
+const pieceViewBox = (pin: { x: number; y: number }) =>
+  `${pin.x - PIECE_W / 2} ${pin.y - PIECE_H / 2} ${PIECE_W} ${PIECE_H}`;
+
+// Pixel layout for the growing map: lay out all 7 piece-crops at their
+// true relative map-unit positions, find the bounding box that
+// encloses all of them, then scale that box to a sensible on-page
+// size. This is computed once, up front — the pieces' final positions
+// never change, only how many of them are visible does.
+const SCALE = 1.3;
+const pieceRects = stopsWithTours.map(({ pin }) => ({
+  slug: pin.slug,
+  left: pin.x - PIECE_W / 2,
+  top: pin.y - PIECE_H / 2,
+}));
+const minLeft = Math.min(...pieceRects.map((r) => r.left));
+const minTop = Math.min(...pieceRects.map((r) => r.top));
+const maxRight = Math.max(...pieceRects.map((r) => r.left + PIECE_W));
+const growthWidth = Math.round((maxRight - minLeft) * SCALE);
+const pieceBoxStyle = (pin: { x: number; y: number }) => {
+  const left = Math.round((pin.x - PIECE_W / 2 - minLeft) * SCALE);
+  const top = Math.round((pin.y - PIECE_H / 2 - minTop) * SCALE);
+  const w = Math.round(PIECE_W * SCALE);
+  const h = Math.round(PIECE_H * SCALE);
+  return `left:${left}px; top:${top}px; width:${w}px; height:${h}px;`;
+};
+
+// Once all 7 pieces have landed, the collage settles into one clean,
+// unbroken map of the whole country (NamibiaMap's full 0 0 751 740
+// viewBox) with all 7 tours pinned at once, so it's actually legible as
+// a map rather than a scrapbook of overlapping crops — the point being
+// a tourist can now see exactly where each tour sits relative to the
+// others. Kept at the same width as the collage so the settle reads as
+// one continuous object, just resolving into focus.
+const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
+---
+
+<section class="tour-hero full-bleed">
+  <img class="tour-hero__bg" src={heroImage.url} alt={heroImage.alt} loading="eager" decoding="async" />
+  <div class="tour-hero__scrim" aria-hidden="true"></div>
+
+  <div class="tour-hero__content container">
+    <p class="tour-hero__eyebrow">Salt &amp; Sun Tours</p>
+    <h1 class="tour-hero__heading">Tours &amp; Adventures</h1>
+    <p class="tour-hero__body">
+      Seven signature destinations across three regions, plus every
+      shorter adventure and combo deal we run out of Swakopmund and
+      Walvis Bay. <a href="/contact">Contact us for current rates</a>.
+    </p>
+  </div>
+
+  <p class="tour-hero__credit">
+    Photo:{' '}
+    <a href={creditHref(heroImage.credit.username)} target="_blank" rel="noopener noreferrer">{heroImage.credit.name}</a>{' '}
+    /{' '}
+    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+  </p>
+
+  <div class="tour-hero__scroll-cue" aria-hidden="true"><span></span></div>
+</section>
+
+<div class="tour-journey">
+  <div class="tour-journey__grid">
+    <div class="tour-journey__sections">
+      {
+        stopsWithTours.map(({ pin, tour }, i) => (
+          <section
+            class:list={['tour-reveal', 'reveal']}
+            data-tour-section={i}
+            id={i === 0 ? 'tour' : undefined}
+          >
+            <div class="tour-reveal__inner">
+              <div class="tour-reveal__photo-wrap reveal-item">
+                <img
+                  class="tour-reveal__photo"
+                  src={tour.imageUrl}
+                  alt={tour.name}
+                  loading={i === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+                {tour.imageCredit && (
+                  <p class="tour-reveal__credit">
+                    Photo:{' '}
+                    <a href={creditHref(tour.imageCredit.username)} target="_blank" rel="noopener noreferrer">{tour.imageCredit.name}</a>{' '}
+                    /{' '}
+                    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                  </p>
+                )}
+              </div>
+
+              <div class="tour-reveal__body reveal-item">
+                <p class="tour-reveal__region">{pin.regionLabel}</p>
+                <h2 class="tour-reveal__title">{tour.name}</h2>
+                <p class="tour-reveal__desc">{tour.description}</p>
+
+                {highlightsBySlug[tour.slug] && (
+                  <ul class="tour-reveal__highlights">
+                    {highlightsBySlug[tour.slug].map((item) => <li>{item}</li>)}
+                  </ul>
+                )}
+
+                <p class="tour-reveal__quickfacts">
+                  {tour.duration && <span class="tour-reveal__duration">{tour.duration}</span>}
+                  <span class="tour-reveal__included">
+                    <span class="tour-reveal__included-label">Includes</span> {tour.included.join(', ')}
+                  </span>
+                </p>
+
+                <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
+
+                {/* Mobile-only fallback: a small static piece map inline
+                    with its own section, in place of the desktop growing
+                    map column, which has nowhere sensible to sit below
+                    the two-column breakpoint. */}
+                <div class="tour-reveal__piece-mobile" aria-hidden="true">
+                  <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
+                </div>
+              </div>
+            </div>
+          </section>
+        ))
+      }
+
+      <!-- Closing slot: once the growing map has assembled all 7 pieces,
+           scrolling to this slot settles it into one clean complete map
+           (see setupTourMapGrowth's finalTrigger) alongside a small
+           auto-cycling slideshow of all 7 tour photos. Lives inside the
+           same left column/grid row as the 7 tour sections (rather than
+           as its own section after .tour-journey) so the map column
+           beside it can keep using the same non-sticky
+           margin-top-repositioning trick to end up level with it. -->
+      <div class="tour-recap reveal" data-map-final>
+        <h2 class="tour-recap__heading reveal-item">Seven tours, three regions</h2>
+        <p class="tour-recap__lede reveal-item">
+          Every tour, together on one map — see exactly where each one takes you.
+        </p>
+
+        {/* Mobile-only fallback: the desktop map column (with its
+            settle-into-a-full-map moment) is hidden below the
+            breakpoint, so mobile gets the same complete map as a plain
+            static image instead. */}
+        <div class="tour-recap__map-mobile reveal-item" aria-hidden="true">
+          <NamibiaMap pins={mapJourney} />
+        </div>
+
+        <div class="tour-recap__slideshow reveal-item" data-tour-slideshow>
+          <div class="tour-recap__slides">
+            {
+              stopsWithTours.map(({ tour }, i) => (
+                <figure class:list={['tour-recap__slide', i === 0 && 'is-active']} data-tour-slide={i}>
+                  <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
+                  <figcaption>{tour.name}</figcaption>
+                </figure>
+              ))
+            }
+          </div>
+
+          <div class="tour-recap__dots" data-tour-slideshow-dots role="tablist" aria-label="Choose a tour photo">
+            {
+              stopsWithTours.map(({ tour }, i) => (
+                <button
+                  type="button"
+                  class:list={[i === 0 && 'is-active']}
+                  data-dot={i}
+                  aria-label={`Show ${tour.name}`}
+                />
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="tour-journey__map-col" aria-hidden="true">
+      <div
+        class="tour-map-growth"
+        data-map-growth
+        data-full-height={FULL_MAP_H}
+        style={`width:${growthWidth}px; height:${FULL_MAP_H}px;`}
+      >
+        <div class="tour-map-growth__pieces" data-map-pieces>
+          {
+            stopsWithTours.map(({ pin }, i) => (
+              <div class="tour-map-growth__piece" data-map-piece={i} style={pieceBoxStyle(pin)}>
+                <NamibiaMap pins={[pin]} activeSlug={pin.slug} viewBox={pieceViewBox(pin)} />
+              </div>
+            ))
+          }
+        </div>
+
+        <div class="tour-map-growth__full" data-map-full-layer aria-hidden="true">
+          <NamibiaMap pins={mapJourney} />
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<style>
+  /* ---------- Hero ---------- */
+  .tour-hero {
+    position: relative;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-on-dark);
+    overflow: hidden;
+  }
+
+  .tour-hero__bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .tour-hero__scrim {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 18, 14, 0.55) 0%,
+      rgba(31, 18, 14, 0.25) 40%,
+      rgba(31, 18, 14, 0.75) 100%
+    );
+  }
+
+  .tour-hero__content {
+    position: relative;
+    z-index: 1;
+    max-width: 40rem;
+  }
+
+  .tour-hero__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-sand-100);
+    margin-bottom: var(--space-sm);
+  }
+
+  .tour-hero__heading {
+    color: var(--color-text-on-dark);
+    margin-bottom: var(--space-md);
+  }
+
+  .tour-hero__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-100);
+    max-width: 32rem;
+  }
+
+  .tour-hero__body a {
+    color: var(--color-text-on-dark);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .tour-hero__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.65);
+  }
+
+  .tour-hero__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .tour-hero__scroll-cue {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1;
+    width: 24px;
+    height: 40px;
+    border: 2px solid rgba(251, 247, 241, 0.7);
+    border-radius: 999px;
+    display: flex;
+    justify-content: center;
+    padding-top: 8px;
+  }
+
+  .tour-hero__scroll-cue span {
+    width: 3px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--color-sand-100);
+    animation: tour-scroll-cue 1.8s ease-in-out infinite;
+  }
+
+  @keyframes tour-scroll-cue {
+    0% { opacity: 1; transform: translateY(0); }
+    70%, 100% { opacity: 0; transform: translateY(10px); }
+  }
+
+  /* ---------- Two-column journey ---------- */
+  .tour-journey {
+    padding-block: var(--space-2xl);
+  }
+
+  /* Deliberately not the sitewide .container (max-width: 1180px, sized
+     for reading-width paragraph text) — a section built around a photo
+     that bleeds to the actual browser edge and reaches toward the
+     middle of the screen needs a much wider budget than that, so this
+     gets its own, considerably wider one. The map column's real content
+     has a fixed pixel width (it doesn't reshape — its pieces are placed
+     at fixed coordinates), so `auto` sizes that column to exactly what
+     it needs and `minmax(0, 1fr)` lets the photo+text column claim
+     everything left over, rather than the two fighting over fr shares
+     the map's fixed width would just override anyway. */
+  .tour-journey__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: var(--space-2xl);
+    width: 100%;
+    max-width: 1600px;
+    margin-inline: auto;
+    padding-inline: var(--space-md);
+  }
+
+  .tour-journey__sections {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+    min-width: 0;
+  }
+
+  /* Not sticky, not pinned — genuinely just sits in normal document
+     flow, at the top of its column by default. A single fixed vertical
+     position (top-anchored or centered) doesn't work here: the map's
+     own assembled size stays compact (it's scaled to real geography,
+     not to page length) while the 7-section stack is many times
+     taller, so anywhere static leaves it stranded off-screen for most
+     of the scroll. Instead, setupTourMapGrowth() nudges this column's
+     margin-top once per section (at the same moment that section's
+     piece is placed) so the map re-centers on whichever section just
+     came into view. That's a one-shot reposition per trigger, not a
+     continuous scroll-follow — still ordinary box-model layout, not
+     position:fixed/sticky — but it keeps the map roughly paired with
+     the reader all the way down instead of only near one spot. Its
+     height is driven entirely by how many pieces have been placed.
+  */
+  .tour-journey__map-col {
+    position: static;
+  }
+
+  .tour-map-growth {
+    position: relative;
+    max-width: 100%;
+    margin-inline: auto;
+    margin-top: 0;
+    overflow: hidden;
+  }
+
+  /* Two stacked layers sharing the same box: the piece-by-piece collage
+     (default hidden — see setupTourMapGrowth, which only takes over
+     once full motion is confirmed) and the single clean complete map
+     it eventually settles into. Without JS, or under reduced motion,
+     the complete map is just shown outright — a more useful static
+     fallback than a half-finished scrapbook. */
+  .tour-map-growth__pieces {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform-origin: center center;
+  }
+
+  .tour-map-growth__full {
+    position: absolute;
+    inset: 0;
+    opacity: 1;
+    transform-origin: center center;
+  }
+
+  .tour-map-growth__piece {
+    position: absolute;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* ---------- Per-tour reveal sections ---------- */
+  /* Flex rather than grid: the photo is meant to break out past its own
+     column all the way to the actual browser edge (see
+     setupTourPhotoBleed in motion.ts, which measures and cancels the
+     real offset via a negative margin-left — a pure-CSS vw-based
+     breakout doesn't reliably reach the viewport edge from this deep a
+     level of nesting, confirmed by testing it in isolation). A CSS
+     grid's fr-tracks resist that kind of intentionally-oversized child
+     well; flex with an explicit fixed-ish photo width and a flexible
+     text column handles it predictably. */
+  .tour-reveal__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-lg);
+    min-width: 0;
+  }
+
+  .tour-reveal__photo-wrap {
+    position: relative;
+    flex: 0 0 auto;
+    width: min(46vw, 560px);
+    min-width: 0;
+  }
+
+  .tour-reveal__body {
+    flex: 1 1 0%;
+    min-width: 0;
+  }
+
+  .tour-reveal__highlights {
+    list-style: none;
+    margin: 0 0 var(--space-md);
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+  }
+
+  .tour-reveal__highlights li {
+    position: relative;
+    padding-left: var(--space-md);
+    font-size: var(--fs-sm);
+    color: var(--color-text);
+  }
+
+  .tour-reveal__highlights li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent-strong);
+  }
+
+  .tour-reveal__quickfacts {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xs);
+    font-size: var(--fs-xs);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-md);
+  }
+
+  .tour-reveal__duration {
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    color: var(--color-accent-strong);
+  }
+
+  .tour-reveal__included-label {
+    font-weight: 600;
+    color: var(--color-earth-900);
+  }
+
+  .tour-reveal__photo {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .tour-reveal__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.85);
+  }
+
+  .tour-reveal__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .tour-reveal__region {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    color: var(--color-accent-strong);
+    margin: 0 0 var(--space-3xs);
+  }
+
+  .tour-reveal__title {
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .tour-reveal__desc {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-md);
+  }
+
+  .tour-reveal__piece-mobile {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .tour-journey__grid {
+      grid-template-columns: 1fr;
+    }
+
+    .tour-journey__map-col {
+      display: none;
+    }
+
+    .tour-reveal__inner {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .tour-reveal__photo-wrap {
+      width: 100%;
+    }
+
+    .tour-reveal__photo {
+      aspect-ratio: 4 / 3;
+    }
+
+    .tour-reveal__piece-mobile {
+      display: block;
+      width: 100%;
+      max-width: 200px;
+      aspect-ratio: 170 / 210;
+      margin: var(--space-md) 0 0;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  /* ---------- Closing recap ---------- */
+  .tour-recap {
+    padding-block: var(--space-3xl) var(--space-xl);
+    margin-top: var(--space-xl);
+    border-top: 1px solid var(--color-sand-200);
+  }
+
+  .tour-recap__heading {
+    text-align: center;
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .tour-recap__lede {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .tour-recap__map-mobile {
+    display: none;
+  }
+
+  @media (max-width: 900px) {
+    .tour-recap__map-mobile {
+      display: block;
+      width: 100%;
+      max-width: 320px;
+      aspect-ratio: 751 / 740;
+      margin: 0 auto var(--space-lg);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-sm);
+    }
+  }
+
+  .tour-recap__slideshow {
+    max-width: 360px;
+    margin-inline: auto;
+    width: 100%;
+  }
+
+  .tour-recap__slides {
+    position: relative;
+    aspect-ratio: 5 / 4;
+  }
+
+  .tour-recap__slide {
+    position: absolute;
+    inset: 0;
+    margin: 0;
+    opacity: 0;
+    transition: opacity 600ms var(--ease-out);
+  }
+
+  .tour-recap__slide.is-active {
+    opacity: 1;
+  }
+
+  .tour-recap__slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .tour-recap__slide figcaption {
+    position: absolute;
+    left: var(--space-sm);
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+    margin: 0;
+    padding: var(--space-2xs) var(--space-sm);
+    background: rgba(58, 35, 28, 0.75);
+    color: var(--color-text-on-dark);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+  }
+
+  .tour-recap__dots {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-2xs);
+    margin-top: var(--space-md);
+  }
+
+  .tour-recap__dots button {
+    width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid var(--color-accent-strong);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .tour-recap__dots button.is-active {
+    background: var(--color-accent-strong);
+  }
+
+  @media (max-width: 640px) {
+    .tour-hero__heading {
+      font-size: var(--fs-2xl);
+    }
+  }
+</style>

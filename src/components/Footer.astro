@@ -1,5 +1,13 @@
 ---
 const year = new Date().getFullYear();
+
+// TODO(Jana): no real Instagram/Facebook URLs exist anywhere in the site's
+// content or config yet — swap these two placeholder strings for the real
+// profile URLs once you have them. Nothing else needs to change.
+const socialLinks = {
+  instagram: '#',
+  facebook: '#',
+};
 ---
 
 <footer class="site-footer">
@@ -7,6 +15,25 @@ const year = new Date().getFullYear();
     <div class="site-footer__brand">
       <p class="site-footer__logo">Salt &amp; Sun Tours</p>
       <p class="site-footer__tagline">Where Life and Light Meet Adventure</p>
+
+      <ul class="site-footer__social">
+        <li>
+          <a href={socialLinks.instagram} aria-label="Salt & Sun Tours on Instagram">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <rect x="3" y="3" width="18" height="18" rx="5" />
+              <circle cx="12" cy="12" r="4.2" />
+              <circle cx="17.2" cy="6.8" r="0.6" fill="currentColor" stroke="none" />
+            </svg>
+          </a>
+        </li>
+        <li>
+          <a href={socialLinks.facebook} aria-label="Salt & Sun Tours on Facebook">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+              <path d="M14.5 21v-7.5h2.5l.4-3H14.5V8.4c0-.87.24-1.46 1.5-1.46h1.6V4.35C17.3 4.24 16.35 4 15.25 4c-2.3 0-3.87 1.4-3.87 3.97V10.5H9v3h2.38V21z" />
+            </svg>
+          </a>
+        </li>
+      </ul>
     </div>
 
     <nav class="site-footer__nav" aria-label="Footer">
@@ -54,6 +81,37 @@ const year = new Date().getFullYear();
     color: var(--color-sand-200);
     font-size: var(--fs-sm);
     margin: 0;
+  }
+
+  .site-footer__social {
+    display: flex;
+    gap: var(--space-sm);
+    list-style: none;
+    margin: var(--space-md) 0 0;
+    padding: 0;
+  }
+
+  .site-footer__social a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    border: 1px solid rgba(251, 247, 241, 0.3);
+    color: var(--color-sand-100);
+    transition: color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .site-footer__social a:hover {
+    color: var(--color-ochre-400);
+    border-color: var(--color-ochre-400);
+  }
+
+  .site-footer__social svg {
+    width: 1.1rem;
+    height: 1.1rem;
   }
 
   .site-footer__nav ul {

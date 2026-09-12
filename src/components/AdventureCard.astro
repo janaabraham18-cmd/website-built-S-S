@@ -114,6 +114,12 @@ const { tour, featured = false } = Astro.props;
   }
 
   .adventure-card__title {
+    /* Ordered after .adventure-card__details (which sits first in the
+       markup for a11y — heading before body text) so the name is always
+       the bottom-most line on the card instead of floating above the
+       description, which reads as "the middle" once details are capped
+       to a few lines. */
+    order: 2;
     font-size: var(--fs-lg);
     color: var(--color-text-on-dark);
     margin: 0;
@@ -124,7 +130,8 @@ const { tour, featured = false } = Astro.props;
   }
 
   .adventure-card__details {
-    margin-top: var(--space-xs);
+    order: 1;
+    margin-bottom: var(--space-xs);
     /* Capped so long copy can never grow past the card's fixed height and
        push the title (a flex sibling under justify-content: flex-end) up
        and out of the visible box — opacity: 0 hides content but doesn't

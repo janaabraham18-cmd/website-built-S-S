@@ -45,21 +45,19 @@ const { tour, reverse = false } = Astro.props;
   </div>
 
   <div class="tour-row__panel">
+    {tour.duration && <span class="tour-row__badge">{tour.duration}</span>}
+
     <p class="tour-row__desc">{tour.description}</p>
 
-    {
-      (tour.duration || tour.note) && (
-        <p class="tour-row__meta">
-          {tour.duration}
-          {tour.duration && tour.note ? ' · ' : ''}
-          {tour.note}
-        </p>
-      )
-    }
+    {tour.note && <p class="tour-row__meta">{tour.note}</p>}
 
     <p class="tour-row__included">
       <span class="tour-row__included-label">Includes</span> {tour.included.join(', ')}
     </p>
+
+    <a class="btn btn-primary tour-row__cta" href={`/booking?tour=${tour.slug}`}>
+      Book this tour
+    </a>
   </div>
 </article>
 
@@ -143,7 +141,24 @@ const { tour, reverse = false } = Astro.props;
     justify-content: center;
     gap: var(--space-sm);
     padding: var(--space-3xl);
-    background: var(--color-surface);
+    /* Cream, not pure white — a solid-white panel here spans half of every
+       85vh row, stacked one after another, which reads as the whole page
+       having dropped to plain white rather than the site's warm tone. */
+    background: var(--color-bg-alt);
+  }
+
+  .tour-row__badge {
+    display: inline-flex;
+    align-self: flex-start;
+    align-items: center;
+    padding: var(--space-3xs) var(--space-sm);
+    border-radius: 999px;
+    background: var(--color-sand-100);
+    color: var(--color-accent-strong);
+    font-size: var(--fs-xs);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
   }
 
   .tour-row__desc {
@@ -174,6 +189,11 @@ const { tour, reverse = false } = Astro.props;
   .tour-row__included-label {
     font-weight: 600;
     color: var(--color-text);
+  }
+
+  .tour-row__cta {
+    align-self: flex-start;
+    margin-top: var(--space-2xs);
   }
 
   @media (max-width: 768px) {
