@@ -264,6 +264,235 @@ function setupHeroPanelSlideshow(reduceMotion: boolean) {
   track.addEventListener('mouseleave', start);
 }
 
+// Tours page closing recap: small auto-cycling slideshow through the 7
+// tour photos next to the complete assembled map. Same accessibility
+// pattern as the hero panel slideshow above — click a dot to jump
+// there directly, pause on hover AND focus (not hover alone, which
+// means nothing on touch), respect reduced motion by leaving it on
+// slide 1 with no autoplay.
+function setupTourRecapSlideshow(reduceMotion: boolean) {
+  const root = document.querySelector<HTMLElement>('[data-tour-slideshow]');
+  if (!root) return;
+
+  const slides = Array.from(root.querySelectorAll<HTMLElement>('[data-tour-slide]'));
+  const dots = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-tour-slideshow-dots] button'));
+  if (slides.length < 2) return;
+
+  let index = 0;
+
+  const goTo = (i: number) => {
+    index = i;
+    slides.forEach((slide, si) => slide.classList.toggle('is-active', si === index));
+    dots.forEach((dot, di) => dot.classList.toggle('is-active', di === index));
+  };
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => goTo(Number(dot.dataset.dot)));
+  });
+
+  if (reduceMotion) return;
+
+  let timer: ReturnType<typeof setInterval>;
+  const advance = () => goTo((index + 1) % slides.length);
+  const start = () => {
+    timer = setInterval(advance, 3200);
+  };
+  const stop = () => clearInterval(timer);
+
+  start();
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('focusout', start);
+}
+
+// Tours page photo bleed: each tour section's photo is meant to run
+// flush with the actual browser edge, not just the edge of its own
+// (fairly narrow, deeply-nested-in-a-centered-container) grid column —
+// a pure-CSS vw-based breakout (`margin-left: calc(50% - 50vw)` and
+// its relatives) doesn't reach the true viewport edge from this deep a
+// level of nesting, since the percentage in that formula resolves
+// against the element's own containing block, not the viewport,
+// confirmed by testing the trick in isolation. So instead this measures
+// each photo's actual distance from the viewport's left edge and
+// cancels it with an equal negative margin, which works regardless of
+// nesting because it's based on the real rendered position rather than
+// a formula. Skipped below the 900px breakpoint, where the photo is
+// meant to sit in normal full-width flow instead (see the CSS).
+//
+// The CSS width (min(46vw, 560px)) is a viewport-relative target, but
+// the actual space available beside it isn't purely viewport-relative:
+// the map column next to it has its own fixed minimum width (the
+// growing map's real pixel dimensions, which don't shrink — its pieces
+// are absolutely positioned at fixed coordinates), so at narrower
+// desktop widths the sections column gets squeezed by more than the
+// viewport shrinking alone would suggest. Below, this also measures the
+// row's actual available width each time and caps the photo so the text
+// beside it always keeps a readable minimum, rather than trusting a
+// vw-based CSS value that has no way to know about that squeeze.
+const TOUR_PHOTO_MIN_BODY_WIDTH = 260;
+
+function setupTourPhotoBleed() {
+  const photos = Array.from(document.querySelectorAll<HTMLElement>('.tour-reveal__photo-wrap'));
+  if (!photos.length) return;
+
+  const align = () => {
+    const isDesktop = window.matchMedia('(min-width: 901px)').matches;
+
+    photos.forEach((photo) => {
+      if (!isDesktop) {
+        photo.style.marginLeft = '';
+        photo.style.width = '';
+        return;
+      }
+
+      const row = photo.parentElement;
+      if (row) {
+        photo.style.width = '';
+        const rowStyle = getComputedStyle(row);
+        const gap = parseFloat(rowStyle.columnGap || rowStyle.gap) || 0;
+        const rowWidth = row.getBoundingClientRect().width;
+        const cssWidth = photo.getBoundingClientRect().width;
+        const maxPhotoWidth = Math.max(0, rowWidth - gap - TOUR_PHOTO_MIN_BODY_WIDTH);
+        photo.style.width = `${Math.min(cssWidth, maxPhotoWidth)}px`;
+      }
+
+      photo.style.marginLeft = '0px';
+      const offset = photo.getBoundingClientRect().left;
+      photo.style.marginLeft = `${-offset}px`;
+    });
+  };
+
+  align();
+  window.addEventListener('resize', align);
+  window.addEventListener('load', align);
+}
+
+// Tours page growing map: each of the 7 tour sections owns one piece
+// of the shared Namibia map, laid out server-side at its true relative
+// position (see TourMapJourney.astro's pieceBoxStyle) but starting
+// hidden and the container collapsed to zero height — there is no
+// pre-existing "ghost" of the finished map. As each section scrolls
+// into view its piece floats down into its already-correct position
+// and stays there, and the container's own height grows to keep
+// fitting whatever has landed so far, so by the last section the map
+// has simply finished assembling itself rather than being swapped for
+// a separate "complete" version. This runs the same in reverse: scroll
+// back up past a section and its piece un-attaches again, the map
+// shrinks back to fit whatever's left, and re-triggering that section
+// by scrolling back down re-places it — nothing is `once: true` here.
+//
+// Scrolling on past the 7th tour into the closing recap slot settles
+// the collage into one clean, unbroken map (same coordinate space, same
+// width, just the seamless version) with all 7 tours pinned at once —
+// the point being a tourist can actually read where everything sits
+// relative to everything else, which the overlapping crops don't
+// really give you. Scrolling back up out of the recap slot reverses
+// that the same way every other step here does.
+//
+// The map is explicitly not pinned/sticky, but it can't just sit at one
+// fixed vertical spot either: its assembled size stays compact (scaled
+// to real geography, not to page length) while the 7-section-plus-recap
+// stack beside it is many times taller, so any single static position
+// leaves it stranded off-screen for most of the scroll — a static top
+// or centered position both fail this the same way, they just fail for
+// different sections. So every trigger (forward or backward) also
+// nudges the map column's margin-top to re-center the map on whichever
+// section is currently active. That's a reposition per section
+// crossing, not a continuous scroll-follow — still ordinary box-model
+// layout, never position:fixed/sticky.
+//
+// Reduced motion is intentionally not wired up here: the container's
+// default CSS state (the complete map, full height, margin-top 0)
+// already reads as the finished result with nothing left to animate —
+// there's no reason to make a reduced-motion visitor sit through the
+// collage phase at all when the useful end state is right there.
+function setupTourMapGrowth() {
+  const container = document.querySelector<HTMLElement>('[data-map-growth]');
+  const grid = document.querySelector<HTMLElement>('.tour-journey__grid');
+  const piecesLayer = container?.querySelector<HTMLElement>('[data-map-pieces]');
+  const fullLayer = container?.querySelector<HTMLElement>('[data-map-full-layer]');
+  const finalSlot = document.querySelector<HTMLElement>('[data-map-final]');
+  if (!container || !grid || !piecesLayer || !fullLayer) return;
+
+  const pieces = Array.from(piecesLayer.querySelectorAll<HTMLElement>('[data-map-piece]'));
+  const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-tour-section]'));
+  if (!pieces.length) return;
+
+  const fullHeight = Number(container.dataset.fullHeight) || container.offsetHeight;
+
+  gsap.set(container, { height: 0, marginTop: 0 });
+  gsap.set(fullLayer, { opacity: 0, scale: 1.04 });
+  gsap.set(piecesLayer, { opacity: 1 });
+  gsap.set(pieces, { opacity: 0, y: -24 });
+
+  // Resizes/repositions the container to fit exactly pieces 0..activeIndex
+  // (inclusive) and re-centers it on that highest-index section — or, if
+  // activeIndex is -1 (scrolled back above the very first section), collapses
+  // back to the untouched starting state.
+  const syncTo = (activeIndex: number) => {
+    if (activeIndex < 0) {
+      gsap.to(container, { height: 0, marginTop: 0, duration: 0.5, ease: 'power2.inOut' });
+      return;
+    }
+
+    let height = 0;
+    for (let i = 0; i <= activeIndex; i++) {
+      height = Math.max(height, pieces[i].offsetTop + pieces[i].offsetHeight);
+    }
+
+    const anchorSection = sections[activeIndex];
+    const gridRect = grid.getBoundingClientRect();
+    const sectionRect = anchorSection.getBoundingClientRect();
+    const sectionCenter = sectionRect.top - gridRect.top + sectionRect.height / 2;
+    const marginTop = Math.max(0, sectionCenter - height / 2);
+
+    gsap.to(container, { height, marginTop, duration: 0.6, ease: 'power2.out' });
+  };
+
+  pieces.forEach((piece) => {
+    const index = Number(piece.dataset.mapPiece);
+    const section = sections[index];
+    if (!section) return;
+
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 75%',
+      onEnter: () => {
+        gsap.to(piece, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' });
+        syncTo(index);
+      },
+      onLeaveBack: () => {
+        gsap.to(piece, { opacity: 0, y: -24, duration: 0.5, ease: 'power2.inOut' });
+        syncTo(index - 1);
+      },
+    });
+  });
+
+  if (finalSlot) {
+    ScrollTrigger.create({
+      trigger: finalSlot,
+      start: 'top 75%',
+      onEnter: () => {
+        gsap.to(piecesLayer, { opacity: 0, scale: 0.94, duration: 0.6, ease: 'power2.inOut' });
+        gsap.to(fullLayer, { opacity: 1, scale: 1, duration: 0.7, ease: 'power2.out', delay: 0.15 });
+
+        const gridRect = grid.getBoundingClientRect();
+        const slotRect = finalSlot.getBoundingClientRect();
+        const slotCenter = slotRect.top - gridRect.top + slotRect.height / 2;
+        const marginTop = Math.max(0, slotCenter - fullHeight / 2);
+
+        gsap.to(container, { height: fullHeight, marginTop, duration: 0.7, ease: 'power2.out' });
+      },
+      onLeaveBack: () => {
+        gsap.to(fullLayer, { opacity: 0, scale: 1.04, duration: 0.5, ease: 'power2.inOut' });
+        gsap.to(piecesLayer, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out', delay: 0.1 });
+        syncTo(pieces.length - 1);
+      },
+    });
+  }
+}
+
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
 // "Tap for details" button (shown via CSS under prefers-reduced-motion)
 // toggles full info instantly instead.
@@ -290,6 +519,7 @@ export function initMotion() {
   ).matches;
 
   setupHeroPanelSlideshow(reduceMotion);
+  setupTourPhotoBleed();
 
   let lenis: Lenis | undefined;
 
@@ -337,6 +567,8 @@ export function initMotion() {
     setupAdventureCards();
     setupAdventureTilt();
     setupAdventureRise();
+    setupTourRecapSlideshow(false);
+    setupTourMapGrowth();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -392,6 +624,7 @@ export function initMotion() {
     setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
+    setupTourRecapSlideshow(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
