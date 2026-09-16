@@ -1,0 +1,671 @@
+<title>The Route</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Public+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand-50: #fbf7f1;
+    --sand-100: #f6ede1;
+    --sand-200: #eeddc7;
+    --beige-300: #e3cba7;
+    --ochre-400: #d3a24f;
+    --terracotta-500: #b5623f;
+    --terracotta-600: #9c4d33;
+    --earth-700: #6b3a2c;
+    --earth-900: #3a231c;
+    --stamp-ink: #8c2f1f;
+
+    --bg: var(--sand-50);
+    --bg-alt: var(--sand-100);
+    --surface: #ffffff;
+    --text: var(--earth-900);
+    --text-muted: var(--earth-700);
+    --accent: var(--terracotta-600);
+    --accent-soft: var(--ochre-400);
+    --line: var(--beige-300);
+    --line-strong: var(--terracotta-600);
+
+    --shadow: 0 10px 30px rgba(58, 35, 28, 0.14);
+    --shadow-sm: 0 3px 10px rgba(58, 35, 28, 0.10);
+
+    --display: "Libre Bodoni", Georgia, serif;
+    --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "Space Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #241611;
+      --bg-alt: #2c1b14;
+      --surface: #2f1d16;
+      --text: #f6ede1;
+      --text-muted: #d8c3ae;
+      --accent: var(--ochre-400);
+      --accent-soft: var(--terracotta-500);
+      --line: #4a352a;
+      --line-strong: var(--ochre-400);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      --shadow-sm: 0 3px 10px rgba(0, 0, 0, 0.35);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #241611;
+    --bg-alt: #2c1b14;
+    --surface: #2f1d16;
+    --text: #f6ede1;
+    --text-muted: #d8c3ae;
+    --accent: var(--ochre-400);
+    --accent-soft: var(--terracotta-500);
+    --line: #4a352a;
+    --line-strong: var(--ochre-400);
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+    --shadow-sm: 0 3px 10px rgba(0, 0, 0, 0.35);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    padding-inline: max(16px, calc((100vw - 1040px) / 2));
+    padding-block: 56px 96px;
+  }
+  h1, h2, h3 { font-family: var(--display); font-weight: 400; color: var(--text); margin: 0; }
+  p { margin: 0; }
+  .wrap { max-width: 1040px; margin: 0 auto; }
+  .mono { font-family: var(--mono); }
+  code { font-family: var(--mono); }
+
+  /* ---------- Cover ---------- */
+  .cover {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow);
+    padding: clamp(28px, 5vw, 56px);
+    margin-bottom: 72px;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1px dashed var(--line);
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .cover__stub {
+    position: absolute;
+    top: 0;
+    right: clamp(20px, 4vw, 48px);
+    transform: translateY(-50%);
+    background: var(--accent);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 6px 14px;
+    border-radius: 2px;
+    box-shadow: var(--shadow-sm);
+  }
+  .cover__eyebrow {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .cover h1 {
+    font-size: clamp(2.4rem, 6vw, 3.6rem);
+    line-height: 1.05;
+    text-wrap: balance;
+    margin-bottom: 16px;
+  }
+  .cover p.lede {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 56ch;
+    margin-bottom: 28px;
+  }
+  .cover__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 32px;
+  }
+  .cover__meta span {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    border: 1px solid var(--line);
+    border-radius: 100px;
+    padding: 5px 12px;
+  }
+
+  /* Route index — the mini table-of-contents map */
+  .route-index {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    overflow-x: auto;
+    padding-block: 8px 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .route-index a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    width: 84px;
+  }
+  .route-index .dot {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid var(--line-strong);
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--accent);
+    flex-shrink: 0;
+  }
+  .route-index .seg {
+    flex: 1;
+    height: 2px;
+    min-width: 20px;
+    background: repeating-linear-gradient(to right, var(--line-strong) 0 5px, transparent 5px 10px);
+    margin: 0 -2px;
+    transform: translateY(-19px);
+  }
+  .route-index a span.lbl {
+    font-size: 10px;
+    text-align: center;
+    line-height: 1.25;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+  }
+  .route-index a:hover .dot { background: var(--accent); color: var(--bg); }
+
+  /* ---------- Dossier / stops ---------- */
+  .dossier { position: relative; }
+  .dossier::before {
+    content: '';
+    position: absolute;
+    left: 31px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: repeating-linear-gradient(to bottom, var(--line-strong) 0 6px, transparent 6px 14px);
+  }
+
+  .stop {
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 8px 28px;
+    padding-block: 40px;
+    border-bottom: 1px solid var(--line);
+  }
+  .stop:last-child { border-bottom: none; }
+
+  .stop__node {
+    grid-column: 1;
+    grid-row: 1 / 3;
+    justify-self: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--line-strong);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--accent);
+    position: relative;
+    z-index: 1;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .stop__head { grid-column: 2; }
+  .stop__eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
+  }
+  .stop__title { font-size: clamp(1.5rem, 3vw, 2rem); text-wrap: balance; margin-bottom: 4px; }
+  .stop__replaces { font-size: 0.85rem; color: var(--text-muted); font-style: italic; margin-bottom: 20px; }
+
+  .stop__spread {
+    grid-column: 2;
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+  .stop.reverse .stop__spread { grid-template-columns: 1fr 1.1fr; }
+  .stop.reverse .mock { order: 2; }
+  .stop.reverse .note { order: 1; }
+
+  .mock {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: var(--shadow-sm);
+    padding: 20px;
+    min-height: 220px;
+  }
+  .mock__label {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .note {
+    padding-top: 4px;
+  }
+  .note p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    margin-bottom: 12px;
+  }
+  .note p:last-child { margin-bottom: 0; }
+  .note strong { color: var(--text); font-weight: 600; }
+
+  @media (max-width: 760px) {
+    .stop { grid-template-columns: 40px 1fr; gap: 6px 16px; }
+    .stop__node { width: 34px; height: 34px; font-size: 10px; }
+    .dossier::before { left: 22px; }
+    .stop__spread, .stop.reverse .stop__spread { grid-template-columns: 1fr; }
+    .stop.reverse .mock, .stop.reverse .note { order: initial; }
+  }
+
+  /* ===== Mock content: shared bits ===== */
+  .m-eyebrow { font-family: var(--mono); font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; }
+  .m-serif { font-family: var(--display); }
+
+  /* Stop 00 — hero */
+  .m-hero { display: flex; height: 130px; border-radius: 2px; overflow: hidden; }
+  .m-hero div { flex: 1; background: linear-gradient(160deg, var(--accent-soft), var(--accent)); display: flex; align-items: center; justify-content: center; font-family: var(--display); font-size: 1.3rem; color: var(--bg); border-right: 1px solid rgba(0,0,0,0.08); }
+  .m-hero div:last-child { border-right: none; }
+
+  /* Stop 01 — brief */
+  .m-brief { display: grid; grid-template-columns: 1.4fr 1fr; gap: 16px; }
+  .m-brief blockquote { font-family: var(--display); font-size: 1.15rem; line-height: 1.35; margin: 0; color: var(--text); }
+  .m-vitals { background: var(--bg-alt); border: 1px dashed var(--line-strong); border-radius: 3px; padding: 12px; font-family: var(--mono); font-size: 10.5px; color: var(--text-muted); display: grid; gap: 8px; align-content: start; }
+  .m-vitals b { display: block; color: var(--text); font-size: 15px; font-family: var(--display); }
+
+  /* Stop 02 — route map */
+  .m-map { position: relative; height: 200px; }
+  .m-map svg { width: 100%; height: 100%; }
+  .m-map-card { position: absolute; bottom: 6px; right: 4px; background: var(--surface); border: 1px solid var(--line-strong); border-radius: 3px; padding: 8px 10px; box-shadow: var(--shadow-sm); max-width: 150px; }
+  .m-map-card b { font-family: var(--display); font-size: 0.85rem; display: block; }
+  .m-map-card span { font-size: 0.7rem; color: var(--text-muted); }
+
+  /* Stop 03 — itinerary tickets */
+  .m-filters { display: flex; gap: 6px; margin-bottom: 14px; flex-wrap: wrap; }
+  .m-filters span { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.05em; text-transform: uppercase; border: 1px solid var(--line); border-radius: 100px; padding: 4px 10px; color: var(--text-muted); }
+  .m-filters span.on { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+  .ticket { display: flex; border: 1px solid var(--line); border-radius: 4px; margin-bottom: 10px; overflow: hidden; }
+  .ticket__stub { width: 56px; background: var(--bg-alt); border-right: 2px dashed var(--line-strong); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 9px; text-align: center; color: var(--accent); padding: 6px; }
+  .ticket__body { padding: 10px 12px; flex: 1; }
+  .ticket__body b { font-family: var(--display); font-size: 0.95rem; display: block; }
+  .ticket__body span { font-size: 0.75rem; color: var(--text-muted); }
+
+  /* Stop 04 — logbook */
+  .m-logbook { columns: 3; column-gap: 8px; }
+  .m-logbook div { break-inside: avoid; margin-bottom: 8px; border-radius: 2px; background: linear-gradient(150deg, var(--accent-soft), var(--bg-alt)); position: relative; }
+  .m-logbook div:nth-child(1) { height: 90px; }
+  .m-logbook div:nth-child(2) { height: 60px; }
+  .m-logbook div:nth-child(3) { height: 110px; }
+  .m-logbook div:nth-child(4) { height: 70px; }
+  .m-logbook div:nth-child(5) { height: 50px; }
+  .m-logbook .cap { position: absolute; bottom: -18px; left: 0; font-family: var(--display); font-style: italic; font-size: 0.65rem; color: var(--text-muted); }
+
+  /* Stop 05 — stamps */
+  .m-stamps { display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-around; padding-block: 8px; }
+  .stamp { width: 78px; height: 78px; border-radius: 50%; border: 2px dashed var(--stamp-ink); display: flex; flex-direction: column; align-items: center; justify-content: center; transform: rotate(-6deg); color: var(--stamp-ink); }
+  .stamp:nth-child(2) { transform: rotate(4deg); }
+  .stamp:nth-child(3) { transform: rotate(-3deg); }
+  .stamp b { font-family: var(--display); font-size: 1.3rem; line-height: 1; }
+  .stamp span { font-family: var(--mono); font-size: 7px; letter-spacing: 0.06em; text-transform: uppercase; margin-top: 2px; text-align: center; }
+
+  /* Stop 06 — postcards */
+  .m-postcards { position: relative; height: 190px; }
+  .postcard { position: absolute; width: 62%; background: var(--surface); border: 1px solid var(--line); border-radius: 3px; box-shadow: var(--shadow-sm); padding: 12px; }
+  .postcard:nth-child(1) { top: 0; left: 0; transform: rotate(-4deg); z-index: 1; }
+  .postcard:nth-child(2) { top: 26px; left: 32%; transform: rotate(3deg); z-index: 2; }
+  .postcard p { font-family: var(--display); font-style: italic; font-size: 0.8rem; margin-bottom: 8px; }
+  .postcard span { font-family: var(--mono); font-size: 9px; color: var(--text-muted); }
+  .postcard::after { content: ''; position: absolute; top: 8px; right: 8px; width: 16px; height: 20px; border: 1px solid var(--line-strong); opacity: 0.5; }
+
+  /* Stop 07 — faq */
+  .m-faq { display: grid; gap: 8px; }
+  .faqrow { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--line); padding-bottom: 8px; }
+  .faqrow b { font-family: var(--display); font-weight: 400; font-size: 0.9rem; }
+  .faqrow span { font-family: var(--mono); font-size: 14px; color: var(--accent); }
+
+  /* Stop 08 — closing cta */
+  .m-cta { height: 160px; border-radius: 3px; background: linear-gradient(160deg, var(--earth-900), var(--terracotta-600)); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; }
+  .m-cta b { font-family: var(--display); font-style: italic; color: var(--sand-50); font-size: 1.2rem; }
+  .m-cta button { font-family: var(--sans); font-weight: 600; font-size: 0.7rem; letter-spacing: 0.05em; text-transform: uppercase; background: var(--accent-soft); color: var(--earth-900); border: none; border-radius: 4px; padding: 8px 18px; }
+
+  footer.close {
+    margin-top: 48px;
+    padding-top: 28px;
+    border-top: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-muted);
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+</style>
+
+<div class="wrap">
+
+  <div class="cover">
+    <span class="cover__stub">NO. 001</span>
+    <p class="cover__eyebrow">Content Structure Proposal · Salt &amp; Sun Tours</p>
+    <h1>The Route</h1>
+    <p class="lede">Same brand, same tours — a homepage that reads like the trip itself. Nine stops, arrival to booking, each one built to earn its place rather than fill a template slot. Everything here is a draft to react to, not a final build.</p>
+    <div class="cover__meta">
+      <span>9 stops</span>
+      <span>Overland palette &amp; type</span>
+      <span>Desktop-first mockups</span>
+      <span>Nothing final</span>
+    </div>
+    <div class="route-index">
+      <a href="#s0"><span class="dot">00</span><span class="lbl">Arrival</span></a>
+      <span class="seg"></span>
+      <a href="#s1"><span class="dot">01</span><span class="lbl">The Brief</span></a>
+      <span class="seg"></span>
+      <a href="#s2"><span class="dot">02</span><span class="lbl">The Route</span></a>
+      <span class="seg"></span>
+      <a href="#s3"><span class="dot">03</span><span class="lbl">Itinerary</span></a>
+      <span class="seg"></span>
+      <a href="#s4"><span class="dot">04</span><span class="lbl">Logbook</span></a>
+      <span class="seg"></span>
+      <a href="#s5"><span class="dot">05</span><span class="lbl">Stamps</span></a>
+      <span class="seg"></span>
+      <a href="#s6"><span class="dot">06</span><span class="lbl">Postcards</span></a>
+      <span class="seg"></span>
+      <a href="#s7"><span class="dot">07</span><span class="lbl">Before You Go</span></a>
+      <span class="seg"></span>
+      <a href="#s8"><span class="dot">08</span><span class="lbl">Plan Route</span></a>
+    </div>
+  </div>
+
+  <div class="dossier">
+
+    <!-- STOP 00 -->
+    <section class="stop" id="s0">
+      <div class="stop__node">00</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">Arrival</p>
+        <h2 class="stop__title">Unchanged — it already does its job</h2>
+        <p class="stop__replaces">Hero — kept as-is</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Current hero</span>
+          <div class="m-hero">
+            <div>N</div><div>A</div><div>M</div><div>I</div><div>B</div><div>I</div><div>A</div>
+          </div>
+        </div>
+        <div class="note">
+          <p>The split-photo <strong>NAMIBIA</strong> panel already says exactly where you are before you've read a word — a strong, correct thesis statement. Every stop after this one is what changes.</p>
+          <p>One small addition: a thin scroll cue reading <strong>"Begin the route ↓"</strong> instead of a generic chevron — the first word of the new language the rest of the page speaks.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 01 -->
+    <section class="stop" id="s1">
+      <div class="stop__node">01</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">Who we are</p>
+        <h2 class="stop__title">The Brief</h2>
+        <p class="stop__replaces">Replaces the three-row "About Us"</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — manifesto + vitals</span>
+          <div class="m-brief">
+            <blockquote>"We run every tour out of Swakopmund and Walvis Bay — no call center, no middleman."</blockquote>
+            <div class="m-vitals">
+              <div><b>2</b>Basecamps</div>
+              <div><b>31</b>Experiences</div>
+              <div><b>0</b>Middlemen</div>
+            </div>
+          </div>
+        </div>
+        <div class="note">
+          <p>One confident statement in the display serif, large — not three photo rows easing you in. Beside it, a <strong>vitals stub</strong> styled like the inside cover of a passport: the numbers that matter, read in two seconds.</p>
+          <p>This is the front page of the dossier, not a corporate "About Us" — it tells you who's driving before it shows you the scenery.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 02 -->
+    <section class="stop" id="s2">
+      <div class="stop__node">02</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">The centerpiece</p>
+        <h2 class="stop__title">The Route</h2>
+        <p class="stop__replaces">New — the page's signature moment</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — interactive route map</span>
+          <div class="m-map">
+            <svg viewBox="0 0 300 200" width="300" height="200">
+              <path d="M40 10 C20 60, 30 140, 55 195" stroke="var(--line-strong)" stroke-width="2" fill="none" opacity="0.5"/>
+              <line x1="48" y1="70" x2="150" y2="40" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="3 4"/>
+              <line x1="48" y1="70" x2="180" y2="110" stroke="var(--accent)" stroke-width="2" stroke-dasharray="3 4"/>
+              <line x1="52" y1="120" x2="140" y2="160" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="3 4"/>
+              <line x1="52" y1="120" x2="230" y2="60" stroke="var(--line-strong)" stroke-width="1.5" stroke-dasharray="3 4"/>
+              <circle cx="48" cy="70" r="6" fill="var(--accent)"/>
+              <circle cx="52" cy="120" r="6" fill="var(--accent)"/>
+              <circle cx="150" cy="40" r="4" fill="var(--line-strong)"/>
+              <circle cx="180" cy="110" r="5" fill="var(--accent)"/>
+              <circle cx="140" cy="160" r="4" fill="var(--line-strong)"/>
+              <circle cx="230" cy="60" r="4" fill="var(--line-strong)"/>
+              <text x="30" y="66" font-family="Space Mono" font-size="8" fill="var(--text-muted)">Swakopmund</text>
+              <text x="34" y="134" font-family="Space Mono" font-size="8" fill="var(--text-muted)">Walvis Bay</text>
+            </svg>
+            <div class="m-map-card">
+              <b>Sossusvlei</b>
+              <span>Where the dunes turn red at dawn</span>
+            </div>
+          </div>
+        </div>
+        <div class="note">
+          <p>A stylized map of the two basecamps with routes fanning out to Sossusvlei, Etosha, Skeleton Coast, Sandwich Harbour. Hover a route — it lights up and a preview card surfaces: photo, one line, "See this tour."</p>
+          <p>This reuses the idea behind the site's best existing feature — the map on the tours page that assembles itself as you scroll — and gives it the homepage stage it deserves instead of leaving it one page deep. This is the "boutique concierge" moment: <strong>fun, interactive, and unmistakably this brand.</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 03 -->
+    <section class="stop" id="s3">
+      <div class="stop__node">03</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">The lineup</p>
+        <h2 class="stop__title">The Itinerary</h2>
+        <p class="stop__replaces">Replaces the plain Tour Programs rows</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — filterable ticket deck</span>
+          <div class="m-filters">
+            <span class="on">All</span><span>Desert</span><span>Coast</span><span>Culture</span><span>Combo</span>
+          </div>
+          <div class="ticket">
+            <div class="ticket__stub">HALF<br>DAY</div>
+            <div class="ticket__body"><b>Sossusvlei Tour</b><span>Desert · Namibia's most photographed dunes</span></div>
+          </div>
+          <div class="ticket">
+            <div class="ticket__stub">FULL<br>DAY</div>
+            <div class="ticket__body"><b>Sandwich Harbour Tour</b><span>Coast · Dunes dropping into the Atlantic</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p>Each tour becomes a <strong>boarding-pass card</strong> — a torn ticket stub carrying the duration, a name set in the display serif, and a one-line hook. A light filter bar (Desert / Coast / Culture / Combo) makes browsing 31 options feel curated, not overwhelming.</p>
+          <p>The existing alternating photo/copy rows still live underneath each ticket when expanded — this is a skin and an entry point, not a rebuild of the content.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 04 -->
+    <section class="stop reverse" id="s4">
+      <div class="stop__node">04</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">Proof, not polish</p>
+        <h2 class="stop__title">The Logbook</h2>
+        <p class="stop__replaces">Replaces the flat Gallery grid</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — scrapbook masonry</span>
+          <div class="m-logbook">
+            <div><span class="cap">— early light, Sossusvlei</span></div>
+            <div></div>
+            <div></div>
+            <div><span class="cap">— low tide, Pelican Point</span></div>
+            <div></div>
+          </div>
+        </div>
+        <div class="note">
+          <p>A loose, mixed-size masonry instead of a uniform grid, with a few photos carrying a short handwritten-style caption — like pages torn from a guide's own logbook, not a stock photo wall.</p>
+          <p>Uneven and specific reads as <strong>real</strong>; perfectly uniform reads as stock. This is the section where imperfection is the point.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 05 -->
+    <section class="stop" id="s5">
+      <div class="stop__node">05</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">Why us, briefly</p>
+        <h2 class="stop__title">Passport Stamps</h2>
+        <p class="stop__replaces">Replaces the plain stats/trust band</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — stamped trust marks</span>
+          <div class="m-stamps">
+            <div class="stamp"><b>31</b><span>Experiences</span></div>
+            <div class="stamp"><b>2</b><span>Basecamps</span></div>
+            <div class="stamp"><b>0</b><span>Middlemen</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p>The same numbers from The Brief's vitals stub, now blown up into circular, ink-stamped marks with a rough dashed edge — like a passport stamped at each border crossing.</p>
+          <p>It rhymes visually with the Itinerary's ticket stubs a few stops back, so the "travel document" language holds together instead of feeling like a one-off gimmick.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 06 -->
+    <section class="stop reverse" id="s6">
+      <div class="stop__node">06</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">Guest voices</p>
+        <h2 class="stop__title">Postcards from the Road</h2>
+        <p class="stop__replaces">Replaces the star-rating carousel</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — fanned postcard stack</span>
+          <div class="m-postcards">
+            <div class="postcard"><p>"Our guide knew the dunes like his own backyard."</p><span>— J. Marsh, Sossusvlei Tour</span></div>
+            <div class="postcard"><p>"Dolphins right next to the boat, no hard sell."</p><span>— R. Okafor, Catamaran Cruise</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p>Reviews as a loosely fanned stack of postcards — a stamp corner, a handwritten-feeling quote, a name and the trip taken — rather than a plain star-rated carousel that could belong to any business.</p>
+          <p>Click or swipe fans a new card to the front. Small, tactile, and it keeps the dossier's physical-object language going right through the social proof.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 07 -->
+    <section class="stop" id="s7">
+      <div class="stop__node">07</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">The quiet one</p>
+        <h2 class="stop__title">Before You Go</h2>
+        <p class="stop__replaces">Replaces the FAQ preview grid</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — plain editorial accordion</span>
+          <div class="m-faq">
+            <div class="faqrow"><b>Do I need to book in advance?</b><span>+</span></div>
+            <div class="faqrow"><b>Where do tours depart from?</b><span>+</span></div>
+            <div class="faqrow"><b>Can tours be combined?</b><span>+</span></div>
+          </div>
+        </div>
+        <div class="note">
+          <p>After six stops of personality, this one is deliberately calm: a plain accordion, serif question, sans answer, no stamps or tickets. Luxury also means knowing when to stop performing.</p>
+          <p>It's the section a nervous first-time booker actually needs to be boring and clear — this is where trust gets closed, not where it gets sold.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- STOP 08 -->
+    <section class="stop" id="s8">
+      <div class="stop__node">08</div>
+      <div class="stop__head">
+        <p class="stop__eyebrow">The invitation</p>
+        <h2 class="stop__title">Plan Your Route</h2>
+        <p class="stop__replaces">Same closing CTA, reframed copy</p>
+      </div>
+      <div class="stop__spread">
+        <div class="mock">
+          <span class="mock__label">Mockup — closing CTA</span>
+          <div class="m-cta">
+            <b>Ready to plan your route?</b>
+            <button>Start Booking</button>
+          </div>
+        </div>
+        <div class="note">
+          <p>Visually unchanged from today's closing photo card — it already works. Only the heading changes, from "Plan your journey" to <strong>"Plan your route"</strong>, closing the loop the hero opened.</p>
+          <p>Nine stops, one sentence each could summarize: arrival, who's driving, where you could go, what you'd actually do, proof it's real, why trust it, who's said so, the practical questions answered — then the invitation.</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <footer class="close">
+    <span>The Route — content structure proposal</span>
+    <span>Salt &amp; Sun Tours · draft, not final</span>
+  </footer>
+
+</div>
