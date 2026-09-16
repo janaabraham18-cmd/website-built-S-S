@@ -206,6 +206,167 @@ function setupProgramThreads(reduceMotion: boolean) {
   }
 }
 
+// The Route: five route lines draw in (once, on scroll) the same way the
+// itinerary threads do above, then hover/focus on a destination swaps the
+// shared preview panel's photo, copy, and booking link and highlights that
+// stop's line. The first destination is the server-rendered resting state
+// (see index.astro) so there's nothing to wait on JS for.
+function setupRouteMap(reduceMotion: boolean) {
+  const map = document.querySelector<HTMLElement>('[data-route-map]');
+  const preview = document.querySelector<HTMLElement>('[data-route-preview]');
+  if (!map || !preview) return;
+
+  const stops = Array.from(map.querySelectorAll<HTMLButtonElement>('.route-stop'));
+  const lines = Array.from(map.querySelectorAll<SVGLineElement>('.route-line'));
+  if (!stops.length) return;
+
+  const previewImg = preview.querySelector<HTMLImageElement>('[data-preview-img]');
+  const previewTag = preview.querySelector<HTMLElement>('[data-preview-tag]');
+  const previewName = preview.querySelector<HTMLElement>('[data-preview-name]');
+  const previewTeaser = preview.querySelector<HTMLElement>('[data-preview-teaser]');
+  const previewCreditName = preview.querySelector<HTMLAnchorElement>('[data-preview-credit-name]');
+  const previewCta = preview.querySelector<HTMLAnchorElement>('[data-preview-cta]');
+
+  const lineFor = (dest: string) => lines.find((l) => l.dataset.dest === dest);
+
+  const activate = (stop: HTMLButtonElement) => {
+    stops.forEach((s) => s.classList.toggle('is-active', s === stop));
+    lines.forEach((l) => l.classList.toggle('is-active', l === lineFor(stop.dataset.dest ?? '')));
+
+    const { name, tag, teaser, img, creditName, creditUsername, slug } = stop.dataset;
+    if (previewImg && img) { previewImg.src = img; previewImg.alt = name ?? ''; }
+    if (previewTag && tag) previewTag.textContent = tag;
+    if (previewName && name) previewName.textContent = name;
+    if (previewTeaser && teaser) previewTeaser.textContent = teaser;
+    if (previewCreditName && creditName && creditUsername) {
+      previewCreditName.textContent = creditName;
+      previewCreditName.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+    }
+    if (previewCta && slug) previewCta.href = `/booking?tour=${slug}`;
+  };
+
+  stops.forEach((stop) => {
+    stop.addEventListener('mouseenter', () => activate(stop));
+    stop.addEventListener('focus', () => activate(stop));
+  });
+
+  // Sync the initially-active line to whichever stop is already
+  // server-rendered as active, rather than assuming it's the first one.
+  const initialStop = stops.find((s) => s.classList.contains('is-active')) ?? stops[0];
+  lines.forEach((l) => l.classList.toggle('is-active', l === lineFor(initialStop.dataset.dest ?? '')));
+
+  if (reduceMotion) {
+    lines.forEach((line) => {
+      const length = line.getTotalLength();
+      gsap.set(line, { strokeDasharray: length, strokeDashoffset: 0 });
+    });
+    return;
+  }
+
+  lines.forEach((line) => {
+    const length = line.getTotalLength();
+    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
+  });
+
+  ScrollTrigger.create({
+    trigger: map,
+    start: 'top 80%',
+    once: true,
+    onEnter: () =>
+      gsap.to(lines, { strokeDashoffset: 0, duration: 0.9, ease: 'power1.inOut', stagger: 0.12 }),
+  });
+}
+
+// The Itinerary's filter pills: click toggles which category is shown,
+// hiding non-matching tour rows via the `hidden` attribute rather than
+// animating them out — a filter change is a direct result of a click, not
+// a moment that needs its own motion.
+function setupItineraryFilter() {
+  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
+  const items = document.querySelectorAll<HTMLElement>('.itinerary-block .program-item');
+  if (!pills.length || !items.length) return;
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      pills.forEach((p) => p.classList.toggle('is-active', p === pill));
+      const filter = pill.dataset.filter;
+      items.forEach((item) => {
+        const show = filter === 'all' || item.dataset.category === filter;
+        item.hidden = !show;
+      });
+    });
+  });
+}
+
+// Passport Stamps: each number counts up from 0 once, the first time the
+// band scrolls into view — same technique the old stats band used, now
+// with somewhere real to run.
+function setupStampCountUp(reduceMotion: boolean) {
+  const numbers = document.querySelectorAll<HTMLElement>('.stamp b[data-count-to]');
+
+  for (const el of numbers) {
+    const target = Number(el.dataset.countTo);
+    if (!Number.isFinite(target)) continue;
+
+    if (reduceMotion) {
+      el.textContent = String(target);
+      continue;
+    }
+
+    const proxy = { value: 0 };
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () =>
+        gsap.to(proxy, {
+          value: target,
+          duration: 1.2,
+          ease: 'power1.out',
+          onUpdate: () => {
+            el.textContent = String(Math.round(proxy.value));
+          },
+        }),
+    });
+  }
+}
+
+// Postcards from the Road: one review visible at a time, cycled with
+// prev/next — click-driven UI switching, not scroll motion, so it isn't
+// gated behind reduced motion (the crossfade is a plain CSS opacity
+// transition on .is-active, same pattern the old testimonials carousel
+// used).
+function setupPostcards() {
+  const root = document.querySelector<HTMLElement>('[data-postcards]');
+  if (!root) return;
+
+  const cards = Array.from(root.querySelectorAll<HTMLElement>('.postcard'));
+  const prevBtn = root.querySelector<HTMLButtonElement>('[data-postcard-prev]');
+  const nextBtn = root.querySelector<HTMLButtonElement>('[data-postcard-next]');
+  const counter = root.querySelector<HTMLElement>('[data-postcard-current]');
+  if (!cards.length || !prevBtn || !nextBtn) return;
+
+  let index = 0;
+
+  function render() {
+    cards.forEach((card, i) => {
+      card.classList.toggle('is-active', i === index);
+      card.setAttribute('aria-hidden', i === index ? 'false' : 'true');
+    });
+    if (counter) counter.textContent = String(index + 1);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    index = (index - 1 + cards.length) % cards.length;
+    render();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    index = (index + 1) % cards.length;
+    render();
+  });
+}
+
 // Tours page closing recap: small auto-cycling slideshow through the 7
 // tour photos next to the complete assembled map. Same accessibility
 // pattern as the hero panel slideshow below — click a dot to jump
@@ -516,6 +677,8 @@ export function initMotion() {
 
   setupHeroPanelSlideshow(reduceMotion);
   setupTourPhotoBleed();
+  setupItineraryFilter();
+  setupPostcards();
 
   let lenis: Lenis | undefined;
 
@@ -565,6 +728,8 @@ export function initMotion() {
     setupTourMapGrowth();
     setupAlternatingRows(false);
     setupProgramThreads(false);
+    setupRouteMap(false);
+    setupStampCountUp(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -621,6 +786,8 @@ export function initMotion() {
     setupTourRecapSlideshow(true);
     setupAlternatingRows(true);
     setupProgramThreads(true);
+    setupRouteMap(true);
+    setupStampCountUp(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());

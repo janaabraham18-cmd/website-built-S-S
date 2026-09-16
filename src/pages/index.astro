@@ -55,6 +55,117 @@ const heroPanels = [
   },
 ];
 
+// "The Route" — five destinations fanning out from the two basecamps.
+// Coordinates are a stylized (not geographically literal) 0-100 layout;
+// each route-stop button and its matching SVG line share the same
+// percentage so they stay coincident regardless of viewport width.
+const routeDestinations = [
+  {
+    slug: 'sossusvlei-tour',
+    name: 'Sossusvlei',
+    tag: 'Desert · Half-day',
+    teaser: 'Where the dunes turn red at dawn.',
+    x: 45,
+    y: 78,
+    imageUrl: 'https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'Bernd Dittrich', username: 'hdbernd' },
+  },
+  {
+    slug: 'sandwich-harbour-full-day',
+    name: 'Sandwich Harbour',
+    tag: 'Coastal · Full-day',
+    teaser: 'Dunes dropping straight into the Atlantic.',
+    x: 20,
+    y: 72,
+    imageUrl: 'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'Bernd Dittrich', username: 'hdbernd' },
+  },
+  {
+    slug: 'etosha-tour',
+    name: 'Etosha',
+    tag: 'Wildlife · Multi-day',
+    teaser: 'Wildlife gathered at every waterhole.',
+    x: 70,
+    y: 18,
+    imageUrl: 'https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'Geranimo', username: 'geraninmo' },
+  },
+  {
+    slug: 'skeleton-coast-tour',
+    name: 'Skeleton Coast',
+    tag: 'Coastal · Full-day',
+    teaser: 'Shipwrecks and fog along a wild shoreline.',
+    x: 15,
+    y: 10,
+    imageUrl: 'https://images.unsplash.com/photo-1551176968-bf1e434355f6?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'Sam Power', username: 'sampowerphoto' },
+  },
+  {
+    slug: 'pelican-point-tour',
+    name: 'Pelican Point',
+    tag: 'Coastal · Half-day',
+    teaser: 'Thousands of Cape fur seals, up close.',
+    x: 25,
+    y: 60,
+    imageUrl: 'https://images.unsplash.com/photo-1635764857370-911375b7a87a?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'katsuma tanaka', username: 'kt2080' },
+  },
+];
+
+const itineraryFilters = [
+  { key: 'all', label: 'All' },
+  { key: 'desert', label: 'Desert' },
+  { key: 'coastal', label: 'Coastal' },
+  { key: 'adventure', label: 'Adventure' },
+  { key: 'wildlife', label: 'Wildlife' },
+  { key: 'culture', label: 'Culture' },
+];
+
+const stampStats = [
+  { value: 31, label: 'Experiences' },
+  { value: 2, label: 'Basecamps' },
+  { value: 0, label: 'Middlemen' },
+];
+
+// Placeholder reviews — same convention as the rest of the codebase:
+// swap these for real guest reviews before launch.
+const testimonials = [
+  {
+    quote: "Placeholder quote — swap in a real review. Planning was easy and our guide clearly knew the desert inside out.",
+    name: 'Placeholder Name',
+    trip: 'Sossusvlei Tour',
+  },
+  {
+    quote: "Placeholder quote — swap in a real review. We saw more wildlife in one day than we expected for the whole trip.",
+    name: 'Placeholder Name',
+    trip: 'Etosha Tour',
+  },
+  {
+    quote: "Placeholder quote — swap in a real review. Dolphins right next to the boat, and the crew made the whole morning fun.",
+    name: 'Placeholder Name',
+    trip: 'Dolphin & Seal Catamaran Cruise',
+  },
+];
+
+const faqItems = [
+  {
+    q: 'Do I need to book in advance?',
+    a: "Most tours can be arranged with a few days' notice, but popular dates fill up faster in peak season.",
+  },
+  {
+    q: 'Where do tours depart from?',
+    a: "Most tours depart from Swakopmund or Walvis Bay; we'll confirm your pick-up point when we plan your day.",
+  },
+  {
+    q: 'Can tours be combined?',
+    a: 'Yes — many guests pair a tour with a shorter adventure or a combo deal; see the tours page for options.',
+  },
+  {
+    q: 'What should I bring?',
+    a: "Comfortable shoes, sun protection, and a camera; we'll flag anything tour-specific when we confirm your booking.",
+  },
+];
+
 const closingCtaPhoto = {
   imageUrl:
     'https://images.unsplash.com/photo-1783679603167-4d6650f3cbd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
@@ -77,102 +188,114 @@ const closingCtaPhoto = {
 
   <div id="scroll-target"></div>
 
-  <section class="block about-block reveal" id="about">
-    <p class="eyebrow">About Us</p>
-    <h2 class="section-title">Two home bases, one stretch of coast and desert</h2>
-
-    <div class="about-row" data-alt-row>
-      <div class="about-media single">
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=1000&q=80&auto=format&fit=crop"
-            alt="Red dunes of the Namib desert"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
+  <!-- ============ 01 · THE BRIEF ============ -->
+  <section class="block brief-block reveal" id="brief">
+    <p class="eyebrow">The Brief</p>
+    <div class="brief-spread">
+      <div class="brief-copy reveal-item">
+        <blockquote class="brief-quote">"We run every tour out of Swakopmund and Walvis Bay — no call center, no middleman."</blockquote>
+        <p>Just guides who know the dunes and the coastline because they work them every day — covering both ends of what Namibia does best, the towering red dunes inland and the seal colonies and Atlantic swell along the coast, often on the same day if that's how you want to build your trip.</p>
       </div>
-      <div class="about-copy">
-        <h3>No call center, no middleman</h3>
-        <p>We run every tour out of Swakopmund and Walvis Bay — no call center, no middleman, just guides who know the dunes and the coastline because they work them every day.</p>
-        <p>That means we cover both ends of what Namibia does best: the towering red dunes and dry riverbeds inland, and the seal colonies, lagoons, and Atlantic swell along the coast — often on the same day, if that's how you want to build your trip.</p>
+      <div class="brief-vitals reveal-item">
+        <div class="vital"><b>2</b><span>Basecamps</span></div>
+        <div class="vital"><b>31</b><span>Experiences</span></div>
+        <div class="vital"><b>0</b><span>Middlemen</span></div>
       </div>
     </div>
-
-    <div class="about-row reverse" data-alt-row>
-      <div class="about-media double">
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=700&q=80&auto=format&fit=crop"
-            alt="Quad biking on the dunes near Swakopmund"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1440020143730-090579c4d53c?w=700&q=80&auto=format&fit=crop"
-            alt="Catamaran cruise on Walvis Bay"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-      <div class="about-copy">
-        <h3>Desert and ocean, one lineup</h3>
-        <p>Based right in Swakopmund — every tour starts close to home, with few operators anywhere in Namibia covering both ends of the landscape the way we do.</p>
-        <p>From the red dunes of Sossusvlei to the seal colonies of Pelican Point, it's one lineup, one team, and one place to book it all.</p>
-      </div>
-    </div>
-
-    <div class="about-row" data-alt-row>
-      <div class="about-media double">
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=700&q=80&auto=format&fit=crop"
-            alt="Wildlife in Etosha National Park"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=700&q=80&auto=format&fit=crop"
-            alt="Township tour guide in Swakopmund"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-      <div class="about-copy">
-        <h3>31 ways to mix and match</h3>
-        <p>7 signature tours, 16 adventures, and 8 combo deals — pair a quad bike ride with a catamaran cruise, or build your own day from scratch.</p>
-        <p>Every one of them runs with hands-on local guides who know the dunes and the coastline — not a script read off a clipboard.</p>
+    <div class="brief-banner reveal-item">
+      <div class="photo-frame">
+        <img
+          src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=1600&q=80&auto=format&fit=crop"
+          alt="Red dunes of the Namib desert"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
     </div>
   </section>
 
-  <section class="block gallery-block reveal" id="gallery">
-    <p class="eyebrow">Gallery</p>
-    <h2 class="section-title">Namibia, in passing</h2>
-    <div class="gallery-grid reveal-item">
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1705065277882-b0604ec13dca?w=600&h=500&q=80&auto=format&fit=crop" alt="Red dunes rolling toward the horizon" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1542762002-45279e010961?w=600&h=500&q=80&auto=format&fit=crop" alt="Coastal cliffs along the Atlantic" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1771148884276-2f101fcadcb1?w=600&h=500&q=80&auto=format&fit=crop" alt="Dune ridgeline at golden hour" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1667666670938-4e89397d7c06?w=600&h=500&q=80&auto=format&fit=crop" alt="Wide desert plain under open sky" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1622713486130-aa0177e64542?w=600&h=500&q=80&auto=format&fit=crop" alt="Salt pan flats near the coast" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1766470956586-2b969d67b391?w=600&h=500&q=80&auto=format&fit=crop" alt="Rock formations in the Namib" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1504813205186-380b1235a5d2?w=600&h=500&q=80&auto=format&fit=crop" alt="Ocean waves meeting the shoreline" loading="lazy" decoding="async" /></div></div>
-      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1778379591293-36b4cb24324f?w=600&h=500&q=80&auto=format&fit=crop" alt="Layered dune shadows at sunset" loading="lazy" decoding="async" /></div></div>
+  <!-- ============ 02 · THE ROUTE ============ -->
+  <section class="block route-block reveal" id="route">
+    <p class="eyebrow">The Route</p>
+    <h2 class="section-title">Two basecamps, five routes worth taking</h2>
+
+    <div class="route-layout reveal-item">
+      <div class="route-map" data-route-map>
+        <svg class="route-map__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <circle class="route-map__base" cx="12" cy="35" r="1.6" />
+          <circle class="route-map__base" cx="12" cy="55" r="1.6" />
+          {
+            routeDestinations.map((d) => {
+              const fromSwakopmund = d.slug === 'skeleton-coast-tour' || d.slug === 'etosha-tour';
+              return <line class="route-line" data-dest={d.slug} x1="12" y1={fromSwakopmund ? 35 : 55} x2={d.x} y2={d.y} />;
+            })
+          }
+        </svg>
+        <span class="route-map__label" style={`left:9%; top:41%;`}>Swakopmund</span>
+        <span class="route-map__label" style={`left:9%; top:61%;`}>Walvis Bay</span>
+
+        {
+          routeDestinations.map((d, i) => (
+            <button
+              type="button"
+              class:list={['route-stop', i === 0 && 'is-active']}
+              data-dest={d.slug}
+              data-name={d.name}
+              data-tag={d.tag}
+              data-teaser={d.teaser}
+              data-slug={d.slug}
+              data-img={d.imageUrl}
+              data-credit-name={d.imageCredit.name}
+              data-credit-username={d.imageCredit.username}
+              style={`left:${d.x}%; top:${d.y}%;`}
+            >
+              <span class="route-stop__dot" aria-hidden="true" />
+              <span class="visually-hidden">{d.name}</span>
+            </button>
+          ))
+        }
+      </div>
+
+      <div class="route-preview" data-route-preview>
+        <div class="photo-frame route-preview__photo">
+          <img
+            data-preview-img
+            src={routeDestinations[0].imageUrl}
+            alt={routeDestinations[0].name}
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="route-preview__tag" data-preview-tag>{routeDestinations[0].tag}</p>
+        <h3 class="route-preview__name" data-preview-name>{routeDestinations[0].name}</h3>
+        <p class="route-preview__teaser" data-preview-teaser>{routeDestinations[0].teaser}</p>
+        <p class="route-preview__credit">
+          Photo:{' '}
+          <a data-preview-credit-name href={`https://unsplash.com/@${routeDestinations[0].imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{routeDestinations[0].imageCredit.name}</a>{' '}
+          /{' '}
+          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </p>
+        <a class="btn btn-outline route-preview__cta" data-preview-cta href={`/booking?tour=${routeDestinations[0].slug}`}>Book this route</a>
+      </div>
     </div>
   </section>
 
-  <section class="block program-block reveal" id="program">
-    <p class="eyebrow">Tour Programs</p>
+  <!-- ============ 03 · THE ITINERARY ============ -->
+  <section class="block itinerary-block reveal" id="itinerary">
+    <p class="eyebrow">The Itinerary</p>
     <h2 class="section-title">A closer look at the lineup</h2>
 
-    <div class="program-item" data-alt-row>
+    <div class="itinerary-filters reveal-item" role="group" aria-label="Filter tours by type">
+      {
+        itineraryFilters.map((f, i) => (
+          <button type="button" class:list={['filter-pill', i === 0 && 'is-active']} data-filter={f.key}>{f.label}</button>
+        ))
+      }
+    </div>
+
+    <div class="program-item" data-alt-row data-category="desert">
       <div class="program-media">
+        <span class="ticket-stub">Half<br />Day</span>
         <div class="photo-frame">
           <img
             src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=900&q=80&auto=format&fit=crop"
@@ -191,8 +314,9 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reverse" data-alt-row data-thread>
+    <div class="program-item reverse" data-alt-row data-thread data-category="coastal">
       <div class="program-media">
+        <span class="ticket-stub">Full<br />Day</span>
         <div class="photo-frame">
           <img
             src="https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?w=900&q=80&auto=format&fit=crop"
@@ -211,8 +335,9 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item" data-alt-row data-thread>
+    <div class="program-item" data-alt-row data-thread data-category="adventure">
       <div class="program-media">
+        <span class="ticket-stub">Half<br />Day</span>
         <div class="photo-frame">
           <img
             src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=900&q=80&auto=format&fit=crop"
@@ -231,8 +356,9 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reverse" data-alt-row data-thread>
+    <div class="program-item reverse" data-alt-row data-thread data-category="coastal">
       <div class="program-media">
+        <span class="ticket-stub">Half<br />Day</span>
         <div class="photo-frame">
           <img
             src="https://images.unsplash.com/photo-1440020143730-090579c4d53c?w=900&q=80&auto=format&fit=crop"
@@ -251,8 +377,9 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item" data-alt-row data-thread>
+    <div class="program-item" data-alt-row data-thread data-category="wildlife">
       <div class="program-media">
+        <span class="ticket-stub">Multi<br />Day</span>
         <div class="photo-frame">
           <img
             src="https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=900&q=80&auto=format&fit=crop"
@@ -271,8 +398,9 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reverse" data-alt-row data-thread>
+    <div class="program-item reverse" data-alt-row data-thread data-category="culture">
       <div class="program-media">
+        <span class="ticket-stub">Half<br />Day</span>
         <div class="photo-frame">
           <img
             src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=900&q=80&auto=format&fit=crop"
@@ -292,6 +420,87 @@ const closingCtaPhoto = {
     </div>
   </section>
 
+  <!-- ============ 04 · THE LOGBOOK ============ -->
+  <section class="block logbook-block reveal" id="logbook">
+    <p class="eyebrow">The Logbook</p>
+    <h2 class="section-title">Namibia, in passing</h2>
+    <div class="logbook-grid reveal-item">
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1705065277882-b0604ec13dca?w=600&q=80&auto=format&fit=crop" alt="Red dunes rolling toward the horizon" loading="lazy" decoding="async" /></div><figcaption>early light, Sossusvlei</figcaption></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1542762002-45279e010961?w=600&q=80&auto=format&fit=crop" alt="Coastal cliffs along the Atlantic" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1771148884276-2f101fcadcb1?w=600&q=80&auto=format&fit=crop" alt="Dune ridgeline at golden hour" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1667666670938-4e89397d7c06?w=600&q=80&auto=format&fit=crop" alt="Wide desert plain under open sky" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1622713486130-aa0177e64542?w=600&q=80&auto=format&fit=crop" alt="Salt pan flats near the coast" loading="lazy" decoding="async" /></div><figcaption>low tide, Pelican Point</figcaption></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1766470956586-2b969d67b391?w=600&q=80&auto=format&fit=crop" alt="Rock formations in the Namib" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1504813205186-380b1235a5d2?w=600&q=80&auto=format&fit=crop" alt="Ocean waves meeting the shoreline" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1778379591293-36b4cb24324f?w=600&q=80&auto=format&fit=crop" alt="Layered dune shadows at sunset" loading="lazy" decoding="async" /></div><figcaption>last light, on the way home</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ 05 · PASSPORT STAMPS ============ -->
+  <section class="stamps-block reveal" id="stamps">
+    <div class="stamps-inner">
+      <p class="eyebrow">Passport Stamps</p>
+      <h2 class="section-title">The short version</h2>
+      <div class="stamps-row reveal-item">
+        {
+          stampStats.map((s) => (
+            <div class="stamp">
+              <b data-count-to={s.value}>0</b>
+              <span>{s.label}</span>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 · POSTCARDS FROM THE ROAD ============ -->
+  <section class="block postcards-block reveal" id="postcards">
+    <p class="eyebrow">Postcards from the Road</p>
+    <h2 class="section-title">What guests say</h2>
+
+    <div class="postcards reveal-item" data-postcards>
+      <div class="postcards__stack">
+        {
+          testimonials.map((t, i) => (
+            <article class:list={['postcard', i === 0 && 'is-active']} aria-hidden={i === 0 ? 'false' : 'true'}>
+              <p class="postcard__quote">"{t.quote}"</p>
+              <p class="postcard__name">{t.name}</p>
+              <p class="postcard__trip">{t.trip}</p>
+            </article>
+          ))
+        }
+      </div>
+      <div class="postcards__controls">
+        <button type="button" class="postcards__arrow" data-postcard-prev aria-label="Previous postcard">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <p class="postcards__counter"><span data-postcard-current>1</span> / {testimonials.length}</p>
+        <button type="button" class="postcards__arrow" data-postcard-next aria-label="Next postcard">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 07 · BEFORE YOU GO ============ -->
+  <section class="block faq-block reveal" id="faq">
+    <p class="eyebrow">Before You Go</p>
+    <h2 class="section-title">A few things people ask</h2>
+    <div class="faq-list reveal-item">
+      {
+        faqItems.map((item) => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+    <p class="faq-more">Have a different question? <a href="/contact">Get in touch</a>.</p>
+  </section>
+
+  <!-- ============ 08 · PLAN YOUR ROUTE ============ -->
   <Section
     align="center"
     theme="photo"
@@ -300,10 +509,10 @@ const closingCtaPhoto = {
   >
     <div class="cta-card">
       <p class="cta-card__eyebrow">Ready when you are</p>
-      <h2 class="cta-card__heading">Plan your journey</h2>
+      <h2 class="cta-card__heading">Plan your route</h2>
       <p class="cta-card__body">
         Ready to see the dunes, the coastline, and everything in between?
-        Get in touch and we'll help you build the right day — or days —
+        Get in touch and we'll help you build the right route — or routes —
         around Swakopmund and Walvis Bay.
       </p>
       <a class="btn btn-primary" href="/booking">Start booking</a>
@@ -312,12 +521,14 @@ const closingCtaPhoto = {
 </BaseLayout>
 
 <style>
-  /* ---------- Section shell (About / Gallery / Tour Programs) ---------- */
+  /* ---------- Section shell ---------- */
   .block {
     background: var(--color-surface);
     color: var(--color-text);
     padding: clamp(3.5rem, 8vw, 6.25rem) clamp(1.25rem, 8vw, 6rem);
   }
+
+  #brief, #itinerary, #faq { background: var(--color-bg-alt); }
 
   .eyebrow {
     letter-spacing: 0.12em;
@@ -337,17 +548,14 @@ const closingCtaPhoto = {
     max-width: 700px;
   }
 
-  /* ---------- Photo frame — shared hover language (scale + soft scrim),
-     matching AdventureCard/TourCard's existing photo treatment ---------- */
+  /* ---------- Photo frame — shared hover language ---------- */
   .photo-frame {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius-lg);
   }
 
-  .photo-frame--sm {
-    border-radius: var(--radius-md);
-  }
+  .photo-frame--sm { border-radius: var(--radius-md); }
 
   .photo-frame img {
     width: 100%;
@@ -367,84 +575,211 @@ const closingCtaPhoto = {
     pointer-events: none;
   }
 
-  .photo-frame:hover img {
-    transform: scale(1.06);
-  }
+  .photo-frame:hover img { transform: scale(1.06); }
+  .photo-frame:hover::after { opacity: 1; }
 
-  .photo-frame:hover::after {
-    opacity: 1;
-  }
-
-  /* ---------- About ---------- */
-  .about-row {
+  /* ---------- 01 The Brief ---------- */
+  .brief-spread {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 3rem;
+    margin-bottom: 3rem;
+  }
+
+  .brief-quote {
+    font-family: var(--font-display);
+    font-size: clamp(1.6rem, 3vw, 2.1rem);
+    line-height: 1.3;
+    margin: 0 0 1.25rem;
+    color: var(--color-text);
+    text-wrap: balance;
+  }
+
+  .brief-copy p {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  .brief-vitals {
+    align-self: start;
+    background: var(--color-surface);
+    border: 1px dashed var(--color-accent-strong);
+    border-radius: var(--radius-md);
+    padding: 1.5rem;
+    display: grid;
+    gap: 1.1rem;
+  }
+
+  .vital { display: flex; align-items: baseline; gap: 0.6rem; }
+  .vital b {
+    font-family: var(--font-display);
+    font-size: 2.2rem;
+    color: var(--color-accent-strong);
+    line-height: 1;
+  }
+  .vital span {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+  }
+
+  .brief-banner .photo-frame { aspect-ratio: 21 / 8; }
+
+  @media (max-width: 800px) {
+    .brief-spread { grid-template-columns: 1fr; }
+    .brief-banner .photo-frame { aspect-ratio: 4 / 3; }
+  }
+
+  /* ---------- 02 The Route ---------- */
+  .route-layout {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
     gap: 3rem;
     align-items: center;
-    margin-bottom: 5rem;
   }
 
-  .about-row:last-child {
-    margin-bottom: 0;
+  .route-map {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    background: var(--color-bg-alt);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    overflow: hidden;
   }
 
-  .about-row.reverse .about-media {
-    order: 2;
+  .route-map__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .route-map__base { fill: var(--color-accent-strong); }
+
+  .route-line {
+    stroke: var(--color-border);
+    stroke-width: 0.4;
+    stroke-dasharray: 1.6 1.6;
+    transition: stroke var(--duration-base) var(--ease-out), stroke-width var(--duration-base) var(--ease-out);
   }
 
-  .about-row.reverse .about-copy {
-    order: 1;
+  .route-line.is-active {
+    stroke: var(--color-accent-strong);
+    stroke-width: 0.7;
   }
 
-  .about-media {
-    display: grid;
-    gap: 1rem;
+  .route-map__label {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-size: 0.65rem;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    font-weight: 600;
   }
 
-  .about-media.single .photo-frame {
-    height: 340px;
+  .route-stop {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .about-media.double {
-    grid-template-columns: 1fr 1fr;
+  .route-stop__dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 2px solid var(--color-accent-strong);
+    transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
   }
 
-  .about-media.double .photo-frame {
-    height: 260px;
+  .route-stop:hover .route-stop__dot,
+  .route-stop:focus-visible .route-stop__dot,
+  .route-stop.is-active .route-stop__dot {
+    background: var(--color-accent-strong);
+    transform: scale(1.35);
   }
 
-  .about-copy h3 {
+  .route-preview {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 1.5rem;
+  }
+
+  .route-preview__photo { aspect-ratio: 4 / 3; margin-bottom: 1rem; }
+
+  .route-preview__tag {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    margin: 0 0 0.4rem;
+  }
+
+  .route-preview__name {
     font-family: var(--font-display);
     font-size: 1.5rem;
     font-weight: 400;
-    margin: 0 0 1.1rem 0;
+    margin: 0 0 0.5rem;
     color: var(--color-text);
   }
 
-  .about-copy p {
-    font-size: 0.95rem;
-    line-height: 1.7;
+  .route-preview__teaser {
     color: var(--color-text-muted);
-    margin: 0 0 1rem 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0 0 0.75rem;
   }
 
-  .about-copy p:last-child {
-    margin-bottom: 0;
+  .route-preview__credit {
+    font-size: 0.7rem;
+    color: var(--color-text-muted);
+    margin: 0 0 1.1rem;
+  }
+  .route-preview__credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
+
+  @media (max-width: 800px) {
+    .route-layout { grid-template-columns: 1fr; }
   }
 
-  /* ---------- Gallery ---------- */
-  .gallery-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(2, 1fr);
-    gap: 0.875rem;
+  /* ---------- 03 The Itinerary ---------- */
+  .itinerary-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 2.5rem;
   }
 
-  .gallery-item .photo-frame {
-    height: 240px;
+  .filter-pill {
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
   }
 
-  /* ---------- Tour Programs ---------- */
+  .filter-pill:hover { border-color: var(--color-accent-strong); color: var(--color-accent-strong); }
+
+  .filter-pill.is-active {
+    background: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+    color: var(--color-bg);
+  }
+
   .program-item {
     position: relative;
     display: grid;
@@ -455,29 +790,33 @@ const closingCtaPhoto = {
     border-top: 1px solid rgba(58, 35, 28, 0.12);
   }
 
-  .program-item:first-of-type {
-    border-top: none;
-    padding-top: 0;
-  }
+  .program-item[hidden] { display: none; }
 
-  .program-item.reverse .program-media {
-    order: 2;
-  }
+  .program-item:first-of-type { border-top: none; padding-top: 0; }
+  .program-item.reverse .program-media { order: 2; }
+  .program-item.reverse .program-copy { order: 1; }
+  .program-media { position: relative; }
+  .program-media .photo-frame { height: 340px; }
 
-  .program-item.reverse .program-copy {
-    order: 1;
+  .ticket-stub {
+    position: absolute;
+    top: 0.9rem;
+    left: -0.6rem;
+    z-index: 1;
+    background: var(--color-bg-alt);
+    border: 1px dashed var(--color-accent-strong);
+    border-radius: var(--radius-sm);
+    color: var(--color-accent-strong);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    line-height: 1.3;
+    text-align: center;
+    padding: 0.35rem 0.55rem;
+    transform: rotate(-6deg);
+    box-shadow: var(--shadow-sm);
   }
-
-  .program-media .photo-frame {
-    height: 340px;
-  }
-
-  /* Hand-drawn connective thread — a short line drawn in at each seam
-     between tour programs, echoing the site's (previously orphaned)
-     constellation motif rather than inventing a new decorative device.
-     Styled entirely inline by setupProgramThreads() in motion.ts, since
-     it's injected client-side after Astro's scoped CSS is attached —
-     see that function's comment for why. */
 
   .program-tag {
     font-size: 0.75rem;
@@ -524,32 +863,184 @@ const closingCtaPhoto = {
     transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
   }
 
-  .book-link:hover {
-    color: var(--color-accent-strong);
-    border-color: var(--color-ochre-400);
+  .book-link:hover { color: var(--color-accent-strong); border-color: var(--color-ochre-400); }
+
+  /* ---------- 04 The Logbook ---------- */
+  .logbook-grid {
+    columns: 4;
+    column-gap: 1rem;
   }
 
-  @media (max-width: 800px) {
-    .about-row,
-    .program-item {
-      grid-template-columns: 1fr;
-    }
+  .logbook-item {
+    margin: 0 0 1rem;
+    break-inside: avoid;
+  }
 
-    .about-row.reverse .about-media,
-    .about-row.reverse .about-copy,
+  .logbook-item:nth-child(3n+1) .photo-frame { aspect-ratio: 3 / 4; }
+  .logbook-item:nth-child(3n+2) .photo-frame { aspect-ratio: 1 / 1; }
+  .logbook-item:nth-child(3n) .photo-frame { aspect-ratio: 4 / 3; }
+
+  .logbook-item figcaption {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 960px) { .logbook-grid { columns: 2; } }
+  @media (max-width: 640px) { .logbook-grid { columns: 1; } }
+
+  /* ---------- 05 Passport Stamps ---------- */
+  .stamps-block {
+    background: var(--color-earth-900);
+    color: var(--color-text-on-dark);
+    padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 8vw, 6rem);
+  }
+
+  .stamps-inner { max-width: 700px; margin-inline: auto; text-align: center; }
+  .stamps-inner .eyebrow { color: var(--color-ochre-400); }
+  .stamps-inner .section-title { color: var(--color-text-on-dark); margin-inline: auto; margin-bottom: 2.5rem; }
+
+  .stamps-row {
+    display: flex;
+    justify-content: center;
+    gap: clamp(1.5rem, 5vw, 3.5rem);
+    flex-wrap: wrap;
+  }
+
+  .stamp {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 2px dashed var(--color-ochre-400);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .stamp b {
+    font-family: var(--font-display);
+    font-size: 2.4rem;
+    line-height: 1;
+    color: var(--color-text-on-dark);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stamp span {
+    font-size: 0.68rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-sand-200);
+    margin-top: 0.3rem;
+  }
+
+  /* ---------- 06 Postcards ---------- */
+  .postcards { max-width: 640px; margin-inline: auto; text-align: center; }
+
+  .postcards__stack {
+    position: relative;
+    min-height: 220px;
+    margin-bottom: 1.5rem;
+  }
+
+  .postcard {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2rem;
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  .postcard.is-active { position: relative; opacity: 1; pointer-events: auto; }
+
+  .postcard__quote {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 1.15rem;
+    line-height: 1.5;
+    color: var(--color-text);
+    margin: 0 0 1rem;
+  }
+
+  .postcard__name { font-weight: 600; font-size: 0.9rem; color: var(--color-earth-900); margin: 0; }
+  .postcard__trip { font-size: 0.78rem; color: var(--color-accent-strong); margin: 0.25rem 0 0; }
+
+  .postcards__controls { display: flex; align-items: center; justify-content: center; gap: 1.25rem; }
+
+  .postcards__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-accent-strong);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+  }
+  .postcards__arrow svg { width: 1rem; height: 1rem; }
+  .postcards__arrow:hover { background: var(--color-accent); color: var(--color-text-on-dark); transform: scale(1.06); }
+  .postcards__counter { font-size: 0.85rem; color: var(--color-text-muted); margin: 0; }
+
+  /* ---------- 07 Before You Go ---------- */
+  .faq-list { max-width: var(--content-width-narrow, 720px); margin-inline: auto; display: grid; gap: 0.75rem; }
+
+  .faq-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.4rem;
+  }
+
+  .faq-item summary {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-text);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+
+  .faq-item summary::after {
+    content: '+';
+    float: right;
+    font-family: var(--font-body);
+    color: var(--color-accent-strong);
+  }
+  .faq-item[open] summary::after { content: '\2212'; }
+
+  .faq-item p {
+    margin: 0.9rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .faq-more {
+    text-align: center;
+    color: var(--color-text-muted);
+    margin: 2rem 0 0;
+  }
+  .faq-more a { color: var(--color-accent-strong); font-weight: 600; }
+
+  @media (max-width: 800px) {
+    .program-item { grid-template-columns: 1fr; }
     .program-item.reverse .program-media,
     .program-item.reverse .program-copy {
       order: initial;
     }
-
-    .gallery-grid {
-      grid-template-columns: repeat(2, 1fr);
-      grid-template-rows: repeat(4, 1fr);
-    }
-
-    .section-title {
-      font-size: 1.875rem;
-    }
+    .section-title { font-size: 1.875rem; }
   }
 
   /* ---------- Closing CTA card ---------- */
@@ -589,8 +1080,6 @@ const closingCtaPhoto = {
   }
 
   @media (max-width: 640px) {
-    .cta-card {
-      padding: var(--space-lg);
-    }
+    .cta-card { padding: var(--space-lg); }
   }
 </style>
