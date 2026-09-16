@@ -27,6 +27,7 @@
   --color-accent-strong: var(--color-terracotta-600);
   --color-accent-soft: var(--color-ochre-400);
   --color-border: var(--color-beige-300);
+  --color-error: #8c2f1f;
 
   /* --- Gradients: soft bleed between sections & photo overlays --- */
   --gradient-page: linear-gradient(
@@ -73,11 +74,17 @@
     var(--color-bg) 100%
   );
 
-  /* --- Typography --- */
-  --font-display: Georgia, "Times New Roman", "Iowan Old Style", serif;
-  --font-display-italic: "Playfair Display", Georgia, "Times New Roman", serif;
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, sans-serif;
+  /* --- Typography ---
+     Overland direction: Libre Bodoni (editorial serif, warm bracketed
+     character) replaces the plain Georgia fallback stack; Public Sans
+     replaces the system-font stack. --font-display-italic now points at
+     the same family (Libre Bodoni ships its own italic) rather than a
+     second imported face (Playfair Display), so the whole site loads
+     exactly two Google Fonts instead of three. */
+  --font-display: "Libre Bodoni", Georgia, "Times New Roman", "Iowan Old Style", serif;
+  --font-display-italic: "Libre Bodoni", Georgia, "Times New Roman", serif;
+  --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, "Helvetica Neue", Arial, sans-serif;
 
   --fs-xs: 0.8rem;
   --fs-sm: 0.9rem;

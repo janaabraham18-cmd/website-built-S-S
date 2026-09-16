@@ -81,14 +81,16 @@ const closingCtaPhoto = {
     <p class="eyebrow">About Us</p>
     <h2 class="section-title">Two home bases, one stretch of coast and desert</h2>
 
-    <div class="about-row reveal-item">
+    <div class="about-row" data-alt-row>
       <div class="about-media single">
-        <img
-          src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=1000&q=80&auto=format&fit=crop"
-          alt="Red dunes of the Namib desert"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=1000&q=80&auto=format&fit=crop"
+            alt="Red dunes of the Namib desert"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="about-copy">
         <h3>No call center, no middleman</h3>
@@ -97,20 +99,24 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="about-row reverse reveal-item">
+    <div class="about-row reverse" data-alt-row>
       <div class="about-media double">
-        <img
-          src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=700&q=80&auto=format&fit=crop"
-          alt="Quad biking on the dunes near Swakopmund"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          src="https://images.unsplash.com/photo-1440020143730-090579c4d53c?w=700&q=80&auto=format&fit=crop"
-          alt="Catamaran cruise on Walvis Bay"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=700&q=80&auto=format&fit=crop"
+            alt="Quad biking on the dunes near Swakopmund"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1440020143730-090579c4d53c?w=700&q=80&auto=format&fit=crop"
+            alt="Catamaran cruise on Walvis Bay"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="about-copy">
         <h3>Desert and ocean, one lineup</h3>
@@ -119,20 +125,24 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="about-row reveal-item">
+    <div class="about-row" data-alt-row>
       <div class="about-media double">
-        <img
-          src="https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=700&q=80&auto=format&fit=crop"
-          alt="Wildlife in Etosha National Park"
-          loading="lazy"
-          decoding="async"
-        />
-        <img
-          src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=700&q=80&auto=format&fit=crop"
-          alt="Township tour guide in Swakopmund"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=700&q=80&auto=format&fit=crop"
+            alt="Wildlife in Etosha National Park"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=700&q=80&auto=format&fit=crop"
+            alt="Township tour guide in Swakopmund"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="about-copy">
         <h3>31 ways to mix and match</h3>
@@ -146,14 +156,14 @@ const closingCtaPhoto = {
     <p class="eyebrow">Gallery</p>
     <h2 class="section-title">Namibia, in passing</h2>
     <div class="gallery-grid reveal-item">
-      <img src="https://images.unsplash.com/photo-1705065277882-b0604ec13dca?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1542762002-45279e010961?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1771148884276-2f101fcadcb1?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1667666670938-4e89397d7c06?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1622713486130-aa0177e64542?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1766470956586-2b969d67b391?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1504813205186-380b1235a5d2?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
-      <img src="https://images.unsplash.com/photo-1778379591293-36b4cb24324f?w=600&h=500&q=80&auto=format&fit=crop" alt="Namibia landscape" loading="lazy" decoding="async" />
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1705065277882-b0604ec13dca?w=600&h=500&q=80&auto=format&fit=crop" alt="Red dunes rolling toward the horizon" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1542762002-45279e010961?w=600&h=500&q=80&auto=format&fit=crop" alt="Coastal cliffs along the Atlantic" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1771148884276-2f101fcadcb1?w=600&h=500&q=80&auto=format&fit=crop" alt="Dune ridgeline at golden hour" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1667666670938-4e89397d7c06?w=600&h=500&q=80&auto=format&fit=crop" alt="Wide desert plain under open sky" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1622713486130-aa0177e64542?w=600&h=500&q=80&auto=format&fit=crop" alt="Salt pan flats near the coast" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1766470956586-2b969d67b391?w=600&h=500&q=80&auto=format&fit=crop" alt="Rock formations in the Namib" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1504813205186-380b1235a5d2?w=600&h=500&q=80&auto=format&fit=crop" alt="Ocean waves meeting the shoreline" loading="lazy" decoding="async" /></div></div>
+      <div class="gallery-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1778379591293-36b4cb24324f?w=600&h=500&q=80&auto=format&fit=crop" alt="Layered dune shadows at sunset" loading="lazy" decoding="async" /></div></div>
     </div>
   </section>
 
@@ -161,14 +171,16 @@ const closingCtaPhoto = {
     <p class="eyebrow">Tour Programs</p>
     <h2 class="section-title">A closer look at the lineup</h2>
 
-    <div class="program-item reveal-item">
+    <div class="program-item" data-alt-row>
       <div class="program-media">
-        <img
-          src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=900&q=80&auto=format&fit=crop"
-          alt="Sossusvlei dunes"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1707470121585-23ecf4671684?w=900&q=80&auto=format&fit=crop"
+            alt="Sossusvlei dunes"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="program-copy">
         <p class="program-tag">Desert Tour · Half-day</p>
@@ -179,14 +191,16 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reverse reveal-item">
+    <div class="program-item reverse" data-alt-row data-thread>
       <div class="program-media">
-        <img
-          src="https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?w=900&q=80&auto=format&fit=crop"
-          alt="Sandwich Harbour where dunes meet the ocean"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?w=900&q=80&auto=format&fit=crop"
+            alt="Sandwich Harbour where dunes meet the ocean"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="program-copy">
         <p class="program-tag">Coastal Tour · Full-day</p>
@@ -197,14 +211,16 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reveal-item">
+    <div class="program-item" data-alt-row data-thread>
       <div class="program-media">
-        <img
-          src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=900&q=80&auto=format&fit=crop"
-          alt="Quad biking on the dunes"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=900&q=80&auto=format&fit=crop"
+            alt="Quad biking on the dunes"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="program-copy">
         <p class="program-tag">Adventure · Half-day</p>
@@ -215,14 +231,16 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reverse reveal-item">
+    <div class="program-item reverse" data-alt-row data-thread>
       <div class="program-media">
-        <img
-          src="https://images.unsplash.com/photo-1440020143730-090579c4d53c?w=900&q=80&auto=format&fit=crop"
-          alt="Catamaran cruise with dolphins"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1440020143730-090579c4d53c?w=900&q=80&auto=format&fit=crop"
+            alt="Catamaran cruise with dolphins"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="program-copy">
         <p class="program-tag">Coastal · Half-day</p>
@@ -233,14 +251,16 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reveal-item">
+    <div class="program-item" data-alt-row data-thread>
       <div class="program-media">
-        <img
-          src="https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=900&q=80&auto=format&fit=crop"
-          alt="Wildlife at Etosha National Park"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1636099487113-ce0a5565b578?w=900&q=80&auto=format&fit=crop"
+            alt="Wildlife at Etosha National Park"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="program-copy">
         <p class="program-tag">Wildlife · Multi-day</p>
@@ -251,14 +271,16 @@ const closingCtaPhoto = {
       </div>
     </div>
 
-    <div class="program-item reverse reveal-item">
+    <div class="program-item reverse" data-alt-row data-thread>
       <div class="program-media">
-        <img
-          src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=900&q=80&auto=format&fit=crop"
-          alt="Township tour in Swakopmund"
-          loading="lazy"
-          decoding="async"
-        />
+        <div class="photo-frame">
+          <img
+            src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=900&q=80&auto=format&fit=crop"
+            alt="Township tour in Swakopmund"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
       </div>
       <div class="program-copy">
         <p class="program-tag">Culture · Half-day</p>
@@ -292,8 +314,8 @@ const closingCtaPhoto = {
 <style>
   /* ---------- Section shell (About / Gallery / Tour Programs) ---------- */
   .block {
-    background: #ffffff;
-    color: #2b1b12;
+    background: var(--color-surface);
+    color: var(--color-text);
     padding: clamp(3.5rem, 8vw, 6.25rem) clamp(1.25rem, 8vw, 6rem);
   }
 
@@ -301,7 +323,7 @@ const closingCtaPhoto = {
     letter-spacing: 0.12em;
     text-transform: uppercase;
     font-size: 0.8rem;
-    color: #b15a34;
+    color: var(--color-accent-strong);
     font-weight: 600;
     margin-bottom: 0.9rem;
   }
@@ -311,8 +333,46 @@ const closingCtaPhoto = {
     font-size: 2.5rem;
     font-weight: 400;
     margin: 0 0 3.75rem 0;
-    color: #2b1b12;
+    color: var(--color-text);
     max-width: 700px;
+  }
+
+  /* ---------- Photo frame — shared hover language (scale + soft scrim),
+     matching AdventureCard/TourCard's existing photo treatment ---------- */
+  .photo-frame {
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+  }
+
+  .photo-frame--sm {
+    border-radius: var(--radius-md);
+  }
+
+  .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform var(--duration-slow) var(--ease-out);
+  }
+
+  .photo-frame::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, transparent 55%, rgba(58, 35, 28, 0.35) 100%);
+    opacity: 0;
+    transition: opacity var(--duration-slow) var(--ease-out);
+    pointer-events: none;
+  }
+
+  .photo-frame:hover img {
+    transform: scale(1.06);
+  }
+
+  .photo-frame:hover::after {
+    opacity: 1;
   }
 
   /* ---------- About ---------- */
@@ -341,22 +401,16 @@ const closingCtaPhoto = {
     gap: 1rem;
   }
 
-  .about-media.single img {
-    width: 100%;
+  .about-media.single .photo-frame {
     height: 340px;
-    object-fit: cover;
-    border-radius: 2px;
   }
 
   .about-media.double {
     grid-template-columns: 1fr 1fr;
   }
 
-  .about-media.double img {
-    width: 100%;
+  .about-media.double .photo-frame {
     height: 260px;
-    object-fit: cover;
-    border-radius: 2px;
   }
 
   .about-copy h3 {
@@ -364,13 +418,13 @@ const closingCtaPhoto = {
     font-size: 1.5rem;
     font-weight: 400;
     margin: 0 0 1.1rem 0;
-    color: #2b1b12;
+    color: var(--color-text);
   }
 
   .about-copy p {
     font-size: 0.95rem;
     line-height: 1.7;
-    color: #6b3a2c;
+    color: var(--color-text-muted);
     margin: 0 0 1rem 0;
   }
 
@@ -386,22 +440,19 @@ const closingCtaPhoto = {
     gap: 0.875rem;
   }
 
-  .gallery-grid img {
-    width: 100%;
+  .gallery-item .photo-frame {
     height: 240px;
-    object-fit: cover;
-    border-radius: 2px;
-    display: block;
   }
 
   /* ---------- Tour Programs ---------- */
   .program-item {
+    position: relative;
     display: grid;
     grid-template-columns: 1fr 1.1fr;
     gap: 3.5rem;
     align-items: center;
     padding: 3.5rem 0;
-    border-top: 1px solid rgba(43, 27, 18, 0.12);
+    border-top: 1px solid rgba(58, 35, 28, 0.12);
   }
 
   .program-item:first-of-type {
@@ -417,18 +468,22 @@ const closingCtaPhoto = {
     order: 1;
   }
 
-  .program-media img {
-    width: 100%;
+  .program-media .photo-frame {
     height: 340px;
-    object-fit: cover;
-    border-radius: 2px;
   }
+
+  /* Hand-drawn connective thread — a short line drawn in at each seam
+     between tour programs, echoing the site's (previously orphaned)
+     constellation motif rather than inventing a new decorative device.
+     Styled entirely inline by setupProgramThreads() in motion.ts, since
+     it's injected client-side after Astro's scoped CSS is attached —
+     see that function's comment for why. */
 
   .program-tag {
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: #b15a34;
+    color: var(--color-accent-strong);
     font-weight: 600;
     margin: 0 0 0.6rem 0;
   }
@@ -437,7 +492,7 @@ const closingCtaPhoto = {
     font-family: var(--font-display);
     font-size: 1.25rem;
     font-weight: 400;
-    color: #2b1b12;
+    color: var(--color-text);
     margin: 0 0 0.4rem 0;
   }
 
@@ -446,13 +501,13 @@ const closingCtaPhoto = {
     font-size: 1.6rem;
     font-weight: 400;
     margin: 0 0 1rem 0;
-    color: #2b1b12;
+    color: var(--color-text);
   }
 
   .program-copy p {
     font-size: 0.95rem;
     line-height: 1.7;
-    color: #6b3a2c;
+    color: var(--color-text-muted);
     margin: 0 0 1.25rem 0;
   }
 
@@ -463,15 +518,15 @@ const closingCtaPhoto = {
     letter-spacing: 0.03em;
     text-transform: uppercase;
     text-decoration: none;
-    color: #2b1b12;
-    border-bottom: 1px solid #b15a34;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-accent-strong);
     padding-bottom: 2px;
-    transition: color 0.2s ease, border-color 0.2s ease;
+    transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
   }
 
   .book-link:hover {
-    color: #b15a34;
-    border-color: #9c4d33;
+    color: var(--color-accent-strong);
+    border-color: var(--color-ochre-400);
   }
 
   @media (max-width: 800px) {

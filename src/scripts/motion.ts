@@ -118,276 +118,92 @@ function setupAdventureCards() {
   }
 }
 
-// Hover tilt for the homepage "More ways to spend a day" grid — cards
-// lean toward the cursor in 3D as it moves across them. Pointer-driven
-// rather than scroll-driven, an experiment scoped to just this one grid
-// for now rather than every AdventureCard on the site. Fine-pointer
-// devices only (hover doesn't mean anything on touch).
-function setupAdventureTilt() {
-  if (!window.matchMedia('(hover: hover) and (pointer: fine)').matches) return;
+// Alternating editorial rows (About / Tour Programs): the photo settles
+// in from a slight scale while the copy trails ~150ms behind it, instead
+// of the generic uniform fade-up every other section uses. This is the
+// site's one alternating photo/copy layout, so it earns its own
+// entrance rather than borrowing setupReveals — the DOM order inside
+// each row is always [media, copy], the `.reverse` modifier only flips
+// which side they render on via CSS `order`.
+function setupAlternatingRows(reduceMotion: boolean) {
+  const rows = gsap.utils.toArray<HTMLElement>('[data-alt-row]');
 
-  const cards = gsap.utils.toArray<HTMLElement>('.homepage-adventures__grid .adventure-card');
-  const maxTilt = 10;
+  for (const row of rows) {
+    const media = row.children[0] as HTMLElement | undefined;
+    const copy = row.children[1] as HTMLElement | undefined;
+    if (!media || !copy) continue;
 
-  for (const card of cards) {
-    gsap.set(card, { transformPerspective: 800 });
-    const setRotateX = gsap.quickTo(card, 'rotationX', { duration: 0.5, ease: 'power3.out' });
-    const setRotateY = gsap.quickTo(card, 'rotationY', { duration: 0.5, ease: 'power3.out' });
-    const setScale = gsap.quickTo(card, 'scale', { duration: 0.5, ease: 'power3.out' });
-
-    card.addEventListener('mouseenter', () => {
-      card.classList.add('is-tilting');
-      setScale(1.035);
-    });
-
-    card.addEventListener('mousemove', (event) => {
-      const rect = card.getBoundingClientRect();
-      const relX = (event.clientX - rect.left) / rect.width;
-      const relY = (event.clientY - rect.top) / rect.height;
-      setRotateY((relX - 0.5) * maxTilt * 2);
-      setRotateX(-(relY - 0.5) * maxTilt * 2);
-    });
-
-    card.addEventListener('mouseleave', () => {
-      card.classList.remove('is-tilting');
-      setRotateX(0);
-      setRotateY(0);
-      setScale(1);
-    });
-  }
-}
-
-// Rising-stagger entrance for the homepage "More ways to spend a day"
-// grid: cards rise and fade in together, with a diagonal stagger running
-// top-left to bottom-right across the grid rather than row by row. Runs
-// once; scoped to this one grid rather than every AdventureCard on the site.
-function setupAdventureRise() {
-  const grid = document.querySelector<HTMLElement>('.homepage-adventures__grid');
-  if (!grid) return;
-
-  const cards = gsap.utils.toArray<HTMLElement>('.adventure-card', grid);
-  if (!cards.length) return;
-
-  gsap.set(cards, { opacity: 0, y: 36 });
-
-  gsap.to(cards, {
-    opacity: 1,
-    y: 0,
-    duration: 0.7,
-    ease: 'power2.out',
-    stagger: { each: 0.07, grid: 'auto', from: 'start' },
-    scrollTrigger: {
-      trigger: grid,
-      start: 'top 80%',
-      toggleActions: 'play none none none',
-    },
-  });
-}
-
-// Homepage tour teaser: an edge-to-edge row of cards that slides
-// horizontally while the section stays pinned, driven by ordinary vertical
-// scroll — desktop only. The row is natively horizontally scrollable by
-// default (mobile, reduced motion, no-JS), so this only upgrades that base
-// behavior rather than replacing it.
-function setupToursTeaserSlide() {
-  if (!window.matchMedia('(min-width: 861px)').matches) return;
-
-  const pinEl = document.querySelector<HTMLElement>('.tours-teaser__pin');
-  const track = document.querySelector<HTMLElement>('.tours-teaser__track');
-  const header = document.querySelector<HTMLElement>('.site-header');
-  if (!pinEl || !track) return;
-
-  pinEl.classList.add('tours-teaser__pin--pinned');
-
-  const getDistance = () => Math.max(0, track.scrollWidth - pinEl.clientWidth);
-  // Pin just below the sticky header instead of at the true viewport top —
-  // otherwise the header (z-index: 50) sits over the top slice of the
-  // pinned cards for the whole slide.
-  const getHeaderOffset = () => header?.getBoundingClientRect().height ?? 0;
-
-  gsap.to(track, {
-    x: () => -getDistance(),
-    ease: 'none',
-    scrollTrigger: {
-      trigger: pinEl,
-      start: () => `top ${getHeaderOffset()}px`,
-      end: () => `+=${getDistance()}`,
-      pin: true,
-      scrub: 1,
-      invalidateOnRefresh: true,
-    },
-  });
-}
-
-// Stats band: each number counts up from 0 to its real value once, the
-// first time the band scrolls into view. The server-rendered text is the
-// real value already (correct with no JS and under reduced motion, since
-// this is only ever called from the no-preference branch) — this just
-// zeroes it out first so there's something to animate toward.
-function setupStatsCountUp() {
-  const numbers = gsap.utils.toArray<HTMLElement>('.stats-band__number[data-count-to]');
-
-  for (const el of numbers) {
-    const target = Number(el.dataset.countTo);
-    if (!Number.isFinite(target)) continue;
-
-    const proxy = { value: 0 };
-    el.textContent = '0';
-
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 85%',
-      once: true,
-      onEnter: () =>
-        gsap.to(proxy, {
-          value: target,
-          duration: 1.4,
-          ease: 'power1.out',
-          onUpdate: () => {
-            el.textContent = String(Math.round(proxy.value));
-          },
-        }),
-    });
-  }
-}
-
-// Where We Go panels: instead of the generic uniform bottom-up reveal,
-// each of the three panels enters from a different side — desert from
-// the left, Etosha (last) from the right, the middle panel from below —
-// so the three settle into place like they're converging on the row
-// rather than all rising in lockstep.
-function setupWhereWeGoReveal(reduceMotion: boolean) {
-  const panels = gsap.utils.toArray<HTMLElement>('.where-we-go__panel');
-  // Below this width the grid stacks the panels to a single full-width
-  // column (see the matching breakpoint in index.astro's <style>), where a
-  // sideways xPercent shift would push a full-width panel off-canvas and
-  // cause horizontal scroll — fall back to the same vertical-only motion
-  // reduced motion uses instead of a direction per panel.
-  const isStacked = !window.matchMedia('(min-width: 861px)').matches;
-
-  panels.forEach((panel, i) => {
-    if (reduceMotion || isStacked) {
-      gsap.set(panel, { opacity: 0 });
+    if (reduceMotion) {
+      gsap.set([media, copy], { opacity: 0 });
       ScrollTrigger.create({
-        trigger: panel,
+        trigger: row,
         start: 'top 85%',
         once: true,
-        onEnter: () => gsap.to(panel, { opacity: 1, duration: 0.3, ease: 'power1.out' }),
+        onEnter: () => gsap.to([media, copy], { opacity: 1, duration: 0.3, ease: 'power1.out' }),
       });
-      return;
+      continue;
     }
 
-    const fromVars =
-      i === 0
-        ? { opacity: 0, xPercent: -12 }
-        : i === panels.length - 1
-          ? { opacity: 0, xPercent: 12 }
-          : { opacity: 0, y: 40 };
+    gsap.set(media, { opacity: 0, scale: 1.04 });
+    gsap.set(copy, { opacity: 0, y: 14 });
 
-    gsap.set(panel, fromVars);
-    gsap.to(panel, {
-      opacity: 1,
-      xPercent: 0,
-      y: 0,
-      duration: 0.9,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: panel,
-        start: 'top 85%',
-        toggleActions: 'play none none none',
-      },
-    });
-  });
+    gsap
+      .timeline({
+        scrollTrigger: {
+          trigger: row,
+          start: 'top 85%',
+          toggleActions: 'play none none none',
+        },
+      })
+      .to(media, { opacity: 1, scale: 1, duration: 0.9, ease: 'power2.out' })
+      .to(copy, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '<+=0.15');
+  }
 }
 
-// Philosophy section: the six circular photo cutouts pop in with a
-// staggered scale/opacity entrance, and the constellation lines between
-// them "draw" in right after via stroke-dashoffset — once, on scroll into
-// view. Reduced motion drops both in favor of a plain one-shot fade,
-// matching the rest of the page's reduced-motion fallback.
-function setupPhilosophyCluster(reduceMotion: boolean) {
-  const section = document.querySelector<HTMLElement>('.philosophy');
-  if (!section) return;
+// Hand-drawn connective thread: a short line draws in at the seam above
+// each Tour Programs item (skipping the first, which has no seam above
+// it), reviving the site's constellation-line idea as this list's
+// throughline instead of leaving that motif retired. Purely decorative
+// (aria-hidden) — under reduced motion it renders fully drawn rather
+// than animating, so there's nothing to "miss" by skipping the draw-in.
+function setupProgramThreads(reduceMotion: boolean) {
+  const items = document.querySelectorAll<HTMLElement>('[data-thread]');
 
-  const photos = gsap.utils.toArray<HTMLElement>('.philosophy__photo');
-  const lines = gsap.utils.toArray<SVGLineElement>('.philosophy__line');
-  const caption = section.querySelector<HTMLElement>('.philosophy__cluster-caption');
-  const fadeTargets = caption ? [...photos, caption] : photos;
+  for (const item of items) {
+    // Styled entirely inline rather than via the stylesheet's scoped
+    // `.thread-node` rule: Astro's CSS scoping attaches a data-astro-cid
+    // attribute to elements at render time, which an element created here
+    // (after that render already happened) never receives — the class
+    // name alone wouldn't match the scoped selector, and an unstyled
+    // <svg viewBox="0 0 4 64"> left to size itself from a ~570px-wide
+    // column stretches to preserve that 1:16 aspect ratio (~9000px tall).
+    const node = document.createElement('div');
+    node.className = 'thread-node';
+    node.setAttribute('aria-hidden', 'true');
+    node.style.cssText =
+      'position:absolute; top:-32px; left:50%; width:4px; height:64px; transform:translateX(-50%); pointer-events:none;';
+    node.innerHTML =
+      '<svg width="4" height="64" viewBox="0 0 4 64" style="display:block; overflow:visible;"><line x1="2" y1="0" x2="2" y2="64" stroke="var(--color-accent-strong)" stroke-width="2" stroke-linecap="round"></line></svg>';
+    item.prepend(node);
 
-  if (reduceMotion) {
-    gsap.set(fadeTargets, { opacity: 0 });
+    const line = node.querySelector<SVGLineElement>('line');
+    if (!line) continue;
+
+    const length = line.getTotalLength();
+
+    if (reduceMotion) {
+      gsap.set(line, { strokeDasharray: length, strokeDashoffset: 0 });
+      continue;
+    }
+
+    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
     ScrollTrigger.create({
-      trigger: section,
+      trigger: item,
       start: 'top 85%',
       once: true,
-      onEnter: () =>
-        gsap.to(fadeTargets, { opacity: 1, duration: 0.3, ease: 'power1.out', stagger: 0.05 }),
+      onEnter: () => gsap.to(line, { strokeDashoffset: 0, duration: 0.7, ease: 'power1.inOut' }),
     });
-    return;
   }
-
-  gsap.set(photos, { opacity: 0, scale: 0.6 });
-  if (caption) gsap.set(caption, { opacity: 0, y: 10 });
-
-  lines.forEach((line) => {
-    const length = line.getTotalLength();
-    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
-  });
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: section,
-      start: 'top 75%',
-      toggleActions: 'play none none none',
-    },
-  });
-
-  tl.to(photos, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)', stagger: 0.12 }).to(
-    lines,
-    { strokeDashoffset: 0, duration: 0.8, ease: 'power1.inOut', stagger: 0.08 },
-    '<0.2'
-  );
-
-  if (caption) {
-    tl.to(caption, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3');
-  }
-}
-
-// Testimonials carousel: one placeholder review visible at a time, cycled
-// with prev/next buttons. Not gated behind reduced motion — this is
-// click-driven UI switching, not scroll motion, and the crossfade itself
-// is a plain CSS opacity transition on `.is-active` (see index.astro's
-// <style>), not a GSAP tween. The first item already carries `is-active`
-// server-side so a testimonial is visible even before this script runs.
-function setupTestimonialCarousel() {
-  const root = document.querySelector<HTMLElement>('[data-testimonial-carousel]');
-  if (!root) return;
-
-  const items = Array.from(root.querySelectorAll<HTMLElement>('.testimonials__carousel-item'));
-  const prevBtn = root.querySelector<HTMLButtonElement>('.testimonials__arrow--prev');
-  const nextBtn = root.querySelector<HTMLButtonElement>('.testimonials__arrow--next');
-  const counter = root.querySelector<HTMLElement>('[data-testimonial-current]');
-  if (!items.length || !prevBtn || !nextBtn) return;
-
-  let index = 0;
-
-  function render() {
-    items.forEach((item, i) => {
-      item.classList.toggle('is-active', i === index);
-      item.setAttribute('aria-hidden', i === index ? 'false' : 'true');
-    });
-    if (counter) counter.textContent = String(index + 1);
-  }
-
-  prevBtn.addEventListener('click', () => {
-    index = (index - 1 + items.length) % items.length;
-    render();
-  });
-
-  nextBtn.addEventListener('click', () => {
-    index = (index + 1) % items.length;
-    render();
-  });
 }
 
 // Tours page closing recap: small auto-cycling slideshow through the 7
@@ -662,6 +478,15 @@ function setupHeroPanelSlideshow(reduceMotion: boolean) {
   start();
   track.addEventListener('mouseenter', stop);
   track.addEventListener('mouseleave', start);
+
+  // The panels themselves are aria-hidden and unfocusable — the only real
+  // keyboard/touch path into this section is the CTA and credit links in
+  // hero__content, so focus-pause listens on the whole hero, not the
+  // panel track, mirroring setupTourRecapSlideshow's hover-isn't-enough
+  // rule for the equivalent reason (hover means nothing on touch either).
+  const hero = track.closest<HTMLElement>('.hero');
+  hero?.addEventListener('focusin', stop);
+  hero?.addEventListener('focusout', start);
 }
 
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
@@ -684,125 +509,13 @@ function setupAdventureCardsReducedMotion() {
   }
 }
 
-// Homepage "About us" carousel: two full-bleed slides in a track twice the
-// viewport's width, moved with a plain CSS transform. Advances via the
-// pagination dots or a horizontal drag/swipe (pointer events cover touch,
-// mouse, and pen in one API) — an axis lock means a vertical drag that
-// starts inside the scrollable text card falls through to native scroll
-// instead of being hijacked as a swipe.
-function setupAboutCarousel() {
-  const section = document.querySelector<HTMLElement>('[data-carousel]');
-  const track = section?.querySelector<HTMLElement>('[data-carousel-track]');
-  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-carousel] [data-slide]'));
-  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-carousel-dots] button'));
-  const prevBtn = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
-  const nextBtn = document.querySelector<HTMLButtonElement>('[data-carousel-next]');
-  if (!section || !track || slides.length < 2) return;
-
-  let index = 0;
-
-  const goTo = (i: number) => {
-    index = Math.max(0, Math.min(slides.length - 1, i));
-    track.style.transform = `translateX(-${(index * 100) / slides.length}%)`;
-    dots.forEach((dot, di) => {
-      const active = di === index;
-      dot.classList.toggle('is-active', active);
-      dot.setAttribute('aria-selected', String(active));
-    });
-    slides.forEach((slide, si) => {
-      const active = si === index;
-      slide.classList.toggle('is-active', active);
-      slide.setAttribute('aria-hidden', String(!active));
-    });
-    if (prevBtn) prevBtn.disabled = index === 0;
-    if (nextBtn) nextBtn.disabled = index === slides.length - 1;
-  };
-
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => goTo(Number(dot.dataset.dot)));
-  });
-
-  prevBtn?.addEventListener('click', () => goTo(index - 1));
-  nextBtn?.addEventListener('click', () => goTo(index + 1));
-
-  section.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight') goTo(index + 1);
-    if (event.key === 'ArrowLeft') goTo(index - 1);
-  });
-
-  // Belt-and-suspenders alongside draggable={false} on every <img> in the
-  // markup: without this, a mouse drag starting on the full-bleed photo
-  // triggers the browser's native "ghost image" drag instead of reaching
-  // the pointer handlers below, which is why swipe wasn't advancing.
-  section.addEventListener('dragstart', (event) => event.preventDefault());
-
-  let startX = 0;
-  let startY = 0;
-  let lastX = 0;
-  let dragging = false;
-  let axis: 'x' | 'y' | null = null;
-
-  section.addEventListener('pointerdown', (event) => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    // A pointerdown that starts on a button or link (arrows, dots, the
-    // Unsplash credit) must not be claimed as a drag — setPointerCapture
-    // below retargets that pointer's later events to `section`, which was
-    // silently swallowing those controls' own click events.
-    if ((event.target as HTMLElement).closest('button, a')) return;
-    dragging = true;
-    axis = null;
-    startX = lastX = event.clientX;
-    startY = event.clientY;
-    section.setPointerCapture(event.pointerId);
-  });
-
-  section.addEventListener('pointermove', (event) => {
-    if (!dragging) return;
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-
-    if (axis === null) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-      if (axis === 'x') track.style.transition = 'none';
-    }
-    if (axis !== 'x') return;
-
-    event.preventDefault();
-    lastX = event.clientX;
-    const basePercent = -(index * 100) / slides.length;
-    const dragPercent = (dx / section.clientWidth) * (100 / slides.length);
-    track.style.transform = `translateX(${basePercent + dragPercent}%)`;
-  });
-
-  const endDrag = () => {
-    if (!dragging) return;
-    dragging = false;
-    track.style.transition = '';
-    if (axis !== 'x') return;
-
-    const delta = lastX - startX;
-    const threshold = 50;
-    if (delta < -threshold) goTo(index + 1);
-    else if (delta > threshold) goTo(index - 1);
-    else goTo(index);
-  };
-
-  section.addEventListener('pointerup', endDrag);
-  section.addEventListener('pointercancel', endDrag);
-
-  goTo(0);
-}
-
 export function initMotion() {
   const reduceMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
   setupHeroPanelSlideshow(reduceMotion);
-  setupAboutCarousel();
   setupTourPhotoBleed();
-  setupTestimonialCarousel();
 
   let lenis: Lenis | undefined;
 
@@ -848,13 +561,10 @@ export function initMotion() {
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
     setupTourRows(false);
     setupAdventureCards();
-    setupAdventureTilt();
-    setupAdventureRise();
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
-    setupStatsCountUp();
-    setupWhereWeGoReveal(false);
-    setupPhilosophyCluster(false);
+    setupAlternatingRows(false);
+    setupProgramThreads(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -893,8 +603,6 @@ export function initMotion() {
       }
     }
 
-    setupToursTeaserSlide();
-
     // Every scroll-triggered pin above is now registered, so recalculate
     // all of their positions once against the final layout instead of
     // waiting for the window 'load' listener further down.
@@ -911,8 +619,8 @@ export function initMotion() {
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
     setupTourRecapSlideshow(true);
-    setupWhereWeGoReveal(true);
-    setupPhilosophyCluster(true);
+    setupAlternatingRows(true);
+    setupProgramThreads(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
