@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Salt & Sun Tours — Overland Brand Kit</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Bodoni:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Public+Sans:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --sand-50: #fbf7f1;
+    --sand-100: #f6ede1;
+    --sand-200: #eeddc7;
+    --beige-300: #e3cba7;
+    --ochre-400: #d3a24f;
+    --ochre-500: #c1863a;
+    --terracotta-500: #b5623f;
+    --terracotta-600: #9c4d33;
+    --earth-700: #6b3a2c;
+    --earth-900: #3a231c;
+    --error: #8c2f1f;
+
+    --bg: var(--sand-50);
+    --bg-alt: var(--sand-100);
+    --surface: #ffffff;
+    --text: var(--earth-900);
+    --text-muted: var(--earth-700);
+    --accent: var(--terracotta-600);
+    --accent-soft: var(--ochre-400);
+    --border: var(--beige-300);
+
+    --display: "Libre Bodoni", Georgia, "Times New Roman", serif;
+    --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+    --radius-sm: 4px;
+    --radius-md: 10px;
+    --radius-lg: 18px;
+
+    --shadow-sm: 0 2px 8px rgba(58,35,28,0.08);
+    --shadow-md: 0 8px 30px rgba(58,35,28,0.14);
+    --shadow-lg: 0 20px 60px rgba(58,35,28,0.22);
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, h4 { font-family: var(--display); font-weight: 400; margin: 0; color: var(--text); }
+  code { font-family: var(--mono); }
+  .container { max-width: 980px; }
+
+  /* ---------- Sidebar ---------- */
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; width: 240px;
+    background: var(--sand-100); border-right: 1px solid var(--border);
+    padding: 32px 20px; overflow-y: auto;
+  }
+  .sidebar__brand { font-family: var(--display); font-size: 1.1rem; margin-bottom: 4px; }
+  .sidebar__sub { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--terracotta-600); font-weight: 600; margin-bottom: 28px; }
+  .sidebar nav { display: grid; gap: 2px; }
+  .sidebar a {
+    display: block; padding: 7px 10px; border-radius: var(--radius-sm);
+    color: var(--text-muted); text-decoration: none; font-size: 0.82rem;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .sidebar a:hover { background: var(--sand-200); color: var(--text); }
+  .sidebar a.active { background: var(--terracotta-600); color: var(--sand-50); font-weight: 600; }
+
+  main { margin-left: 240px; padding: 0 56px 120px; }
+  @media (max-width: 860px) {
+    .sidebar { display: none; }
+    main { margin-left: 0; padding: 0 24px 80px; }
+  }
+
+  /* ---------- Cover ---------- */
+  .cover { padding: 96px 0 64px; border-bottom: 1px solid var(--border); margin-bottom: 64px; }
+  .cover__eyebrow { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.14em; color: var(--terracotta-600); font-weight: 600; margin-bottom: 18px; }
+  .cover h1 { font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.08; margin-bottom: 18px; max-width: 14ch; }
+  .cover p.lede { font-size: 1.15rem; color: var(--text-muted); max-width: 46ch; margin-bottom: 28px; }
+  .cover__meta { display: flex; gap: 28px; flex-wrap: wrap; font-size: 0.85rem; color: var(--text-muted); }
+  .cover__meta b { color: var(--text); display: block; font-family: var(--display); font-size: 1rem; }
+
+  section.guide { padding-bottom: 88px; margin-bottom: 8px; border-bottom: 1px solid var(--border); scroll-margin-top: 24px; }
+  section.guide:last-of-type { border-bottom: none; }
+  .guide__eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.1em; color: var(--terracotta-600); text-transform: uppercase; margin-bottom: 10px; }
+  .guide h2 { font-size: 2rem; margin-bottom: 12px; }
+  .guide__intro { color: var(--text-muted); max-width: 62ch; margin-bottom: 36px; font-size: 1rem; }
+
+  /* ---------- Logo section ---------- */
+  .logo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 28px; }
+  .logo-cell { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 32px 20px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; min-height: 160px; }
+  .logo-cell.dark { background: var(--earth-900); border-color: var(--earth-900); }
+  .logo-cell.tint { background: var(--sand-100); }
+  .logo-mark { width: 36px; height: 36px; color: var(--terracotta-600); }
+  .logo-cell.dark .logo-mark, .logo-cell.dark .logo-word { color: var(--sand-50); }
+  .logo-word { font-family: var(--display); font-size: 1.2rem; color: var(--text); }
+  .logo-cell-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); }
+  .rule-block { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); margin-bottom: 10px; }
+  .rule-block-inner { display: grid; grid-template-columns: 180px 1fr; gap: 20px; padding: 16px 20px; }
+  .rule-label { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--terracotta-600); }
+  .rule-content { font-size: 0.9rem; color: var(--text-muted); }
+  .rule-content code { color: var(--terracotta-600); background: var(--sand-100); padding: 1px 6px; border-radius: 4px; font-size: 0.85em; }
+  @media (max-width: 640px) { .rule-block-inner { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* ---------- Color system ---------- */
+  .primary-swatch { border-radius: var(--radius-lg); height: 200px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; box-shadow: var(--shadow-md); }
+  .primary-swatch span { font-family: var(--display); font-size: 2rem; color: var(--sand-50); }
+  .swatch-meta { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; font-size: 0.82rem; }
+  .swatch-meta div b { display: block; font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 3px; }
+  .opacity-strip { display: grid; gap: 6px; margin-bottom: 44px; }
+  .opacity-band { border-radius: var(--radius-sm); padding: 12px 16px; font-family: var(--mono); font-size: 0.78rem; color: var(--sand-50); display: flex; justify-content: space-between; }
+
+  .accent-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 44px; }
+  .accent-cell { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); }
+  .accent-block { height: 110px; display: flex; align-items: center; justify-content: center; }
+  .accent-block span { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sand-50); }
+  .accent-info { padding: 12px 14px; background: var(--surface); }
+  .accent-info b { display: block; font-family: var(--mono); font-size: 0.72rem; color: var(--text); margin-bottom: 2px; }
+  .accent-info small { color: var(--text-muted); font-size: 0.76rem; }
+  .accent-tags { margin-top: 6px; display: flex; gap: 6px; flex-wrap: wrap; }
+  .accent-tags span { font-size: 0.62rem; border: 1px solid var(--border); border-radius: 100px; padding: 2px 8px; color: var(--text-muted); }
+
+  .neutral-strip { display: flex; border-radius: var(--radius-md); overflow: hidden; box-shadow: var(--shadow-sm); }
+  .neutral-chip { flex: 1; height: 96px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; font-size: 0.72rem; }
+  .neutral-chip b { font-family: var(--mono); font-weight: 500; }
+
+  /* ---------- Typography ---------- */
+  .font-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 32px; margin-bottom: 28px; }
+  .font-card__eyebrow { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--terracotta-600); font-weight: 600; margin-bottom: 6px; }
+  .font-card__family { font-family: var(--mono); font-size: 0.8rem; color: var(--text-muted); margin-bottom: 20px; }
+  .font-card__sample { font-family: var(--sample-font, var(--display)); font-size: 2.6rem; line-height: 1.15; margin-bottom: 18px; }
+  .font-card__chars { font-family: var(--sample-font, var(--display)); font-size: 1.1rem; letter-spacing: 0.04em; color: var(--text-muted); margin-bottom: 22px; word-break: break-all; }
+  .weight-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 18px; }
+  .weight-cell b { display: block; font-size: 0.68rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; font-family: var(--mono); }
+  .weight-cell span { font-family: var(--sample-font, var(--display)); font-size: 1.15rem; }
+  .note-box { background: var(--sand-100); border-left: 3px solid var(--terracotta-600); border-radius: 0 var(--radius-sm) var(--radius-sm) 0; padding: 12px 16px; font-size: 0.85rem; color: var(--text-muted); }
+  .note-box b { color: var(--text); }
+
+  /* type hierarchy */
+  .hier-row { display: grid; grid-template-columns: 220px 1fr; border: 1px solid var(--border); border-radius: var(--radius-md); overflow: hidden; margin-bottom: 12px; }
+  .hier-meta { background: var(--earth-900); color: var(--sand-100); padding: 18px 20px; font-size: 0.75rem; }
+  .hier-meta b { display: block; color: var(--sand-50); font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; font-size: 0.72rem; }
+  .hier-meta div { margin-bottom: 3px; opacity: 0.85; }
+  .hier-sample { background: var(--surface); padding: 20px 24px; display: flex; align-items: center; }
+  @media (max-width: 700px) { .hier-row { grid-template-columns: 1fr; } }
+
+  /* spacing */
+  .space-row { display: grid; grid-template-columns: 90px 1fr 90px; align-items: center; gap: 16px; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.82rem; }
+  .space-row b { font-family: var(--mono); color: var(--text); }
+  .space-bar { height: 10px; background: var(--terracotta-600); border-radius: 100px; }
+  .space-row span.px { text-align: right; font-family: var(--mono); color: var(--text-muted); }
+
+  /* borders/surfaces */
+  .border-demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 32px; }
+  .border-demo { height: 90px; border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 0.72rem; color: var(--text-muted); text-align: center; background: var(--surface); }
+  .b-hairline { border: 1px solid var(--border); }
+  .b-accent { border: 1px solid var(--terracotta-600); }
+  .b-heavy { border: 2px solid var(--earth-900); }
+
+  .corner-demo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 32px; }
+  .corner-demo { background: var(--terracotta-600); height: 80px; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 8px; font-family: var(--mono); font-size: 0.7rem; color: var(--sand-50); }
+
+  .elevation-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .elevation-card { border-radius: var(--radius-md); padding: 20px; background: var(--surface); height: 110px; display: flex; flex-direction: column; justify-content: space-between; }
+  .elevation-card b { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: var(--terracotta-600); }
+  .elevation-card span { font-size: 0.76rem; color: var(--text-muted); }
+  .ev-ground { box-shadow: none; border: 1px solid var(--border); }
+  .ev-card { box-shadow: var(--shadow-sm); }
+  .ev-elevated { box-shadow: var(--shadow-md); }
+  .ev-glass { background: rgba(251,247,241,0.6); backdrop-filter: blur(8px); border: 1px solid rgba(251,247,241,0.5); box-shadow: var(--shadow-md); }
+
+  /* buttons */
+  .component-row { display: flex; gap: 14px; flex-wrap: wrap; margin-bottom: 32px; }
+  .component-cell { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
+  .component-cell-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted); font-family: var(--mono); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 32px; border-radius: var(--radius-md); font-family: var(--sans); font-size: 0.85rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border: 1px solid transparent; cursor: pointer; }
+  .btn-primary { background: linear-gradient(135deg, var(--ochre-400) 0%, var(--terracotta-500) 55%, var(--terracotta-600) 100%); color: var(--sand-50); box-shadow: var(--shadow-md); }
+  .btn-primary.hover { box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .btn-primary.focus { outline: 2px solid var(--terracotta-600); outline-offset: 3px; }
+  .btn-primary.disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+  .btn-outline { background: transparent; border-color: var(--text); color: var(--text); }
+
+  /* cards */
+  .card-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .tour-card { position: relative; border-radius: var(--radius-lg); overflow: hidden; height: 220px; background: linear-gradient(135deg, var(--ochre-400), var(--earth-900)); display: flex; align-items: flex-end; padding: 16px; }
+  .tour-card__scrim { position: absolute; inset: 0; background: linear-gradient(180deg, transparent 40%, rgba(58,35,28,0.85) 100%); }
+  .tour-card h4 { position: relative; color: var(--sand-50); font-size: 1.1rem; }
+  .tour-card.featured { outline: 3px solid var(--terracotta-600); outline-offset: 3px; }
+  .tour-card.hovered { transform: scale(1.02); box-shadow: var(--shadow-lg); }
+
+  /* badges */
+  .badge-row { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 28px; }
+  .badge-eyebrow { font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--terracotta-600); font-weight: 600; }
+  .badge-tag { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta-600); font-weight: 600; border: 1px solid var(--terracotta-600); border-radius: 100px; padding: 4px 12px; }
+  .badge-duration { font-size: 0.72rem; background: var(--sand-100); color: var(--text-muted); border-radius: var(--radius-sm); padding: 5px 10px; font-family: var(--mono); }
+
+  /* nav demo */
+  .nav-demo { background: rgba(251,247,241,0.92); backdrop-filter: blur(8px); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px 24px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .nav-demo__logo { display: flex; align-items: center; gap: 8px; font-family: var(--display); font-size: 1.1rem; }
+  .nav-demo__links { display: flex; gap: 24px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+
+  /* voice grid */
+  .voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .voice-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 22px; }
+  .voice-card__label { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta-600); margin-bottom: 10px; }
+  .voice-card__example { margin-bottom: 10px; }
+  .voice-card__note { font-size: 0.8rem; color: var(--text-muted); }
+  @media (max-width: 700px) { .voice-grid { grid-template-columns: 1fr; } }
+
+  /* do/dont */
+  .do-dont-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .do-card, .dont-card { border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border); }
+  .do-card-header, .dont-card-header { padding: 8px 16px; font-family: var(--mono); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; }
+  .do-card-header { background: #e4f0e2; color: #2e6b28; }
+  .dont-card-header { background: #f5e0dd; color: var(--error); }
+  .do-dont-example { padding: 20px; background: var(--surface); min-height: 90px; display: flex; align-items: center; justify-content: center; }
+  .do-dont-text { padding: 10px 16px 16px; font-size: 0.8rem; color: var(--text-muted); background: var(--surface); }
+  @media (max-width: 700px) { .do-dont-grid { grid-template-columns: 1fr; } }
+
+  footer.kit-footer { padding-top: 48px; font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<aside class="sidebar">
+  <div class="sidebar__brand">Salt &amp; Sun Tours</div>
+  <div class="sidebar__sub">Overland — Brand Kit</div>
+  <nav>
+    <a href="#logo">01 · Logo &amp; Wordmark</a>
+    <a href="#color">02 · Color System</a>
+    <a href="#type">03 · Typography</a>
+    <a href="#hierarchy">04 · Type Hierarchy</a>
+    <a href="#spacing">05 · Spacing</a>
+    <a href="#surfaces">06 · Borders &amp; Surfaces</a>
+    <a href="#buttons">07 · Buttons</a>
+    <a href="#cards">08 · Cards</a>
+    <a href="#badges">09 · Badges &amp; Tags</a>
+    <a href="#nav">10 · Navigation</a>
+    <a href="#voice">11 · Voice &amp; Copy</a>
+    <a href="#dos">12 · Do's &amp; Don'ts</a>
+    <a href="#motion">13 · Motion</a>
+  </nav>
+</aside>
+
+<main>
+  <div class="container">
+    <section class="cover">
+      <p class="cover__eyebrow">Creative Direction · v1.0</p>
+      <h1>Overland: a warmer, more confident Salt &amp; Sun Tours</h1>
+      <p class="lede">Not a new brand — the one this site already has, sharpened. One warm terracotta-to-ochre hue family, an editorial serif with real character, and a "hand-assembled" motion signature carried through every section instead of a few.</p>
+      <div class="cover__meta">
+        <div><b>Warm · Editorial · Hand-guided</b>Mood</div>
+        <div><b>Libre Bodoni + Public Sans</b>Typography</div>
+        <div><b>#9c4d33</b>Primary accent</div>
+        <div><b>2026-09-16</b>Version date</div>
+      </div>
+    </section>
+
+    <!-- 01 LOGO -->
+    <section class="guide" id="logo">
+      <p class="guide__eyebrow">01</p>
+      <h2>Logo &amp; Wordmark</h2>
+      <p class="guide__intro">The existing mark (the arc-over-circle "sun above the dunes" icon already in <code>Header.astro</code>) stays — it's a good, simple, on-brand symbol. What changes is the wordmark's typeface, moving from generic Georgia to Libre Bodoni, and the mark finally getting a defined reversed/tint treatment for dark and tinted backgrounds instead of only ever appearing one way.</p>
+
+      <div class="logo-grid">
+        <div class="logo-cell">
+          <svg class="logo-mark" viewBox="0 0 32 32" fill="none"><path d="M3 23c3.2-6.4 8.4-9.6 13-9.6s9.8 3.2 13 9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="12.5" r="4.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span class="logo-word">Salt &amp; Sun Tours</span>
+          <span class="logo-cell-label">Primary — on sand</span>
+        </div>
+        <div class="logo-cell dark">
+          <svg class="logo-mark" viewBox="0 0 32 32" fill="none"><path d="M3 23c3.2-6.4 8.4-9.6 13-9.6s9.8 3.2 13 9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="12.5" r="4.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span class="logo-word">Salt &amp; Sun Tours</span>
+          <span class="logo-cell-label">Reversed — on earth-900</span>
+        </div>
+        <div class="logo-cell tint">
+          <svg class="logo-mark" viewBox="0 0 32 32" fill="none"><path d="M3 23c3.2-6.4 8.4-9.6 13-9.6s9.8 3.2 13 9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="12.5" r="4.5" stroke="currentColor" stroke-width="1.6"/></svg>
+          <span class="logo-word">Salt &amp; Sun Tours</span>
+          <span class="logo-cell-label">On tinted sand-100</span>
+        </div>
+      </div>
+
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Clear space</div><div class="rule-content">Minimum clear space around the mark equals the mark's own height (32px at reference size) on every side — never let nav links or copy crowd it.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Minimum size</div><div class="rule-content">Mark never renders below 22px tall; below that the arc reads as a smudge. Wordmark never sets smaller than <code>--fs-md</code> (1.15rem).</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Color</div><div class="rule-content">Mark is always a single flat <code>currentColor</code> stroke — terracotta-600 on light, sand-50 on dark. Never fill it, never gradient it.</div></div></div>
+    </section>
+
+    <!-- 02 COLOR -->
+    <section class="guide" id="color">
+      <p class="guide__eyebrow">02</p>
+      <h2>Color System</h2>
+      <p class="guide__intro">One hue family, stretched from deep terracotta to warm ochre, over a sand-white base. No second chromatic hue anywhere in the system — the only color that isn't from this family is the error red, and it's used nowhere except real form-validation failures.</p>
+
+      <div class="primary-swatch" style="background: var(--terracotta-600);"><span>Terracotta Strong</span></div>
+      <div class="swatch-meta">
+        <div><b>Hex</b>#9c4d33</div>
+        <div><b>RGB</b>156, 77, 51</div>
+        <div><b>Token</b>--accent</div>
+        <div><b>Usage</b>Eyebrows, links, primary CTAs, active states</div>
+      </div>
+      <div class="opacity-strip">
+        <div class="opacity-band" style="background: rgba(156,77,51,0.1); color: var(--terracotta-600);"><span>Dim — 10%</span><span>rgba(156,77,51,0.10)</span></div>
+        <div class="opacity-band" style="background: rgba(156,77,51,0.25); color: var(--terracotta-600);"><span>Glow — 25%</span><span>rgba(156,77,51,0.25)</span></div>
+        <div class="opacity-band" style="background: rgba(156,77,51,1);"><span>Full — 100%</span><span>rgba(156,77,51,1.00)</span></div>
+      </div>
+
+      <div class="accent-grid">
+        <div class="accent-cell">
+          <div class="accent-block" style="background: var(--terracotta-600);"><span>Brand</span></div>
+          <div class="accent-info"><b>--accent</b><small>#9c4d33</small>
+            <div class="accent-tags"><span>CTAs</span><span>Links</span><span>Active</span></div>
+          </div>
+        </div>
+        <div class="accent-cell">
+          <div class="accent-block" style="background: var(--ochre-400);"><span>Highlight</span></div>
+          <div class="accent-info"><b>--accent-soft</b><small>#d3a24f</small>
+            <div class="accent-tags"><span>Gradients</span><span>Glow</span></div>
+          </div>
+        </div>
+        <div class="accent-cell">
+          <div class="accent-block" style="background: var(--earth-900);"><span>Grounding</span></div>
+          <div class="accent-info"><b>--dark-surface</b><small>#3a231c</small>
+            <div class="accent-tags"><span>Footer</span><span>Photo overlay</span></div>
+          </div>
+        </div>
+        <div class="accent-cell">
+          <div class="accent-block" style="background: var(--error);"><span>Error</span></div>
+          <div class="accent-info"><b>--error</b><small>#8c2f1f</small>
+            <div class="accent-tags"><span>Form validation only</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="neutral-strip">
+        <div class="neutral-chip" style="background: var(--sand-50); color: var(--earth-900);"><b>sand-50</b>#fbf7f1</div>
+        <div class="neutral-chip" style="background: var(--sand-100); color: var(--earth-900);"><b>sand-100</b>#f6ede1</div>
+        <div class="neutral-chip" style="background: var(--sand-200); color: var(--earth-900);"><b>sand-200</b>#eeddc7</div>
+        <div class="neutral-chip" style="background: var(--beige-300); color: var(--earth-900);"><b>beige-300</b>#e3cba7</div>
+        <div class="neutral-chip" style="background: var(--earth-700); color: var(--sand-50);"><b>earth-700</b>#6b3a2c</div>
+        <div class="neutral-chip" style="background: var(--earth-900); color: var(--sand-50);"><b>earth-900</b>#3a231c</div>
+      </div>
+    </section>
+
+    <!-- 03 TYPOGRAPHY -->
+    <section class="guide" id="type">
+      <p class="guide__eyebrow">03</p>
+      <h2>Typography</h2>
+      <p class="guide__intro">Georgia was a placeholder that happened to work — Libre Bodoni is the deliberate choice: same warm editorial register, but with real bracketed-serif character that reads as considered rather than "whatever the system had." Public Sans replaces the plain system-font stack for the same reason: warmth without losing speed.</p>
+
+      <div class="font-card" style="--sample-font: 'Libre Bodoni', Georgia, serif;">
+        <p class="font-card__eyebrow">Display — Headlines, section titles, tour names</p>
+        <p class="font-card__family">font-family: 'Libre Bodoni', Georgia, 'Times New Roman', serif;</p>
+        <p class="font-card__sample">Two home bases, one coast</p>
+        <p class="font-card__chars">ABCDEFGHIJKLM abcdefghijklm 0123456789 &amp;—"…"</p>
+        <div class="weight-row">
+          <div class="weight-cell"><b>400 Regular</b><span>Sossusvlei</span></div>
+          <div class="weight-cell"><b>500 Medium</b><span style="font-weight:500;">Sossusvlei</span></div>
+          <div class="weight-cell"><b>600 Semibold</b><span style="font-weight:600;">Sossusvlei</span></div>
+          <div class="weight-cell"><b>400 Italic</b><span style="font-style:italic;">Sossusvlei</span></div>
+        </div>
+        <div class="note-box"><b>Rule —</b> 400 weight only for headings at any size; reserve 600 italic for the one "special occasion" moment per page (currently the closing CTA). Never set body copy in this font.</div>
+      </div>
+
+      <div class="font-card" style="--sample-font: 'Public Sans', sans-serif;">
+        <p class="font-card__eyebrow">Body — Paragraphs, labels, buttons, UI</p>
+        <p class="font-card__family">font-family: 'Public Sans', -apple-system, 'Segoe UI', sans-serif;</p>
+        <p class="font-card__sample" style="font-size: 1.4rem;">We run every tour out of Swakopmund and Walvis Bay.</p>
+        <p class="font-card__chars">ABCDEFGHIJKLM abcdefghijklm 0123456789 &amp;—"…"</p>
+        <div class="weight-row">
+          <div class="weight-cell"><b>400 Regular</b><span>Book this tour</span></div>
+          <div class="weight-cell"><b>500 Medium</b><span style="font-weight:500;">Book this tour</span></div>
+          <div class="weight-cell"><b>600 Semibold</b><span style="font-weight:600;">Book this tour</span></div>
+          <div class="weight-cell"><b>700 Bold</b><span style="font-weight:700;">Book this tour</span></div>
+        </div>
+        <div class="note-box"><b>Rule —</b> 400 for paragraphs, 600 for eyebrows/labels/buttons (always uppercase + 0.05–0.12em tracking at that weight). Never 700 in body copy — it reads as shouting against the serif's warmth.</div>
+      </div>
+    </section>
+
+    <!-- 04 TYPE HIERARCHY -->
+    <section class="guide" id="hierarchy">
+      <p class="guide__eyebrow">04</p>
+      <h2>Type Hierarchy</h2>
+      <p class="guide__intro">Every text role the site actually uses, at real size.</p>
+
+      <div class="hier-row">
+        <div class="hier-meta"><b>Hero headline</b><div>Libre Bodoni 400</div><div>clamp(2.75rem, 6vw, 5.5rem)</div><div>line-height 1.1</div></div>
+        <div class="hier-sample"><span style="font-family: var(--display); font-size: 2.8rem;">Namibia</span></div>
+      </div>
+      <div class="hier-row">
+        <div class="hier-meta"><b>Section title</b><div>Libre Bodoni 400</div><div>2.6rem</div><div>line-height 1.1, max-width 700px</div></div>
+        <div class="hier-sample"><span style="font-family: var(--display); font-size: 2rem;">A closer look at the lineup</span></div>
+      </div>
+      <div class="hier-row">
+        <div class="hier-meta"><b>Eyebrow (label)</b><div>Public Sans 600</div><div>0.8rem</div><div>uppercase, 0.12em tracking</div></div>
+        <div class="hier-sample"><span style="font-family: var(--sans); font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--terracotta-600);">Tour Programs</span></div>
+      </div>
+      <div class="hier-row">
+        <div class="hier-meta"><b>Row / card title</b><div>Libre Bodoni 400</div><div>1.6rem</div><div>line-height 1.1</div></div>
+        <div class="hier-sample"><span style="font-family: var(--display); font-size: 1.6rem;">Where the dunes plunge into the Atlantic</span></div>
+      </div>
+      <div class="hier-row">
+        <div class="hier-meta"><b>Body paragraph</b><div>Public Sans 400</div><div>0.95–1rem</div><div>line-height 1.7</div></div>
+        <div class="hier-sample"><span style="font-family: var(--sans); font-size: 1rem; line-height: 1.7; color: var(--text-muted);">A 4x4 run past salt pans and flamingo-filled lagoons to Namibia's most photographed meeting of desert and ocean.</span></div>
+      </div>
+      <div class="hier-row">
+        <div class="hier-meta"><b>Stat number</b><div>Libre Bodoni 400</div><div>2.6rem</div><div>tabular, on dark</div></div>
+        <div class="hier-sample"><span style="font-family: var(--display); font-size: 2.4rem; color: var(--terracotta-600);">31</span></div>
+      </div>
+      <div class="hier-row">
+        <div class="hier-meta"><b>Caption / meta</b><div>Public Sans 400</div><div>0.8rem</div><div>muted</div></div>
+        <div class="hier-sample"><span style="font-family: var(--sans); font-size: 0.8rem; color: var(--text-muted);">Photo: Bernd Dittrich / Unsplash</span></div>
+      </div>
+    </section>
+
+    <!-- 05 SPACING -->
+    <section class="guide" id="spacing">
+      <p class="guide__eyebrow">05</p>
+      <h2>Spacing</h2>
+      <p class="guide__intro">The existing scale is already right — kept as-is. Bars show relative size against the largest token.</p>
+
+      <div class="space-row"><b>3xs</b><div class="space-bar" style="width: 2.7%;"></div><span class="px">4px</span></div>
+      <div class="space-row"><b>2xs</b><div class="space-bar" style="width: 5.5%;"></div><span class="px">8px</span></div>
+      <div class="space-row"><b>xs</b><div class="space-bar" style="width: 8.3%;"></div><span class="px">12px</span></div>
+      <div class="space-row"><b>sm</b><div class="space-bar" style="width: 11%;"></div><span class="px">16px</span></div>
+      <div class="space-row"><b>md</b><div class="space-bar" style="width: 16.6%;"></div><span class="px">24px</span></div>
+      <div class="space-row"><b>lg</b><div class="space-bar" style="width: 27.7%;"></div><span class="px">40px</span></div>
+      <div class="space-row"><b>xl</b><div class="space-bar" style="width: 44.4%;"></div><span class="px">64px</span></div>
+      <div class="space-row"><b>2xl</b><div class="space-bar" style="width: 66.6%;"></div><span class="px">96px</span></div>
+      <div class="space-row"><b>3xl</b><div class="space-bar" style="width: 100%;"></div><span class="px">144px</span></div>
+    </section>
+
+    <!-- 06 SURFACES -->
+    <section class="guide" id="surfaces">
+      <p class="guide__eyebrow">06</p>
+      <h2>Borders &amp; Surfaces</h2>
+      <p class="guide__intro">Depth comes from soft, warm-tinted shadow and color, not hard borders — borders are for form fields and quiet dividers, not cards.</p>
+
+      <div class="border-demo-grid">
+        <div class="border-demo b-hairline">1px hairline — border-beige-300</div>
+        <div class="border-demo b-accent">1px accent — hover/focus only</div>
+        <div class="border-demo b-heavy">2px heavy — reserved, rarely used</div>
+      </div>
+
+      <div class="corner-demo-grid">
+        <div class="corner-demo" style="border-radius: 4px;">sm · 4px</div>
+        <div class="corner-demo" style="border-radius: 10px;">md · 10px</div>
+        <div class="corner-demo" style="border-radius: 18px;">lg · 18px</div>
+        <div class="corner-demo" style="border-radius: 18px; outline: 2px dashed var(--error); outline-offset: 3px;">✗ 2px — not in scale</div>
+      </div>
+
+      <div class="elevation-grid">
+        <div class="elevation-card ev-ground"><b>Ground</b><span>Page background, no shadow</span></div>
+        <div class="elevation-card ev-card"><b>Card</b><span>shadow-sm, resting content block</span></div>
+        <div class="elevation-card ev-elevated"><b>Elevated</b><span>shadow-md, hover / active card</span></div>
+        <div class="elevation-card ev-glass"><b>Glass</b><span>Header &amp; CTA card only — blur(8px)</span></div>
+      </div>
+    </section>
+
+    <!-- 07 BUTTONS -->
+    <section class="guide" id="buttons">
+      <p class="guide__eyebrow">07</p>
+      <h2>Buttons</h2>
+      <p class="guide__intro">One primary style, one outline style. No third variant — a third button competing for attention is the fastest way to dilute a single-accent system.</p>
+
+      <div class="component-row">
+        <div class="component-cell"><div class="component-cell-label">Default</div><span class="btn btn-primary">Start Booking</span></div>
+        <div class="component-cell"><div class="component-cell-label">Hover</div><span class="btn btn-primary hover">Start Booking</span></div>
+        <div class="component-cell"><div class="component-cell-label">Focus</div><span class="btn btn-primary focus">Start Booking</span></div>
+        <div class="component-cell"><div class="component-cell-label">Disabled</div><span class="btn btn-primary disabled">Start Booking</span></div>
+        <div class="component-cell"><div class="component-cell-label">Loading</div><span class="btn btn-primary">LOADING…</span></div>
+      </div>
+      <div class="component-row">
+        <div class="component-cell"><div class="component-cell-label">Outline — default</div><span class="btn btn-outline">View all tours</span></div>
+        <div class="component-cell"><div class="component-cell-label">Outline — hover</div><span class="btn btn-outline" style="background: var(--earth-900); color: var(--sand-50); border-color: var(--earth-900);">View all tours</span></div>
+      </div>
+
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Anatomy</div><div class="rule-content">14px/32px padding, <code>--radius-md</code> (10px), uppercase Public Sans 600 at 0.85rem with 0.03em tracking. Primary always carries the warm gradient + shadow-md; never a flat fill.</div></div></div>
+    </section>
+
+    <!-- 08 CARDS -->
+    <section class="guide" id="cards">
+      <p class="guide__eyebrow">08</p>
+      <h2>Cards</h2>
+      <p class="guide__intro">The site's real "card" is a full-bleed photo with a bottom scrim and the title pinned above it — not a boxed white card with padding. That pattern stays the anchor unit for tours and adventures.</p>
+
+      <div class="card-grid">
+        <div class="tour-card"><div class="tour-card__scrim"></div><h4>Default</h4></div>
+        <div class="tour-card hovered"><div class="tour-card__scrim"></div><h4>Hovered — scale 1.02 + scrim deepens</h4></div>
+        <div class="tour-card featured"><div class="tour-card__scrim"></div><h4>Featured — accent outline, spans 2 cols in grid</h4></div>
+      </div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Radius</div><div class="rule-content"><code>--radius-lg</code> (18px) always — this is the one place the largest radius in the scale belongs.</div></div></div>
+    </section>
+
+    <!-- 09 BADGES -->
+    <section class="guide" id="badges">
+      <p class="guide__eyebrow">09</p>
+      <h2>Badges &amp; Tags</h2>
+      <div class="badge-row">
+        <span class="badge-eyebrow">Section Eyebrow</span>
+        <span class="badge-tag">Desert Tour · Half-day</span>
+        <span class="badge-duration">Full-day</span>
+      </div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Eyebrow</div><div class="rule-content">Public Sans 600, uppercase, 0.12em tracking, terracotta-600, no border, no background — the lightest-weight label in the system.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Category tag</div><div class="rule-content">Public Sans 600, uppercase, 0.1em tracking, terracotta-600 text on transparent, no pill border in current use — reserve a pill outline only if a tag needs to read as clickable/filterable.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Duration chip</div><div class="rule-content">Geist/Public Sans mono-weight, sand-100 fill, <code>--radius-sm</code> (4px) — the one place a small radius is correct.</div></div></div>
+    </section>
+
+    <!-- 10 NAV -->
+    <section class="guide" id="nav">
+      <p class="guide__eyebrow">10</p>
+      <h2>Navigation</h2>
+      <div class="nav-demo">
+        <div class="nav-demo__logo"><svg width="20" height="20" viewBox="0 0 32 32" fill="none" style="color: var(--terracotta-600);"><path d="M3 23c3.2-6.4 8.4-9.6 13-9.6s9.8 3.2 13 9.6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/><circle cx="16" cy="12.5" r="4.5" stroke="currentColor" stroke-width="1.6"/></svg>Salt &amp; Sun Tours</div>
+        <div class="nav-demo__links"><span>Home</span><span>Tours</span><span>Booking</span><span>Contact</span></div>
+      </div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Position</div><div class="rule-content">Sticky top, always light regardless of what scrolls beneath it — never a transparent-over-photo header.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Surface</div><div class="rule-content">Sand-50 at 85–92% opacity + <code>backdrop-filter: blur(8px)</code>, with a whisper of the ochre page-glow bleeding through the top edge.</div></div></div>
+    </section>
+
+    <!-- 11 VOICE -->
+    <section class="guide" id="voice">
+      <p class="guide__eyebrow">11</p>
+      <h2>Voice &amp; Copy</h2>
+      <div class="voice-grid">
+        <div class="voice-card"><div class="voice-card__label">Headline</div><div class="voice-card__example" style="font-family: var(--display); font-size: 1.3rem;">Two home bases, one stretch of coast and desert.</div><div class="voice-card__note">Fragment sentences over complete ones. Periods, not exclamation marks — confidence, not enthusiasm.</div></div>
+        <div class="voice-card"><div class="voice-card__label">Eyebrow</div><div class="voice-card__example" style="font-family: var(--sans); font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--terracotta-600); font-size: 0.85rem;">Tour Programs</div><div class="voice-card__note">2–3 words, never a full sentence.</div></div>
+        <div class="voice-card"><div class="voice-card__label">Body copy</div><div class="voice-card__example" style="color: var(--text-muted);">We run every tour out of Swakopmund and Walvis Bay — no call center, no middleman.</div><div class="voice-card__note">Second person or first-person-plural "we." Specific nouns (place names, numbers) over vague ones ("amazing experiences").</div></div>
+        <div class="voice-card"><div class="voice-card__label">CTA button</div><div class="voice-card__example"><span class="btn btn-primary" style="padding: 10px 24px;">Start Booking</span></div><div class="voice-card__note">Imperative verb first. Never "Learn More" or "Continue" — say what happens next.</div></div>
+        <div class="voice-card"><div class="voice-card__label">Stat label</div><div class="voice-card__example" style="font-family: var(--display); font-size: 1.6rem; color: var(--terracotta-600);">31 <span style="font-family: var(--sans); font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">tours, adventures &amp; combos</span></div><div class="voice-card__note">Number leads. No article ("a", "the") in the label.</div></div>
+        <div class="voice-card"><div class="voice-card__label">FAQ / trust answer</div><div class="voice-card__example" style="font-style: italic; color: var(--text-muted);">"No call center. Reach out and you'll hear back from someone who actually knows the dunes."</div><div class="voice-card__note">Answer the anxiety directly before the feature — never lead with the company's own claim about itself.</div></div>
+      </div>
+    </section>
+
+    <!-- 12 DOS -->
+    <section class="guide" id="dos">
+      <p class="guide__eyebrow">12</p>
+      <h2>Do's &amp; Don'ts</h2>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example"><div style="width:70px;height:50px;background:var(--terracotta-600);border-radius:10px;"></div></div><div class="do-dont-text">Use the 4 / 10 / 18px radius scale — 10px for cards and buttons, 18px for full-bleed photo cards.</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example"><div style="width:70px;height:50px;background:var(--terracotta-600);border-radius:2px;"></div></div><div class="do-dont-text">Introduce a one-off radius like 2px — this already happened once (About/Gallery/Program photos) and reads as a different, colder decision.</div></div>
+      </div>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example"><div style="width:90px;height:50px;background:var(--surface);border-radius:10px;box-shadow:var(--shadow-md);"></div></div><div class="do-dont-text">Depth via warm-tinted shadow — rgba(58,35,28, …), never pure black.</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example"><div style="width:90px;height:50px;background:var(--surface);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,0.35);"></div></div><div class="do-dont-text">Use a neutral/black shadow — it instantly reads as generic UI chrome instead of this brand.</div></div>
+      </div>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example"><div style="width:100%;height:50px;background:linear-gradient(135deg, var(--ochre-400), var(--terracotta-600));border-radius:8px;"></div></div><div class="do-dont-text">One warm gradient family for emphasis fills (buttons, glow).</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example"><div style="width:100%;height:50px;background:linear-gradient(135deg, #2b1810, #b15a34);border-radius:8px;"></div></div><div class="do-dont-text">Drop in a dark, unrelated background for a "new" section — this is exactly the dark-brown mistake already caught and reverted once this session.</div></div>
+      </div>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example"><span style="font-family: var(--display); font-size: 1.4rem;">Section headline</span></div><div class="do-dont-text">Libre Bodoni for headings only.</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example"><span style="font-family: var(--display); font-size: 0.95rem;">A whole paragraph of body copy set in the display serif reads slower and feels precious rather than warm.</span></div><div class="do-dont-text">Never set a full paragraph in Libre Bodoni.</div></div>
+      </div>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example"><span class="btn btn-primary" style="padding:10px 22px;">Start Booking</span></div><div class="do-dont-text">One terracotta CTA per view — the single loudest thing on the screen.</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example" style="gap:10px; display:flex;"><span class="btn btn-primary" style="padding:10px 18px; font-size:0.7rem;">Book Now</span><span class="btn btn-primary" style="padding:10px 18px; font-size:0.7rem;">See Tours</span><span class="btn btn-primary" style="padding:10px 18px; font-size:0.7rem;">Contact</span></div><div class="do-dont-text">Three competing primary buttons in one view — nothing reads as "the" action.</div></div>
+      </div>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example"><div style="width:100%;height:50px;background:var(--sand-50);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:0.7rem;color:var(--text-muted);">sand-50 everywhere</div></div><div class="do-dont-text">Keep the sand-to-white gradient consistent section to section.</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example" style="display:flex; width:100%; gap:2px;"><div style="flex:1;height:50px;background:var(--sand-50);"></div><div style="flex:1;height:50px;background:#2b1810;"></div><div style="flex:1;height:50px;background:var(--sand-50);"></div></div><div class="do-dont-text">Alternate background themes section-by-section — it fragments the page into unrelated blocks.</div></div>
+      </div>
+
+      <div class="do-dont-grid">
+        <div class="do-card"><div class="do-card-header">✓ DO</div><div class="do-dont-example" style="font-size:0.85rem; color: var(--text-muted); text-align:center;">"No call center, no middleman."</div><div class="do-dont-text">Direct, specific, confident.</div></div>
+        <div class="dont-card"><div class="dont-card-header">✗ DON'T</div><div class="do-dont-example" style="font-size:0.85rem; color: var(--text-muted); text-align:center;">"We strive to deliver world-class experiences tailored to your needs."</div><div class="do-dont-text">Hedging, corporate, could be any company on earth.</div></div>
+      </div>
+    </section>
+
+    <!-- 13 MOTION -->
+    <section class="guide" id="motion">
+      <p class="guide__eyebrow">13</p>
+      <h2>Motion</h2>
+      <p class="guide__intro">The signature motion idea is <b>assembling</b> — things settle into a hand-placed position rather than simply fading in place, echoing the tours page's map that pieces itself together and the (currently orphaned) constellation lines between photo cutouts. Every section should carry a taste of that, not just the generic fade the newest section currently uses alone.</p>
+
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Signature entrance</div><div class="rule-content">Alternating photo/copy rows: photo settles from <code>scale(1.04)</code>, copy trails ~150ms behind on a small <code>y</code> rise — reuses the existing <code>setupTourRows</code> technique instead of a generic fade.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Connective motif</div><div class="rule-content">A thin hand-drawn line (<code>stroke-dashoffset</code>) connecting sequential items — revives the constellation idea as the throughline for lists like Tour Programs, instead of letting it stay retired.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Duration &amp; easing</div><div class="rule-content">600–900ms, <code>power2.out</code>, for one-shot scroll entrances (these are narrative, not click feedback — longer durations are correct here). Hover/click feedback stays 150–300ms.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Reduced motion</div><div class="rule-content">Every effect gets a matching <code>prefers-reduced-motion</code> branch that renders the final state directly — no exceptions, matching the discipline already present sitewide.</div></div></div>
+      <div class="rule-block"><div class="rule-block-inner"><div class="rule-label">Forbidden</div><div class="rule-content">No motion invented purely for a new section that isn't reused or extended from an existing technique — the point is one coherent motion vocabulary, not a new idea per section.</div></div></div>
+    </section>
+
+    <footer class="kit-footer">Salt &amp; Sun Tours · Overland Brand Kit v1.0 · 2026-09-16 · companion reference: themes/overland.md</footer>
+  </div>
+</main>
+
+<script>
+  const links = document.querySelectorAll('.sidebar nav a');
+  const sections = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const id = '#' + entry.target.id;
+        links.forEach(a => a.classList.toggle('active', a.getAttribute('href') === id));
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+  sections.forEach(s => s && observer.observe(s));
+</script>
+
+</body>
+</html>

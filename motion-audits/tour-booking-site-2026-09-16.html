@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tour-booking-site motion audit — 2026-09-16</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@400;500;600;700&family=Public+Sans:wght@400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:        oklch(0.155 0.006 255);
+    --surface:    oklch(0.195 0.007 255);
+    --surface-2:  oklch(0.235 0.008 255);
+    --paper:      oklch(0.945 0.004 255);
+    --paper-dim:  oklch(0.800 0.006 255);
+    --muted:      oklch(0.680 0.008 255);
+    --faint:      oklch(0.505 0.008 255);
+    --line:       oklch(0.95 0.01 255 / 0.09);
+    --line-strong:oklch(0.95 0.01 255 / 0.16);
+
+    --crit: oklch(0.655 0.185 25);
+    --imp:  oklch(0.805 0.125 78);
+    --opp:  oklch(0.745 0.135 152);
+    --t-good: oklch(0.745 0.135 152);
+    --t-mid:  oklch(0.805 0.125 78);
+    --t-slow: oklch(0.655 0.185 25);
+
+    --accent: var(--paper);
+    --accent-soft: var(--paper-dim);
+    --accent-tint: oklch(0.945 0.004 255 / 0.08);
+
+    --display: "Familjen Grotesk", "Hanken Grotesk", system-ui, sans-serif;
+    --sans: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --mono: "Geist Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+
+  :root:has(#theme-light:checked) {
+    --ink:        oklch(0.985 0.003 255);
+    --surface:    oklch(0.965 0.004 255);
+    --surface-2:  oklch(0.940 0.005 255);
+    --paper:      oklch(0.180 0.006 255);
+    --paper-dim:  oklch(0.330 0.008 255);
+    --muted:      oklch(0.475 0.010 255);
+    --faint:      oklch(0.640 0.009 255);
+    --line:       oklch(0.180 0.010 255 / 0.12);
+    --line-strong:oklch(0.180 0.010 255 / 0.22);
+    --crit: oklch(0.560 0.190 25);
+    --imp:  oklch(0.620 0.135 78);
+    --opp:  oklch(0.560 0.140 152);
+  }
+
+  * { box-sizing: border-box; }
+  html { background: var(--ink); }
+  body {
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    margin: 0;
+    padding: 56px 24px 96px;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; }
+  a { color: inherit; }
+  code { font-family: var(--mono); font-size: 0.9em; }
+  .mono-label { font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--faint); }
+
+  .vh { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+
+  /* theme switch */
+  .theme-switch { display: flex; justify-content: flex-end; margin-bottom: 32px; }
+  .seg { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 100px; overflow: hidden; transition: border-color 0.2s ease; }
+  .seg label { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); padding: 5px 11px; cursor: pointer; user-select: none; transition: background 0.15s ease, color 0.15s ease; }
+  #theme-dark:checked ~ .wrap .theme-switch label[for="theme-dark"],
+  #theme-light:checked ~ .wrap .theme-switch label[for="theme-light"] {
+    background: color-mix(in oklch, var(--paper) 12%, transparent);
+    color: var(--paper);
+  }
+
+  /* header */
+  header.report-head { border-bottom: 1px solid var(--line); padding-bottom: 32px; margin-bottom: 40px; }
+  .eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--faint); margin: 0 0 14px; }
+  h1.title { font-family: var(--display); font-weight: 700; font-size: clamp(28px, 4vw, 40px); line-height: 1.12; margin: 0 0 14px; letter-spacing: -0.01em; }
+  p.lede { font-size: 16px; line-height: 1.6; color: var(--paper-dim); max-width: 640px; margin: 0 0 18px; }
+  .meta-row { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .stats { display: flex; gap: 24px; flex-wrap: wrap; }
+  .stats a { font-family: var(--mono); font-size: 13px; text-decoration: none; color: var(--paper); border-bottom: 1px solid var(--line-strong); padding-bottom: 2px; transition: border-color 0.2s ease; }
+  .stats a:hover { border-color: var(--paper); }
+  .stats .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
+  .dot--crit { background: var(--crit); }
+  .dot--imp { background: var(--imp); }
+  .dot--opp { background: var(--opp); }
+
+  /* assessment */
+  section.assessment { margin-bottom: 48px; }
+  .assessment p { font-family: var(--display); font-weight: 500; font-size: clamp(19px, 2.6vw, 24px); line-height: 1.45; color: var(--paper); max-width: 760px; margin: 12px 0 0; }
+
+  h2.section-num { font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em; color: var(--faint); text-transform: uppercase; margin: 0 0 18px; }
+
+  /* lens table */
+  section.lens-table-sec { margin-bottom: 48px; }
+  table.lens-table { width: 100%; border-collapse: collapse; }
+  .lens-table th { text-align: left; font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--faint); font-weight: 500; padding: 0 0 10px; border-bottom: 1px solid var(--line-strong); }
+  .lens-table td { padding: 16px 0; border-bottom: 1px solid var(--line); vertical-align: top; transition: border-color 0.2s ease; }
+  .lens-table tr:hover td { border-color: var(--line-strong); }
+  .lens-name { font-weight: 600; font-size: 15px; }
+  .weight-chip { display: inline-block; margin-left: 8px; font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line-strong); border-radius: 100px; padding: 2px 8px; vertical-align: 1px; }
+  .verdict { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; white-space: nowrap; }
+  .verdict .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .verdict--strong .dot { background: var(--t-good); }
+  .verdict--concern .dot { background: var(--imp); }
+  .verdict--mixed .dot { background: var(--muted); }
+  .lens-table .read { color: var(--paper-dim); font-size: 13.5px; line-height: 1.5; }
+
+  @media (max-width: 600px) {
+    table.lens-table, .lens-table thead, .lens-table tbody, .lens-table th, .lens-table td, .lens-table tr { display: block; }
+    .lens-table thead { display: none; }
+    .lens-table tr { padding: 14px 0; }
+    .lens-table td { border: none; padding: 4px 0; }
+  }
+
+  /* timing diagram */
+  section.timing-sec { margin-bottom: 56px; }
+  .timing-grid { display: grid; grid-template-columns: 1fr 300px; gap: 32px; align-items: start; }
+  @media (max-width: 860px) { .timing-grid { grid-template-columns: 1fr; } }
+  .timing-svg-wrap { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+  .zone-band text, .dot-label { font-family: var(--mono); }
+  .timing-key { list-style: none; margin: 0; padding: 0; }
+  .timing-key li { display: flex; align-items: baseline; gap: 10px; font-size: 12.5px; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .timing-key .num { font-family: var(--mono); font-size: 11px; color: var(--faint); width: 16px; flex-shrink: 0; }
+  .timing-key .name { flex: 1; color: var(--paper-dim); }
+  .timing-key .val { font-family: var(--mono); font-size: 11px; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .timing-note { margin-top: 18px; padding: 14px 16px; background: var(--surface); border-radius: 10px; font-size: 13px; line-height: 1.55; color: var(--paper-dim); }
+  .timing-note b { color: var(--paper); }
+
+  /* lens sections */
+  section.lens-sec { margin-bottom: 56px; padding-top: 40px; border-top: 1px solid var(--line); }
+  .lens-sec__head { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+  .lens-sec__head h3 { font-family: var(--display); font-size: 22px; font-weight: 700; margin: 0; }
+  .lens-sec__weight { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--faint); border: 1px solid var(--line-strong); border-radius: 100px; padding: 3px 10px; }
+  .lens-sec__verdict { margin: 0 0 28px; }
+  .lens-block { margin-bottom: 28px; }
+  .lens-block > .mono-label { display: block; margin-bottom: 12px; }
+  ul.lens-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  ul.lens-list li { font-size: 14px; line-height: 1.55; color: var(--paper-dim); padding-left: 22px; position: relative; }
+  ul.lens-list.good li::before { content: "✓"; position: absolute; left: 0; color: var(--t-good); font-weight: 700; }
+  ul.lens-list.opp li::before { content: "💡"; position: absolute; left: 0; }
+  ul.lens-list code { color: var(--muted); }
+  p.lens-empty { font-style: italic; color: var(--faint); font-size: 13.5px; margin: 0; }
+  .lens-take { font-family: var(--display); font-size: 15px; font-style: italic; color: var(--paper); background: var(--surface); border-radius: 10px; padding: 16px 18px; margin: 0; line-height: 1.5; }
+
+  /* finding rows */
+  .finding-row { display: grid; grid-template-columns: 1fr 380px; gap: 28px; padding: 24px 0; border-bottom: 1px solid var(--line); transition: border-color 0.2s ease; }
+  .finding-row:hover { border-color: var(--line-strong); }
+  .finding-row:first-of-type { padding-top: 0; }
+  @media (max-width: 860px) { .finding-row { grid-template-columns: 1fr; } }
+
+  .find-tags { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+  .tag { font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; border-radius: 100px; padding: 3px 9px; border: 1px solid var(--line-strong); color: var(--muted); }
+  .tag--crit { color: var(--crit); border-color: color-mix(in oklch, var(--crit) 45%, var(--line-strong)); }
+  .tag--imp { color: var(--imp); border-color: color-mix(in oklch, var(--imp) 45%, var(--line-strong)); }
+
+  h4.find-title { font-family: var(--display); font-size: 17px; font-weight: 700; margin: 0 0 10px; }
+  .find-body p { font-size: 14px; line-height: 1.6; color: var(--paper-dim); margin: 0 0 10px; }
+  .find-body .label { font-weight: 700; color: var(--paper); }
+  .find-body .fix { background: var(--surface); border-radius: 8px; padding: 10px 14px; margin: 10px 0; }
+  .find-body .fix p { margin: 0; color: var(--paper); }
+  p.find-loc { margin: 10px 0 0 !important; }
+  p.find-loc code { color: var(--faint); font-size: 12px; }
+
+  /* demo card */
+  .demo { position: relative; }
+  .demo__bar { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .demo__meta { min-width: 0; }
+  .demo__title { display: block; font-size: 13.5px; font-weight: 600; color: var(--paper); line-height: 1.3; }
+  .demo__timing { display: block; font-family: var(--mono); font-size: 11px; color: var(--muted); margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .demo__controls { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .demo__loop { font-family: var(--mono); font-size: 12px; color: var(--faint); }
+
+  .demo__stage {
+    --st-bg: var(--surface-2);
+    --st-fg: var(--paper);
+    --st-line: var(--line-strong);
+    --st-dim: color-mix(in oklch, var(--paper) 55%, transparent);
+    background: var(--st-bg); color: var(--st-fg);
+    border: 1px solid var(--line); border-radius: 10px;
+    padding: 28px 22px; min-height: 168px;
+    display: flex; align-items: center; justify-content: center; overflow: hidden;
+  }
+  .demo input[id$="-l"]:checked ~ .demo__stage {
+    --st-bg: oklch(0.985 0.003 255); --st-fg: oklch(0.180 0.006 255);
+    --st-line: oklch(0.180 0.010 255 / 0.18); --st-dim: oklch(0.180 0.010 255 / 0.45);
+  }
+  .demo input[id$="-d"]:checked ~ .demo__stage {
+    --st-bg: oklch(0.180 0.006 255); --st-fg: oklch(0.985 0.003 255);
+    --st-line: oklch(0.985 0.010 255 / 0.18); --st-dim: oklch(0.985 0.010 255 / 0.50);
+  }
+  .demo input[id$="-a"]:checked ~ .demo__bar .seg label[for$="-a"],
+  .demo input[id$="-l"]:checked ~ .demo__bar .seg label[for$="-l"],
+  .demo input[id$="-d"]:checked ~ .demo__bar .seg label[for$="-d"] {
+    background: color-mix(in oklch, var(--paper) 12%, transparent);
+    color: var(--paper);
+  }
+
+  .ui-btn { display: inline-flex; align-items: center; justify-content: center; padding: 9px 18px; border-radius: 8px; background: var(--st-fg); color: var(--st-bg); font-family: var(--sans); font-size: 13px; font-weight: 600; }
+  .ui-card { background: var(--st-bg); border: 1px solid var(--st-line); border-radius: 10px; padding: 14px 16px; min-width: 180px; box-shadow: 0 8px 24px oklch(0 0 0 / 0.12); }
+  .ui-row { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--st-fg); }
+  .ui-photo { width: 100%; height: 100%; background: linear-gradient(135deg, var(--st-dim), transparent); border-radius: 6px; }
+  .ui-label { font-family: var(--mono); font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--st-dim); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .demo__loop { display: none; }
+    [class*="__mt"], [class*="__mt"] * { animation: none !important; transition: none !important; }
+  }
+
+  /* combined recs */
+  section.rec-sec { margin-bottom: 40px; scroll-margin-top: 24px; }
+  .tier-label { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+  .tier-label .mono-label { margin: 0; }
+  .tier-label .count { font-family: var(--mono); font-size: 11px; color: var(--faint); }
+  .tier-hr { border: none; border-top: 1px solid var(--line-strong); margin: 8px 0 16px; }
+  table.rec-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .rec-table th { text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--faint); font-weight: 500; padding: 0 12px 8px 0; border-bottom: 1px solid var(--line-strong); }
+  .rec-table td { padding: 12px 12px 12px 0; border-bottom: 1px solid var(--line); vertical-align: top; color: var(--paper-dim); line-height: 1.5; }
+  .rec-table td:first-child, .rec-table td.file code { color: var(--muted); font-family: var(--mono); font-size: 12px; }
+  .rec-table td.issue { color: var(--paper); font-weight: 500; }
+
+  @media (max-width: 700px) {
+    table.rec-table, .rec-table thead, .rec-table tbody, .rec-table th, .rec-table td, .rec-table tr { display: block; }
+    .rec-table thead { display: none; }
+    .rec-table tr { padding: 10px 0; border-bottom: 1px solid var(--line-strong); }
+    .rec-table td { border: none; padding: 3px 0; }
+  }
+
+  /* ref summary */
+  section.ref-summary { padding-top: 32px; border-top: 1px solid var(--line); margin-bottom: 40px; }
+  .ref-summary p { font-size: 14px; line-height: 1.6; color: var(--paper-dim); max-width: 700px; }
+  .ref-summary b { color: var(--paper); }
+  .ref-lean { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 18px; }
+  @media (max-width: 600px) { .ref-lean { grid-template-columns: 1fr; } }
+  .ref-lean div { background: var(--surface); border-radius: 10px; padding: 14px 16px; }
+  .ref-lean .mono-label { display: block; margin-bottom: 8px; }
+  .ref-lean p { font-size: 12.5px; margin: 0; }
+
+  footer.report-foot { font-family: var(--mono); font-size: 11px; color: var(--faint); padding-top: 24px; border-top: 1px solid var(--line); }
+
+  /* ===== per-finding motion (n = 1..4, 1-indexed across report) ===== */
+  @media (prefers-reduced-motion: no-preference) {
+
+    /* Finding 1 — Hero autoplay: focus-visible pause affordance */
+    @keyframes m1 {
+      0%   { opacity: 0; transform: translateY(6px) scale(0.94); }
+      60%  { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .demo-1__mt .pause-affordance { animation: m1 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
+    /* Finding 2 — reclaimed motion budget: gallery tiles land in sequence */
+    @keyframes m2a { 0% { opacity: 0; transform: translateY(16px); } 60% { opacity: 1; transform: translateY(0); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes m2b { 0% { opacity: 0; transform: translateY(16px); } 60% { opacity: 1; transform: translateY(0); } 100% { opacity: 1; transform: translateY(0); } }
+    @keyframes m2c { 0% { opacity: 0; transform: translateY(16px); } 60% { opacity: 1; transform: translateY(0); } 100% { opacity: 1; transform: translateY(0); } }
+    .demo-2__mt .tile:nth-child(1) { animation: m2a 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+    .demo-2__mt .tile:nth-child(2) { animation: m2b 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; animation-delay: 0.09s; }
+    .demo-2__mt .tile:nth-child(3) { animation: m2c 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; animation-delay: 0.18s; }
+
+    /* Finding 3 — alternating row entrance: photo settles from scale, copy trails */
+    @keyframes m3-photo { 0% { opacity: 0; transform: scale(1.05); } 60% { opacity: 1; transform: scale(1); } 100% { opacity: 1; transform: scale(1); } }
+    @keyframes m3-copy { 0% { opacity: 0; transform: translateY(14px); } 60% { opacity: 0; transform: translateY(14px); } 85% { opacity: 1; transform: translateY(0); } 100% { opacity: 1; transform: translateY(0); } }
+    .demo-3__mt .row-photo { animation: m3-photo 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+    .demo-3__mt .row-copy { animation: m3-copy 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+
+    /* Finding 4 — photo hover: scale + scrim (matches AdventureCard language) */
+    @keyframes m4-img { 0%, 15% { transform: scale(1); } 60%, 85% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    @keyframes m4-scrim { 0%, 15% { opacity: 0; } 60%, 85% { opacity: 1; } 100% { opacity: 0; } }
+    .demo-4__mt .hov-img { animation: m4-img 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+    .demo-4__mt .hov-scrim { animation: m4-scrim 3s cubic-bezier(0.22, 1, 0.36, 1) infinite; }
+  }
+</style>
+</head>
+<body>
+<input class="vh" type="radio" name="theme" id="theme-dark" checked>
+<input class="vh" type="radio" name="theme" id="theme-light">
+
+<div class="wrap">
+
+  <div class="theme-switch">
+    <div class="seg">
+      <label for="theme-dark">Dark</label>
+      <label for="theme-light">Light</label>
+    </div>
+  </div>
+
+  <header class="report-head">
+    <p class="eyebrow">Motion Audit · design-motion-principles</p>
+    <h1 class="title">Salt &amp; Sun Tours — the site's motion is more careful than its newest section</h1>
+    <p class="lede">A warm, photo-led Astro marketing site for a two-basecamp Namibian tour operator. The pre-existing page (tours.astro, the old homepage sections) carries unusually hand-tuned, reduced-motion-safe motion; the homepage's just-rebuilt About/Gallery/Tour&nbsp;Programs block hasn't caught up to that bar yet, and a chunk of the old motion code is now running for nothing.</p>
+    <p class="meta-row">Astro 7 static site · GSAP + ScrollTrigger + Lenis · src/scripts/motion.ts (920 lines)</p>
+    <div class="stats">
+      <a href="#rec-crit"><span class="dot dot--crit"></span>2 Critical</a>
+      <a href="#rec-imp"><span class="dot dot--imp"></span>2 Important</a>
+      <a href="#rec-opp"><span class="dot dot--opp"></span>3 Opportunities</a>
+    </div>
+  </header>
+
+  <section class="assessment">
+    <p class="mono-label">Overall</p>
+    <p>This is not an AI-slop codebase — it's the opposite problem. Someone hand-built genuinely distinctive motion (a map that assembles itself piece by piece, constellation lines drawing between photo cutouts, direction-aware panel entrances) with careful reduced-motion parity on nearly every effect. But a recent homepage rewrite deleted the sections that motion lived in without touching the script that drives it, so roughly a quarter of <code>motion.ts</code> now runs against elements that don't exist, and the new homepage content that replaced them ships with none of that craft — just the generic scroll-fade every other section already uses.</p>
+  </section>
+
+  <section class="lens-table-sec">
+    <h2 class="section-num">01 · Lens Summary</h2>
+    <table class="lens-table">
+      <thead><tr><th>Lens</th><th>Verdict</th><th>Read</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="lens-name">Jakub Krehel</span><span class="weight-chip">Primary</span></td>
+          <td><span class="verdict verdict--mixed"><span class="dot"></span>Mixed</span></td>
+          <td class="read">Strong production baseline (subtle easing, real reduced-motion fallbacks, no jarring defaults) — but the newest, most visible section of the page doesn't meet the bar the rest of the site already set.</td>
+        </tr>
+        <tr>
+          <td><span class="lens-name">Jhey Tompkins</span><span class="weight-chip">Secondary</span></td>
+          <td><span class="verdict verdict--concern"><span class="dot"></span>Concern</span></td>
+          <td class="read">The site's best, most distinctive ideas (the growing map, the constellation draw-in) are either orphaned or off the homepage entirely. Nothing new has replaced that spirit.</td>
+        </tr>
+        <tr>
+          <td><span class="lens-name">Emil Kowalski</span><span class="weight-chip">Selective — nav &amp; forms</span></td>
+          <td><span class="verdict verdict--strong"><span class="dot"></span>Strong</span></td>
+          <td class="read">Keyboard support, focus-visible rings, and reduced-motion gating on interactive chrome (nav, carousels) are handled with real rigor.</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="timing-sec">
+    <h2 class="section-num">02 · Where the timings land</h2>
+    <div class="timing-grid">
+      <div class="timing-svg-wrap">
+        <svg viewBox="0 0 660 300" width="100%" role="img" aria-label="Duration budget diagram">
+          <style>
+            .zb-good { fill: color-mix(in oklch, var(--t-good) 16%, transparent); }
+            .zb-mid  { fill: color-mix(in oklch, var(--t-mid) 16%, transparent); }
+            .zb-slow { fill: color-mix(in oklch, var(--t-slow) 14%, transparent); }
+            .zb-label { fill: var(--faint); font-size: 10px; font-family: var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+            .axis-label { fill: var(--faint); font-size: 10px; font-family: var(--mono); }
+            .dot-c { stroke: var(--ink); stroke-width: 2; }
+            .dot-label { fill: var(--paper); font-size: 11px; font-weight: 700; font-family: var(--mono); text-anchor: middle; }
+          </style>
+          <!-- zones: 0-600ms mapped to x=40..620 -->
+          <rect class="zb-good" x="40" y="30" width="145" height="210"/>
+          <rect class="zb-mid" x="185" y="30" width="97" height="210"/>
+          <rect class="zb-slow" x="282" y="30" width="338" height="210"/>
+          <text class="zb-label" x="45" y="24">Instant/Responsive</text>
+          <text class="zb-label" x="190" y="24">Deliberate</text>
+          <text class="zb-label" x="287" y="24">Sluggish</text>
+          <text class="axis-label" x="40" y="255">0ms</text>
+          <text class="axis-label" x="180" y="255">300ms</text>
+          <text class="axis-label" x="277" y="255">500ms</text>
+          <text class="axis-label" x="595" y="255">600ms+</text>
+
+          <!-- points: x = 40 + ms*0.967 (capped 620) -->
+          <circle class="dot-c" cx="79" cy="110" r="9" fill="var(--t-good)"/><text class="dot-label" x="79" y="97">1</text>
+          <circle class="dot-c" cx="79" cy="150" r="9" fill="var(--t-good)"/><text class="dot-label" x="79" y="137">2</text>
+          <circle class="dot-c" cx="227" cy="90" r="9" fill="var(--t-mid)"/><text class="dot-label" x="227" y="77">3</text>
+          <circle class="dot-c" cx="330" cy="130" r="9" fill="var(--t-slow)"/><text class="dot-label" x="330" y="117">4</text>
+          <circle class="dot-c" cx="330" cy="170" r="9" fill="var(--t-slow)"/><text class="dot-label" x="330" y="183">5</text>
+          <circle class="dot-c" cx="427" cy="150" r="9" fill="var(--t-slow)"/><text class="dot-label" x="427" y="137">6</text>
+          <circle class="dot-c" cx="40" cy="200" r="8" fill="none" stroke="var(--faint)" stroke-width="1.5" stroke-dasharray="3 2"/><text class="dot-label" x="40" y="223" style="font-weight:500; fill: var(--faint);">7</text>
+        </svg>
+      </div>
+      <ul class="timing-key">
+        <li><span class="num">1</span><span class="name">Hover color/border (.book-link)</span><span class="val">200ms</span></li>
+        <li><span class="num">2</span><span class="name">Hover transitions (buttons, arrows)</span><span class="val">200ms</span></li>
+        <li><span class="num">3</span><span class="name">Mobile nav open (max-height)</span><span class="val">400ms</span></li>
+        <li><span class="num">4</span><span class="name">Generic .reveal scroll-fade (every section)</span><span class="val">800ms</span></li>
+        <li><span class="num">5</span><span class="name">AdventureCard scrim/details reveal</span><span class="val">600ms</span></li>
+        <li><span class="num">6</span><span class="name">Tour row panel slide-in</span><span class="val">900ms</span></li>
+        <li><span class="num">7</span><span class="name">New photo hover response (About/Gallery/Programs)</span><span class="val">— none —</span></li>
+      </ul>
+    </div>
+    <div class="timing-note">
+      <b>What's off:</b> nothing here is a frequency violation — every 600–900ms duration belongs to a one-shot scroll narration, not a repeated click, so Emil's under-300ms rule doesn't apply (context-dependent, per the checklist). The real story is <b>point 7</b>: it's a hollow dot at 0ms because the new sections' photos have <i>no</i> hover response at all, where every comparable photo elsewhere on the site (point 5, and the now-orphaned adventure-tilt effect) does.
+    </div>
+  </section>
+
+  <!-- ============ JAKUB (PRIMARY) ============ -->
+  <section class="lens-sec">
+    <div class="lens-sec__head">
+      <h3>Jakub Krehel — Production Polish</h3>
+      <span class="lens-sec__weight">Primary</span>
+    </div>
+    <p class="verdict verdict--mixed lens-sec__verdict"><span class="dot"></span>Mixed</p>
+
+    <div class="lens-block">
+      <span class="mono-label">What's working well</span>
+      <ul class="lens-list good">
+        <li>Every scroll-triggered entrance has a matched reduced-motion fallback that swaps to a plain opacity fade — not just a global CSS override, but per-effect JS branches — <code>src/scripts/motion.ts:797-916</code>.</li>
+        <li>Exits are already subtler than enters where it counts: the tour-map pieces fade out with less travel (<code>y: -24</code>) than they fade in, and reverse timelines use <code>power2.inOut</code> rather than mirroring the enter curve 1:1 — <code>src/scripts/motion.ts:588-618</code>.</li>
+        <li>Hover states on buttons and links are never instant — <code>.book-link</code>, <code>.btn</code>, footer social icons all carry a 200ms transition — <code>src/pages/index.astro:469</code>, <code>src/styles/global.css:263-266</code>.</li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Issues to address</span>
+
+      <div class="finding-row" data-sev="crit">
+        <div class="finding-row__prose">
+          <div class="find-tags"><span class="tag tag--crit">Critical</span><span class="tag">Jakub</span><span class="tag">Emil</span></div>
+          <h4 class="find-title">Orphaned motion — a quarter of motion.ts now animates nothing</h4>
+          <div class="find-body">
+            <p><span class="label">What</span> Eight setup functions (<code>setupAboutCarousel</code>, <code>setupTestimonialCarousel</code>, <code>setupAdventureTilt</code>, <code>setupAdventureRise</code>, <code>setupToursTeaserSlide</code>, <code>setupWhereWeGoReveal</code>, <code>setupPhilosophyCluster</code>, <code>setupStatsCountUp</code>) query selectors that no longer exist anywhere in the site after the homepage was rebuilt — they all safely no-op, but they still run, register listeners, and ship as dead weight. One whole component, <code>AboutCarousel.astro</code>, is now unreferenced.</p>
+            <p><span class="label">Why it matters</span> This is the single biggest lever in the whole audit: the motion that got orphaned was the site's most distinctive work — a hand-drawn constellation between photo cutouts, a map that assembles itself, a pointer-tilt on cards. It didn't get simplified away on purpose; it just lost its DOM.</p>
+            <div class="fix"><p><span class="label">Recommended motion</span> Don't just delete the dead functions — port their best ideas onto the new sections before removing them (see the "reclaimed budget" demo). Then delete what doesn't get reused, and remove <code>AboutCarousel.astro</code>.</p></div>
+            <p class="find-loc"><code>src/scripts/motion.ts:693-796,126-301</code></p>
+          </div>
+        </div>
+        <div class="demo">
+          <input class="vh" type="radio" name="st2" id="st2-a" checked>
+          <input class="vh" type="radio" name="st2" id="st2-l">
+          <input class="vh" type="radio" name="st2" id="st2-d">
+          <div class="demo__bar">
+            <div class="demo__meta">
+              <span class="demo__title">Gallery tiles land in sequence</span>
+              <span class="demo__timing">500ms · cubic-bezier(0.22,1,0.36,1), 90ms stagger</span>
+            </div>
+            <div class="demo__controls">
+              <div class="seg"><label for="st2-a">Auto</label><label for="st2-l">Light</label><label for="st2-d">Dark</label></div>
+              <span class="demo__loop">↻</span>
+            </div>
+          </div>
+          <div class="demo__stage">
+            <div class="demo-2__mt" style="display:flex; gap:10px;">
+              <div class="tile ui-photo" style="width:52px; height:52px;"></div>
+              <div class="tile ui-photo" style="width:52px; height:52px;"></div>
+              <div class="tile ui-photo" style="width:52px; height:52px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="finding-row" data-sev="imp">
+        <div class="finding-row__prose">
+          <div class="find-tags"><span class="tag tag--imp">Important</span><span class="tag">Jakub</span></div>
+          <h4 class="find-title">Uniform fade-up is now the only entrance on the page</h4>
+          <div class="find-body">
+            <p><span class="label">What</span> With the bespoke sections gone, <code>setupReveals</code> (opacity + y:40 + power2.out, 800ms) is the entrance for literally every remaining section — About, Gallery, Tour Programs, and <code>Section.astro</code>'s default. Four-plus distinct components sharing one identical entrance is exactly the uniformity the checklist flags.</p>
+            <p><span class="label">Why it matters</span> The alternating-row pattern in About and Tour Programs is visually the site's signature layout (used nowhere as a generic list) — but it animates exactly like a generic list, so the layout's own structure (photo vs. copy, left vs. right) isn't reflected in how it enters.</p>
+            <div class="fix"><p><span class="label">Recommended motion</span> Reuse <code>setupTourRows</code>'s technique (already built for this exact photo+copy alternating shape) instead of the generic reveal: photo settles from a slight scale, copy trails in ~150ms behind it.</p></div>
+            <p class="find-loc"><code>src/pages/index.astro:80-271</code>, <code>src/scripts/motion.ts:12-43</code></p>
+          </div>
+        </div>
+        <div class="demo">
+          <input class="vh" type="radio" name="st3" id="st3-a" checked>
+          <input class="vh" type="radio" name="st3" id="st3-l">
+          <input class="vh" type="radio" name="st3" id="st3-d">
+          <div class="demo__bar">
+            <div class="demo__meta">
+              <span class="demo__title">Alternating row entrance</span>
+              <span class="demo__timing">900ms · power2.out, copy trails ~150ms</span>
+            </div>
+            <div class="demo__controls">
+              <div class="seg"><label for="st3-a">Auto</label><label for="st3-l">Light</label><label for="st3-d">Dark</label></div>
+              <span class="demo__loop">↻</span>
+            </div>
+          </div>
+          <div class="demo__stage">
+            <div class="demo-3__mt" style="display:flex; gap:14px; align-items:center; width: 100%;">
+              <div class="row-photo ui-photo" style="width:40%; height:76px;"></div>
+              <div class="row-copy" style="flex:1;">
+                <div class="ui-label" style="margin-bottom:6px;">Desert Tour</div>
+                <div style="width:100%; height:8px; background:var(--st-dim); border-radius:4px; margin-bottom:6px;"></div>
+                <div style="width:70%; height:8px; background:var(--st-dim); border-radius:4px;"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Opportunities</span>
+      <ul class="lens-list opp">
+        <li>The closing CTA card's glassmorphism (<code>backdrop-filter: blur(8px)</code>) is a one-off "special occasion" element visually, but enters with the same generic reveal as everything else — a slightly slower blur→sharp materialize would suit it better. <code>src/pages/index.astro:501-511</code></li>
+      </ul>
+    </div>
+
+    <p class="lens-take">Through Jakub's lens: the engineering discipline is already production-grade — the gap isn't craft, it's coverage. The newest section just hasn't been brought up to the standard the rest of the site already proved out.</p>
+  </section>
+
+  <!-- ============ JHEY (SECONDARY) ============ -->
+  <section class="lens-sec">
+    <div class="lens-sec__head">
+      <h3>Jhey Tompkins — Experimentation &amp; Delight</h3>
+      <span class="lens-sec__weight">Secondary</span>
+    </div>
+    <p class="verdict verdict--concern lens-sec__verdict"><span class="dot"></span>Concern</p>
+
+    <div class="lens-block">
+      <span class="mono-label">What's working well</span>
+      <ul class="lens-list good">
+        <li>The tours-page map that assembles itself piece by piece as you scroll, then resolves into one seamless map at the end, is a genuinely rare idea — decomposed, scroll-synced, fully reversible — <code>src/scripts/motion.ts:497-620</code>.</li>
+        <li>The (now-orphaned) constellation draw-in — <code>stroke-dashoffset</code> lines connecting circular photo cutouts after they pop in with <code>back.out(1.6)</code> — was real CSS-art craft, not a template pattern — <code>src/scripts/motion.ts:303-354</code>.</li>
+        <li>Pointer-tilt on cards (max 10°, fine-pointer-only, scoped to one grid rather than blanket-applied) is exactly the kind of single, intentional playful touch Jhey's lens rewards — <code>src/scripts/motion.ts:126-158</code>.</li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Issues to address</span>
+      <p class="lens-empty">No Critical/Important findings unique to this lens — see the shared orphaned-motion finding under Jakub above, which is the same root cause.</p>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Opportunities</span>
+      <ul class="lens-list opp">
+        <li>Revive the constellation-line motif as the connective thread for the new Tour Programs list instead of letting it die with the old philosophy section — a thin drawn line between each alternating row would tie the homepage back to the site's most distinctive idea. <code>src/scripts/motion.ts:303-354</code></li>
+        <li>The pointer-tilt effect is a strong fit for the Tour Programs photos specifically (large, alternating, one per row) — revive it there rather than only in a homepage grid that no longer exists. <code>src/scripts/motion.ts:126-158</code></li>
+        <li>The growing-map idea could seed a lighter homepage echo: gallery tiles landing into place one at a time on first scroll (see the reclaimed-budget demo above) borrows the "assembling" feeling without reimplementing the whole map system. <code>src/pages/index.astro:145-158</code></li>
+      </ul>
+    </div>
+
+    <p class="lens-take">Through Jhey's lens: this site already knows how to be playful in a way that still feels intentional, not gimmicky — the problem is that knowledge is trapped in code that no longer runs, on sections nobody can reach anymore.</p>
+  </section>
+
+  <!-- ============ EMIL (SELECTIVE) ============ -->
+  <section class="lens-sec">
+    <div class="lens-sec__head">
+      <h3>Emil Kowalski — Restraint &amp; Speed</h3>
+      <span class="lens-sec__weight">Selective — nav &amp; forms</span>
+    </div>
+    <p class="verdict verdict--strong lens-sec__verdict"><span class="dot"></span>Strong</p>
+
+    <div class="lens-block">
+      <span class="mono-label">What's working well</span>
+      <ul class="lens-list good">
+        <li>Every autoplaying carousel/slideshow pauses on <code>mouseenter</code> <i>and</i> is click-driven via dots/arrows, so keyboard and mouse users both have a non-motion path to the same content — <code>src/scripts/motion.ts:362-433</code>.</li>
+        <li>The about-carousel supports real arrow-key navigation (<code>ArrowLeft</code>/<code>ArrowRight</code>) in addition to drag — a keyboard shortcut that correctly does <i>not</i> get an extra animation layered on top of the existing transform transition — <code>src/scripts/motion.ts:728-731</code>.</li>
+        <li>Mobile nav toggle and every interactive element inherit a sitewide <code>:focus-visible</code> ring rather than suppressing outline — <code>src/styles/global.css:177-184</code>.</li>
+      </ul>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Issues to address</span>
+
+      <div class="finding-row" data-sev="crit">
+        <div class="finding-row__prose">
+          <div class="find-tags"><span class="tag tag--crit">Critical</span><span class="tag">Emil</span></div>
+          <h4 class="find-title">Hero autoplay has no keyboard/touch pause path</h4>
+          <div class="find-body">
+            <p><span class="label">What</span> <code>setupHeroPanelSlideshow</code> cycles the hero's 7 photo panels every 2.8s and only pauses on <code>mouseenter</code>/<code>mouseleave</code> — no <code>focusin</code>/<code>focusout</code>, no visible pause control. A keyboard-only or touch-only visitor cannot stop it.</p>
+            <p><span class="label">Why it matters</span> This is the exact accessibility gap the site's <i>own</i> later component already solved: <code>setupTourRecapSlideshow</code>, built for the same "auto-cycling slides" job, explicitly adds <code>focusin</code>/<code>focusout</code> alongside hover, with a code comment stating why ("not hover alone, which means nothing on touch"). The fix already exists in this codebase — it just never got backported to the first slideshow.</p>
+            <div class="fix"><p><span class="label">Recommended motion</span> Add the same <code>focusin</code>/<code>focusout</code> pair to <code>setupHeroPanelSlideshow</code>, and surface a small always-visible pause toggle (the recap slideshow's dots already give a click-to-jump path — the hero panels currently have no equivalent control at all).</p></div>
+            <p class="find-loc"><code>src/scripts/motion.ts:628-665</code> vs. <code>src/scripts/motion.ts:399-433</code></p>
+          </div>
+        </div>
+        <div class="demo">
+          <input class="vh" type="radio" name="st1" id="st1-a" checked>
+          <input class="vh" type="radio" name="st1" id="st1-l">
+          <input class="vh" type="radio" name="st1" id="st1-d">
+          <div class="demo__bar">
+            <div class="demo__meta">
+              <span class="demo__title">Focus-visible pause affordance</span>
+              <span class="demo__timing">200ms · ease-out</span>
+            </div>
+            <div class="demo__controls">
+              <div class="seg"><label for="st1-a">Auto</label><label for="st1-l">Light</label><label for="st1-d">Dark</label></div>
+              <span class="demo__loop">↻</span>
+            </div>
+          </div>
+          <div class="demo__stage">
+            <div class="demo-1__mt">
+              <div class="ui-card" style="display:flex; flex-direction:column; align-items:center; gap:8px;">
+                <div class="ui-label">Panel 3 / 7</div>
+                <div class="pause-affordance ui-row" style="gap:6px;">
+                  <span style="width:22px;height:22px;border-radius:50%;border:2px solid var(--st-fg);display:inline-flex;align-items:center;justify-content:center;">
+                    <svg width="9" height="10" viewBox="0 0 9 10" fill="var(--st-fg)"><rect width="3" height="10"/><rect x="6" width="3" height="10"/></svg>
+                  </span>
+                  <span style="font-size:11px;">Pause</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="finding-row" data-sev="imp">
+        <div class="finding-row__prose">
+          <div class="find-tags"><span class="tag tag--imp">Important</span><span class="tag">Jakub</span></div>
+          <h4 class="find-title">New section photos have zero hover response</h4>
+          <div class="find-body">
+            <p><span class="label">What</span> Every photo in About, Gallery, and Tour Programs is fully static on hover — no scale, no scrim, nothing. Every other photo-forward pattern on the site (<code>AdventureCard</code>, the tours-page map pieces) has some hover/interaction response.</p>
+            <p><span class="label">Why it matters</span> On a fine-pointer device this reads as "did that just not load," not "static by design" — especially next to the Gallery grid, which is the one section on the whole site most clearly meant to invite browsing.</p>
+            <div class="fix"><p><span class="label">Recommended motion</span> A restrained <code>scale(1.06)</code> + soft scrim on hover, matching the existing <code>AdventureCard</code> language (150-200ms minimum per Jakub's rule) — not the full tilt effect, just parity with the rest of the site's photo hover vocabulary.</p></div>
+            <p class="find-loc"><code>src/pages/index.astro:86-268</code></p>
+          </div>
+        </div>
+        <div class="demo">
+          <input class="vh" type="radio" name="st4" id="st4-a" checked>
+          <input class="vh" type="radio" name="st4" id="st4-l">
+          <input class="vh" type="radio" name="st4" id="st4-d">
+          <div class="demo__bar">
+            <div class="demo__meta">
+              <span class="demo__title">Photo hover — scale + scrim</span>
+              <span class="demo__timing">500ms · cubic-bezier(0.22,1,0.36,1)</span>
+            </div>
+            <div class="demo__controls">
+              <div class="seg"><label for="st4-a">Auto</label><label for="st4-l">Light</label><label for="st4-d">Dark</label></div>
+              <span class="demo__loop">↻</span>
+            </div>
+          </div>
+          <div class="demo__stage">
+            <div class="demo-4__mt" style="position:relative; width:120px; height:90px; border-radius:6px; overflow:hidden;">
+              <div class="hov-img ui-photo" style="width:100%; height:100%;"></div>
+              <div class="hov-scrim" style="position:absolute; inset:0; background:linear-gradient(180deg, transparent 40%, color-mix(in oklch, var(--st-fg) 55%, transparent) 100%);"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lens-block">
+      <span class="mono-label">Opportunities</span>
+      <ul class="lens-list opp">
+        <li>Mobile nav open/close animates <code>max-height</code>, a layout-triggering property — technically an anti-pattern, but this is a low-frequency nav toggle, not a 100×/day interaction, so it's a minor cleanup (swap to a transform/clip-path reveal) rather than urgent. <code>src/components/Header.astro:165-190</code></li>
+      </ul>
+    </div>
+
+    <p class="lens-take">Through Emil's lens: the interactive chrome (nav, carousels, keyboard paths) is handled with real discipline — the one gap is a fix this codebase already invented once and forgot to apply a second time.</p>
+  </section>
+
+  <!-- ============ COMBINED RECS ============ -->
+  <section class="rec-sec">
+    <div class="tier-label"><span class="mono-label" id="rec-crit">Critical · must fix</span><span class="count">2</span></div>
+    <hr class="tier-hr">
+    <table class="rec-table">
+      <thead><tr><th>Issue</th><th>File</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td class="issue">Hero autoplay has no keyboard/touch pause path</td><td class="file"><code>motion.ts:628-665</code></td><td>Add focusin/focusout (mirror setupTourRecapSlideshow) + visible pause control</td></tr>
+        <tr><td class="issue">~220 lines of orphaned motion code + 1 dead component</td><td class="file"><code>motion.ts:126-354,693-796</code></td><td>Port reusable ideas to new sections first, then delete; remove AboutCarousel.astro</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rec-sec">
+    <div class="tier-label"><span class="mono-label" id="rec-imp">Important · should fix</span><span class="count">2</span></div>
+    <hr class="tier-hr">
+    <table class="rec-table">
+      <thead><tr><th>Issue</th><th>File</th><th>Fix</th></tr></thead>
+      <tbody>
+        <tr><td class="issue">Uniform fade-up is the only entrance left on the page</td><td class="file"><code>index.astro:80-271</code></td><td>Reuse setupTourRows's photo/copy alternating technique instead of generic reveal</td></tr>
+        <tr><td class="issue">New section photos have zero hover response</td><td class="file"><code>index.astro:86-268</code></td><td>Scale(1.06) + scrim on hover, matching AdventureCard</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="rec-sec">
+    <div class="tier-label"><span class="mono-label" id="rec-opp">Opportunities · could enhance</span><span class="count">3</span></div>
+    <hr class="tier-hr">
+    <table class="rec-table">
+      <thead><tr><th>Enhancement</th><th>Where</th><th>Impact</th></tr></thead>
+      <tbody>
+        <tr><td class="issue">Revive constellation draw-in as Tour Programs' connective thread</td><td class="file"><code>motion.ts:303-354</code></td><td>Reclaims the site's most distinctive motif instead of losing it</td></tr>
+        <tr><td class="issue">Revive pointer-tilt on Tour Programs photos</td><td class="file"><code>motion.ts:126-158</code></td><td>Restores the one playful, brand-appropriate interaction the homepage lost</td></tr>
+        <tr><td class="issue">Mobile nav: max-height → transform/clip-path</td><td class="file"><code>Header.astro:165-190</code></td><td>Removes a layout-property animation; low urgency (low frequency)</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="ref-summary">
+    <h2 class="section-num">07 · Lens Reference Summary</h2>
+    <p><b>Lens referenced most:</b> Jakub Krehel — Production Polish.</p>
+    <p><b>Why:</b> this is a marketing/landing page where most visitors interact with each animation only a handful of times per session — Jakub's "does this feel smooth and finished" question is the right primary filter, and it's the lens that surfaced the orphaned-code finding, the report's biggest single fix.</p>
+    <div class="ref-lean">
+      <div><span class="mono-label">Lean more Emil</span><p>Cap every new entrance at ≤300ms and drop the alternating-row idea in favor of an instant, no-motion reveal — appropriate if this were a booking/checkout flow instead of a marketing homepage.</p></div>
+      <div><span class="mono-label">Lean more Jakub</span><p>Already the primary lens — next step is simply closing the two Important findings (differentiated reveal, photo hover) to bring the new section to parity.</p></div>
+      <div><span class="mono-label">Lean more Jhey</span><p>Revive the constellation line and pointer-tilt as proposed, and consider one genuinely new signature motif for the homepage rather than only recovering old ones.</p></div>
+    </div>
+  </section>
+
+  <footer class="report-foot">tour-booking-site · 2026-09-16 · 2 Critical · 2 Important · 3 Opportunities</footer>
+
+</div>
+</body>
+</html>
