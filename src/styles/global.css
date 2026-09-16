@@ -4,57 +4,48 @@
    softly between sections rather than hard color-block cuts.
    ========================================================= */
 :root {
-  /* --- Color: base palette --- */
-  --color-sand-50: #fbf7f1;
-  --color-sand-100: #f6ede1;
-  --color-sand-200: #eeddc7;
-  --color-beige-300: #e3cba7;
-  --color-ochre-400: #d3a24f;
-  --color-ochre-500: #c1863a;
-  --color-terracotta-500: #b5623f;
-  --color-terracotta-600: #9c4d33;
-  --color-earth-700: #6b3a2c;
-  --color-earth-900: #3a231c;
+  /* --- Color: locked palette (Homepage Cohesion Audit) ---
+     Five colors, no exceptions: paper is the only section background
+     outside the hero/footer bookends, maroon is reserved for those two
+     bookends, and accent is the single rust used everywhere an accent
+     is needed — eyebrows, stat numbers, star ratings, links, the
+     primary button, avatar circles, map pins. */
+  --color-paper: #f6ecdc;
+  --color-maroon: #35180f;
+  --color-accent: #b15a34;
+  --color-ink: #2b1b12;
+  --color-ink-soft: #6b5847;
+
+  /* --- Legacy token names, aliased to the locked palette above so
+     existing component styles didn't need touching one by one. --- */
+  --color-sand-50: var(--color-paper);
+  --color-sand-100: var(--color-paper);
+  --color-sand-200: var(--color-paper);
+  --color-beige-300: var(--color-paper);
+  --color-ochre-400: var(--color-accent);
+  --color-ochre-500: var(--color-accent);
+  --color-terracotta-500: var(--color-accent);
+  --color-terracotta-600: var(--color-accent);
+  --color-earth-900: var(--color-ink);
 
   /* --- Color: semantic roles --- */
-  --color-bg: var(--color-sand-50);
-  --color-bg-alt: var(--color-sand-100);
+  --color-bg: var(--color-paper);
+  --color-bg-alt: var(--color-paper);
   --color-surface: #ffffff;
-  --color-text: var(--color-earth-900);
-  --color-text-muted: var(--color-earth-700);
-  --color-text-on-dark: var(--color-sand-50);
-  --color-accent: var(--color-terracotta-500);
-  --color-accent-strong: var(--color-terracotta-600);
-  --color-accent-soft: var(--color-ochre-400);
-  --color-border: var(--color-beige-300);
+  --color-text: var(--color-ink);
+  --color-text-muted: var(--color-ink-soft);
+  --color-text-on-dark: var(--color-paper);
+  --color-accent-strong: var(--color-accent);
+  --color-accent-soft: var(--color-accent);
+  --color-border: rgba(43, 27, 18, 0.14);
 
-  /* --- Gradients: soft bleed between sections & photo overlays --- */
-  --gradient-page: linear-gradient(
-    180deg,
-    var(--color-sand-50) 0%,
-    var(--color-sand-100) 45%,
-    var(--color-beige-300) 100%
-  );
-  /* Soft warmth pooling just below the hero, like low sun, then bleeding
-     out as the page continues — layered over --gradient-page rather than
-     replacing it. Centered at 100vh (roughly where the full-bleed, 100vh
-     hero ends) rather than the page top, since the hero is opaque and
-     would otherwise hide the glow entirely; it reads as depth in the page
-     chrome (gutters, gaps between sections) without competing with the
-     photos those sections carry. */
-  --gradient-page-glow: radial-gradient(
-      1400px 900px at 50% 100vh,
-      rgba(211, 162, 79, 0.3) 0%,
-      rgba(211, 162, 79, 0.14) 40%,
-      rgba(211, 162, 79, 0) 70%
-    ),
-    var(--gradient-page);
-  --gradient-warm: linear-gradient(
-    135deg,
-    var(--color-ochre-400) 0%,
-    var(--color-terracotta-500) 55%,
-    var(--color-terracotta-600) 100%
-  );
+  /* --- Gradients: photo-legibility scrims only. The old page-level
+     background gradient and its ochre glow are gone — every mid-page
+     section is flat --color-paper now (see body, below). --gradient-warm
+     is gone too: it blended two oranges together, which is exactly the
+     "second orange" the accent audit called out, so every former
+     consumer (button, avatar circles, photo-placeholder fills) is a
+     flat var(--color-accent) fill instead. --- */
   --gradient-overlay-photo: linear-gradient(
     180deg,
     rgba(58, 35, 28, 0.15) 0%,
@@ -66,11 +57,6 @@
     rgba(58, 35, 28, 0.35) 0%,
     rgba(58, 35, 28, 0.55) 50%,
     rgba(31, 18, 14, 0.85) 100%
-  );
-  --gradient-fade-bottom: linear-gradient(
-    180deg,
-    transparent 0%,
-    var(--color-bg) 100%
   );
 
   /* --- Typography --- */
@@ -141,7 +127,7 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: var(--gradient-page-glow);
+  background: var(--color-paper);
   color: var(--color-text);
   font-family: var(--font-body);
   font-size: var(--fs-base);
@@ -270,13 +256,12 @@ p {
 }
 
 .btn-primary {
-  background: var(--gradient-warm);
+  background: var(--color-accent);
   color: var(--color-text-on-dark);
-  box-shadow: var(--shadow-md);
 }
 
 .btn-primary:hover {
-  box-shadow: var(--shadow-lg);
+  background: var(--color-maroon);
 }
 
 .btn-outline {
@@ -346,7 +331,7 @@ p {
 .form textarea:focus {
   outline: none;
   border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgba(181, 98, 63, 0.15);
+  box-shadow: 0 0 0 3px rgba(177, 90, 52, 0.15);
 }
 
 .form textarea {

@@ -219,180 +219,54 @@ function setupToursTeaserSlide() {
   });
 }
 
-// Stats band: each number counts up from 0 to its real value once, the
-// first time the band scrolls into view. The server-rendered text is the
-// real value already (correct with no JS and under reduced motion, since
-// this is only ever called from the no-preference branch) — this just
-// zeroes it out first so there's something to animate toward.
-function setupStatsCountUp() {
-  const numbers = gsap.utils.toArray<HTMLElement>('.stats-band__number[data-count-to]');
+// Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
+// "active" (wider, via flex-grow — see .hero__panel.is-active) so each
+// photo gets a turn filling most of the hero, like an expanding-photo
+// slideshow rather than a single static banner. Pauses on hover so a
+// visitor reading a panel's letter/photo isn't fighting the layout, and
+// under reduced motion it just holds on the first panel with no cycling.
+function setupHeroPanelSlideshow(reduceMotion: boolean) {
+  const track = document.querySelector<HTMLElement>('[data-hero-panels]');
+  if (!track) return;
 
-  for (const el of numbers) {
-    const target = Number(el.dataset.countTo);
-    if (!Number.isFinite(target)) continue;
+  const panels = Array.from(track.querySelectorAll<HTMLElement>('[data-hero-panel]'));
+  if (panels.length < 2) return;
 
-    const proxy = { value: 0 };
-    el.textContent = '0';
+  const creditEl = document.querySelector<HTMLElement>('[data-hero-credit]');
+  const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
 
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 85%',
-      once: true,
-      onEnter: () =>
-        gsap.to(proxy, {
-          value: target,
-          duration: 1.4,
-          ease: 'power1.out',
-          onUpdate: () => {
-            el.textContent = String(Math.round(proxy.value));
-          },
-        }),
-    });
-  }
-}
+  const setActive = (index: number) => {
+    panels.forEach((panel, i) => panel.classList.toggle('is-active', i === index));
 
-// Where We Go panels: instead of the generic uniform bottom-up reveal,
-// each of the three panels enters from a different side — desert from
-// the left, Etosha (last) from the right, the middle panel from below —
-// so the three settle into place like they're converging on the row
-// rather than all rising in lockstep.
-function setupWhereWeGoReveal(reduceMotion: boolean) {
-  const panels = gsap.utils.toArray<HTMLElement>('.where-we-go__panel');
-  // Below this width the grid stacks the panels to a single full-width
-  // column (see the matching breakpoint in index.astro's <style>), where a
-  // sideways xPercent shift would push a full-width panel off-canvas and
-  // cause horizontal scroll — fall back to the same vertical-only motion
-  // reduced motion uses instead of a direction per panel.
-  const isStacked = !window.matchMedia('(min-width: 861px)').matches;
-
-  panels.forEach((panel, i) => {
-    if (reduceMotion || isStacked) {
-      gsap.set(panel, { opacity: 0 });
-      ScrollTrigger.create({
-        trigger: panel,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => gsap.to(panel, { opacity: 1, duration: 0.3, ease: 'power1.out' }),
-      });
-      return;
+    const { creditName, creditUsername } = panels[index].dataset;
+    if (!creditEl || !creditLink) return;
+    if (creditName && creditUsername) {
+      creditLink.textContent = creditName;
+      creditLink.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+      creditEl.hidden = false;
+    } else {
+      creditEl.hidden = true;
     }
+  };
 
-    const fromVars =
-      i === 0
-        ? { opacity: 0, xPercent: -12 }
-        : i === panels.length - 1
-          ? { opacity: 0, xPercent: 12 }
-          : { opacity: 0, y: 40 };
-
-    gsap.set(panel, fromVars);
-    gsap.to(panel, {
-      opacity: 1,
-      xPercent: 0,
-      y: 0,
-      duration: 0.9,
-      ease: 'power2.out',
-      scrollTrigger: {
-        trigger: panel,
-        start: 'top 85%',
-        toggleActions: 'play none none none',
-      },
-    });
-  });
-}
-
-// Philosophy section: the six circular photo cutouts pop in with a
-// staggered scale/opacity entrance, and the constellation lines between
-// them "draw" in right after via stroke-dashoffset — once, on scroll into
-// view. Reduced motion drops both in favor of a plain one-shot fade,
-// matching the rest of the page's reduced-motion fallback.
-function setupPhilosophyCluster(reduceMotion: boolean) {
-  const section = document.querySelector<HTMLElement>('.philosophy');
-  if (!section) return;
-
-  const photos = gsap.utils.toArray<HTMLElement>('.philosophy__photo');
-  const lines = gsap.utils.toArray<SVGLineElement>('.philosophy__line');
-  const caption = section.querySelector<HTMLElement>('.philosophy__cluster-caption');
-  const fadeTargets = caption ? [...photos, caption] : photos;
-
-  if (reduceMotion) {
-    gsap.set(fadeTargets, { opacity: 0 });
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 85%',
-      once: true,
-      onEnter: () =>
-        gsap.to(fadeTargets, { opacity: 1, duration: 0.3, ease: 'power1.out', stagger: 0.05 }),
-    });
-    return;
-  }
-
-  gsap.set(photos, { opacity: 0, scale: 0.6 });
-  if (caption) gsap.set(caption, { opacity: 0, y: 10 });
-
-  lines.forEach((line) => {
-    const length = line.getTotalLength();
-    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
-  });
-
-  const tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: section,
-      start: 'top 75%',
-      toggleActions: 'play none none none',
-    },
-  });
-
-  tl.to(photos, { opacity: 1, scale: 1, duration: 0.6, ease: 'back.out(1.6)', stagger: 0.12 }).to(
-    lines,
-    { strokeDashoffset: 0, duration: 0.8, ease: 'power1.inOut', stagger: 0.08 },
-    '<0.2'
-  );
-
-  if (caption) {
-    tl.to(caption, { opacity: 1, y: 0, duration: 0.5, ease: 'power2.out' }, '-=0.3');
-  }
-}
-
-// Testimonials carousel: one placeholder review visible at a time, cycled
-// with prev/next buttons. Not gated behind reduced motion — this is
-// click-driven UI switching, not scroll motion, and the crossfade itself
-// is a plain CSS opacity transition on `.is-active` (see index.astro's
-// <style>), not a GSAP tween. The first item already carries `is-active`
-// server-side so a testimonial is visible even before this script runs.
-function setupTestimonialCarousel() {
-  const root = document.querySelector<HTMLElement>('[data-testimonial-carousel]');
-  if (!root) return;
-
-  const items = Array.from(root.querySelectorAll<HTMLElement>('.testimonials__carousel-item'));
-  const prevBtn = root.querySelector<HTMLButtonElement>('.testimonials__arrow--prev');
-  const nextBtn = root.querySelector<HTMLButtonElement>('.testimonials__arrow--next');
-  const counter = root.querySelector<HTMLElement>('[data-testimonial-current]');
-  if (!items.length || !prevBtn || !nextBtn) return;
+  if (reduceMotion) return;
 
   let index = 0;
+  let timer: ReturnType<typeof setInterval>;
+  const advance = () => setActive((index = (index + 1) % panels.length));
+  const start = () => {
+    timer = setInterval(advance, 2800);
+  };
+  const stop = () => clearInterval(timer);
 
-  function render() {
-    items.forEach((item, i) => {
-      item.classList.toggle('is-active', i === index);
-      item.setAttribute('aria-hidden', i === index ? 'false' : 'true');
-    });
-    if (counter) counter.textContent = String(index + 1);
-  }
-
-  prevBtn.addEventListener('click', () => {
-    index = (index - 1 + items.length) % items.length;
-    render();
-  });
-
-  nextBtn.addEventListener('click', () => {
-    index = (index + 1) % items.length;
-    render();
-  });
+  start();
+  track.addEventListener('mouseenter', stop);
+  track.addEventListener('mouseleave', start);
 }
 
 // Tours page closing recap: small auto-cycling slideshow through the 7
 // tour photos next to the complete assembled map. Same accessibility
-// pattern as the hero panel slideshow below — click a dot to jump
+// pattern as the hero panel slideshow above — click a dot to jump
 // there directly, pause on hover AND focus (not hover alone, which
 // means nothing on touch), respect reduced motion by leaving it on
 // slide 1 with no autoplay.
@@ -619,51 +493,6 @@ function setupTourMapGrowth() {
   }
 }
 
-// Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
-// "active" (wider, via flex-grow — see .hero__panel.is-active) so each
-// photo gets a turn filling most of the hero, like an expanding-photo
-// slideshow rather than a single static banner. Pauses on hover so a
-// visitor reading a panel's letter/photo isn't fighting the layout, and
-// under reduced motion it just holds on the first panel with no cycling.
-function setupHeroPanelSlideshow(reduceMotion: boolean) {
-  const track = document.querySelector<HTMLElement>('[data-hero-panels]');
-  if (!track) return;
-
-  const panels = Array.from(track.querySelectorAll<HTMLElement>('[data-hero-panel]'));
-  if (panels.length < 2) return;
-
-  const creditEl = document.querySelector<HTMLElement>('[data-hero-credit]');
-  const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
-
-  const setActive = (index: number) => {
-    panels.forEach((panel, i) => panel.classList.toggle('is-active', i === index));
-
-    const { creditName, creditUsername } = panels[index].dataset;
-    if (!creditEl || !creditLink) return;
-    if (creditName && creditUsername) {
-      creditLink.textContent = creditName;
-      creditLink.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
-      creditEl.hidden = false;
-    } else {
-      creditEl.hidden = true;
-    }
-  };
-
-  if (reduceMotion) return;
-
-  let index = 0;
-  let timer: ReturnType<typeof setInterval>;
-  const advance = () => setActive((index = (index + 1) % panels.length));
-  const start = () => {
-    timer = setInterval(advance, 2800);
-  };
-  const stop = () => clearInterval(timer);
-
-  start();
-  track.addEventListener('mouseenter', stop);
-  track.addEventListener('mouseleave', start);
-}
-
 // Reduced motion: no scroll-linked dim/fade at all — a small always-visible
 // "Tap for details" button (shown via CSS under prefers-reduced-motion)
 // toggles full info instantly instead.
@@ -684,125 +513,13 @@ function setupAdventureCardsReducedMotion() {
   }
 }
 
-// Homepage "About us" carousel: two full-bleed slides in a track twice the
-// viewport's width, moved with a plain CSS transform. Advances via the
-// pagination dots or a horizontal drag/swipe (pointer events cover touch,
-// mouse, and pen in one API) — an axis lock means a vertical drag that
-// starts inside the scrollable text card falls through to native scroll
-// instead of being hijacked as a swipe.
-function setupAboutCarousel() {
-  const section = document.querySelector<HTMLElement>('[data-carousel]');
-  const track = section?.querySelector<HTMLElement>('[data-carousel-track]');
-  const slides = Array.from(document.querySelectorAll<HTMLElement>('[data-carousel] [data-slide]'));
-  const dots = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-carousel-dots] button'));
-  const prevBtn = document.querySelector<HTMLButtonElement>('[data-carousel-prev]');
-  const nextBtn = document.querySelector<HTMLButtonElement>('[data-carousel-next]');
-  if (!section || !track || slides.length < 2) return;
-
-  let index = 0;
-
-  const goTo = (i: number) => {
-    index = Math.max(0, Math.min(slides.length - 1, i));
-    track.style.transform = `translateX(-${(index * 100) / slides.length}%)`;
-    dots.forEach((dot, di) => {
-      const active = di === index;
-      dot.classList.toggle('is-active', active);
-      dot.setAttribute('aria-selected', String(active));
-    });
-    slides.forEach((slide, si) => {
-      const active = si === index;
-      slide.classList.toggle('is-active', active);
-      slide.setAttribute('aria-hidden', String(!active));
-    });
-    if (prevBtn) prevBtn.disabled = index === 0;
-    if (nextBtn) nextBtn.disabled = index === slides.length - 1;
-  };
-
-  dots.forEach((dot) => {
-    dot.addEventListener('click', () => goTo(Number(dot.dataset.dot)));
-  });
-
-  prevBtn?.addEventListener('click', () => goTo(index - 1));
-  nextBtn?.addEventListener('click', () => goTo(index + 1));
-
-  section.addEventListener('keydown', (event) => {
-    if (event.key === 'ArrowRight') goTo(index + 1);
-    if (event.key === 'ArrowLeft') goTo(index - 1);
-  });
-
-  // Belt-and-suspenders alongside draggable={false} on every <img> in the
-  // markup: without this, a mouse drag starting on the full-bleed photo
-  // triggers the browser's native "ghost image" drag instead of reaching
-  // the pointer handlers below, which is why swipe wasn't advancing.
-  section.addEventListener('dragstart', (event) => event.preventDefault());
-
-  let startX = 0;
-  let startY = 0;
-  let lastX = 0;
-  let dragging = false;
-  let axis: 'x' | 'y' | null = null;
-
-  section.addEventListener('pointerdown', (event) => {
-    if (event.pointerType === 'mouse' && event.button !== 0) return;
-    // A pointerdown that starts on a button or link (arrows, dots, the
-    // Unsplash credit) must not be claimed as a drag — setPointerCapture
-    // below retargets that pointer's later events to `section`, which was
-    // silently swallowing those controls' own click events.
-    if ((event.target as HTMLElement).closest('button, a')) return;
-    dragging = true;
-    axis = null;
-    startX = lastX = event.clientX;
-    startY = event.clientY;
-    section.setPointerCapture(event.pointerId);
-  });
-
-  section.addEventListener('pointermove', (event) => {
-    if (!dragging) return;
-    const dx = event.clientX - startX;
-    const dy = event.clientY - startY;
-
-    if (axis === null) {
-      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-      axis = Math.abs(dx) > Math.abs(dy) ? 'x' : 'y';
-      if (axis === 'x') track.style.transition = 'none';
-    }
-    if (axis !== 'x') return;
-
-    event.preventDefault();
-    lastX = event.clientX;
-    const basePercent = -(index * 100) / slides.length;
-    const dragPercent = (dx / section.clientWidth) * (100 / slides.length);
-    track.style.transform = `translateX(${basePercent + dragPercent}%)`;
-  });
-
-  const endDrag = () => {
-    if (!dragging) return;
-    dragging = false;
-    track.style.transition = '';
-    if (axis !== 'x') return;
-
-    const delta = lastX - startX;
-    const threshold = 50;
-    if (delta < -threshold) goTo(index + 1);
-    else if (delta > threshold) goTo(index - 1);
-    else goTo(index);
-  };
-
-  section.addEventListener('pointerup', endDrag);
-  section.addEventListener('pointercancel', endDrag);
-
-  goTo(0);
-}
-
 export function initMotion() {
   const reduceMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
   setupHeroPanelSlideshow(reduceMotion);
-  setupAboutCarousel();
   setupTourPhotoBleed();
-  setupTestimonialCarousel();
 
   let lenis: Lenis | undefined;
 
@@ -852,9 +569,6 @@ export function initMotion() {
     setupAdventureRise();
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
-    setupStatsCountUp();
-    setupWhereWeGoReveal(false);
-    setupPhilosophyCluster(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -911,8 +625,6 @@ export function initMotion() {
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
     setupTourRecapSlideshow(true);
-    setupWhereWeGoReveal(true);
-    setupPhilosophyCluster(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
