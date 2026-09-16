@@ -1,19 +1,113 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Section from '../components/Section.astro';
 import ContactForm from '../components/ContactForm.astro';
+
+const address = '1st Street East, Walvis Bay, Namibia';
+const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
 ---
 
-<BaseLayout title="Contact" description="Get in touch with us.">
-  <Section
-    eyebrow="Say hello"
-    heading="Get in touch"
-    align="left"
-  >
-    <p>
-      Placeholder intro copy for the contact page. Send a message and
-      we'll get back to you.
-    </p>
-    <ContactForm />
-  </Section>
+<BaseLayout title="Contact" description="Get in touch with Salt & Sun Tours in Swakopmund and Walvis Bay, Namibia.">
+  <header class="contact-header">
+    <div class="container">
+      <p class="contact-header__eyebrow">Say hello</p>
+      <h1 class="contact-header__heading">Get in touch</h1>
+      <p class="contact-header__body">
+        Have a question before you book, or want to talk through your trip
+        first? We're a small, local team based in Swakopmund and Walvis
+        Bay — reach out and you'll hear back from one of us directly, not
+        a call center.
+      </p>
+    </div>
+  </header>
+
+  <section class="contact-grid-section reveal">
+    <div class="container contact-grid">
+      <div class="contact-grid__form reveal-item">
+        <ContactForm />
+      </div>
+
+      <div class="contact-grid__visual reveal-item">
+        <iframe
+          class="contact-map"
+          src={mapSrc}
+          title={`Map showing ${address}`}
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+        ></iframe>
+        <p class="contact-grid__address">{address}</p>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
+
+<style>
+  .contact-header {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .contact-header__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .contact-header__heading {
+    margin-bottom: var(--space-md);
+  }
+
+  .contact-header__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
+  }
+
+  .contact-grid-section {
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .contact-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  .contact-grid__visual {
+    position: sticky;
+    top: 6rem;
+  }
+
+  .contact-map {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    border: 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+  }
+
+  .contact-grid__address {
+    margin: var(--space-sm) 0 0;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+    text-align: center;
+  }
+
+  @media (max-width: 860px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .contact-grid__visual {
+      position: static;
+      order: -1;
+    }
+
+    .contact-map {
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>
