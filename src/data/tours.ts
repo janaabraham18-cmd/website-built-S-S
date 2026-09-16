@@ -15,6 +15,16 @@ export interface Tour {
   included: string[];
   imageUrl?: string;
   imageCredit?: { name: string; username: string };
+  /**
+   * For `combo` entries only: the slugs of the tour/adventure entries this
+   * combo actually pairs, in the order its own description mentions them.
+   * The source rate sheet never states this structurally — each pairing
+   * below is inferred from that combo's own description/note prose (see
+   * the combo entries themselves for the sentence each mapping is read
+   * from) so the tours page can show the two real component cards
+   * side by side instead of leaving the pairing as unlinked text.
+   */
+  pairs?: string[];
 }
 
 export const categoryLabels: Record<Tour['category'], { label: string; description: string }> = {
@@ -406,6 +416,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1765416320238-910536a59da3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Margaret Szarzynski', username: 'margoszar' },
+    pairs: ['quad-bike-tour', 'sandboarding', 'explorer-tour'],
   },
   {
     slug: 'unity-combo',
@@ -424,6 +435,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1593536284003-ef3103cff953?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Alix Greenman', username: 'alixgreenman' },
+    pairs: ['dolphin-seal-catamaran-cruise', 'quad-bike-tour'],
   },
   {
     slug: 'freedom-combo',
@@ -442,6 +454,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1535190823090-3c159ed10a97?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Y K', username: 'yokeboy' },
+    pairs: ['dolphin-seal-catamaran-cruise', 'camel-ride'],
   },
   {
     slug: 'quad-bike-sandboarding-combo',
@@ -454,6 +467,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1742237281789-c37c5b38e0a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Humphrey M', username: 'good_citizen' },
+    pairs: ['quad-bike-tour', 'sandboarding'],
   },
   {
     slug: 'surf-and-turf',
@@ -472,6 +486,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1504813205186-380b1235a5d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Matthias Jordan', username: 'iammatthias' },
+    pairs: ['dolphin-seal-catamaran-cruise', 'quad-bike-tour'],
   },
   {
     slug: 'kayak-catamaran-combo',
@@ -488,6 +503,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1778379591293-36b4cb24324f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Amanda Swanepoel', username: 'amandaswanepoel' },
+    pairs: ['kayaking', 'dolphin-seal-catamaran-cruise'],
   },
   {
     slug: 'kayak-sandwich-harbour-combo',
@@ -504,6 +520,7 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1762947240379-150d9a6ee659?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Jan Suchánek', username: 'johnny_slav' },
+    pairs: ['kayaking', 'sandwich-harbour-half-day'],
   },
   {
     slug: 'catamaran-sandwich-harbour-combo',
@@ -520,9 +537,14 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1717054373388-b405bfd27707?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Jay Alexander', username: 'jasont378' },
+    pairs: ['dolphin-seal-catamaran-cruise', 'sandwich-harbour-half-day'],
   },
 ];
 
 export function toursByCategory(category: Tour['category']): Tour[] {
   return tours.filter((tour) => tour.category === category);
+}
+
+export function tourBySlug(slug: string): Tour | undefined {
+  return tours.find((tour) => tour.slug === slug);
 }

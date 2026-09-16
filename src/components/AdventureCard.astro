@@ -61,6 +61,7 @@ const { tour, featured = false } = Astro.props;
       <p class="adventure-card__included">
         <span class="adventure-card__included-label">Includes</span> {tour.included.join(', ')}
       </p>
+      <a class="adventure-card__book" href={`/booking?tour=${tour.slug}`}>Book this →</a>
     </div>
   </div>
 </article>
@@ -169,6 +170,25 @@ const { tour, featured = false } = Astro.props;
   .adventure-card__included-label {
     font-weight: 600;
     color: var(--color-text-on-dark);
+  }
+
+  .adventure-card__book {
+    display: inline-block;
+    margin-top: var(--space-2xs);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--color-text-on-dark);
+    border-bottom: 1px solid var(--color-ochre-400);
+    padding-bottom: 1px;
+    transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .adventure-card__book:hover {
+    color: var(--color-ochre-400);
+    border-color: var(--color-text-on-dark);
   }
 
   .adventure-card__credit {

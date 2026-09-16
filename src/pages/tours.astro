@@ -1,15 +1,59 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import AdventureCard from '../components/AdventureCard.astro';
+import ComboCard from '../components/ComboCard.astro';
 import TourMapJourney from '../components/TourMapJourney.astro';
-import { toursByCategory, categoryLabels } from '../data/tours';
+import { toursByCategory, tourBySlug, categoryLabels } from '../data/tours';
+import type { Tour } from '../data/tours';
 
-const adventures = toursByCategory('adventure');
 const combos = toursByCategory('combo');
 
-const featuredAdventureSlugs = new Set(['quad-bike-tour', 'tandem-skydive']);
-
 const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
+
+// Adventures are grouped into three chapters instead of one 16-card wall —
+// each opens with one larger "spotlight" tour and a supporting grid beneath,
+// so scrolling through them has a beat (spotlight, grid, spotlight, grid...)
+// instead of reading as one undifferentiated dense wall.
+interface AdventureGroup {
+  key: string;
+  eyebrow: string;
+  intro: string;
+  spotlight: Tour;
+  items: Tour[];
+}
+
+const adventureGroupDefs = [
+  {
+    key: 'dunes',
+    eyebrow: 'On the Dunes',
+    intro: 'Quad bikes, boards, and fat-tyre bikes — the classic Swakopmund dune activities.',
+    spotlightSlug: 'quad-bike-tour',
+    slugs: ['explorer-tour', 'breakfast-run', 'special-quad-90min', 'sandboarding', 'fat-bike-tour'],
+  },
+  {
+    key: 'sky-sea',
+    eyebrow: 'Sky & Sea',
+    intro: 'From 10,000 feet to sea level — the widest views Namibia has to offer.',
+    spotlightSlug: 'tandem-skydive',
+    slugs: ['paragliding', 'kayaking', 'fishing', 'sandwich-harbour-half-day'],
+  },
+  {
+    key: 'wildlife-culture',
+    eyebrow: 'Wildlife & Culture',
+    intro: 'Slower-paced days built around the people, animals, and landscapes of the coast.',
+    spotlightSlug: 'township-tour',
+    slugs: ['camel-ride', 'living-desert-tour', 'moonlandscape-tour', 'cape-cross'],
+  },
+];
+
+const adventureGroups: AdventureGroup[] = adventureGroupDefs
+  .map((g) => {
+    const spotlight = tourBySlug(g.spotlightSlug);
+    if (!spotlight) return null;
+    const items = g.slugs.map((s) => tourBySlug(s)).filter((t): t is Tour => !!t);
+    return { key: g.key, eyebrow: g.eyebrow, intro: g.intro, spotlight, items };
+  })
+  .filter((g): g is AdventureGroup => !!g);
 ---
 
 <BaseLayout
@@ -18,79 +62,316 @@ const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
 >
   <TourMapJourney />
 
-  <section class="adventure-section" id="adventure">
+  <section class="orientation reveal" id="how-it-works">
+    <div class="container orientation__grid">
+      <div class="orientation__item reveal-item">
+        <span class="orientation__num">01</span>
+        <h3>Signature Tours</h3>
+        <p>Full-day trips to Namibia's most iconic destinations — see all seven on the map above.</p>
+      </div>
+      <div class="orientation__item reveal-item">
+        <span class="orientation__num">02</span>
+        <h3>Adventures</h3>
+        <p>Shorter, activity-based excursions around Swakopmund and Walvis Bay — an hour or an afternoon, not a full day.</p>
+      </div>
+      <div class="orientation__item reveal-item">
+        <span class="orientation__num">03</span>
+        <h3>Combos</h3>
+        <p>Pair two experiences into one day — or skip ahead and build something entirely your own.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="adventures-section reveal" id="adventures">
     <div class="container">
-      <div class="adventure-section__intro reveal">
-        <h2 class="reveal-item">{categoryLabels.adventure.label}</h2>
-        <p class="reveal-item">{categoryLabels.adventure.description}</p>
+      <div class="section-intro reveal-item">
+        <p class="eyebrow">{categoryLabels.adventure.label}</p>
+        <h2>{categoryLabels.adventure.description}</h2>
       </div>
 
-      <div class="adventure-grid">
+      {
+        adventureGroups.map((group) => (
+          <div class="adventure-group">
+            <div class="adventure-group__head reveal-item">
+              <p class="adventure-group__eyebrow">{group.eyebrow}</p>
+              <p class="adventure-group__intro">{group.intro}</p>
+            </div>
+            <div class="adventure-group__spotlight reveal-item">
+              <AdventureCard tour={group.spotlight} featured />
+            </div>
+            <div class="adventure-group__grid">
+              {group.items.map((tour) => (
+                <AdventureCard tour={tour} />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="custom-itinerary reveal">
+    <div class="container custom-itinerary__inner reveal-item">
+      <p class="eyebrow">Build Your Own</p>
+      <h2>Don't see the exact day you want?</h2>
+      <p>Combine any tour, adventure, or combo into your own custom itinerary — tell us what you're after and we'll build the day around you, no fixed package required.</p>
+      <a class="btn btn-primary" href="/contact">Talk to us about your trip</a>
+    </div>
+  </section>
+
+  <section class="combos-section reveal" id="combos">
+    <div class="container">
+      <div class="section-intro reveal-item">
+        <p class="eyebrow">{categoryLabels.combo.label}</p>
+        <h2>{categoryLabels.combo.description}</h2>
+      </div>
+
+      <div class="combo-grid reveal-item">
         {
-          adventures.map((tour) => (
-            <AdventureCard tour={tour} featured={featuredAdventureSlugs.has(tour.slug)} />
+          combos.map((combo) => (
+            <div class:list={['combo-grid__item', featuredComboSlugs.has(combo.slug) && 'is-featured']}>
+              <ComboCard combo={combo} />
+            </div>
           ))
         }
       </div>
     </div>
   </section>
 
-  <section class="adventure-section" id="combo">
-    <div class="container">
-      <div class="adventure-section__intro reveal">
-        <h2 class="reveal-item">{categoryLabels.combo.label}</h2>
-        <p class="reveal-item">{categoryLabels.combo.description}</p>
-      </div>
-
-      <div class="adventure-grid">
-        {
-          combos.map((tour) => (
-            <AdventureCard tour={tour} featured={featuredComboSlugs.has(tour.slug)} />
-          ))
-        }
+  <section class="tours-closing reveal">
+    <div class="container tours-closing__inner reveal-item">
+      <h2>Ready to book, or still deciding?</h2>
+      <p>Either way, get in touch — we'll help you build the right day.</p>
+      <div class="tours-closing__ctas">
+        <a class="btn btn-primary" href="/booking">Start booking</a>
+        <a class="btn btn-outline" href="/contact">Ask us a question</a>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
-  .adventure-section {
-    padding-block: var(--space-2xl);
-    scroll-margin-top: 5rem;
+  .eyebrow {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
   }
 
-  .adventure-section__intro {
+  .section-intro {
     max-width: var(--content-width-narrow);
-    margin-bottom: var(--space-lg);
+    margin-bottom: var(--space-xl);
   }
 
-  .adventure-section__intro h2 {
-    margin-bottom: var(--space-2xs);
+  .section-intro h2 {
+    margin: 0 0 var(--space-2xs);
   }
 
-  .adventure-section__intro p {
+  .section-intro p {
     color: var(--color-text-muted);
     margin: 0;
   }
 
-  .adventure-grid {
+  /* ---------- Orientation strip ---------- */
+  .orientation {
+    padding-block: var(--space-xl);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .orientation__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-lg);
+  }
+
+  .orientation__num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--color-accent-soft);
+    margin-bottom: 0.4rem;
+  }
+
+  .orientation__item h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .orientation__item p {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  @media (max-width: 760px) {
+    .orientation__grid { grid-template-columns: 1fr; gap: var(--space-md); }
+  }
+
+  /* ---------- Adventures ---------- */
+  .adventures-section {
+    padding-block: var(--space-2xl);
+    scroll-margin-top: 5rem;
+  }
+
+  .adventure-group {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .adventure-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .adventure-group__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .adventure-group__eyebrow {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--color-text);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .adventure-group__intro {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .adventure-group__spotlight {
+    margin-bottom: var(--space-md);
+  }
+
+  .adventure-group__spotlight :global(.adventure-card) {
+    aspect-ratio: 21 / 8;
+  }
+
+  .adventure-group__spotlight :global(.adventure-card__title) {
+    font-size: var(--fs-2xl);
+  }
+
+  .adventure-group__spotlight :global(.adventure-card__details) {
+    max-height: 10rem;
+  }
+
+  .adventure-group__grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 240px;
-    grid-auto-flow: dense;
+    grid-auto-rows: 200px;
     gap: var(--space-md);
   }
 
+  .adventure-group__grid :global(.adventure-card) {
+    aspect-ratio: auto;
+  }
+
   @media (max-width: 960px) {
-    .adventure-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
+    .adventure-group__spotlight :global(.adventure-card) { aspect-ratio: 16 / 9; }
+    .adventure-group__grid { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (max-width: 640px) {
-    .adventure-grid {
-      grid-template-columns: 1fr;
-      grid-auto-rows: 280px;
-    }
+    .adventure-group__grid { grid-template-columns: 1fr; grid-auto-rows: 240px; }
+  }
+
+  /* ---------- Custom itinerary band ---------- */
+  .custom-itinerary {
+    background: var(--gradient-warm);
+    padding-block: var(--space-2xl);
+  }
+
+  .custom-itinerary__inner {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .custom-itinerary__inner .eyebrow {
+    color: var(--color-text-on-dark);
+    opacity: 0.85;
+  }
+
+  .custom-itinerary__inner h2 {
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .custom-itinerary__inner p {
+    color: var(--color-sand-100);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .custom-itinerary__inner .btn-primary {
+    background: var(--color-earth-900);
+    box-shadow: var(--shadow-md);
+  }
+
+  /* ---------- Combos ---------- */
+  .combos-section {
+    padding-block: var(--space-2xl);
+    scroll-margin-top: 5rem;
+  }
+
+  .combo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-md);
+    align-items: stretch;
+  }
+
+  .combo-grid__item {
+    display: flex;
+  }
+
+  .combo-grid__item :global(.combo-card) {
+    width: 100%;
+  }
+
+  .combo-grid__item.is-featured {
+    grid-column: span 2;
+  }
+
+  @media (max-width: 700px) {
+    .combo-grid { grid-template-columns: 1fr; }
+    .combo-grid__item.is-featured { grid-column: span 1; }
+  }
+
+  /* ---------- Closing ---------- */
+  .tours-closing {
+    padding-block: var(--space-2xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .tours-closing__inner {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .tours-closing__inner h2 {
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .tours-closing__inner p {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .tours-closing__ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
   }
 </style>
