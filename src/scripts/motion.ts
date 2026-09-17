@@ -277,6 +277,28 @@ function setupRouteMap(reduceMotion: boolean) {
   });
 }
 
+// The Route section's giraffe background photo drifts slower than the
+// page scrolls — same technique as the pinned section's .section__bg —
+// scrubbed across the section's own scroll range rather than a pin.
+// Only called under no-preference; the layer sits still otherwise.
+function setupRouteParallax() {
+  const bg = document.querySelector<HTMLElement>('[data-route-bg]');
+  const section = document.querySelector<HTMLElement>('.route-block');
+  if (!bg || !section) return;
+
+  gsap.set(bg, { yPercent: -8 });
+  gsap.to(bg, {
+    yPercent: 8,
+    ease: 'none',
+    scrollTrigger: {
+      trigger: section,
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+    },
+  });
+}
+
 // Adventures index: replaces a wall of same-sized cards with a compact
 // name list beside one large shared photo per themed group — picking a
 // name (hover, focus, or tap) crossfades the photo/caption beside it. The
@@ -951,6 +973,7 @@ export function initMotion() {
     setupAlternatingRows(false);
     setupProgramThreads(false);
     setupRouteMap(false);
+    setupRouteParallax();
     setupStampCountUp(false);
 
     // Pinned section: background pans slowly while content sits in place
