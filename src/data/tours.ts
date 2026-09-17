@@ -62,8 +62,8 @@ export const tours: Tour[] = [
       'Return trip to Swakop',
     ],
     imageUrl:
-      'https://images.unsplash.com/photo-1636099487113-ce0a5565b578?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
-    imageCredit: { name: 'Chris Stenger', username: 'chrisstenger' },
+      'https://images.unsplash.com/photo-1596225893172-1685676f0a50?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'Eelco Böhtlingk', username: 'eelco_bohtlingk' },
   },
   {
     slug: 'sossusvlei-tour',
