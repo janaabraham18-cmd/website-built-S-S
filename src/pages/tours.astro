@@ -9,6 +9,12 @@ const combos = toursByCategory('combo');
 
 const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
 
+// Everything bookable that isn't already a combo — the raw material for
+// the "Create Your Own Combo" builder below. Combos aren't included as
+// pickable pieces themselves (combining a combo doesn't make sense).
+const builderTours = toursByCategory('tour');
+const builderAdventures = toursByCategory('adventure');
+
 // Adventures read as two themed chapters rather than one dense wall. Each
 // chapter is a compact name index next to one large shared photo — picking
 // a name (hover, focus, or tap) swaps the photo and caption beside it — so
@@ -51,7 +57,7 @@ const creditHref = (username: string) =>
 
 <BaseLayout
   title="Tours & Adventures"
-  description="The full lineup of tours, adventures, and combo deals from Salt & Sun Tours in Swakopmund and Walvis Bay, Namibia."
+  description="The full lineup of tours, adventures, and combos from Salt & Sun Tours in Swakopmund and Walvis Bay, Namibia."
 >
   <TourMapJourney />
 
@@ -152,15 +158,6 @@ const creditHref = (username: string) =>
     </div>
   </section>
 
-  <section class="custom-itinerary reveal">
-    <div class="container custom-itinerary__inner reveal-item">
-      <p class="eyebrow">Build Your Own</p>
-      <h2>Don't see the exact day you want?</h2>
-      <p>Combine any tour, adventure, or combo into your own custom itinerary — tell us what you're after and we'll build the day around you, no fixed package required.</p>
-      <a class="btn btn-primary" href="/contact">Talk to us about your trip</a>
-    </div>
-  </section>
-
   <section class="combos-section reveal" id="combos">
     <div class="container">
       <div class="section-intro reveal-item">
@@ -176,6 +173,85 @@ const creditHref = (username: string) =>
             </div>
           ))
         }
+      </div>
+    </div>
+  </section>
+
+  <section class="build-combo reveal" id="build-your-own">
+    <div class="container">
+      <div class="section-intro reveal-item">
+        <p class="eyebrow">Your Own Combo</p>
+        <h2>Create Your Own Combo</h2>
+        <p>The combos above are proven pairings, but they're not the limit. This isn't really about the cheapest way to fit two things into a day — it's your day, so pick whatever actually interests you and we'll build the itinerary around it.</p>
+      </div>
+
+      <div class="combo-builder reveal-item" data-combo-builder>
+        <div class="combo-builder__picker">
+          <div class="combo-builder__group">
+            <p class="combo-builder__group-label">{categoryLabels.tour.label}</p>
+            <div class="combo-builder__chips">
+              {builderTours.map((tour) => (
+                <button
+                  type="button"
+                  class="combo-builder__chip"
+                  data-builder-chip
+                  data-slug={tour.slug}
+                  data-name={tour.name}
+                  data-img={tour.imageUrl}
+                  aria-pressed="false"
+                >
+                  <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
+                  {tour.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div class="combo-builder__group">
+            <p class="combo-builder__group-label">{categoryLabels.adventure.label}</p>
+            <div class="combo-builder__chips">
+              {builderAdventures.map((tour) => (
+                <button
+                  type="button"
+                  class="combo-builder__chip"
+                  data-builder-chip
+                  data-slug={tour.slug}
+                  data-name={tour.name}
+                  data-img={tour.imageUrl}
+                  aria-pressed="false"
+                >
+                  <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
+                  {tour.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="combo-builder__preview">
+          <p class="combo-builder__count" data-builder-count role="status" aria-live="polite">
+            Pick at least 2 to build your combo
+          </p>
+
+          <div class="combo-builder__pairs" data-builder-pairs>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div class="combo-builder__pair-slot" data-pair-slot={i} hidden>
+                <span class="combo-builder__plus" aria-hidden="true">+</span>
+                <div class="photo-frame photo-frame--sm combo-builder__pair-photo">
+                  <img data-pair-img alt="" loading="lazy" decoding="async" />
+                </div>
+                <p class="combo-builder__pair-name" data-pair-name></p>
+              </div>
+            ))}
+          </div>
+
+          <a class="btn btn-primary combo-builder__cta" data-builder-cta href="#" aria-disabled="true">
+            Book my combo
+          </a>
+          <p class="combo-builder__fallback">
+            Not sure yet? <a href="/contact">Just tell us what you're dreaming of →</a>
+          </p>
+        </div>
       </div>
     </div>
   </section>
@@ -492,37 +568,201 @@ const creditHref = (username: string) =>
     }
   }
 
-  /* ---------- Custom itinerary band ---------- */
-  .custom-itinerary {
+  /* ---------- Create Your Own Combo ---------- */
+  .build-combo {
     background: var(--gradient-warm);
     padding-block: var(--space-2xl);
+    scroll-margin-top: 5rem;
   }
 
-  .custom-itinerary__inner {
+  .build-combo .section-intro {
     max-width: 640px;
     margin-inline: auto;
     text-align: center;
   }
 
-  .custom-itinerary__inner .eyebrow {
+  .build-combo .eyebrow {
     color: var(--color-text-on-dark);
     opacity: 0.85;
   }
 
-  .custom-itinerary__inner h2 {
+  .build-combo h2 {
     color: var(--color-text-on-dark);
+  }
+
+  .build-combo .section-intro p {
+    color: var(--color-sand-100);
+  }
+
+  .combo-builder {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    gap: var(--space-xl);
+    align-items: start;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .combo-builder__group {
+    margin-bottom: var(--space-md);
+  }
+
+  .combo-builder__group:last-child {
+    margin-bottom: 0;
+  }
+
+  .combo-builder__group-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.6rem;
+  }
+
+  .combo-builder__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .combo-builder__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem 0.45rem 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .combo-builder__chip:hover,
+  .combo-builder__chip:focus-visible {
+    border-color: var(--color-accent-strong);
+  }
+
+  .combo-builder__chip-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    font-size: 0.6rem;
+    line-height: 1;
+    color: transparent;
+    flex-shrink: 0;
+    transition: background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .combo-builder__chip.is-selected {
+    background: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
+  }
+
+  .combo-builder__chip.is-selected .combo-builder__chip-check {
+    background: var(--color-text-on-dark);
+    border-color: var(--color-text-on-dark);
+    color: var(--color-accent-strong);
+  }
+
+  .combo-builder__preview {
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    position: sticky;
+    top: 5rem;
+  }
+
+  .combo-builder__count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
     margin: 0 0 var(--space-sm);
   }
 
-  .custom-itinerary__inner p {
-    color: var(--color-sand-100);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-lg);
+  .combo-builder__pairs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
   }
 
-  .custom-itinerary__inner .btn-primary {
-    background: var(--color-earth-900);
-    box-shadow: var(--shadow-md);
+  .combo-builder__pair-slot[hidden] {
+    display: none;
+  }
+
+  .combo-builder__pair-slot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .combo-builder__pair-slot:first-child .combo-builder__plus {
+    display: none;
+  }
+
+  .combo-builder__plus {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-accent-strong);
+    line-height: 1;
+  }
+
+  .combo-builder__pair-photo {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+  }
+
+  .combo-builder__pair-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 5rem;
+  }
+
+  .combo-builder__cta {
+    width: 100%;
+    margin-top: var(--space-md);
+  }
+
+  .combo-builder__cta[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .combo-builder__fallback {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: var(--space-sm) 0 0;
+  }
+
+  @media (max-width: 860px) {
+    .combo-builder {
+      grid-template-columns: 1fr;
+    }
+
+    .combo-builder__preview {
+      position: static;
+    }
   }
 
   /* ---------- Combos ---------- */

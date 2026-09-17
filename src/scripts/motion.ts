@@ -415,6 +415,88 @@ function setupAdventureIndex(reduceMotion: boolean) {
   }
 }
 
+// "Create Your Own Combo" builder: clicking a chip toggles it in/out of a
+// running selection (order-preserving, so the preview reads left-to-right
+// in the order things were picked), which fills a fixed pool of
+// pre-rendered preview slots — rather than creating new DOM elements for
+// each pick, which would silently lose Astro's scoped styles (learned the
+// hard way earlier on this page's hand-drawn thread lines: an element
+// created after server render never gets the scoped data-astro-cid
+// attribute, so scoped CSS never matches it). Toggling chips is a
+// frequent, rapid-fire interaction (someone trying a few combinations in a
+// row), so per Emil Kowalski's frequency gate it only animates the one
+// genuinely new thing each click produces — a slot's first appearance —
+// not every content update a reorder causes when an earlier pick is
+// removed.
+function setupComboBuilder(reduceMotion: boolean) {
+  const root = document.querySelector<HTMLElement>('[data-combo-builder]');
+  if (!root) return;
+
+  const chips = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-builder-chip]'));
+  const slots = Array.from(root.querySelectorAll<HTMLElement>('[data-pair-slot]'));
+  const countEl = root.querySelector<HTMLElement>('[data-builder-count]');
+  const cta = root.querySelector<HTMLAnchorElement>('[data-builder-cta]');
+  if (!chips.length || !slots.length || !cta) return;
+
+  let selected: HTMLButtonElement[] = [];
+
+  const render = () => {
+    slots.forEach((slot, i) => {
+      const chip = selected[i];
+      const wasHidden = slot.hidden;
+
+      if (!chip) {
+        slot.hidden = true;
+        return;
+      }
+
+      slot.hidden = false;
+      const img = slot.querySelector<HTMLImageElement>('[data-pair-img]');
+      const name = slot.querySelector<HTMLElement>('[data-pair-name]');
+      if (img) {
+        img.src = chip.dataset.img ?? '';
+        img.alt = chip.dataset.name ?? '';
+      }
+      if (name) name.textContent = chip.dataset.name ?? '';
+
+      if (wasHidden && !reduceMotion) {
+        gsap.from(slot, { opacity: 0, scale: 0.92, duration: 0.3, ease: 'power2.out' });
+      }
+    });
+
+    const n = selected.length;
+    if (countEl) {
+      const overflow = n > slots.length ? ` (+${n - slots.length} more not shown above)` : '';
+      countEl.textContent =
+        n === 0
+          ? 'Pick at least 2 to build your combo'
+          : n === 1
+            ? '1 selected — pick at least one more'
+            : `${n} experiences selected — ready to book${overflow}`;
+    }
+
+    const ready = n >= 2;
+    cta.classList.toggle('is-ready', ready);
+    cta.setAttribute('aria-disabled', String(!ready));
+    cta.href = ready
+      ? `/booking?custom=${encodeURIComponent(selected.map((c) => c.dataset.name).join(' + '))}`
+      : '#';
+  };
+
+  chips.forEach((chip) => {
+    chip.addEventListener('click', () => {
+      const isSelected = chip.classList.toggle('is-selected');
+      chip.setAttribute('aria-pressed', String(isSelected));
+      selected = isSelected ? [...selected, chip] : selected.filter((c) => c !== chip);
+      render();
+    });
+  });
+
+  cta.addEventListener('click', (e) => {
+    if (cta.getAttribute('aria-disabled') === 'true') e.preventDefault();
+  });
+}
+
 // The Itinerary's filter pills: click toggles which category is shown,
 // hiding non-matching tour rows via the `hidden` attribute rather than
 // animating them out — a filter change is a direct result of a click, not
@@ -863,6 +945,7 @@ export function initMotion() {
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureIndex(false);
+    setupComboBuilder(false);
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
     setupAlternatingRows(false);
@@ -923,6 +1006,7 @@ export function initMotion() {
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
     setupAdventureIndex(true);
+    setupComboBuilder(true);
     setupTourRecapSlideshow(true);
     setupAlternatingRows(true);
     setupProgramThreads(true);

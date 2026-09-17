@@ -135,13 +135,49 @@ Below it, in order:
      a focused name) stops it for good, handing control to the visitor.
      Skipped entirely under `prefers-reduced-motion: reduce`, matching the
      hero panel and postcard slideshows elsewhere on the site.
-3. **Build Your Own** band — the custom-itinerary pitch/CTA (links to `/contact`).
-4. **Combos** (`#combos`) — new `ComboCard.astro` component: each combo visibly
+3. **Combos** (`#combos`) — `ComboCard.astro` component: each combo visibly
    shows its actual paired tours/adventures (photo + name per half, joined by
-   a "+"), driven by a new `pairs: string[]` field added to the 8 combo entries
+   a "+"), driven by a `pairs: string[]` field added to the 8 combo entries
    in `src/data/tours.ts` (inferred from each combo's own description/note,
    documented inline as such — the source rate sheet has no structural link
-   between a combo and its components).
+   between a combo and its components). Cards also now show an "Includes"
+   line (previously data that existed but wasn't rendered here), and the
+   "Combo deal" tag was reworded to "Two in one day" — dropping the
+   deal/savings framing per the next section.
+4. **Create Your Own Combo** (`#build-your-own`) — replaces the old plain
+   "Build Your Own" CTA band with a real interactive combo builder, built
+   after explicit direction that combos should foreground *freedom of
+   choice*, not cost-effectiveness. `categoryLabels.combo` (`src/data/tours.ts`)
+   was reworded the same way ("Combo deals" → "Combos", description → "Two
+   experiences, one day — or design something entirely your own"). The
+   builder: a chip picker spanning every Tour and Adventure (not existing
+   combos — combining a combo doesn't make sense), grouped under "Tours"/
+   "Adventures" labels; clicking a chip toggles it into a running,
+   order-preserving selection; a live preview assembles the picks as
+   photo+name pairs joined by "+" (same visual language as `ComboCard`, but
+   built from a fixed pool of 8 pre-rendered `hidden` slots that JS
+   shows/fills rather than creating new DOM — the scoped-CSS-on-client-
+   created-elements pitfall documented below bit us once already this
+   session on the itinerary thread lines, not worth repeating). A status
+   line ("Pick at least 2…" / "N experiences selected — ready to book") is
+   `role="status" aria-live="polite"`. Once 2+ are picked, "Book my combo"
+   becomes a real link to `/booking?custom=<names joined by " + ">`.
+   `BookingForm.astro` gained a standing "Custom combo (see message below)"
+   option and a second deep-link branch (alongside the existing `?tour=`
+   one) that reads `?custom=`, selects that option, and pre-fills the
+   message textarea — verified end-to-end with Playwright (builder selects
+   → CTA href → booking page arrives with the right option selected and
+   message pre-filled). Implementation: `setupComboBuilder()` in
+   `src/scripts/motion.ts`, wired into both `initMotion()` branches.
+   - **Real bug hit and fixed while building this:** giving
+     `.combo-builder__pair-slot` its own `display: flex` rule overrode the
+     browser's default `[hidden] { display: none }` UA rule (equal
+     specificity, author stylesheet wins), so all 8 slots showed as empty
+     boxes even with nothing selected. Fixed with an explicit
+     `.combo-builder__pair-slot[hidden] { display: none; }` rule (higher
+     specificity via the attribute selector, so it wins regardless of
+     source order). Worth remembering for any future `hidden`+`display`
+     combination on this site.
 5. **Closing CTA** band — "Ready to book, or still deciding?"
 
 ## Key data model note

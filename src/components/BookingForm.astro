@@ -38,6 +38,7 @@ const categories = (['tour', 'adventure', 'combo'] as const).map((category) => (
       <label for="tour-select">Preferred tour</label>
       <select id="tour-select" name="tour" required>
         <option value="" disabled selected>Choose a tour, adventure, or combo</option>
+        <option value="Custom combo" data-slug="custom">Custom combo (see message below)</option>
         {
           categories.map((group) => (
             <optgroup label={group.label}>
@@ -71,11 +72,28 @@ const categories = (['tour', 'adventure', 'combo'] as const).map((category) => (
   // leaving visitors to find it again in a long dropdown.
   const params = new URLSearchParams(window.location.search);
   const slug = params.get('tour');
+  const select = document.getElementById('tour-select') as HTMLSelectElement | null;
 
   if (slug) {
-    const select = document.getElementById('tour-select') as HTMLSelectElement | null;
     const options = Array.from(select?.options ?? []);
     const match = options.find((option) => option.dataset.slug === slug);
     if (select && match) select.value = match.value;
+  }
+
+  // Deep-link support: /booking?custom=<names joined by " + "> (used by
+  // the "Create Your Own Combo" builder on the tours page) — there's no
+  // single matching option for a combination nobody's pre-defined, so this
+  // selects the standing "Custom combo" option and writes the picks into
+  // the message field instead, rather than forcing a guess at the closest
+  // listed option.
+  const custom = params.get('custom');
+  if (custom && select) {
+    const customOption = Array.from(select.options).find((option) => option.dataset.slug === 'custom');
+    if (customOption) select.value = customOption.value;
+
+    const message = document.getElementById('message') as HTMLTextAreaElement | null;
+    if (message && !message.value) {
+      message.value = `I'd like to build a custom combo: ${custom}`;
+    }
   }
 </script>

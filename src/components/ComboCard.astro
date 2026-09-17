@@ -32,10 +32,13 @@ const components = (combo.pairs ?? [])
   </div>
 
   <div class="combo-card__body">
-    <p class="combo-card__tag">Combo deal{combo.duration ? ` · ${combo.duration}` : ''}</p>
+    <p class="combo-card__tag">Two in one day{combo.duration ? ` · ${combo.duration}` : ''}</p>
     <h3 class="combo-card__name">{combo.name}</h3>
     <p class="combo-card__desc">{combo.description}</p>
     {combo.note && <p class="combo-card__note">{combo.note}</p>}
+    <p class="combo-card__included">
+      <span class="combo-card__included-label">Includes</span> {combo.included.join(', ')}
+    </p>
     <a class="book-link" href={`/booking?tour=${combo.slug}`}>Book this combo</a>
   </div>
 </article>
@@ -117,6 +120,18 @@ const components = (combo.pairs ?? [])
     font-style: italic;
     color: var(--color-text-muted);
     margin: 0 0 1rem;
+  }
+
+  .combo-card__included {
+    font-size: 0.78rem;
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    margin: 0 0 1rem;
+  }
+
+  .combo-card__included-label {
+    font-weight: 600;
+    color: var(--color-earth-900);
   }
 
   @media (max-width: 480px) {

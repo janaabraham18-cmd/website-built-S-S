@@ -37,8 +37,8 @@ export const categoryLabels: Record<Tour['category'], { label: string; descripti
     description: 'Shorter, activity-based excursions around Swakopmund and Walvis Bay.',
   },
   combo: {
-    label: 'Combo deals',
-    description: 'Pair two experiences together, on the same day or across different days.',
+    label: 'Combos',
+    description: 'Two experiences, one day — or design something entirely your own.',
   },
 };
 
