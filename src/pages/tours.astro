@@ -97,7 +97,9 @@ const creditHref = (username: string) =>
             </div>
 
             <div class="adventure-index reveal-item" data-adventure-index>
-              <div class="adventure-index__list">
+              <div class="adventure-index__list-wrap">
+                <p class="adventure-index__list-label">{group.items.length} activities — tap one to preview ↓</p>
+                <div class="adventure-index__list">
                 {group.items.map((tour, i) => (
                   <button
                     type="button"
@@ -122,6 +124,7 @@ const creditHref = (username: string) =>
                     {tour.duration && <span class="adventure-index__duration">{tour.duration}</span>}
                   </button>
                 ))}
+                </div>
               </div>
 
               <div class="adventure-index__preview" data-index-preview>
@@ -322,10 +325,30 @@ const creditHref = (username: string) =>
     align-items: start;
   }
 
-  .adventure-index__list {
+  /* A visible card, not plain text on the page background — the list
+     needs to read unmistakably as "more choices live here", not as
+     secondary/decorative copy next to the big photo. */
+  .adventure-index__list-wrap {
     grid-area: list;
+  }
+
+  .adventure-index__list-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.6rem;
+  }
+
+  .adventure-index__list {
     display: flex;
     flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 0 var(--space-md);
+    box-shadow: var(--shadow-sm);
   }
 
   .adventure-index__item {
@@ -346,8 +369,8 @@ const creditHref = (username: string) =>
     transition: color var(--duration-fast) var(--ease-out);
   }
 
-  .adventure-index__list :last-child {
-    border-bottom: 1px solid var(--color-border);
+  .adventure-index__item:first-child {
+    border-top: none;
   }
 
   .adventure-index__item:hover,
