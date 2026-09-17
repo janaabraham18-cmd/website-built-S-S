@@ -528,7 +528,30 @@ const closingCtaPhoto = {
     padding: clamp(3.5rem, 8vw, 6.25rem) clamp(1.25rem, 8vw, 6rem);
   }
 
-  #brief, #itinerary, #faq { background: var(--color-bg-alt); }
+  /* background-color only (not the `background` shorthand) — a shorthand
+     here would silently reset background-image back to none at ID-level
+     specificity, beating the lower-specificity .brief-block/.itinerary-block
+     glow rules below regardless of source order. */
+  #brief, #itinerary, #faq { background-color: var(--color-bg-alt); }
+
+  /* ---------- Desert Light: per-section glows ----------
+     Soft, color-matched glow keyed to each section's own photos, layered
+     on top of the background colors above rather than replacing them.
+     Placed after .block/#brief,#itinerary,#faq so these longhand
+     background-image declarations win at equal specificity. */
+  .brief-block,
+  .itinerary-block,
+  .postcards-block {
+    background-image: var(--gradient-glow-warm);
+  }
+
+  .route-block {
+    background-image: var(--gradient-glow-coastal);
+  }
+
+  .logbook-block {
+    background-image: var(--gradient-glow-wild);
+  }
 
   .eyebrow {
     letter-spacing: 0.12em;
@@ -849,6 +872,7 @@ const closingCtaPhoto = {
   /* ---------- 05 Passport Stamps ---------- */
   .stamps-block {
     background: var(--color-earth-900);
+    background-image: var(--gradient-dusk);
     color: var(--color-text-on-dark);
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 8vw, 6rem);
   }

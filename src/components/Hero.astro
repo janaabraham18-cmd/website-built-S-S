@@ -100,6 +100,19 @@ const firstCredit = panels[0]?.imageCredit;
     overflow: hidden;
   }
 
+  /* Desert Light: a soft vignette over the whole panel collage — dark at
+     the edges, clear through the center — so the 7 photos read as one
+     unified image instead of a filmstrip, and focus pulls toward the
+     headline/CTA sitting in the clear center. Sits above the panels but
+     doesn't block clicks on the CTA/scroll cue beneath it. */
+  .hero--panels::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 130% 90% at 50% 35%, transparent 45%, #3a231c3d 100%);
+    pointer-events: none;
+  }
+
   .hero__panels {
     position: absolute;
     inset: 0;

@@ -61,7 +61,11 @@ const socialLinks = {
   .site-footer {
     background: var(--color-earth-900);
     color: var(--color-text-on-dark);
-    margin-top: var(--space-2xl);
+    /* No top margin: the page's closing sections are already dark
+       (Passport Stamps, the photo CTA's dark overlay), so any gap here
+       exposes a stray strip of the sand-colored page background between
+       two sections that should read as one continuous dark close. */
+    margin-top: 0;
   }
 
   .site-footer__inner {

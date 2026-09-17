@@ -6,7 +6,7 @@ the end of each work session rather than letting context live only in chat
 history.
 
 **Branch:** `claude/modest-tesla-m7moez`
-**Last updated:** 2026-09-17 (same session: tour recategorization, then the Adventures section's card grid replaced with a name-index + large-photo interaction)
+**Last updated:** 2026-09-17 (same session: tour recategorization → Adventures name-index redesign → Create Your Own Combo builder → real Namibia photo swaps → homepage "Desert Light" background system)
 
 ---
 
@@ -90,6 +90,45 @@ Established across a few sessions of audit + design work, documented in full at:
    group lost 3 of its 4 items in this move, so it was folded into "Sky &
    Sea" (renamed "Sky, Sea & Culture") to keep both adventure chapters
    substantial — the page now has 2 adventure chapters instead of 3.
+6. **Real photo swaps, on request** — several stock photos were replaced with
+   genuine, verified, high-res shots (checked against every photo ID already
+   used sitewide to avoid repeats): Sossusvlei's shared photo (Brief banner /
+   Route preview / Itinerary row / `tours.ts` canonical) became a real
+   Deadvlei-trees shot; Etosha's shared photo became a real lioness; and all
+   8 Logbook gallery photos (previously not actually all from Namibia) were
+   replaced with verified Namibia shots — Fish River Canyon, a giraffe and a
+   black rhino in Etosha, a lone oryx on the Namib dunes, Spitzkoppe under a
+   star-filled sky, the Cape Cross seal colony, Damaraland at sunset, and an
+   aerial dune-pattern shot.
+7. **Homepage "Desert Light" background system** — one continuous low-sun
+   light source running down the page instead of hard alternating flat
+   blocks: a fine sand-grain texture (`body::before` in `global.css`, very
+   low opacity, `mix-blend-mode: multiply`) ties every section together, and
+   each section gets a soft glow keyed to its own photos (warm for
+   Brief/Itinerary/Postcards, coastal-toned for the Route, wildlife-toned for
+   the Logbook, a "dusk" glow for the dark Passport Stamps band), plus a
+   vignette over the hero's 7-photo collage so it reads as one image instead
+   of a filmstrip. Tokens live in `global.css` (`--texture-grain`,
+   `--gradient-glow-warm/coastal/wild`, `--gradient-dusk`); the actual
+   section rules live in whichever file owns that selector's specificity
+   (mostly `index.astro`'s own scoped `<style>`, plus `Hero.astro` for the
+   vignette) — **not** all dumped into `global.css`, because two real
+   cascade bugs surfaced doing this against Astro's scoped-per-component
+   CSS and had to be fixed at the source rather than papered over:
+   - `#brief, #itinerary, #faq` was using the `background` *shorthand* for
+     just a color swap, which silently resets `background-image` to `none`
+     at ID-level specificity — beat the new glow rules regardless of source
+     order. Fixed by switching that one rule to `background-color`.
+   - The already-known "footer gap" bug (a 96px stray strip of page
+     background between the closing photo CTA and the dark footer) turned
+     out to be `margin-top: var(--space-2xl)` in `Footer.astro`'s own
+     *scoped* style. An unscoped `footer.site-footer { margin-top: 0; }` in
+     `global.css` would have lost that cascade fight (Astro's scoped
+     attribute selector out-specificities a plain global one) — fixed at
+     the source in `Footer.astro` instead.
+   Verified via computed-style checks (each section's `background-image`
+   resolves to the intended gradient, not `none`) plus screenshots, not just
+   visual inspection.
 
 ## Tours page — current structure
 
