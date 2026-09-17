@@ -287,6 +287,11 @@ function setupRouteMap(reduceMotion: boolean) {
 // than an instant swap — but stays quick since this fires on hover, which
 // can happen often in one visit. The exit is shorter than the enter (the
 // user's attention is already moving toward the new content).
+//
+// Each list also auto-advances on its own (a first-time visitor has no
+// reason to know the names are clickable otherwise), pausing on
+// hover/focus and stopping for good the moment someone actually picks a
+// name themselves — from then on it's their choice, not the timer's.
 function setupAdventureIndex(reduceMotion: boolean) {
   const roots = document.querySelectorAll<HTMLElement>('[data-adventure-index]');
 
@@ -351,11 +356,42 @@ function setupAdventureIndex(reduceMotion: boolean) {
       });
     };
 
+    let timer: ReturnType<typeof setInterval> | undefined;
+    let stopped = false; // true once a person has picked a name themselves
+
+    const advance = () => {
+      const nextIndex = (items.indexOf(active) + 1) % items.length;
+      activate(items[nextIndex]);
+    };
+    const startTimer = () => {
+      if (stopped || reduceMotion || items.length < 2) return;
+      timer = setInterval(advance, 5000);
+    };
+    const pauseTimer = () => clearInterval(timer);
+    const stopTimer = () => {
+      stopped = true;
+      clearInterval(timer);
+    };
+
     items.forEach((item) => {
+      // Hover/focus only pause (handled at the root below) — someone's
+      // mouse can graze a name on its way to the photo without meaning
+      // anything. A click (or a keyboard Enter/Space, which fires one too)
+      // is the actual "I'm choosing this" signal, so only that permanently
+      // hands control to the person and retires the timer for good.
       item.addEventListener('mouseenter', () => activate(item));
       item.addEventListener('focus', () => activate(item));
-      item.addEventListener('click', () => activate(item));
+      item.addEventListener('click', () => {
+        activate(item);
+        stopTimer();
+      });
     });
+
+    startTimer();
+    root.addEventListener('mouseenter', pauseTimer);
+    root.addEventListener('mouseleave', startTimer);
+    root.addEventListener('focusin', pauseTimer);
+    root.addEventListener('focusout', startTimer);
   }
 
   // Hand-drawn underline beneath the Adventures heading, drawn in once on

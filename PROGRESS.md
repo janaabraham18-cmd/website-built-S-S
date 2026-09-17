@@ -122,6 +122,19 @@ Below it, in order:
    by the standalone `/preview-adventure-cards` page) but every tour still
    has a real "Book this →" link — previously adventures/combos had no
    booking path from the card at all.
+   - **Follow-up (same session):** the list of names was too easy to miss
+     next to the big photo — confirmed against the live Vercel deployment,
+     not just local dev. Fixed by wrapping the list in a visible card
+     (surface background, border, shadow) with a bold count label above it
+     ("6 activities — tap one to preview").
+   - **Follow-up 2 (same session):** each chapter's list now auto-advances
+     on its own every 5s (`setInterval` in `setupAdventureIndex`) since a
+     first-time visitor has no reason to know the names are clickable.
+     Pauses on hover/focus anywhere in that chapter's index+preview block,
+     resumes when the pointer/focus leaves — but a click (or Enter/Space on
+     a focused name) stops it for good, handing control to the visitor.
+     Skipped entirely under `prefers-reduced-motion: reduce`, matching the
+     hero panel and postcard slideshows elsewhere on the site.
 3. **Build Your Own** band — the custom-itinerary pitch/CTA (links to `/contact`).
 4. **Combos** (`#combos`) — new `ComboCard.astro` component: each combo visibly
    shows its actual paired tours/adventures (photo + name per half, joined by
