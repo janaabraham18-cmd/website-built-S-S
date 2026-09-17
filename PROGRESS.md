@@ -1,0 +1,171 @@
+# Salt & Sun Tours — Progress Log
+
+A running record of the redesign work on this site, so a session (this one or
+a fresh one) can pick up exactly where things left off. Update this file at
+the end of each work session rather than letting context live only in chat
+history.
+
+**Branch:** `claude/modest-tesla-m7moez`
+**Last updated:** 2026-09-17
+
+---
+
+## Where things stand
+
+The site has a defined visual identity ("Overland") and both the homepage
+and the tours page have been rebuilt around it. Nothing below is a plan —
+it's all built, committed, and pushed.
+
+## Brand identity — "Overland"
+
+Established across a few sessions of audit + design work, documented in full at:
+
+- **`themes/overland.md`** — the complete token reference (colors, type scale,
+  spacing, component specs, anti-patterns) — copy-paste-ready `:root {}` block included.
+- **`themes/brand-kit.html`** — the same system as a visual style guide (13 sections:
+  logo, color, typography, hierarchy, spacing, borders, buttons, cards, badges, nav,
+  voice, do's/don'ts, motion).
+- **`DESIGN-current.md`** — an earlier audit of the *pre-Overland* baseline identity,
+  kept for reference/contrast.
+
+**Quick summary:**
+- **Colors:** warm terracotta→ochre on a sand-white base. Primary `#9c4d33`,
+  secondary/ochre `#d3a24f`, sand base `#fbf7f1`, earth text `#3a231c`. One hue
+  family only — no second chromatic color anywhere except `--color-error` (form
+  validation only, never decorative).
+- **Type:** Libre Bodoni (serif, headings, 400 weight only) + Public Sans (body,
+  400/600). Tokens: `--font-display`, `--font-display-italic`, `--font-body` in
+  `src/styles/global.css`.
+- **Radius scale:** 4px / 10px / 18px (`--radius-sm/md/lg`) — no other values.
+- **Shadows:** always warm-tinted (`rgba(58,35,28,…)`), never neutral/black.
+- **Motion signature:** "assembling" entrances (photo settles from a slight scale,
+  copy trails ~150ms behind — see `setupAlternatingRows` in `src/scripts/motion.ts`)
+  and a hand-drawn connecting-line motif (`setupProgramThreads`, `setupRouteMap`)
+  reviving what used to be an orphaned "constellation lines" effect.
+- **Shared CSS utilities** (in `src/styles/global.css`, used by both pages):
+  `.photo-frame` (hover scale + scrim on images), `.photo-frame--sm` (smaller
+  radius variant), `.book-link` (underlined uppercase text CTA).
+
+## What's been built, in order
+
+1. **Motion audit** — `motion-audits/tour-booking-site-2026-09-16.html`. Found 2
+   critical + 2 important issues (orphaned motion code from an earlier homepage
+   rewrite, a hero-autoplay pause gap). Both fixed during the "apply it" pass.
+2. **Overland brand kit** — see above.
+3. **Homepage rebuilt** (`src/pages/index.astro`) around "The Route" content
+   structure (plan at `themes/the-route.html`, an expedition-dossier concept).
+   Current section order:
+   - Hero (unchanged split-photo "NAMIBIA" panel)
+   - **The Brief** (`#brief`) — manifesto pull-quote + passport-style vitals stub
+     (2 basecamps / 31 experiences / 0 middlemen) + one banner photo
+   - **The Route** (`#route`) — interactive map: 5 destinations (Sossusvlei,
+     Sandwich Harbour, Etosha, Skeleton Coast, Pelican Point) fanning out from
+     the two basecamps. Hover/focus a stop → shared preview panel updates
+     (photo/copy/booking link); route lines draw in on scroll
+     (`setupRouteMap` in `motion.ts`).
+   - **The Itinerary** (`#itinerary`) — the 6 tour rows, now filterable by
+     category (Desert/Coastal/Adventure/Wildlife/Culture) with a ticket-stub
+     duration badge per photo (`setupItineraryFilter`).
+   - **The Logbook** (`#logbook`) — gallery as mixed-ratio masonry with a few
+     handwritten-style captions.
+   - **Passport Stamps** (`#stamps`) — dark stat band, count-up animation
+     (`setupStampCountUp`).
+   - **Postcards from the Road** (`#postcards`) — testimonials as a cycling
+     postcard stack (`setupPostcards`). **Quotes are still placeholder text** —
+     see Open Items.
+   - **Before You Go** (`#faq`) — native `<details>/<summary>` accordion, no JS.
+   - Closing CTA (existing `Section` component, photo theme, heading reframed
+     to "Plan your route").
+4. **Tours page restructured** (`src/pages/tours.astro`) — see next section.
+
+## Tours page — current structure
+
+`TourMapJourney` (the self-assembling map component, `src/components/TourMapJourney.astro`)
+is **untouched** per explicit request — it's the site's best existing motion
+work and stays as the hero + first section.
+
+Below it, in order:
+
+1. **Orientation strip** (`#how-it-works`) — 3-column "01/02/03" explainer of the
+   page's own structure (Signature Tours / Adventures / Combos).
+2. **Adventures** (`#adventures`) — regrouped from one 16-card grid into three
+   chapters, each with one larger "spotlight" card + a supporting grid:
+   - *On the Dunes* (spotlight: Quad Bike Tour) — Explorer Tour, Breakfast Run,
+     Special Quad 90min, Sandboarding, Fat Bike Tour
+   - *Sky & Sea* (spotlight: Tandem Skydive) — Paragliding, Kayaking, Fishing,
+     Sandwich Harbour Tour (Half-day)
+   - *Wildlife & Culture* (spotlight: Township Tour) — Camel Ride, Living Desert
+     Tour, Moonlandscape Tour, Cape Cross
+   - Every `AdventureCard` now has a real "Book this →" link
+     (`src/components/AdventureCard.astro`) — previously adventures/combos had
+     no booking path from the card at all.
+3. **Build Your Own** band — the custom-itinerary pitch/CTA (links to `/contact`).
+4. **Combos** (`#combos`) — new `ComboCard.astro` component: each combo visibly
+   shows its actual paired tours/adventures (photo + name per half, joined by
+   a "+"), driven by a new `pairs: string[]` field added to the 8 combo entries
+   in `src/data/tours.ts` (inferred from each combo's own description/note,
+   documented inline as such — the source rate sheet has no structural link
+   between a combo and its components).
+5. **Closing CTA** band — "Ready to book, or still deciding?"
+
+## Key data model note
+
+`src/data/tours.ts` — `Tour` interface now has an optional `pairs?: string[]`
+field (combo entries only), plus a new `tourBySlug(slug)` helper alongside the
+existing `toursByCategory(category)`. 31 total entries: 7 `tour`, 16 `adventure`,
+8 `combo` (verified by direct grep — an earlier research pass mis-stated 8
+`tour`-category entries; there are 7, and all 7 already appear correctly in
+`TourMapJourney`/`tourRegions.ts`, so there's no missing-tour bug).
+
+## Open items / known gaps
+
+Nothing below is broken — these are flagged honestly, not urgent bugs:
+
+- **Placeholder testimonials** — the 3 "Postcards from the Road" quotes on the
+  homepage are marked `Placeholder quote — swap in a real review` (same
+  convention the old site used). Swap for real guest reviews before full launch.
+- **Formspree not wired up** — `src/components/BookingForm.astro:5`,
+  `FORMSPREE_ID = 'YOUR_FORM_ID'`. Booking form won't actually submit anywhere
+  until a real Formspree endpoint is created and dropped in.
+- **Booking form is single-select** — one tour per booking submission. A combo
+  can be booked as one line item (it's in the dropdown), but two separate
+  non-combo experiences can't be booked together in one submission except via
+  the free-text message field. Not changed this round — flagged as a possible
+  future upgrade if "combine your own itinerary" should become a literal
+  multi-select booking flow rather than a "get in touch" CTA.
+- **`src/components/WhyUsSection.astro`** — unused/dead file, not imported
+  anywhere. Left alone (out of scope for what was asked); safe to delete
+  whenever someone's doing cleanup.
+- **Route map geography is stylized**, not literally accurate to real
+  lon/lat — same design choice `TourMapJourney`'s pins avoid (those *are*
+  real-projected; the homepage's smaller "Route" teaser map is intentionally
+  schematic).
+- **Sandboxed dev environment can't load `images.unsplash.com`** — org network
+  policy blocks it, so screenshots taken during this work show broken image
+  icons. This is an environment limitation, not a site bug — confirmed the
+  same photos 404 the same way for every section, old and new.
+
+## Where to pick up next
+
+No specific next task is queued — ask the user. Natural candidates based on
+open items above: wire up Formspree, replace placeholder testimonials with
+real reviews, or a similar structural pass on `/booking` or `/contact` to
+match the Overland identity (they haven't been touched yet and likely still
+carry the pre-Overland look).
+
+## Useful references for a fresh session
+
+- `themes/overland.md` — read this first for any visual/component work.
+- `themes/the-route.html` (homepage) and this file's "Tours page" section
+  above — the content-structure rationale, so new sections stay consistent
+  with *why* things are organized this way, not just *how*.
+- `src/scripts/motion.ts` — every animation on the site lives here, with
+  comments explaining intent. Always add a `prefers-reduced-motion` branch
+  for any new scroll-triggered effect — the whole file holds this line
+  strictly and it's part of the established quality bar.
+- Screenshot verification pattern used throughout: local `astro dev`,
+  Playwright with `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`, and
+  **real `page.mouse.wheel()` calls with ~150-200ms settle time between
+  ticks** (not `scrollIntoView` or instant `window.scrollTo`) — this site
+  uses Lenis smooth-scroll + GSAP ScrollTrigger, and anything else fails to
+  trigger reveals/pins reliably in headless testing.
