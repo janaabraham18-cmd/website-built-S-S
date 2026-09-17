@@ -81,8 +81,8 @@ export const tours: Tour[] = [
       'Driver/guide',
     ],
     imageUrl:
-      'https://images.unsplash.com/photo-1707470121585-23ecf4671684?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
-    imageCredit: { name: 'm_oros', username: 'm_oros' },
+      'https://images.unsplash.com/photo-1587321174565-73cffc72e10a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+    imageCredit: { name: 'Felipe Labate', username: 'felipelabate' },
   },
   {
     slug: 'skeleton-coast-tour',
