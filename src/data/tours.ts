@@ -1,4 +1,4 @@
-// Real offering content, transcribed from Salt & Sun Tours' 2026 rate sheet
+// Real offering content, transcribed from Salt and Sun Tours' 2026 rate sheet
 // (pricing intentionally omitted until confirmed — see company notes).
 // Skeleton Coast and Spitzkoppe each had two write-ups in the source with
 // no price difference driving it; Version A was kept for both per the
