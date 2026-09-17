@@ -1,6 +1,6 @@
 ---
 // Full-bleed hero leads straight into a two-column journey: a left
-// column of 7 ordinary (non-pinned, non-sticky) sections — one per
+// column of ordinary (non-pinned, non-sticky) sections — one per
 // tour, each fading in via the sitewide .reveal/.reveal-item pattern —
 // and a right-hand column holding a single map that literally grows as
 // you scroll. Nothing about the map is pre-rendered as a "ghost" of the
@@ -8,12 +8,12 @@
 // NamibiaMap coordinate system, centered on that tour's pin) only
 // appears once its section scrolls into view, floating into its true
 // relative position next to whichever pieces already landed, and the
-// map's own container grows taller to fit. By the seventh section the
+// map's own container grows taller to fit. By the final section the
 // map has assembled itself from everything that accumulated. Scrolling
 // on to the closing slot settles that collage into one clean, unbroken
-// map of the whole country with all 7 tours pinned at once — so a
+// map of the whole country with every tour pinned at once — so a
 // tourist can actually read where everything is — alongside a small
-// auto-cycling slideshow of all 7 tour photos. Below ~900px there's no
+// auto-cycling slideshow of all the tour photos. Below ~900px there's no
 // room for two columns, so the growing map is hidden: each tour section
 // shows its own small static piece inline, and the closing slot shows
 // the same complete map as a plain static image.
@@ -47,6 +47,9 @@ const highlightsBySlug: Record<string, string[]> = {
   'spitzkoppe-tour': ['Granite rock formations', 'Ancient rock art', 'Desert landscapes'],
   'pelican-point-tour': ['Cape fur seals', 'Pelicans', 'Flamingos', 'Desert-meets-ocean views'],
   'dolphin-seal-catamaran-cruise': ['Dolphins', 'Rescue seals & pelicans', 'Whales', 'Turtles & Mola fish'],
+  'moonlandscape-tour': ['Moonscape valley views', 'Lichen fields', 'Welwitschia plants'],
+  'cape-cross': ['Cape fur seal colony', 'Historic post office & railway', 'Lichen fields', 'Zeila Shipwreck'],
+  'living-desert-tour': ['Sidewinder snakes', 'White Lady spiders', 'Namaqua chameleons', 'Dancing lizards'],
 };
 
 // Every piece is the same fixed-size crop (in map units) of the exact
@@ -59,7 +62,7 @@ const PIECE_H = 210;
 const pieceViewBox = (pin: { x: number; y: number }) =>
   `${pin.x - PIECE_W / 2} ${pin.y - PIECE_H / 2} ${PIECE_W} ${PIECE_H}`;
 
-// Pixel layout for the growing map: lay out all 7 piece-crops at their
+// Pixel layout for the growing map: lay out all the piece-crops at their
 // true relative map-unit positions, find the bounding box that
 // encloses all of them, then scale that box to a sensible on-page
 // size. This is computed once, up front — the pieces' final positions
@@ -82,9 +85,9 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
   return `left:${left}px; top:${top}px; width:${w}px; height:${h}px;`;
 };
 
-// Once all 7 pieces have landed, the collage settles into one clean,
+// Once all pieces have landed, the collage settles into one clean,
 // unbroken map of the whole country (NamibiaMap's full 0 0 751 740
-// viewBox) with all 7 tours pinned at once, so it's actually legible as
+// viewBox) with every tour pinned at once, so it's actually legible as
 // a map rather than a scrapbook of overlapping crops — the point being
 // a tourist can now see exactly where each tour sits relative to the
 // others. Kept at the same width as the collage so the settle reads as
@@ -100,7 +103,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     <p class="tour-hero__eyebrow">Salt &amp; Sun Tours</p>
     <h1 class="tour-hero__heading">Tours &amp; Adventures</h1>
     <p class="tour-hero__body">
-      Seven signature destinations across three regions, plus every
+      Ten signature destinations across three regions, plus every
       shorter adventure and combo deal we run out of Swakopmund and
       Walvis Bay. <a href="/contact">Contact us for current rates</a>.
     </p>
@@ -178,16 +181,16 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
         ))
       }
 
-      <!-- Closing slot: once the growing map has assembled all 7 pieces,
+      <!-- Closing slot: once the growing map has assembled all its pieces,
            scrolling to this slot settles it into one clean complete map
            (see setupTourMapGrowth's finalTrigger) alongside a small
-           auto-cycling slideshow of all 7 tour photos. Lives inside the
-           same left column/grid row as the 7 tour sections (rather than
+           auto-cycling slideshow of all the tour photos. Lives inside the
+           same left column/grid row as the tour sections (rather than
            as its own section after .tour-journey) so the map column
            beside it can keep using the same non-sticky
            margin-top-repositioning trick to end up level with it. -->
       <div class="tour-recap reveal" data-map-final>
-        <h2 class="tour-recap__heading reveal-item">Seven tours, three regions</h2>
+        <h2 class="tour-recap__heading reveal-item">Ten tours, three regions</h2>
         <p class="tour-recap__lede reveal-item">
           Every tour, together on one map — see exactly where each one takes you.
         </p>
@@ -398,7 +401,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
      flow, at the top of its column by default. A single fixed vertical
      position (top-anchored or centered) doesn't work here: the map's
      own assembled size stays compact (it's scaled to real geography,
-     not to page length) while the 7-section stack is many times
+     not to page length) while the tour-section stack is many times
      taller, so anywhere static leaves it stranded off-screen for most
      of the scroll. Instead, setupTourMapGrowth() nudges this column's
      margin-top once per section (at the same moment that section's

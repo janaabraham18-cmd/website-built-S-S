@@ -10,7 +10,7 @@ const combos = toursByCategory('combo');
 
 const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
 
-// Adventures are grouped into three chapters instead of one 16-card wall —
+// Adventures are grouped into chapters instead of one dense wall —
 // each opens with one larger "spotlight" tour and a supporting grid beneath,
 // so scrolling through them has a beat (spotlight, grid, spotlight, grid...)
 // instead of reading as one undifferentiated dense wall.
@@ -32,17 +32,10 @@ const adventureGroupDefs = [
   },
   {
     key: 'sky-sea',
-    eyebrow: 'Sky & Sea',
-    intro: 'From 10,000 feet to sea level — the widest views Namibia has to offer.',
+    eyebrow: 'Sky, Sea & Culture',
+    intro: 'From 10,000 feet to sea level, plus the slower-paced days built around the coast’s people and wildlife.',
     spotlightSlug: 'tandem-skydive',
-    slugs: ['paragliding', 'kayaking', 'fishing', 'sandwich-harbour-half-day'],
-  },
-  {
-    key: 'wildlife-culture',
-    eyebrow: 'Wildlife & Culture',
-    intro: 'Slower-paced days built around the people, animals, and landscapes of the coast.',
-    spotlightSlug: 'township-tour',
-    slugs: ['camel-ride', 'living-desert-tour', 'moonlandscape-tour', 'cape-cross'],
+    slugs: ['paragliding', 'kayaking', 'fishing', 'sandwich-harbour-half-day', 'camel-ride', 'township-tour'],
   },
 ];
 
@@ -67,7 +60,7 @@ const adventureGroups: AdventureGroup[] = adventureGroupDefs
       <div class="orientation__item reveal-item">
         <span class="orientation__num">01</span>
         <h3>Signature Tours</h3>
-        <p>Full-day trips to Namibia's most iconic destinations — see all seven on the map above.</p>
+        <p>Full-day trips to Namibia's most iconic destinations — see all ten on the map above.</p>
       </div>
       <div class="orientation__item reveal-item">
         <span class="orientation__num">02</span>

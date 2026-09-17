@@ -31,6 +31,12 @@ export const mapStops: MapStop[] = [
       { slug: 'dolphin-seal-catamaran-cruise', x: 178, y: 363 },
       { slug: 'sandwich-harbour-full-day', x: 186, y: 391 },
       { slug: 'spitzkoppe-tour', x: 204, y: 303 },
+      // Swakop River valley, just inland of Swakopmund — same cluster
+      // as the coastal pins above, nudged east.
+      { slug: 'moonlandscape-tour', x: 197, y: 358 },
+      { slug: 'living-desert-tour', x: 192, y: 382 },
+      // North along the coast past Henties Bay, still inside Erongo.
+      { slug: 'cape-cross', x: 160, y: 322 },
     ],
   },
   {

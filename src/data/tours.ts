@@ -167,6 +167,44 @@ export const tours: Tour[] = [
     imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
   },
   {
+    slug: 'moonlandscape-tour',
+    category: 'tour',
+    name: 'Moonlandscape Tour',
+    description:
+      'As you venture into the valleys of the Swakop River you will get to a spectacular and unusual moonscape. Learn about the minerals and the plants of the area. A stop will be made to see the variety of lichen in the area and the indigenous Welwitschia plant.',
+    duration: '4 hrs',
+    included: ['Transfers', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1766470956586-2b969d67b391?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Abhi Verma', username: 'abhiver' },
+  },
+  {
+    slug: 'cape-cross',
+    category: 'tour',
+    name: 'Cape Cross',
+    description:
+      'Watch thousands of seals bask in the sun at Cape Cross — excellent photo opportunities and an unforgettable sight. We head north past Henties Bay to the first regional post office, cemetery and the first known railway in the territory. On the way back, we cruise through the lichen fields and on to the Zeila Shipwreck.',
+    duration: '4 hrs',
+    note: 'Departs at 08h00',
+    included: ['Transfers', 'Water', 'Park fees'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1782841027397-1ffc35ea9eef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Trenton Alarcon', username: 'tatertots4robots' },
+  },
+  {
+    slug: 'living-desert-tour',
+    category: 'tour',
+    name: 'Living Desert Tour',
+    description:
+      'Come explore the Namib Desert on this 4-wheel drive trip and discover its many wonders. The life-giving fog supports a wealth of fauna and flora. Sidewinder snakes, White Lady spiders, Namaqua chameleons, dancing lizards and much more can be seen. Excellent photographic opportunities.',
+    duration: '+/-3 hrs',
+    note: 'Pick-up from 8h30',
+    included: ['Transfers', 'Water'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1761071149747-db3277fb8615?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Nadine Marfurt', username: 'nadine3' },
+  },
+  {
     // Recategorized from 'adventure' to 'tour' — this is a proper
     // sightseeing tour departing Walvis Bay harbour like Pelican Point,
     // not a short activity, so it belongs with the other destination
@@ -281,19 +319,6 @@ export const tours: Tour[] = [
     imageCredit: { name: 'Jorge Otero', username: 'oterex' },
   },
   {
-    slug: 'living-desert-tour',
-    category: 'adventure',
-    name: 'Living Desert Tour',
-    description:
-      'Come explore the Namib Desert on this 4-wheel drive trip and discover its many wonders. The life-giving fog supports a wealth of fauna and flora. Sidewinder snakes, White Lady spiders, Namaqua chameleons, dancing lizards and much more can be seen. Excellent photographic opportunities.',
-    duration: '+/-3 hrs',
-    note: 'Pick-up from 8h30',
-    included: ['Transfers', 'Water'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1761071149747-db3277fb8615?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Nadine Marfurt', username: 'nadine3' },
-  },
-  {
     slug: 'township-tour',
     category: 'adventure',
     name: 'Township Tour',
@@ -377,32 +402,6 @@ export const tours: Tour[] = [
       'https://images.unsplash.com/photo-1659901981145-dbc056431a8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Kamil Pietrzak', username: 'kamilpphotos' },
   },
-  {
-    slug: 'moonlandscape-tour',
-    category: 'adventure',
-    name: 'Moonlandscape Tour',
-    description:
-      'As you venture into the valleys of the Swakop River you will get to a spectacular and unusual moonscape. Learn about the minerals and the plants of the area. A stop will be made to see the variety of lichen in the area and the indigenous Welwitschia plant.',
-    duration: '4 hrs',
-    included: ['Transfers', 'Water'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1766470956586-2b969d67b391?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Abhi Verma', username: 'abhiver' },
-  },
-  {
-    slug: 'cape-cross',
-    category: 'adventure',
-    name: 'Cape Cross',
-    description:
-      'Watch thousands of seals bask in the sun at Cape Cross — excellent photo opportunities and an unforgettable sight. We head north past Henties Bay to the first regional post office, cemetery and the first known railway in the territory. On the way back, we cruise through the lichen fields and on to the Zeila Shipwreck.',
-    duration: '4 hrs',
-    note: 'Departs at 08h00',
-    included: ['Transfers', 'Water', 'Park fees'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1782841027397-1ffc35ea9eef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Trenton Alarcon', username: 'tatertots4robots' },
-  },
-
   // --- Combo deals ---
   {
     slug: 'explorer-combo',

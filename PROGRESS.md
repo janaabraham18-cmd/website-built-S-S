@@ -6,7 +6,7 @@ the end of each work session rather than letting context live only in chat
 history.
 
 **Branch:** `claude/modest-tesla-m7moez`
-**Last updated:** 2026-09-17
+**Last updated:** 2026-09-17 (later same session: Moonlandscape/Cape Cross/Living Desert Tour recategorized)
 
 ---
 
@@ -77,6 +77,19 @@ Established across a few sessions of audit + design work, documented in full at:
    - Closing CTA (existing `Section` component, photo theme, heading reframed
      to "Plan your route").
 4. **Tours page restructured** (`src/pages/tours.astro`) — see next section.
+5. **Moonlandscape Tour, Cape Cross, and Living Desert Tour moved from
+   Adventures to Tours** — recategorized in `src/data/tours.ts` (same move
+   already made earlier for the Dolphin & Seal Catamaran Cruise), added to
+   `TourMapJourney`'s pin set via `src/data/tourRegions.ts` (erongo group,
+   clustered near Swakopmund/inland along the Swakop River valley for the
+   first two, further north along the coast for Cape Cross), and given
+   `highlightsBySlug` entries in `TourMapJourney.astro`. The self-assembling
+   map is fully data-driven off `mapJourney`, so no changes to the map
+   component itself were needed. Tours is now 10 entries, Adventures 13
+   (31 total unchanged). The tours page's "Wildlife & Culture" adventure
+   group lost 3 of its 4 items in this move, so it was folded into "Sky &
+   Sea" (renamed "Sky, Sea & Culture") to keep both adventure chapters
+   substantial — the page now has 2 adventure chapters instead of 3.
 
 ## Tours page — current structure
 
@@ -88,14 +101,15 @@ Below it, in order:
 
 1. **Orientation strip** (`#how-it-works`) — 3-column "01/02/03" explainer of the
    page's own structure (Signature Tours / Adventures / Combos).
-2. **Adventures** (`#adventures`) — regrouped from one 16-card grid into three
-   chapters, each with one larger "spotlight" card + a supporting grid:
+2. **Adventures** (`#adventures`) — regrouped from one dense grid into chapters,
+   each with one larger "spotlight" card + a supporting grid:
    - *On the Dunes* (spotlight: Quad Bike Tour) — Explorer Tour, Breakfast Run,
      Special Quad 90min, Sandboarding, Fat Bike Tour
-   - *Sky & Sea* (spotlight: Tandem Skydive) — Paragliding, Kayaking, Fishing,
-     Sandwich Harbour Tour (Half-day)
-   - *Wildlife & Culture* (spotlight: Township Tour) — Camel Ride, Living Desert
-     Tour, Moonlandscape Tour, Cape Cross
+   - *Sky, Sea & Culture* (spotlight: Tandem Skydive) — Paragliding, Kayaking,
+     Fishing, Sandwich Harbour Tour (Half-day), Camel Ride, Township Tour
+   - (Living Desert Tour, Moonlandscape Tour, and Cape Cross moved to the
+     Tours category — see below — so the old third "Wildlife & Culture"
+     chapter was folded into Sky & Sea rather than left thin.)
    - Every `AdventureCard` now has a real "Book this →" link
      (`src/components/AdventureCard.astro`) — previously adventures/combos had
      no booking path from the card at all.
@@ -112,10 +126,14 @@ Below it, in order:
 
 `src/data/tours.ts` — `Tour` interface now has an optional `pairs?: string[]`
 field (combo entries only), plus a new `tourBySlug(slug)` helper alongside the
-existing `toursByCategory(category)`. 31 total entries: 7 `tour`, 16 `adventure`,
-8 `combo` (verified by direct grep — an earlier research pass mis-stated 8
-`tour`-category entries; there are 7, and all 7 already appear correctly in
-`TourMapJourney`/`tourRegions.ts`, so there's no missing-tour bug).
+existing `toursByCategory(category)`. 31 total entries: 10 `tour`, 13
+`adventure`, 8 `combo`. Four entries have been moved from `adventure` to
+`tour` since the original rate-sheet transcription (Dolphin & Seal Catamaran
+Cruise, then later Moonlandscape Tour, Cape Cross, and Living Desert Tour) —
+each move is a proper destination excursion departing from a basecamp, not a
+short activity, so it reads better alongside the other Tours. All 10 `tour`
+entries have a matching pin in `src/data/tourRegions.ts` and appear in
+`TourMapJourney` automatically (it's driven entirely off `mapJourney`).
 
 ## Open items / known gaps
 

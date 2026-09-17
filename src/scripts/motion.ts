@@ -367,7 +367,7 @@ function setupPostcards() {
   });
 }
 
-// Tours page closing recap: small auto-cycling slideshow through the 7
+// Tours page closing recap: small auto-cycling slideshow through the
 // tour photos next to the complete assembled map. Same accessibility
 // pattern as the hero panel slideshow below — click a dot to jump
 // there directly, pause on hover AND focus (not hover alone, which
@@ -471,7 +471,7 @@ function setupTourPhotoBleed() {
   window.addEventListener('load', align);
 }
 
-// Tours page growing map: each of the 7 tour sections owns one piece
+// Tours page growing map: each tour section owns one piece
 // of the shared Namibia map, laid out server-side at its true relative
 // position (see TourMapJourney.astro's pieceBoxStyle) but starting
 // hidden and the container collapsed to zero height — there is no
@@ -485,9 +485,9 @@ function setupTourPhotoBleed() {
 // shrinks back to fit whatever's left, and re-triggering that section
 // by scrolling back down re-places it — nothing is `once: true` here.
 //
-// Scrolling on past the 7th tour into the closing recap slot settles
+// Scrolling on past the last tour into the closing recap slot settles
 // the collage into one clean, unbroken map (same coordinate space, same
-// width, just the seamless version) with all 7 tours pinned at once —
+// width, just the seamless version) with every tour pinned at once —
 // the point being a tourist can actually read where everything sits
 // relative to everything else, which the overlapping crops don't
 // really give you. Scrolling back up out of the recap slot reverses
@@ -495,7 +495,7 @@ function setupTourPhotoBleed() {
 //
 // The map is explicitly not pinned/sticky, but it can't just sit at one
 // fixed vertical spot either: its assembled size stays compact (scaled
-// to real geography, not to page length) while the 7-section-plus-recap
+// to real geography, not to page length) while the tour-section-plus-recap
 // stack beside it is many times taller, so any single static position
 // leaves it stranded off-screen for most of the scroll — a static top
 // or centered position both fail this the same way, they just fail for
