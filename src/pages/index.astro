@@ -112,6 +112,12 @@ const routeDestinations = [
   },
 ];
 
+// The Sossusvlei photo already opens the page in the Brief banner and
+// repeats in the Itinerary row below, so this preview defaults to Etosha
+// instead to avoid a third repeat of the same shot right after the hero.
+const defaultRouteIndex = routeDestinations.findIndex((d) => d.slug === 'etosha-tour');
+const defaultRoute = routeDestinations[defaultRouteIndex];
+
 const itineraryFilters = [
   { key: 'all', label: 'All' },
   { key: 'desert', label: 'Desert' },
@@ -238,7 +244,7 @@ const closingCtaPhoto = {
           routeDestinations.map((d, i) => (
             <button
               type="button"
-              class:list={['route-stop', i === 0 && 'is-active']}
+              class:list={['route-stop', i === defaultRouteIndex && 'is-active']}
               data-dest={d.slug}
               data-name={d.name}
               data-tag={d.tag}
@@ -260,22 +266,22 @@ const closingCtaPhoto = {
         <div class="photo-frame route-preview__photo">
           <img
             data-preview-img
-            src={routeDestinations[0].imageUrl}
-            alt={routeDestinations[0].name}
+            src={defaultRoute.imageUrl}
+            alt={defaultRoute.name}
             loading="lazy"
             decoding="async"
           />
         </div>
-        <p class="route-preview__tag" data-preview-tag>{routeDestinations[0].tag}</p>
-        <h3 class="route-preview__name" data-preview-name>{routeDestinations[0].name}</h3>
-        <p class="route-preview__teaser" data-preview-teaser>{routeDestinations[0].teaser}</p>
+        <p class="route-preview__tag" data-preview-tag>{defaultRoute.tag}</p>
+        <h3 class="route-preview__name" data-preview-name>{defaultRoute.name}</h3>
+        <p class="route-preview__teaser" data-preview-teaser>{defaultRoute.teaser}</p>
         <p class="route-preview__credit">
           Photo:{' '}
-          <a data-preview-credit-name href={`https://unsplash.com/@${routeDestinations[0].imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{routeDestinations[0].imageCredit.name}</a>{' '}
+          <a data-preview-credit-name href={`https://unsplash.com/@${defaultRoute.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{defaultRoute.imageCredit.name}</a>{' '}
           /{' '}
           <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
         </p>
-        <a class="btn btn-outline route-preview__cta" data-preview-cta href={`/booking?tour=${routeDestinations[0].slug}`}>Book this route</a>
+        <a class="btn btn-outline route-preview__cta" data-preview-cta href={`/booking?tour=${defaultRoute.slug}`}>Book this route</a>
       </div>
     </div>
   </section>
