@@ -551,8 +551,17 @@ const closingCtaPhoto = {
     background-image: var(--gradient-glow-warm);
   }
 
+  /* A soft, tinted-down giraffe shot (also used in the Logbook grid) sits
+     behind the route map/card as ambient texture — the map and preview
+     card both carry their own solid backgrounds, so this only shows
+     through the section's own padding, never behind the card content. */
   .route-block {
-    background-image: var(--gradient-glow-coastal);
+    background-image: linear-gradient(180deg, rgba(251, 247, 241, 0.88) 0%, rgba(251, 247, 241, 0.94) 100%),
+      var(--gradient-glow-coastal),
+      url('https://images.unsplash.com/photo-1595652974715-571ba74668b5?w=1600&q=80&auto=format&fit=crop');
+    background-size: auto, auto, cover;
+    background-position: 0 0, 0 0, center;
+    background-repeat: no-repeat, no-repeat, no-repeat;
   }
 
   .logbook-block {
