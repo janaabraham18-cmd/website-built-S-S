@@ -6,7 +6,7 @@ the end of each work session rather than letting context live only in chat
 history.
 
 **Branch:** `claude/modest-tesla-m7moez`
-**Last updated:** 2026-09-17 (later same session: Moonlandscape/Cape Cross/Living Desert Tour recategorized)
+**Last updated:** 2026-09-17 (same session: tour recategorization, then the Adventures section's card grid replaced with a name-index + large-photo interaction)
 
 ---
 
@@ -101,18 +101,27 @@ Below it, in order:
 
 1. **Orientation strip** (`#how-it-works`) — 3-column "01/02/03" explainer of the
    page's own structure (Signature Tours / Adventures / Combos).
-2. **Adventures** (`#adventures`) — regrouped from one dense grid into chapters,
-   each with one larger "spotlight" card + a supporting grid:
-   - *On the Dunes* (spotlight: Quad Bike Tour) — Explorer Tour, Breakfast Run,
-     Special Quad 90min, Sandboarding, Fat Bike Tour
-   - *Sky, Sea & Culture* (spotlight: Tandem Skydive) — Paragliding, Kayaking,
-     Fishing, Sandwich Harbour Tour (Half-day), Camel Ride, Township Tour
-   - (Living Desert Tour, Moonlandscape Tour, and Cape Cross moved to the
-     Tours category — see below — so the old third "Wildlife & Culture"
-     chapter was folded into Sky & Sea rather than left thin.)
-   - Every `AdventureCard` now has a real "Book this →" link
-     (`src/components/AdventureCard.astro`) — previously adventures/combos had
-     no booking path from the card at all.
+2. **Adventures** (`#adventures`) — redesigned again, away from any card grid
+   entirely. Each of the two chapters (*On the Dunes*, *Sky, Sea & Culture* —
+   see the recategorization note above for why there are only two) is now a
+   compact **name index beside one large shared photo**: picking a name
+   (hover, focus, or tap) crossfades a big photo + caption in next to it,
+   instead of a wall of same-sized tiles. The first name in each list is
+   marked "Most requested" and is what's shown before anyone picks anything.
+   Implementation: `setupAdventureIndex()` in `src/scripts/motion.ts`
+   (per-group crossfade, ~180ms fade-out/350ms fade-in, `power1.in`/
+   `power2.out`, matching Jakub Krehel's "small transitions read as more
+   polished than instant" guidance from `design-motion-principles`), plus a
+   hand-drawn SVG underline beneath the section heading that draws in on
+   scroll (same technique as the itinerary threads and Route lines). The
+   section heading itself also picked up a short italic hint line ("Pick a
+   name, watch the photo change.") so the interaction isn't a surprise.
+   Mobile (<860px) reorders via CSS grid-area so the photo stacks above the
+   list (DOM order stays list-then-preview for keyboard/screen-reader
+   users). `AdventureCard.astro` is no longer used on this page (still used
+   by the standalone `/preview-adventure-cards` page) but every tour still
+   has a real "Book this →" link — previously adventures/combos had no
+   booking path from the card at all.
 3. **Build Your Own** band — the custom-itinerary pitch/CTA (links to `/contact`).
 4. **Combos** (`#combos`) — new `ComboCard.astro` component: each combo visibly
    shows its actual paired tours/adventures (photo + name per half, joined by
