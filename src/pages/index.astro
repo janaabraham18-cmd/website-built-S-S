@@ -557,6 +557,7 @@ const faqItems = [
 
   <!-- ============ 08 · POSTCARDS FROM THE ROAD ============ -->
   <section class="block postcards-block reveal" id="postcards">
+    <div class="postcards-block__bg" data-postcards-bg aria-hidden="true"></div>
     <p class="eyebrow">Postcards from the Road</p>
     <h2 class="section-title">What guests say</h2>
 
@@ -623,8 +624,7 @@ const faqItems = [
      Placed after .block/#brief,#itinerary,#faq so these longhand
      background-image declarations win at equal specificity. */
   .brief-block,
-  .itinerary-block,
-  .postcards-block {
+  .itinerary-block {
     background-image: var(--gradient-glow-warm);
   }
 
@@ -1189,6 +1189,28 @@ const faqItems = [
   }
 
   /* ---------- 08 Postcards ---------- */
+  .postcards-block {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  /* Hikers with backpacks, heavily blurred so it reads as ambient
+     texture rather than a competing photo behind the review cards.
+     Oversized (inset beyond the section's own edges) so the blur's
+     soft fringe never shows at the boundary — the parent's
+     overflow: hidden clips the excess. Shown at full strength, no
+     tint overlay on top. */
+  .postcards-block__bg {
+    position: absolute;
+    inset: -40px;
+    background-image: url('https://images.unsplash.com/photo-1755554246446-c3c4a94f64e8?w=1600&q=80&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    filter: blur(24px);
+    z-index: -1;
+  }
+
   .postcards { max-width: 640px; margin-inline: auto; text-align: center; }
 
   .postcards__stack {
