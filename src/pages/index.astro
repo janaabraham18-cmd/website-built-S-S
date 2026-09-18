@@ -487,6 +487,15 @@ const faqItems = [
         </div>
       </div>
     </div>
+
+    <div class="about-profile">
+      <img
+        src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
+        alt="Lenga, founder of Salt and Sun Tours"
+        loading="lazy"
+        decoding="async"
+      />
+    </div>
   </section>
 
   <!-- ============ 05 · PASSPORT STAMPS ============ -->
@@ -947,6 +956,40 @@ const faqItems = [
   }
 
   /* ---------- 04 About Us ---------- */
+  .about-block {
+    position: relative;
+  }
+
+  /* Small square profile photo, pinned to the section's bottom-left
+     corner on desktop; drops into normal flow (centered, below the
+     text) on narrower viewports where a corner overlay would collide
+     with the text. */
+  .about-profile {
+    position: absolute;
+    left: clamp(1.25rem, 5vw, 3rem);
+    bottom: clamp(1.25rem, 5vw, 3rem);
+    width: 110px;
+    height: 110px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 3px solid var(--color-surface);
+    box-shadow: var(--shadow-md);
+  }
+
+  .about-profile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 800px) {
+    .about-profile {
+      position: static;
+      margin: 2rem auto 0;
+    }
+  }
+
   .about-copy {
     text-align: center;
   }
