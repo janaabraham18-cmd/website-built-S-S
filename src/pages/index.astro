@@ -965,19 +965,14 @@ const aboutPhoto = {
     overflow: hidden;
   }
 
-  /* Man standing at The Bridge rock arch, Spitzkoppe — kept subtle
-     behind the long-form text with a sand-tinted scrim (unlike the
-     Route section's bare photo, this one sits directly behind body
-     copy rather than beside a card, so it needs real contrast to stay
-     readable) and anchored toward the bottom right of the frame. */
+  /* Spitzkoppe photo, anchored toward the bottom right of the frame. */
   .about-block__bg {
     position: absolute;
     inset: 0;
-    background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.94) 100%),
-      url('https://images.unsplash.com/photo-1666993804910-60191605094f?w=1600&q=80&auto=format&fit=crop');
-    background-size: cover, cover;
-    background-position: center, right bottom;
-    background-repeat: no-repeat, no-repeat;
+    background-image: url('https://images.unsplash.com/photo-1666993804910-60191605094f?w=1600&q=80&auto=format&fit=crop');
+    background-size: cover;
+    background-position: right bottom;
+    background-repeat: no-repeat;
     z-index: -1;
   }
 
