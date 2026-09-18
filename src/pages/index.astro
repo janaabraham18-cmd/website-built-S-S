@@ -442,45 +442,49 @@ const faqItems = [
     <p class="eyebrow">About Us</p>
     <h2 class="section-title">More than a journey</h2>
     <div class="about-copy reveal-item">
-      <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
+      <div class="about-copy__columns">
+        <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
 
-      <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
+        <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
 
-      <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+        <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
 
-      <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
+        <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
 
-      <p class="about-copy__pull">It is about the person you become along the way.</p>
+        <p class="about-copy__pull">It is about the person you become along the way.</p>
 
-      <p>Life leaves people carrying stories that are often never spoken — pain, disappointment, loss, rejection, fear, and experiences that shape who we become. My own journey taught me that sometimes healing begins when we finally have a safe place to be heard.</p>
+        <p>Life leaves people carrying stories that are often never spoken — pain, disappointment, loss, rejection, fear, and experiences that shape who we become. My own journey taught me that sometimes healing begins when we finally have a safe place to be heard.</p>
 
-      <p>That is what we want Salt and Sun Tours to be.</p>
+        <p>That is what we want Salt and Sun Tours to be.</p>
 
-      <p class="about-copy__list">
-        A place where strangers can become companions.<br />
-        Where conversations go deeper than the road ahead.<br />
-        Where stories can be shared without judgement.<br />
-        Where we can laugh, reflect, encourage one another, and sometimes simply sit in silence beneath the African sky.
-      </p>
+        <p class="about-copy__list">
+          A place where strangers can become companions.<br />
+          Where conversations go deeper than the road ahead.<br />
+          Where stories can be shared without judgement.<br />
+          Where we can laugh, reflect, encourage one another, and sometimes simply sit in silence beneath the African sky.
+        </p>
 
-      <p class="about-copy__pull">
-        You may arrive looking for Namibia.<br />
-        You may leave having found a little more of yourself.
-      </p>
+        <p class="about-copy__pull">
+          You may arrive looking for Namibia.<br />
+          You may leave having found a little more of yourself.
+        </p>
 
-      <p>We believe that every person has value, regardless of their past, their mistakes, or what they have been through. And sometimes, one person's testimony can become another person's reason to keep going.</p>
+        <p>We believe that every person has value, regardless of their past, their mistakes, or what they have been through. And sometimes, one person's testimony can become another person's reason to keep going.</p>
 
-      <p>So when you travel with us, you are not just booking a tour.</p>
+        <p>So when you travel with us, you are not just booking a tour.</p>
 
-      <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
+        <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
+      </div>
 
-      <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
+      <div class="about-copy__close">
+        <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
 
-      <p>And perhaps, somewhere between the desert and the stars, you will discover that the greatest destination was never a place — it was becoming who you were created to be.</p>
+        <p>And perhaps, somewhere between the desert and the stars, you will discover that the greatest destination was never a place — it was becoming who you were created to be.</p>
 
-      <div class="about-copy__signoff">
-        <p class="about-copy__signoff-name">Salt and Sun Tours</p>
-        <p class="about-copy__signoff-tag">More than a tour. A journey that leaves a mark.</p>
+        <div class="about-copy__signoff">
+          <p class="about-copy__signoff-name">Salt and Sun Tours</p>
+          <p class="about-copy__signoff-tag">More than a tour. A journey that leaves a mark.</p>
+        </div>
       </div>
     </div>
   </section>
@@ -944,8 +948,6 @@ const faqItems = [
 
   /* ---------- 04 About Us ---------- */
   .about-copy {
-    max-width: 40rem;
-    margin-inline: auto;
     text-align: center;
   }
 
@@ -954,6 +956,38 @@ const faqItems = [
     line-height: 1.8;
     color: var(--color-text-muted);
     margin: 0 0 1.4rem;
+  }
+
+  /* Two-column flow for the long-form body — text fills the left column
+     top to bottom, then continues in the right column, so the section
+     doesn't force a very long single-column scroll. Collapses back to
+     one column on narrow viewports where side-by-side reading columns
+     don't work. */
+  .about-copy__columns {
+    max-width: 64rem;
+    margin: 0 auto 2.5rem;
+    columns: 2;
+    column-gap: 3.5rem;
+    column-rule: 1px solid var(--color-border);
+  }
+
+  .about-copy__columns > * {
+    break-inside: avoid;
+  }
+
+  /* The invite line and everything after it stays a single centered
+     column, not split across the two above. */
+  .about-copy__close {
+    max-width: 40rem;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 800px) {
+    .about-copy__columns {
+      columns: 1;
+      column-rule: none;
+      max-width: 40rem;
+    }
   }
 
   .about-copy__lead {
