@@ -958,27 +958,27 @@ const faqItems = [
   /* ---------- 04 About Us ---------- */
   .about-block {
     position: relative;
-    /* Extra room below the text so the larger corner photo (330px) has
-       clear space beneath the closing block instead of sitting on top
-       of it. Reverts to the shared .block padding on mobile, where the
-       photo drops into normal flow instead. */
-    padding-bottom: 28rem;
+    /* Extra room above the text so the larger corner photo (330px) has
+       clear space above the heading/columns instead of sitting on top
+       of them. Reverts to the shared .block padding on mobile, where
+       the photo drops into normal flow instead. */
+    padding-top: 28rem;
   }
 
   @media (max-width: 800px) {
     .about-block {
-      padding-bottom: clamp(3.5rem, 8vw, 6.25rem);
+      padding-top: clamp(3.5rem, 8vw, 6.25rem);
     }
   }
 
-  /* Small square profile photo, pinned to the section's bottom-left
+  /* Small square profile photo, pinned to the section's top-right
      corner on desktop; drops into normal flow (centered, below the
      text) on narrower viewports where a corner overlay would collide
      with the text. */
   .about-profile {
     position: absolute;
-    left: clamp(1.25rem, 5vw, 3rem);
-    bottom: clamp(1.25rem, 5vw, 3rem);
+    right: clamp(1.25rem, 5vw, 3rem);
+    top: clamp(1.25rem, 5vw, 3rem);
     width: 330px;
     height: 330px;
     border-radius: var(--radius-md);
