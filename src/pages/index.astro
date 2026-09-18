@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
-import Section from '../components/Section.astro';
 
 const heroPanels = [
   {
@@ -176,11 +175,6 @@ const faqItems = [
   },
 ];
 
-const closingCtaPhoto = {
-  imageUrl:
-    'https://images.unsplash.com/photo-1783679603167-4d6650f3cbd3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
-  credit: { name: 'GILLES GORLIER', username: 'gorlig_38' },
-};
 ---
 
 <BaseLayout
@@ -443,19 +437,51 @@ const closingCtaPhoto = {
     </div>
   </section>
 
-  <!-- ============ 04 · THE LOGBOOK ============ -->
-  <section class="block logbook-block reveal" id="logbook">
-    <p class="eyebrow">The Logbook</p>
-    <h2 class="section-title">Namibia, in passing</h2>
-    <div class="logbook-grid reveal-item">
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1709192856319-255c881dd630?w=600&q=80&auto=format&fit=crop" alt="Fish River Canyon at dawn, one of the largest canyons in the world" loading="lazy" decoding="async" /></div><figcaption>dawn over the canyon</figcaption></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595652974715-571ba74668b5?w=600&q=80&auto=format&fit=crop" alt="A giraffe at sunset in Etosha National Park" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1696894134302-7e124a8bf2e8?w=600&q=80&auto=format&fit=crop" alt="A lone oryx crossing the red dunes of the Namib" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1669220228835-6c80412646d2?w=600&q=80&auto=format&fit=crop" alt="Spitzkoppe's granite peaks under a star-filled sky" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1621238705338-532e7df61de5?w=600&q=80&auto=format&fit=crop" alt="Cape fur seal colony at Cape Cross" loading="lazy" decoding="async" /></div><figcaption>seal colony, Cape Cross</figcaption></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595583945105-3138e8dd6b98?w=600&q=80&auto=format&fit=crop" alt="Mountains of Damaraland at sunset" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595961664116-130d677eb080?w=600&q=80&auto=format&fit=crop" alt="A black rhino in its natural Namibian habitat" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1665072523770-601bd7e96aef?w=600&q=80&auto=format&fit=crop" alt="Aerial view of Namib desert dune patterns" loading="lazy" decoding="async" /></div><figcaption>the dunes, from above</figcaption></figure>
+  <!-- ============ 04 · ABOUT US ============ -->
+  <section class="block about-block reveal" id="about">
+    <p class="eyebrow">About Us</p>
+    <h2 class="section-title">More than a journey</h2>
+    <div class="about-copy reveal-item">
+      <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
+
+      <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
+
+      <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+
+      <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
+
+      <p class="about-copy__pull">It is about the person you become along the way.</p>
+
+      <p>Life leaves people carrying stories that are often never spoken — pain, disappointment, loss, rejection, fear, and experiences that shape who we become. My own journey taught me that sometimes healing begins when we finally have a safe place to be heard.</p>
+
+      <p>That is what we want Salt and Sun Tours to be.</p>
+
+      <p class="about-copy__list">
+        A place where strangers can become companions.<br />
+        Where conversations go deeper than the road ahead.<br />
+        Where stories can be shared without judgement.<br />
+        Where we can laugh, reflect, encourage one another, and sometimes simply sit in silence beneath the African sky.
+      </p>
+
+      <p class="about-copy__pull">
+        You may arrive looking for Namibia.<br />
+        You may leave having found a little more of yourself.
+      </p>
+
+      <p>We believe that every person has value, regardless of their past, their mistakes, or what they have been through. And sometimes, one person's testimony can become another person's reason to keep going.</p>
+
+      <p>So when you travel with us, you are not just booking a tour.</p>
+
+      <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
+
+      <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
+
+      <p>And perhaps, somewhere between the desert and the stars, you will discover that the greatest destination was never a place — it was becoming who you were created to be.</p>
+
+      <div class="about-copy__signoff">
+        <p class="about-copy__signoff-name">Salt and Sun Tours</p>
+        <p class="about-copy__signoff-tag">More than a tour. A journey that leaves a mark.</p>
+      </div>
     </div>
   </section>
 
@@ -477,7 +503,40 @@ const closingCtaPhoto = {
     </div>
   </section>
 
-  <!-- ============ 06 · POSTCARDS FROM THE ROAD ============ -->
+  <!-- ============ 06 · THE LOGBOOK ============ -->
+  <section class="block logbook-block reveal" id="logbook">
+    <p class="eyebrow">The Logbook</p>
+    <h2 class="section-title">Namibia, in passing</h2>
+    <div class="logbook-grid reveal-item">
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1709192856319-255c881dd630?w=600&q=80&auto=format&fit=crop" alt="Fish River Canyon at dawn, one of the largest canyons in the world" loading="lazy" decoding="async" /></div><figcaption>dawn over the canyon</figcaption></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595652974715-571ba74668b5?w=600&q=80&auto=format&fit=crop" alt="A giraffe at sunset in Etosha National Park" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1696894134302-7e124a8bf2e8?w=600&q=80&auto=format&fit=crop" alt="A lone oryx crossing the red dunes of the Namib" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1669220228835-6c80412646d2?w=600&q=80&auto=format&fit=crop" alt="Spitzkoppe's granite peaks under a star-filled sky" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1621238705338-532e7df61de5?w=600&q=80&auto=format&fit=crop" alt="Cape fur seal colony at Cape Cross" loading="lazy" decoding="async" /></div><figcaption>seal colony, Cape Cross</figcaption></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595583945105-3138e8dd6b98?w=600&q=80&auto=format&fit=crop" alt="Mountains of Damaraland at sunset" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595961664116-130d677eb080?w=600&q=80&auto=format&fit=crop" alt="A black rhino in its natural Namibian habitat" loading="lazy" decoding="async" /></div></figure>
+      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1665072523770-601bd7e96aef?w=600&q=80&auto=format&fit=crop" alt="Aerial view of Namib desert dune patterns" loading="lazy" decoding="async" /></div><figcaption>the dunes, from above</figcaption></figure>
+    </div>
+  </section>
+
+  <!-- ============ 07 · BEFORE YOU GO ============ -->
+  <section class="block faq-block reveal" id="faq">
+    <p class="eyebrow">Before You Go</p>
+    <h2 class="section-title">A few things people ask</h2>
+    <div class="faq-list reveal-item">
+      {
+        faqItems.map((item) => (
+          <details class="faq-item">
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+    <p class="faq-more">Have a different question? <a href="/contact">Get in touch</a>.</p>
+  </section>
+
+  <!-- ============ 08 · POSTCARDS FROM THE ROAD ============ -->
   <section class="block postcards-block reveal" id="postcards">
     <p class="eyebrow">Postcards from the Road</p>
     <h2 class="section-title">What guests say</h2>
@@ -523,41 +582,6 @@ const closingCtaPhoto = {
     </div>
   </section>
 
-  <!-- ============ 07 · BEFORE YOU GO ============ -->
-  <section class="block faq-block reveal" id="faq">
-    <p class="eyebrow">Before You Go</p>
-    <h2 class="section-title">A few things people ask</h2>
-    <div class="faq-list reveal-item">
-      {
-        faqItems.map((item) => (
-          <details class="faq-item">
-            <summary>{item.q}</summary>
-            <p>{item.a}</p>
-          </details>
-        ))
-      }
-    </div>
-    <p class="faq-more">Have a different question? <a href="/contact">Get in touch</a>.</p>
-  </section>
-
-  <!-- ============ 08 · PLAN YOUR ROUTE ============ -->
-  <Section
-    align="center"
-    theme="photo"
-    imageUrl={closingCtaPhoto.imageUrl}
-    imageCredit={closingCtaPhoto.credit}
-  >
-    <div class="cta-card">
-      <p class="cta-card__eyebrow">Ready when you are</p>
-      <h2 class="cta-card__heading">Plan your route</h2>
-      <p class="cta-card__body">
-        Ready to see the dunes, the coastline, and everything in between?
-        Get in touch and we'll help you build the right route — or routes —
-        around Swakopmund and Walvis Bay.
-      </p>
-      <a class="btn btn-primary" href="/booking">Start booking</a>
-    </div>
-  </Section>
 </BaseLayout>
 
 <style>
@@ -918,7 +942,70 @@ const closingCtaPhoto = {
     margin: 0 0 1.25rem 0;
   }
 
-  /* ---------- 04 The Logbook ---------- */
+  /* ---------- 04 About Us ---------- */
+  .about-copy {
+    max-width: 40rem;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .about-copy p {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--color-text-muted);
+    margin: 0 0 1.4rem;
+  }
+
+  .about-copy__lead {
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.6vw, 1.75rem);
+    line-height: 1.4;
+    color: var(--color-text);
+    margin-bottom: 1.75rem !important;
+  }
+
+  .about-copy__pull {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.2vw, 1.45rem);
+    line-height: 1.5;
+    color: var(--color-accent-strong);
+    margin: 2rem 0 !important;
+  }
+
+  .about-copy__list {
+    color: var(--color-text);
+  }
+
+  .about-copy__invite {
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+  }
+
+  .about-copy__signoff {
+    margin-top: 2.5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--color-border);
+  }
+
+  .about-copy__signoff-name {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-earth-900);
+    margin: 0 0 0.25rem;
+  }
+
+  .about-copy__signoff-tag {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  /* ---------- 06 The Logbook ---------- */
   .logbook-grid {
     columns: 4;
     column-gap: 1rem;
@@ -990,7 +1077,7 @@ const closingCtaPhoto = {
     margin-top: 0.3rem;
   }
 
-  /* ---------- 06 Postcards ---------- */
+  /* ---------- 08 Postcards ---------- */
   .postcards { max-width: 640px; margin-inline: auto; text-align: center; }
 
   .postcards__stack {
@@ -1129,43 +1216,4 @@ const closingCtaPhoto = {
     .section-title { font-size: 1.875rem; }
   }
 
-  /* ---------- Closing CTA card ---------- */
-  .cta-card {
-    max-width: 34rem;
-    margin-inline: auto;
-    padding: var(--space-xl);
-    border-radius: var(--radius-lg);
-    background: rgba(251, 247, 241, 0.12);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(251, 247, 241, 0.25);
-    box-shadow: var(--shadow-lg);
-  }
-
-  .cta-card__eyebrow {
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-sand-100);
-    margin: 0 0 var(--space-2xs);
-  }
-
-  .cta-card__heading {
-    font-family: var(--font-display-italic);
-    font-style: italic;
-    font-weight: 600;
-    color: var(--color-text-on-dark);
-    margin: 0 0 var(--space-md);
-  }
-
-  .cta-card__body {
-    color: var(--color-sand-100);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-lg);
-  }
-
-  @media (max-width: 640px) {
-    .cta-card { padding: var(--space-lg); }
-  }
 </style>
