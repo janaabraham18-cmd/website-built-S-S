@@ -160,6 +160,30 @@ function setupAlternatingRows(reduceMotion: boolean) {
   }
 }
 
+// Itinerary photos drift slightly slower than the page scrolls, each on
+// its own scroll range so a card only starts moving once it's actually
+// in view — same technique as the Route section's background layer.
+// No-preference only; the reduced-motion branch never calls this, so the
+// image just sits still at its default position.
+function setupItineraryParallax() {
+  const layers = gsap.utils.toArray<HTMLElement>('[data-parallax-img]');
+
+  layers.forEach((layer) => {
+    const item = layer.closest<HTMLElement>('.program-item') ?? layer;
+    gsap.set(layer, { yPercent: -10 });
+    gsap.to(layer, {
+      yPercent: 10,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: item,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+  });
+}
+
 // Hand-drawn connective thread: a short line draws in at the seam above
 // each Tour Programs item (skipping the first, which has no seam above
 // it), reviving the site's constellation-line idea as this list's
@@ -971,6 +995,7 @@ export function initMotion() {
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
     setupAlternatingRows(false);
+    setupItineraryParallax();
     setupProgramThreads(false);
     setupRouteMap(false);
     setupRouteParallax();
