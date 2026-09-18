@@ -488,13 +488,19 @@ const faqItems = [
       </div>
     </div>
 
-    <div class="about-profile">
-      <img
-        src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
-        alt="Lenga, founder of Salt and Sun Tours"
-        loading="lazy"
-        decoding="async"
-      />
+    <div class="about-profile-block">
+      <div class="about-profile-caption">
+        <p class="about-profile-name">Lenga Shihueka</p>
+        <p class="about-profile-role">Founder</p>
+      </div>
+      <div class="about-profile">
+        <img
+          src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
+          alt="Lenga Shihueka, founder of Salt and Sun Tours"
+          loading="lazy"
+          decoding="async"
+        />
+      </div>
     </div>
   </section>
 
@@ -971,14 +977,41 @@ const faqItems = [
     }
   }
 
-  /* Small square profile photo, pinned to the section's top-right
-     corner on desktop; drops into normal flow (centered, below the
-     text) on narrower viewports where a corner overlay would collide
-     with the text. */
-  .about-profile {
+  /* Small square profile photo + name/role caption, pinned to the
+     section's top-right corner on desktop; drops into normal flow
+     (centered, below the text) on narrower viewports where a corner
+     overlay would collide with the text. */
+  .about-profile-block {
     position: absolute;
     right: clamp(1.25rem, 5vw, 3rem);
     top: clamp(1.25rem, 5vw, 3rem);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .about-profile-caption {
+    text-align: right;
+  }
+
+  .about-profile-name {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--color-earth-900);
+    margin: 0;
+  }
+
+  .about-profile-role {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-text-muted);
+    margin: 0.15rem 0 0;
+  }
+
+  .about-profile {
+    flex-shrink: 0;
     width: 330px;
     height: 330px;
     border-radius: var(--radius-md);
@@ -995,9 +1028,15 @@ const faqItems = [
   }
 
   @media (max-width: 800px) {
-    .about-profile {
+    .about-profile-block {
       position: static;
+      flex-direction: column-reverse;
+      justify-content: center;
       margin: 2rem auto 0;
+    }
+
+    .about-profile-caption {
+      text-align: center;
     }
   }
 
