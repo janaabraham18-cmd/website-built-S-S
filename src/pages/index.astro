@@ -964,30 +964,16 @@ const faqItems = [
   /* ---------- 04 About Us ---------- */
   .about-block {
     position: relative;
-    /* Extra room above the text so the larger corner photo (330px) has
-       clear space above the heading/columns instead of sitting on top
-       of them. Reverts to the shared .block padding on mobile, where
-       the photo drops into normal flow instead. */
-    padding-top: 28rem;
   }
 
-  @media (max-width: 800px) {
-    .about-block {
-      padding-top: clamp(3.5rem, 8vw, 6.25rem);
-    }
-  }
-
-  /* Small square profile photo + name/role caption, pinned to the
-     section's top-right corner on desktop; drops into normal flow
-     (centered, below the text) on narrower viewports where a corner
-     overlay would collide with the text. */
+  /* Small square profile photo + name/role caption, centered in normal
+     flow below the closing text. */
   .about-profile-block {
-    position: absolute;
-    right: clamp(1.25rem, 5vw, 3rem);
-    top: clamp(1.25rem, 5vw, 3rem);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 1rem;
+    margin: 3rem auto 0;
   }
 
   .about-profile-caption {
@@ -1029,10 +1015,8 @@ const faqItems = [
 
   @media (max-width: 800px) {
     .about-profile-block {
-      position: static;
       flex-direction: column-reverse;
-      justify-content: center;
-      margin: 2rem auto 0;
+      margin-top: 2rem;
     }
 
     .about-profile-caption {
