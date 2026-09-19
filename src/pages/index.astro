@@ -141,10 +141,14 @@ const fleetVehicles = [
     imageCredit: { name: 'Amith Ramakrishna', username: 'amithkrishna2k' },
   },
   {
-    // No clean, unmodified, full-frame match found on Unsplash yet for
-    // this one — left as a placeholder rather than shipping a photo
-    // that doesn't actually meet the brief.
     name: 'Toyota Fortuner 4.0 V6',
+    imageUrl: 'https://images.pexels.com/photos/18240248/pexels-photo-18240248.jpeg?auto=compress&cs=tinysrgb&w=900',
+    imageCredit: {
+      name: 'Mohsin Mirza',
+      href: 'https://www.pexels.com/photo/back-of-a-white-toyota-fortuner-standing-in-a-parking-lot-18240248/',
+      source: 'Pexels',
+      sourceHref: 'https://www.pexels.com/',
+    },
   },
 ];
 
@@ -545,12 +549,20 @@ const faqItems = [
                 </div>
               )}
               <p class="fleet-card__name">{v.name}</p>
-              {v.imageCredit && (
+              {v.imageCredit && v.imageCredit.username && (
                 <p class="fleet-card__credit">
                   Photo:{' '}
                   <a href={`https://unsplash.com/@${v.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{v.imageCredit.name}</a>{' '}
                   /{' '}
                   <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                </p>
+              )}
+              {v.imageCredit && v.imageCredit.href && (
+                <p class="fleet-card__credit">
+                  Photo:{' '}
+                  <a href={v.imageCredit.href} target="_blank" rel="noopener noreferrer">{v.imageCredit.name}</a>{' '}
+                  /{' '}
+                  <a href={v.imageCredit.sourceHref} target="_blank" rel="noopener noreferrer">{v.imageCredit.source}</a>
                 </p>
               )}
             </div>
