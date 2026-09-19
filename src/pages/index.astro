@@ -132,18 +132,19 @@ const itineraryFilters = [
 const fleetVehicles = [
   {
     name: 'Toyota Land Cruiser 79 Pickup',
-    imageUrl: 'https://images.unsplash.com/photo-1551171128-2618b95729db?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Andrea Leopardi', username: 'whatyouhide' },
+    imageUrl: 'https://images.unsplash.com/photo-1718703195387-212d37e81d00?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'Ryunosuke Kikuno', username: 'ryunosuke_kikuno' },
   },
   {
     name: 'Toyota Fortuner 2.8 GD-6',
-    imageUrl: 'https://images.unsplash.com/photo-1742697167580-af91e3ead35e?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Amjith S', username: 'amjiths' },
+    imageUrl: 'https://images.unsplash.com/photo-1670054953044-2605dbd0d747?w=900&q=80&auto=format&fit=crop',
+    imageCredit: { name: 'Amith Ramakrishna', username: 'amithkrishna2k' },
   },
   {
+    // No clean, unmodified, full-frame match found on Unsplash yet for
+    // this one — left as a placeholder rather than shipping a photo
+    // that doesn't actually meet the brief.
     name: 'Toyota Fortuner 4.0 V6',
-    imageUrl: 'https://images.unsplash.com/photo-1782046820317-dcea16585049?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Rafael Peier', username: 'rafaelpeier' },
   },
 ];
 
@@ -528,16 +529,30 @@ const faqItems = [
         {
           fleetVehicles.map((v) => (
             <div class="fleet-card">
-              <div class="fleet-card__photo photo-frame">
-                <img src={v.imageUrl} alt={v.name} loading="lazy" decoding="async" />
-              </div>
+              {v.imageUrl ? (
+                <div class="fleet-card__photo photo-frame">
+                  <img src={v.imageUrl} alt={v.name} loading="lazy" decoding="async" />
+                </div>
+              ) : (
+                <div class="fleet-card__photo fleet-card__photo--placeholder">
+                  <svg viewBox="0 0 48 48" aria-hidden="true">
+                    <path d="M6 30l3.4-10.2a3 3 0 0 1 2.85-2.05h23.5a3 3 0 0 1 2.85 2.05L42 30" />
+                    <rect x="4" y="30" width="40" height="9" rx="2.5" />
+                    <circle cx="14" cy="39" r="3.4" />
+                    <circle cx="34" cy="39" r="3.4" />
+                  </svg>
+                  <span>Photo coming soon</span>
+                </div>
+              )}
               <p class="fleet-card__name">{v.name}</p>
-              <p class="fleet-card__credit">
-                Photo:{' '}
-                <a href={`https://unsplash.com/@${v.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{v.imageCredit.name}</a>{' '}
-                /{' '}
-                <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-              </p>
+              {v.imageCredit && (
+                <p class="fleet-card__credit">
+                  Photo:{' '}
+                  <a href={`https://unsplash.com/@${v.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{v.imageCredit.name}</a>{' '}
+                  /{' '}
+                  <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                </p>
+              )}
             </div>
           ))
         }
@@ -1193,6 +1208,34 @@ const faqItems = [
 
   .fleet-card__photo {
     aspect-ratio: 4 / 3;
+  }
+
+  .fleet-card__photo--placeholder {
+    border-radius: var(--radius-md);
+    border: 2px dashed var(--color-border);
+    background: var(--color-bg-alt);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
+  }
+
+  .fleet-card__photo--placeholder svg {
+    width: 40px;
+    height: 40px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .fleet-card__photo--placeholder span {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 
   .fleet-card__name {
