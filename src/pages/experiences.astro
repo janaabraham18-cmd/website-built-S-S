@@ -1,0 +1,389 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { tourBySlug } from '../data/tours';
+import type { Tour } from '../data/tours';
+
+interface EditorialExperience {
+  name: string;
+  description: string;
+  imageUrl: string;
+  imageCredit: { name: string; username: string };
+}
+
+interface MoodSection {
+  key: string;
+  eyebrow: string;
+  heading: string;
+  intro: string;
+  tone: 'bg' | 'alt';
+  bannerUrl: string;
+  bannerCredit: { name: string; username: string };
+  tours: Tour[];
+  editorial?: EditorialExperience[];
+}
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+
+const bySlug = (slugs: string[]) => slugs.map((s) => tourBySlug(s)).filter((t): t is Tour => !!t);
+
+const sections: MoodSection[] = [
+  {
+    key: 'sunrise',
+    eyebrow: 'Sunrise & Golden Hour',
+    heading: 'Chase the light before the day gets busy',
+    intro:
+      "The desert looks like a different place at dawn — the dunes turn rose-gold, the air is still cool, and the coast feels like it belongs to you. These are the experiences built around that first hour.",
+    tone: 'bg',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1761899285601-32b23ff9aacd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+    bannerCredit: { name: 'ray rui', username: 'ray30' },
+    tours: bySlug(['breakfast-run', 'quad-bike-tour', 'moonlandscape-tour', 'explorer-tour']),
+  },
+  {
+    key: 'full-throttle',
+    eyebrow: 'Full-Throttle',
+    heading: 'For the ones who came for the adrenaline',
+    intro:
+      "Skydive over the Namib, carve down a 300-metre dune, or feel a quad bike kick up sand behind you — if you want your heart rate up, start here.",
+    tone: 'alt',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1538584169853-905fe7292381?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+    bannerCredit: { name: 'William Pei Yuan', username: '_iamwill' },
+    tours: bySlug(['tandem-skydive', 'sandboarding', 'paragliding', 'special-quad-90min', 'fat-bike-tour']),
+  },
+  {
+    key: 'slow-and-wild',
+    eyebrow: 'Slow & Wild',
+    heading: 'Namibia at its own pace',
+    intro:
+      "Not every great day needs speed. These are the trips for tracking a sidewinder's trail across the sand, watching a seal colony from a respectful distance, or simply sitting still long enough for the desert to reveal itself.",
+    tone: 'bg',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1781817388497-bd831004913b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+    bannerCredit: { name: 'Rafael Peier', username: 'rafaelpeier' },
+    tours: bySlug(['living-desert-tour', 'cape-cross', 'etosha-tour', 'moonlandscape-tour']),
+  },
+  {
+    key: 'ocean-and-coastal',
+    eyebrow: 'Ocean & Coastal',
+    heading: 'Where the dunes meet the Atlantic',
+    intro:
+      "Walvis Bay and Pelican Point are where Namibia's desert story turns coastal — dolphins, seals, oysters, and a horizon that never quite settles. The two newest additions here are built purely around slowing down at the end of the day.",
+    tone: 'alt',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1736149562100-79ab7e23d692?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+    bannerCredit: { name: 'Dimitar Meddling', username: 'dmeddling' },
+    tours: bySlug(['dolphin-seal-catamaran-cruise', 'kayaking', 'pelican-point-tour', 'sandwich-harbour-full-day', 'fishing']),
+    editorial: [
+      {
+        name: 'Beach Sundowner Experience',
+        description:
+          'A private setup right on the sand as the sun drops into the Atlantic — refreshments, light snacks, and a bit of entertainment while the sky does the rest. Built for groups and special occasions. Bring a warm layer, comfortable shoes, and a camera.',
+        imageUrl:
+          'https://images.unsplash.com/photo-1612176876591-196abbaa8e79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+        imageCredit: { name: 'Artur Kornakov', username: 'arturkornakov' },
+      },
+      {
+        name: 'Luxury Coastal Dinner Experience',
+        description:
+          'An exclusive dinner setup on the coast, with seating, entertainment and drinks arranged around your group. A favourite for milestone celebrations and larger private events — enquire and we\'ll build it around your date and numbers. Bring a warm layer or shawl for the evening breeze.',
+        imageUrl:
+          'https://images.unsplash.com/photo-1777906718328-deb1ff1be508?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
+        imageCredit: { name: 'Izzudin Habib', username: 'habib2510' },
+      },
+    ],
+  },
+  {
+    key: 'culture-and-connection',
+    eyebrow: 'Culture & Connection',
+    heading: 'Meet the people behind the place',
+    intro:
+      "Namibia isn't only landscape. An afternoon in Swakopmund's Damara, Herero and Ovambo communities is a chance to sit down, share a meal, and hear the place's story from the people who call it home.",
+    tone: 'bg',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1662534263409-c7d8a58d7744?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+    bannerCredit: { name: 'Hush Naidoo Jade Photography', username: 'hush52' },
+    tours: bySlug(['township-tour']),
+  },
+  {
+    key: 'family-friendly',
+    eyebrow: 'Family-Friendly',
+    heading: 'Built for every age in the group',
+    intro:
+      "No experience needed, no minimum-age worries — these are the days that work whether you're travelling with grandparents, toddlers, or a teenager who claims to be bored by everything.",
+    tone: 'alt',
+    bannerUrl:
+      'https://images.unsplash.com/photo-1780681426080-0486829a0d07?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
+    bannerCredit: { name: 'Jay Thakkar', username: 'cejaythakkar07' },
+    tours: bySlug(['camel-ride', 'quad-bike-tour', 'fat-bike-tour', 'freedom-combo']),
+  },
+];
+---
+
+<BaseLayout
+  title="Experiences"
+  description="Find your kind of day — Salt and Sun Tours' experiences curated by mood, from golden-hour dune drives to full-throttle adventure and slow, wild wildlife encounters."
+>
+  <header class="experiences-header">
+    <div class="container">
+      <p class="experiences-header__eyebrow">Find your kind of day</p>
+      <h1 class="experiences-header__heading">Experiences</h1>
+      <p class="experiences-header__body">
+        Our tours and adventures live on one page — this one is organised
+        differently. Instead of sorting by what an activity is, it's sorted
+        by how it feels: the sunrise trips, the adrenaline, the slow days,
+        the coast, the culture, and the ones that work for the whole family.
+        Find the mood, then pick the day.
+      </p>
+    </div>
+  </header>
+
+  {
+    sections.map((section) => (
+      <section
+        class:list={['mood-section', 'reveal', section.tone === 'alt' && 'mood-section--alt']}
+        id={section.key}
+      >
+        <div class="container">
+          <div class="mood-section__head reveal-item">
+            <p class="eyebrow">{section.eyebrow}</p>
+            <h2>{section.heading}</h2>
+            <p class="mood-section__intro">{section.intro}</p>
+          </div>
+
+          <div class="photo-frame mood-section__banner reveal-item">
+            <img src={section.bannerUrl} alt={section.heading} loading="lazy" decoding="async" />
+            <p class="mood-section__credit">
+              Photo:{' '}
+              <a href={creditHref(section.bannerCredit.username)} target="_blank" rel="noopener noreferrer">
+                {section.bannerCredit.name}
+              </a>{' '}
+              / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+            </p>
+          </div>
+
+          <div class="mood-grid reveal-item">
+            {section.tours.map((tour) => (
+              <article class="mood-card">
+                <div class="photo-frame mood-card__photo">
+                  <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
+                </div>
+                <div class="mood-card__body">
+                  {tour.duration && <p class="mood-card__duration">{tour.duration}</p>}
+                  <h3>{tour.name}</h3>
+                  <p>{tour.description}</p>
+                  <a class="book-link" href={`/booking?tour=${tour.slug}`}>Book this →</a>
+                </div>
+              </article>
+            ))}
+
+            {section.editorial?.map((exp) => (
+              <article class="mood-card mood-card--editorial">
+                <div class="photo-frame mood-card__photo">
+                  <img src={exp.imageUrl} alt={exp.name} loading="lazy" decoding="async" />
+                </div>
+                <div class="mood-card__body">
+                  <p class="mood-card__duration mood-card__duration--editorial">Private event · Enquire for details</p>
+                  <h3>{exp.name}</h3>
+                  <p>{exp.description}</p>
+                  <a class="book-link" href="/contact">Enquire about this experience →</a>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="experiences-closing reveal">
+    <div class="container experiences-closing__inner reveal-item">
+      <h2>Not sure which mood fits?</h2>
+      <p>Tell us who's coming and what you're after — we'll point you to the right day, or build one from scratch.</p>
+      <div class="experiences-closing__ctas">
+        <a class="btn btn-primary" href="/booking">Start booking</a>
+        <a class="btn btn-outline" href="/contact">Ask us a question</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .experiences-header {
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .experiences-header__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .experiences-header__heading {
+    margin-bottom: var(--space-md);
+  }
+
+  .experiences-header__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
+  }
+
+  .mood-section {
+    padding-block: var(--space-2xl);
+    scroll-margin-top: 5rem;
+  }
+
+  .mood-section--alt {
+    background: var(--color-bg-alt);
+  }
+
+  .mood-section__head {
+    max-width: var(--content-width-narrow);
+    margin-bottom: var(--space-lg);
+  }
+
+  .mood-section__head h2 {
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .mood-section__intro {
+    color: var(--color-text-muted);
+    margin: 0;
+    line-height: var(--lh-normal);
+  }
+
+  .mood-section__banner {
+    position: relative;
+    aspect-ratio: 21 / 8;
+    box-shadow: var(--shadow-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .mood-section__credit {
+    position: absolute;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    z-index: 1;
+    margin: 0;
+    font-size: 0.65rem;
+    color: rgba(251, 247, 241, 0.85);
+  }
+
+  .mood-section__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .mood-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .mood-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+
+  .mood-card__photo {
+    aspect-ratio: 4 / 3;
+  }
+
+  .mood-card__body {
+    padding: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .mood-card__duration {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.35rem;
+  }
+
+  .mood-card--editorial {
+    outline: 1px dashed var(--color-border);
+    outline-offset: -1px;
+  }
+
+  .mood-card__duration--editorial {
+    color: var(--color-terracotta-600, var(--color-accent-strong));
+  }
+
+  .mood-card__body h3 {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem;
+  }
+
+  .mood-card__body p:not(.mood-card__duration) {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-sm);
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .mood-card__body .book-link {
+    margin-top: auto;
+  }
+
+  @media (max-width: 700px) {
+    .mood-section__banner {
+      aspect-ratio: 4 / 3;
+    }
+  }
+
+  .experiences-closing {
+    padding-block: var(--space-2xl);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .experiences-closing__inner {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .experiences-closing__inner h2 {
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .experiences-closing__inner p {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .experiences-closing__ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
