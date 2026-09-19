@@ -126,10 +126,12 @@ const itineraryFilters = [
   { key: 'culture', label: 'Culture' },
 ];
 
-const stampStats = [
-  { value: 31, label: 'Experiences' },
-  { value: 2, label: 'Basecamps' },
-  { value: 0, label: 'Middlemen' },
+// Placeholder lineup — swap in the real vehicles (name + photo) once
+// they're supplied.
+const fleetVehicles = [
+  { name: 'Placeholder — swap in real vehicle name' },
+  { name: 'Placeholder — swap in real vehicle name' },
+  { name: 'Placeholder — swap in real vehicle name' },
 ];
 
 // Real guest reviews, transcribed verbatim from Salt and Sun Tours' Google
@@ -504,17 +506,25 @@ const faqItems = [
     </div>
   </section>
 
-  <!-- ============ 05 · PASSPORT STAMPS ============ -->
-  <section class="stamps-block reveal" id="stamps">
+  <!-- ============ 05 · OUR FLEET ============ -->
+  <section class="stamps-block reveal" id="fleet">
     <div class="stamps-inner">
-      <p class="eyebrow">Passport Stamps</p>
-      <h2 class="section-title">The short version</h2>
-      <div class="stamps-row reveal-item">
+      <p class="eyebrow">Our Fleet</p>
+      <h2 class="section-title">What gets you there</h2>
+      <div class="fleet-grid reveal-item">
         {
-          stampStats.map((s) => (
-            <div class="stamp">
-              <b data-count-to={s.value}>0</b>
-              <span>{s.label}</span>
+          fleetVehicles.map((v) => (
+            <div class="fleet-card">
+              <div class="fleet-card__photo">
+                <svg viewBox="0 0 48 48" aria-hidden="true">
+                  <path d="M6 30l3.4-10.2a3 3 0 0 1 2.85-2.05h23.5a3 3 0 0 1 2.85 2.05L42 30" />
+                  <rect x="4" y="30" width="40" height="9" rx="2.5" />
+                  <circle cx="14" cy="39" r="3.4" />
+                  <circle cx="34" cy="39" r="3.4" />
+                </svg>
+                <span>Photo coming soon</span>
+              </div>
+              <p class="fleet-card__name">{v.name}</p>
             </div>
           ))
         }
@@ -1142,7 +1152,7 @@ const faqItems = [
   @media (max-width: 960px) { .logbook-grid { columns: 2; } }
   @media (max-width: 640px) { .logbook-grid { columns: 1; } }
 
-  /* ---------- 05 Passport Stamps ---------- */
+  /* ---------- 05 Our Fleet ---------- */
   .stamps-block {
     background: var(--color-earth-900);
     background-image: var(--gradient-dusk);
@@ -1150,42 +1160,58 @@ const faqItems = [
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 8vw, 6rem);
   }
 
-  .stamps-inner { max-width: 700px; margin-inline: auto; text-align: center; }
+  .stamps-inner { max-width: 960px; margin-inline: auto; text-align: center; }
   .stamps-inner .eyebrow { color: var(--color-ochre-400); }
   .stamps-inner .section-title { color: var(--color-text-on-dark); margin-inline: auto; margin-bottom: 2.5rem; }
 
-  .stamps-row {
-    display: flex;
-    justify-content: center;
-    gap: clamp(1.5rem, 5vw, 3.5rem);
-    flex-wrap: wrap;
+  .fleet-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.75rem;
   }
 
-  .stamp {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    border: 2px dashed var(--color-ochre-400);
+  .fleet-card {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: 0.9rem;
+    text-align: left;
+  }
+
+  .fleet-card__photo {
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-md);
+    border: 2px dashed var(--color-border);
+    background: var(--color-bg-alt);
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    gap: 0.5rem;
+    color: var(--color-text-muted);
   }
 
-  .stamp b {
-    font-family: var(--font-display);
-    font-size: 2.4rem;
-    line-height: 1;
-    color: var(--color-text-on-dark);
-    font-variant-numeric: tabular-nums;
+  .fleet-card__photo svg {
+    width: 40px;
+    height: 40px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
 
-  .stamp span {
-    font-size: 0.68rem;
+  .fleet-card__photo span {
+    font-size: 0.75rem;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--color-sand-200);
-    margin-top: 0.3rem;
+    letter-spacing: 0.06em;
+  }
+
+  .fleet-card__name {
+    margin: 0.85rem 0 0;
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--color-text-muted);
   }
 
   /* ---------- 08 Postcards ---------- */

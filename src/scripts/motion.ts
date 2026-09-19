@@ -564,39 +564,6 @@ function setupItineraryFilter() {
   });
 }
 
-// Passport Stamps: each number counts up from 0 once, the first time the
-// band scrolls into view — same technique the old stats band used, now
-// with somewhere real to run.
-function setupStampCountUp(reduceMotion: boolean) {
-  const numbers = document.querySelectorAll<HTMLElement>('.stamp b[data-count-to]');
-
-  for (const el of numbers) {
-    const target = Number(el.dataset.countTo);
-    if (!Number.isFinite(target)) continue;
-
-    if (reduceMotion) {
-      el.textContent = String(target);
-      continue;
-    }
-
-    const proxy = { value: 0 };
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 85%',
-      once: true,
-      onEnter: () =>
-        gsap.to(proxy, {
-          value: target,
-          duration: 1.2,
-          ease: 'power1.out',
-          onUpdate: () => {
-            el.textContent = String(Math.round(proxy.value));
-          },
-        }),
-    });
-  }
-}
-
 // Postcards from the Road: one review visible at a time, cycled with
 // prev/next — click-driven UI switching, not scroll motion, so it isn't
 // gated behind reduced motion (the crossfade is a plain CSS opacity
@@ -999,7 +966,6 @@ export function initMotion() {
     setupProgramThreads(false);
     setupRouteMap(false);
     setupRouteParallax();
-    setupStampCountUp(false);
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -1059,7 +1025,6 @@ export function initMotion() {
     setupAlternatingRows(true);
     setupProgramThreads(true);
     setupRouteMap(true);
-    setupStampCountUp(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());
