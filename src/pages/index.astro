@@ -126,30 +126,17 @@ const itineraryFilters = [
   { key: 'culture', label: 'Culture' },
 ];
 
-// Stand-ins for the actual fleet — same make/model as the vehicles in
-// the photo supplied, sourced from Unsplash rather than using that
-// photo (parking-lot plate/lot shot) directly on the site.
-const fleetVehicles = [
-  {
-    name: 'Toyota Land Cruiser 79 Pickup',
-    imageUrl: 'https://images.unsplash.com/photo-1662832245207-e4e52c3b713e?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Claude Nai', username: 'spekul8' },
-  },
-  {
-    name: 'Toyota Fortuner 2.8 GD-6',
-    imageUrl: 'https://images.unsplash.com/photo-1670054953044-2605dbd0d747?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Amith Ramakrishna', username: 'amithkrishna2k' },
-  },
-  {
-    name: 'Toyota Fortuner 4.0 V6',
-    imageUrl: 'https://images.pexels.com/photos/18240248/pexels-photo-18240248.jpeg?auto=compress&cs=tinysrgb&w=900',
-    imageCredit: {
-      name: 'Mohsin Mirza',
-      href: 'https://www.pexels.com/photo/back-of-a-white-toyota-fortuner-standing-in-a-parking-lot-18240248/',
-      source: 'Pexels',
-      sourceHref: 'https://www.pexels.com/',
-    },
-  },
+// Placeholder lineup — swap in real fleet photos once supplied.
+interface FleetVehicle {
+  name: string;
+  imageUrl?: string;
+  imageCredit?: { name: string; username?: string; href?: string; source?: string; sourceHref?: string };
+}
+
+const fleetVehicles: FleetVehicle[] = [
+  { name: 'Toyota Land Cruiser 79 Pickup' },
+  { name: 'Toyota Fortuner 2.8 GD-6' },
+  { name: 'Toyota Fortuner 4.0 V6' },
 ];
 
 // Real guest reviews, transcribed verbatim from Salt and Sun Tours' Google
