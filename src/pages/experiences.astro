@@ -5,9 +5,7 @@ import type { Tour } from '../data/tours';
 
 interface EditorialExperience {
   name: string;
-  description: string;
   imageUrl: string;
-  imageCredit: { name: string; username: string };
 }
 
 interface MoodSection {
@@ -26,6 +24,20 @@ const creditHref = (username: string) =>
   `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 
 const bySlug = (slugs: string[]) => slugs.map((s) => tourBySlug(s)).filter((t): t is Tour => !!t);
+
+// Every mood is booked as one package, not stop-by-stop — this builds the
+// single CTA href (reusing the tours page's "Custom combo" deep-link into
+// BookingForm) and the ordered stop list shown beside it, from a section's
+// tours + any editorial-only entries combined.
+const stopsOf = (section: Pick<MoodSection, 'tours' | 'editorial'>) => [
+  ...section.tours.map((t) => ({ name: t.name, imageUrl: t.imageUrl ?? '' })),
+  ...(section.editorial ?? []),
+];
+
+const bookingHrefFor = (section: Pick<MoodSection, 'eyebrow' | 'tours' | 'editorial'>) => {
+  const names = stopsOf(section).map((s) => s.name);
+  return `/booking?custom=${encodeURIComponent(`${section.eyebrow} Experience — ${names.join(' + ')}`)}`;
+};
 
 const sections: MoodSection[] = [
   {
@@ -69,7 +81,7 @@ const sections: MoodSection[] = [
     eyebrow: 'Ocean & Coastal',
     heading: 'Where the dunes meet the Atlantic',
     intro:
-      "Walvis Bay and Pelican Point are where Namibia's desert story turns coastal — dolphins, seals, oysters, and a horizon that never quite settles. The two newest additions here are built purely around slowing down at the end of the day.",
+      "Walvis Bay and Pelican Point are where Namibia's desert story turns coastal — dolphins, seals, oysters, and a horizon that never quite settles. Two of the stops below are new: a private Beach Sundowner as the sun drops into the Atlantic, and an exclusive Luxury Coastal Dinner for groups and celebrations — both built purely around slowing down at the end of the day.",
     tone: 'alt',
     bannerUrl:
       'https://images.unsplash.com/photo-1736149562100-79ab7e23d692?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800',
@@ -78,19 +90,13 @@ const sections: MoodSection[] = [
     editorial: [
       {
         name: 'Beach Sundowner Experience',
-        description:
-          'A private setup right on the sand as the sun drops into the Atlantic — refreshments, light snacks, and a bit of entertainment while the sky does the rest. Built for groups and special occasions. Bring a warm layer, comfortable shoes, and a camera.',
         imageUrl:
-          'https://images.unsplash.com/photo-1612176876591-196abbaa8e79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
-        imageCredit: { name: 'Artur Kornakov', username: 'arturkornakov' },
+          'https://images.unsplash.com/photo-1612176876591-196abbaa8e79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       },
       {
         name: 'Luxury Coastal Dinner Experience',
-        description:
-          'An exclusive dinner setup on the coast, with seating, entertainment and drinks arranged around your group. A favourite for milestone celebrations and larger private events — enquire and we\'ll build it around your date and numbers. Bring a warm layer or shawl for the evening breeze.',
         imageUrl:
-          'https://images.unsplash.com/photo-1777906718328-deb1ff1be508?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1200',
-        imageCredit: { name: 'Izzudin Habib', username: 'habib2510' },
+          'https://images.unsplash.com/photo-1777906718328-deb1ff1be508?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=400',
       },
     ],
   },
@@ -140,61 +146,57 @@ const sections: MoodSection[] = [
   </header>
 
   {
-    sections.map((section) => (
-      <section
-        class:list={['mood-section', 'reveal', section.tone === 'alt' && 'mood-section--alt']}
-        id={section.key}
-      >
-        <div class="container">
-          <div class="mood-section__head reveal-item">
-            <p class="eyebrow">{section.eyebrow}</p>
-            <h2>{section.heading}</h2>
-            <p class="mood-section__intro">{section.intro}</p>
-          </div>
+    sections.map((section, i) => {
+      const stops = stopsOf(section);
+      return (
+        <section
+          class:list={['mood-section', section.tone === 'alt' && 'mood-section--alt']}
+          id={section.key}
+        >
+          <div class="container">
+            <div class:list={['mood-row', i % 2 === 1 && 'reverse']} data-alt-row>
+              <div class="mood-row__media">
+                <div class="photo-frame mood-row__photo">
+                  <div class="mood-row__parallax" data-mood-parallax-img>
+                    <img src={section.bannerUrl} alt={section.heading} loading="lazy" decoding="async" />
+                  </div>
+                  <p class="mood-row__credit">
+                    Photo:{' '}
+                    <a href={creditHref(section.bannerCredit.username)} target="_blank" rel="noopener noreferrer">
+                      {section.bannerCredit.name}
+                    </a>{' '}
+                    / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                  </p>
+                </div>
+              </div>
 
-          <div class="photo-frame mood-section__banner reveal-item">
-            <img src={section.bannerUrl} alt={section.heading} loading="lazy" decoding="async" />
-            <p class="mood-section__credit">
-              Photo:{' '}
-              <a href={creditHref(section.bannerCredit.username)} target="_blank" rel="noopener noreferrer">
-                {section.bannerCredit.name}
-              </a>{' '}
-              / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-            </p>
-          </div>
+              <div class="mood-row__copy">
+                <p class="eyebrow">{section.eyebrow}</p>
+                <h2>{section.heading}</h2>
+                <p class="mood-row__intro">{section.intro}</p>
 
-          <div class="mood-grid reveal-item">
-            {section.tours.map((tour) => (
-              <article class="mood-card">
-                <div class="photo-frame mood-card__photo">
-                  <img src={tour.imageUrl} alt={tour.name} loading="lazy" decoding="async" />
-                </div>
-                <div class="mood-card__body">
-                  {tour.duration && <p class="mood-card__duration">{tour.duration}</p>}
-                  <h3>{tour.name}</h3>
-                  <p>{tour.description}</p>
-                  <a class="book-link" href={`/booking?tour=${tour.slug}`}>Book this →</a>
-                </div>
-              </article>
-            ))}
+                <p class="mood-row__stops-label">{stops.length} stop{stops.length === 1 ? '' : 's'}, one booking</p>
+                <ol class="mood-row__stops">
+                  {stops.map((stop, si) => (
+                    <li>
+                      <span class="mood-row__stop-num">{String(si + 1).padStart(2, '0')}</span>
+                      <span class="mood-row__stop-photo">
+                        <img src={stop.imageUrl} alt="" loading="lazy" decoding="async" />
+                      </span>
+                      <span class="mood-row__stop-name">{stop.name}</span>
+                    </li>
+                  ))}
+                </ol>
 
-            {section.editorial?.map((exp) => (
-              <article class="mood-card mood-card--editorial">
-                <div class="photo-frame mood-card__photo">
-                  <img src={exp.imageUrl} alt={exp.name} loading="lazy" decoding="async" />
-                </div>
-                <div class="mood-card__body">
-                  <p class="mood-card__duration mood-card__duration--editorial">Private event · Enquire for details</p>
-                  <h3>{exp.name}</h3>
-                  <p>{exp.description}</p>
-                  <a class="book-link" href="/contact">Enquire about this experience →</a>
-                </div>
-              </article>
-            ))}
+                <a class="btn btn-primary mood-row__cta" href={bookingHrefFor(section)}>
+                  Book the {section.eyebrow} Experience →
+                </a>
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
-    ))
+        </section>
+      );
+    })
   }
 
   <section class="experiences-closing reveal">
@@ -252,29 +254,47 @@ const sections: MoodSection[] = [
     background: var(--color-bg-alt);
   }
 
-  .mood-section__head {
-    max-width: var(--content-width-narrow);
-    margin-bottom: var(--space-lg);
+  /* One row = one bookable package: photo on one side, the whole pitch
+     (heading, intro, stop list, single CTA) on the other. Alternates
+     side-to-side per section via .reverse, same technique as the
+     homepage Itinerary's program rows. */
+  .mood-row {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: var(--space-2xl);
+    align-items: center;
   }
 
-  .mood-section__head h2 {
-    margin: 0 0 var(--space-2xs);
+  .mood-row.reverse .mood-row__media {
+    order: 2;
   }
 
-  .mood-section__intro {
-    color: var(--color-text-muted);
-    margin: 0;
-    line-height: var(--lh-normal);
+  .mood-row.reverse .mood-row__copy {
+    order: 1;
   }
 
-  .mood-section__banner {
+  .mood-row__media {
     position: relative;
-    aspect-ratio: 21 / 8;
-    box-shadow: var(--shadow-md);
-    margin-bottom: var(--space-lg);
   }
 
-  .mood-section__credit {
+  .mood-row__photo {
+    position: relative;
+    height: 420px;
+    box-shadow: var(--shadow-md);
+  }
+
+  /* Oversized + absolutely positioned so the scroll-scrubbed parallax
+     drift (see setupMoodParallax in motion.ts) never exposes an edge —
+     the frame's own overflow:hidden clips it. */
+  .mood-row__parallax {
+    position: absolute;
+    top: -15%;
+    left: 0;
+    width: 100%;
+    height: 130%;
+  }
+
+  .mood-row__credit {
     position: absolute;
     right: var(--space-2xs);
     bottom: var(--space-2xs);
@@ -284,79 +304,101 @@ const sections: MoodSection[] = [
     color: rgba(251, 247, 241, 0.85);
   }
 
-  .mood-section__credit a {
+  .mood-row__credit a {
     color: inherit;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  .mood-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: var(--space-lg);
+  .mood-row__copy h2 {
+    margin: 0 0 var(--space-sm);
   }
 
-  .mood-card {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
-    overflow: hidden;
+  .mood-row__intro {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-lg);
   }
 
-  .mood-card__photo {
-    aspect-ratio: 4 / 3;
-  }
-
-  .mood-card__body {
-    padding: var(--space-md);
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-  }
-
-  .mood-card__duration {
+  .mood-row__stops-label {
     font-size: 0.72rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 700;
     color: var(--color-accent-strong);
-    margin: 0 0 0.35rem;
+    margin: 0 0 0.6rem;
   }
 
-  .mood-card--editorial {
-    outline: 1px dashed var(--color-border);
-    outline-offset: -1px;
-  }
-
-  .mood-card__duration--editorial {
-    color: var(--color-terracotta-600, var(--color-accent-strong));
-  }
-
-  .mood-card__body h3 {
-    font-size: 1.1rem;
-    margin: 0 0 0.5rem;
-  }
-
-  .mood-card__body p:not(.mood-card__duration) {
-    color: var(--color-text-muted);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-sm);
-    font-size: 0.9rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
+  .mood-row__stops {
+    list-style: none;
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
     overflow: hidden;
   }
 
-  .mood-card__body .book-link {
-    margin-top: auto;
+  .mood-row__stops li {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.9rem;
+    border-top: 1px solid var(--color-border);
   }
 
-  @media (max-width: 700px) {
-    .mood-section__banner {
-      aspect-ratio: 4 / 3;
+  .mood-row__stops li:first-child {
+    border-top: none;
+  }
+
+  .mood-row__stop-num {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--color-accent-soft);
+    width: 1.4rem;
+    flex-shrink: 0;
+  }
+
+  .mood-row__stop-photo {
+    display: block;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--color-bg-alt);
+  }
+
+  .mood-row__stop-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .mood-row__stop-name {
+    font-size: 0.92rem;
+    color: var(--color-text);
+    font-weight: 500;
+  }
+
+  .mood-row__cta {
+    display: inline-flex;
+  }
+
+  @media (max-width: 860px) {
+    .mood-row {
+      grid-template-columns: 1fr;
+      gap: var(--space-lg);
+    }
+
+    .mood-row.reverse .mood-row__media,
+    .mood-row.reverse .mood-row__copy {
+      order: initial;
+    }
+
+    .mood-row__photo {
+      height: 280px;
     }
   }
 

@@ -323,6 +323,29 @@ function setupRouteParallax() {
   });
 }
 
+// Experiences page: each mood's banner photo drifts slower than the page
+// scrolls, scoped to its own row so it only moves while that row is
+// actually in view — same technique as the Route section and Itinerary
+// photos above. No-preference only.
+function setupMoodParallax() {
+  const layers = gsap.utils.toArray<HTMLElement>('[data-mood-parallax-img]');
+
+  layers.forEach((layer) => {
+    const row = layer.closest<HTMLElement>('.mood-row') ?? layer;
+    gsap.set(layer, { yPercent: -8 });
+    gsap.to(layer, {
+      yPercent: 8,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: row,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+  });
+}
+
 // Adventures index: replaces a wall of same-sized cards with a compact
 // name list beside one large shared photo per themed group — picking a
 // name (hover, focus, or tap) crossfades the photo/caption beside it. The
@@ -966,6 +989,7 @@ export function initMotion() {
     setupProgramThreads(false);
     setupRouteMap(false);
     setupRouteParallax();
+    setupMoodParallax();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
