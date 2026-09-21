@@ -21,12 +21,6 @@ import { tours } from '../data/tours';
 import { mapJourney } from '../data/tourRegions';
 import NamibiaMap from './NamibiaMap.astro';
 
-const heroImage = {
-  url: 'https://images.unsplash.com/photo-1489493887464-892be6d1daae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-  credit: { name: 'Ondrej Machart', username: 'ondrejmachart' },
-  alt: 'Aerial view of the Namib desert dunes meeting the Atlantic coastline',
-};
-
 const stopsWithTours = mapJourney.map((pin) => {
   const tour = tours.find((t) => t.slug === pin.slug);
   return { pin, tour };
@@ -95,28 +89,31 @@ const pieceBoxStyle = (pin: { x: number; y: number }) => {
 const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 ---
 
-<section class="tour-hero full-bleed">
-  <img class="tour-hero__bg" src={heroImage.url} alt={heroImage.alt} loading="eager" decoding="async" />
-  <div class="tour-hero__scrim" aria-hidden="true"></div>
+<section class="tour-intro">
+  <div class="tour-intro__glow" aria-hidden="true"></div>
 
-  <div class="tour-hero__content container">
-    <p class="tour-hero__eyebrow">Salt and Sun Tours</p>
-    <h1 class="tour-hero__heading">Tours &amp; Adventures</h1>
-    <p class="tour-hero__body">
-      Ten signature destinations across three regions, plus every
-      shorter adventure and combo deal we run out of Swakopmund and
-      Walvis Bay. <a href="/contact">Contact us for current rates</a>.
-    </p>
+  <div class="tour-intro__grid container">
+    <div class="tour-intro__copy">
+      <p class="tour-intro__eyebrow">Salt and Sun Tours</p>
+      <h1 class="tour-intro__heading">Tours &amp; Adventures</h1>
+      <p class="tour-intro__body">
+        Ten signature destinations across three regions, plus every
+        shorter adventure and combo deal we run out of Swakopmund and
+        Walvis Bay. <a href="/contact">Contact us for current rates</a>.
+      </p>
+      <a class="btn btn-outline tour-intro__cta" href="#tour">See where we go</a>
+    </div>
+
+    <div class="tour-intro__map">
+      <div class="tour-intro__map-glow" aria-hidden="true"></div>
+      <div class="tour-intro__map-frame" data-tour-intro-map>
+        <NamibiaMap pins={mapJourney} />
+      </div>
+      <p class="tour-intro__map-caption">3 regions · 10 signature stops</p>
+    </div>
   </div>
 
-  <p class="tour-hero__credit">
-    Photo:{' '}
-    <a href={creditHref(heroImage.credit.username)} target="_blank" rel="noopener noreferrer">{heroImage.credit.name}</a>{' '}
-    /{' '}
-    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-  </p>
-
-  <div class="tour-hero__scroll-cue" aria-hidden="true"><span></span></div>
+  <div class="tour-intro__scroll-cue" aria-hidden="true"><span></span></div>
 </section>
 
 <div class="tour-journey">
@@ -257,86 +254,108 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 </div>
 
 <style>
-  /* ---------- Hero ---------- */
-  .tour-hero {
+  /* ---------- Intro ---------- */
+  /* No photo: the page's real centerpiece is the map that grows piece by
+     piece further down, so the opening states that up front instead of
+     borrowing a stock photo — the same country map, with the three
+     regions this page actually visits already lit, before the journey
+     starts. Dark earth-900 + the dusk glow token is the same treatment
+     the homepage's Our Fleet section uses for a photo-free dark band, so
+     this reads as an intentional part of the same "Desert Light" system
+     rather than a one-off. */
+  .tour-intro {
     position: relative;
-    min-height: 100vh;
+    min-height: min(88vh, 820px);
     display: flex;
     align-items: center;
-    color: var(--color-text-on-dark);
     overflow: hidden;
+    background: var(--color-earth-900);
+    color: var(--color-text-on-dark);
   }
 
-  .tour-hero__bg {
+  .tour-intro__glow {
     position: absolute;
     inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    background-image: var(--gradient-dusk);
   }
 
-  .tour-hero__scrim {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(31, 18, 14, 0.55) 0%,
-      rgba(31, 18, 14, 0.25) 40%,
-      rgba(31, 18, 14, 0.75) 100%
-    );
-  }
-
-  .tour-hero__content {
+  .tour-intro__grid {
     position: relative;
     z-index: 1;
-    max-width: 40rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(280px, 380px);
+    align-items: center;
+    gap: var(--space-2xl);
+    width: 100%;
   }
 
-  .tour-hero__eyebrow {
+  .tour-intro__eyebrow {
     text-transform: uppercase;
     letter-spacing: 0.14em;
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--color-sand-100);
+    color: var(--color-ochre-400);
     margin-bottom: var(--space-sm);
   }
 
-  .tour-hero__heading {
+  .tour-intro__heading {
     color: var(--color-text-on-dark);
     margin-bottom: var(--space-md);
   }
 
-  .tour-hero__body {
+  .tour-intro__body {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
     color: var(--color-sand-100);
     max-width: 32rem;
+    margin-bottom: var(--space-lg);
   }
 
-  .tour-hero__body a {
+  .tour-intro__body a {
     color: var(--color-text-on-dark);
     font-weight: 600;
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
-  .tour-hero__credit {
+  .tour-intro__cta {
+    color: var(--color-text-on-dark);
+  }
+
+  .tour-intro__map {
+    position: relative;
+    text-align: center;
+  }
+
+  .tour-intro__map-glow {
     position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
+    inset: -15%;
+    background: radial-gradient(circle, rgba(211, 162, 79, 0.22) 0%, transparent 70%);
+    z-index: 0;
+  }
+
+  .tour-intro__map-frame {
+    position: relative;
     z-index: 1;
-    margin: 0;
+    max-width: 380px;
+    aspect-ratio: 751 / 740;
+    margin-inline: auto;
+    filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.35));
+  }
+
+  .tour-intro__map-caption {
+    position: relative;
+    z-index: 1;
+    margin: var(--space-sm) 0 0;
     font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.65);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-sand-100);
+    opacity: 0.85;
   }
 
-  .tour-hero__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .tour-hero__scroll-cue {
+  .tour-intro__scroll-cue {
     position: absolute;
     bottom: var(--space-lg);
     left: 50%;
@@ -351,7 +370,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     padding-top: 8px;
   }
 
-  .tour-hero__scroll-cue span {
+  .tour-intro__scroll-cue span {
     width: 3px;
     height: 8px;
     border-radius: 999px;
@@ -362,6 +381,35 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   @keyframes tour-scroll-cue {
     0% { opacity: 1; transform: translateY(0); }
     70%, 100% { opacity: 0; transform: translateY(10px); }
+  }
+
+  @media (max-width: 760px) {
+    .tour-intro {
+      min-height: 0;
+      padding-block: var(--space-3xl) var(--space-2xl);
+    }
+
+    .tour-intro__grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+      text-align: center;
+    }
+
+    .tour-intro__copy {
+      order: 2;
+    }
+
+    .tour-intro__body {
+      margin-inline: auto;
+    }
+
+    .tour-intro__map {
+      order: 1;
+    }
+
+    .tour-intro__map-frame {
+      max-width: 260px;
+    }
   }
 
   /* ---------- Two-column journey ---------- */
@@ -716,7 +764,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   }
 
   @media (max-width: 640px) {
-    .tour-hero__heading {
+    .tour-intro__heading {
       font-size: var(--fs-2xl);
     }
   }

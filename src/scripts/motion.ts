@@ -642,6 +642,31 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
   root.addEventListener('focusout', start);
 }
 
+// Tours page intro: the country map's regions and pins fade in on load
+// (once) instead of just appearing — the page's opening statement, now
+// that it's the map itself rather than a photo. Reduced motion leaves
+// the map at its default, fully-opaque CSS state with nothing to animate.
+function setupTourIntroMap(reduceMotion: boolean) {
+  if (reduceMotion) return;
+
+  const root = document.querySelector<HTMLElement>('[data-tour-intro-map]');
+  if (!root) return;
+
+  const regions = Array.from(root.querySelectorAll<SVGPolygonElement>('.namibia-map__region'));
+  const pins = Array.from(root.querySelectorAll<SVGGElement>('.namibia-map__pin'));
+  if (!regions.length) return;
+
+  gsap.set(regions, { opacity: 0 });
+  gsap.set(pins, { opacity: 0 });
+
+  const tl = gsap.timeline({ delay: 0.3 });
+  tl.to(regions, { opacity: 1, duration: 0.6, ease: 'power1.out', stagger: 0.02 }).to(
+    pins,
+    { opacity: 1, duration: 0.4, ease: 'power1.out', stagger: 0.06 },
+    '-=0.3'
+  );
+}
+
 // Tours page photo bleed: each tour section's photo is meant to sit just
 // off the actual browser edge (a small, deliberate gutter — not flush
 // with it, and not just the edge of its own fairly narrow,
@@ -912,6 +937,7 @@ export function initMotion() {
   ).matches;
 
   setupHeroPanelSlideshow(reduceMotion);
+  setupTourIntroMap(reduceMotion);
   setupTourPhotoBleed();
   setupItineraryFilter();
   setupPostcards();
