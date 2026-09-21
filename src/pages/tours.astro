@@ -157,6 +157,25 @@ const creditHref = (username: string) =>
   </section>
 
   <section class="combos-section reveal" id="combos">
+    <div class="combos-section__split" aria-hidden="true">
+      <div class="combos-section__half">
+        <div
+          class="combos-section__photo"
+          data-combo-parallax
+          style="background-image:url('https://images.unsplash.com/photo-1788927774068-278d964fe3e8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600')"
+        />
+      </div>
+      <div class="combos-section__half">
+        <div
+          class="combos-section__photo"
+          data-combo-parallax
+          style="background-image:url('https://images.unsplash.com/photo-1645341777045-8f18b88e2712?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600')"
+        />
+      </div>
+    </div>
+    <div class="combos-section__scrim" aria-hidden="true"></div>
+    <div class="combos-section__divider" aria-hidden="true"></div>
+
     <div class="container">
       <div class="section-intro reveal-item">
         <p class="eyebrow">{categoryLabels.combo.label}</p>
@@ -776,10 +795,75 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Combos ---------- */
+  /* Split background — a catamaran cruise photo and a Deadvlei photo,
+     side by side, each drifting independently on scroll (see
+     setupComboSplitParallax in motion.ts) — the section's own "two
+     things become one day" idea made visual. A light wash sits on top
+     (heavier near the title, which sits directly on the photos; the
+     combo cards below are opaque so they don't need the protection)
+     rather than the postcards-style no-tint blur, since this section
+     leans on two full-color photos meeting at a hard edge for its
+     effect, not one soft ambient texture. */
   .combos-section {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
     background: var(--color-beige-300);
+  }
+
+  .combos-section__split {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    display: flex;
+  }
+
+  .combos-section__half {
+    position: relative;
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .combos-section__photo {
+    position: absolute;
+    inset: -12% 0;
+    height: 124%;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .combos-section__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(251, 247, 241, 0.92) 0%,
+      rgba(251, 247, 241, 0.6) 28%,
+      rgba(251, 247, 241, 0.42) 100%
+    );
+  }
+
+  .combos-section__divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    z-index: -1;
+    width: 2px;
+    transform: translateX(-1px);
+    background: rgba(251, 247, 241, 0.75);
+  }
+
+  @media (max-width: 700px) {
+    .combos-section__split,
+    .combos-section__scrim,
+    .combos-section__divider {
+      display: none;
+    }
   }
 
   /* Uniform grid — every combo card is now the same compact shape, so
