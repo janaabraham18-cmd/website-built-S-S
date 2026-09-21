@@ -7,8 +7,6 @@ import type { Tour } from '../data/tours';
 
 const combos = toursByCategory('combo');
 
-const featuredComboSlugs = new Set(['surf-and-turf', 'unity-combo']);
-
 // Everything bookable that isn't already a combo — the raw material for
 // the "Create Your Own Combo" builder below. Combos aren't included as
 // pickable pieces themselves (combining a combo doesn't make sense).
@@ -168,7 +166,7 @@ const creditHref = (username: string) =>
       <div class="combo-grid reveal-item">
         {
           combos.map((combo) => (
-            <div class:list={['combo-grid__item', featuredComboSlugs.has(combo.slug) && 'is-featured']}>
+            <div class="combo-grid__item">
               <ComboCard combo={combo} />
             </div>
           ))
@@ -784,9 +782,12 @@ const creditHref = (username: string) =>
     background: var(--color-beige-300);
   }
 
+  /* Uniform grid — every combo card is now the same compact shape, so
+     nothing needs a wider "featured" span to stand out; a plain,
+     evenly-filled grid reads as more orderly than mixed card widths. */
   .combo-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
     gap: var(--space-md);
     align-items: stretch;
   }
@@ -799,13 +800,12 @@ const creditHref = (username: string) =>
     width: 100%;
   }
 
-  .combo-grid__item.is-featured {
-    grid-column: span 2;
+  @media (max-width: 700px) {
+    .combo-grid { grid-template-columns: repeat(2, 1fr); }
   }
 
-  @media (max-width: 700px) {
+  @media (max-width: 420px) {
     .combo-grid { grid-template-columns: 1fr; }
-    .combo-grid__item.is-featured { grid-column: span 1; }
   }
 
   /* ---------- Closing ---------- */
