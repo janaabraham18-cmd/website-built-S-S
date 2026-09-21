@@ -21,6 +21,11 @@ import { tours } from '../data/tours';
 import { mapJourney } from '../data/tourRegions';
 import NamibiaMap from './NamibiaMap.astro';
 
+const introBg = {
+  url: 'https://images.unsplash.com/photo-1772289093080-831ca03c76e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'NIR HIMI', username: 'nirhimi' },
+};
+
 const stopsWithTours = mapJourney.map((pin) => {
   const tour = tours.find((t) => t.slug === pin.slug);
   return { pin, tour };
@@ -90,7 +95,15 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 ---
 
 <section class="tour-intro">
-  <div class="tour-intro__glow" aria-hidden="true"></div>
+  <div class="tour-intro__bg" style={`background-image:url('${introBg.url}')`} aria-hidden="true"></div>
+  <div class="tour-intro__scrim" aria-hidden="true"></div>
+
+  <p class="tour-intro__credit">
+    Photo:{' '}
+    <a href={creditHref(introBg.credit.username)} target="_blank" rel="noopener noreferrer">{introBg.credit.name}</a>{' '}
+    /{' '}
+    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+  </p>
 
   <div class="tour-intro__grid container">
     <div class="tour-intro__copy">
@@ -255,28 +268,59 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
 <style>
   /* ---------- Intro ---------- */
-  /* No photo: the page's real centerpiece is the map that grows piece by
-     piece further down, so the opening states that up front instead of
-     borrowing a stock photo — the same country map, with the three
-     regions this page actually visits already lit, before the journey
-     starts. Dark earth-900 + the dusk glow token is the same treatment
-     the homepage's Our Fleet section uses for a photo-free dark band, so
-     this reads as an intentional part of the same "Desert Light" system
-     rather than a one-off. */
+  /* The page's real centerpiece is the map that grows piece by piece
+     further down, so the opening states that up front — the same
+     country map, with the three regions this page actually visits
+     already lit, before the journey starts — rather than a generic
+     stock photo. A blurred desert-dusk photo sits behind it purely as
+     ambient texture/mood (same technique as the homepage Reviews
+     section's blurred background), with a dark scrim on top for text
+     contrast, matching the weight the previous full-bleed hero photo
+     used. */
   .tour-intro {
     position: relative;
     min-height: min(88vh, 820px);
     display: flex;
     align-items: center;
     overflow: hidden;
-    background: var(--color-earth-900);
     color: var(--color-text-on-dark);
   }
 
-  .tour-intro__glow {
+  .tour-intro__bg {
+    position: absolute;
+    inset: -40px;
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px);
+    z-index: -2;
+  }
+
+  .tour-intro__scrim {
     position: absolute;
     inset: 0;
-    background-image: var(--gradient-dusk);
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 18, 14, 0.6) 0%,
+      rgba(31, 18, 14, 0.4) 45%,
+      rgba(31, 18, 14, 0.8) 100%
+    );
+  }
+
+  .tour-intro__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.65);
+  }
+
+  .tour-intro__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .tour-intro__grid {
