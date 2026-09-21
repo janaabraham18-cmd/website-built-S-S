@@ -131,7 +131,10 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
 <div class="tour-journey">
   <div class="tour-journey__grid">
-    <div class="tour-recap-band" data-recap-band aria-hidden="true"></div>
+    <div class="tour-recap-band" data-recap-band aria-hidden="true">
+      <div class="tour-recap-band__photo"></div>
+      <div class="tour-recap-band__wash"></div>
+    </div>
 
     <div class="tour-journey__sections">
       {
@@ -494,17 +497,38 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   /* Positioned/sized by setupTourMapGrowth once the map settles into its
      complete form (see the finalSlot trigger in motion.ts) — spans the
      grid's full width so the recap card and the settled map beside it
-     share one background instead of the card carrying its own. */
+     share one background instead of the card carrying its own. Same
+     blurred-photo technique as the homepage Reviews section and the
+     tours page intro (oversized child layer + blur filter), with a
+     translucent warm wash on top since — unlike Reviews, where content
+     sits on its own opaque card — the recap heading/lede sit directly
+     on this background and still need to read clearly. */
   .tour-recap-band {
     position: absolute;
     left: 0;
     right: 0;
     z-index: -1;
     opacity: 0;
+    overflow: hidden;
     border-radius: var(--radius-lg);
     background-color: var(--color-beige-300);
-    background-image: var(--gradient-dusk);
     box-shadow: var(--shadow-lg);
+  }
+
+  .tour-recap-band__photo {
+    position: absolute;
+    inset: -40px;
+    background-image: url('https://images.unsplash.com/photo-1785270100674-e610ec45f3a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800');
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px);
+  }
+
+  .tour-recap-band__wash {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(227, 203, 167, 0.72);
+    background-image: var(--gradient-dusk);
   }
 
   .tour-journey__sections {
