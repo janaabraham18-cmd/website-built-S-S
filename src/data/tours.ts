@@ -223,9 +223,7 @@ export const tours: Tour[] = [
       'Variety of drinks',
       'Transfers available at additional cost (subject to availability, please enquire)',
     ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1440020143730-090579c4d53c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Talia Cohen', username: 'taliacohen' },
+    imageUrl: '/images/catamaran-cruise.jpg',
   },
 
   // --- Adventures ---
