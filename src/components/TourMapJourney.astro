@@ -534,11 +534,15 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     transform-origin: center center;
   }
 
+  /* Same soft dusk glow as the .tour-recap card beside it (this layer
+     only shows once the map has fully settled — see setupTourMapGrowth
+     — so the glow arrives at the same moment as the card does). */
   .tour-map-growth__full {
     position: absolute;
     inset: 0;
     opacity: 1;
     transform-origin: center center;
+    background: radial-gradient(ellipse at center, rgba(211, 162, 79, 0.16) 0%, transparent 72%);
   }
 
   .tour-map-growth__piece {
@@ -707,10 +711,21 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   }
 
   /* ---------- Closing recap ---------- */
+  /* The payoff moment of the growing map (it settles into one complete
+     map here, next to the slideshow of every tour) gets its own raised
+     card instead of just continuing the plain page background — a
+     soft warm glow using the same dusk token the page's own intro
+     uses, so the "journey" bookends itself: dusk opens the page, dusk
+     closes this section. */
   .tour-recap {
-    padding-block: var(--space-3xl) var(--space-xl);
+    position: relative;
     margin-top: var(--space-xl);
-    border-top: 1px solid var(--color-sand-200);
+    padding: var(--space-2xl) var(--space-xl);
+    background-color: var(--color-surface);
+    background-image: var(--gradient-dusk);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    overflow: hidden;
   }
 
   .tour-recap__heading {
