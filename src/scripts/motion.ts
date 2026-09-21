@@ -669,7 +669,7 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // beside it always keeps a readable minimum, rather than trusting a
 // vw-based CSS value that has no way to know about that squeeze.
 const TOUR_PHOTO_MIN_BODY_WIDTH = 260;
-const TOUR_PHOTO_EDGE_GAP = 24;
+const TOUR_PHOTO_EDGE_GAP = 64;
 
 function setupTourPhotoBleed() {
   const photos = Array.from(document.querySelectorAll<HTMLElement>('.tour-reveal__photo-wrap'));
