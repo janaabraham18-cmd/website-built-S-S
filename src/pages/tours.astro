@@ -173,11 +173,10 @@ const creditHref = (username: string) =>
         />
       </div>
     </div>
-    <div class="combos-section__scrim" aria-hidden="true"></div>
     <div class="combos-section__divider" aria-hidden="true"></div>
 
     <div class="container">
-      <div class="section-intro reveal-item">
+      <div class="section-intro combos-section__intro reveal-item">
         <p class="eyebrow">{categoryLabels.combo.label}</p>
         <h2>{categoryLabels.combo.description}</h2>
       </div>
@@ -798,12 +797,12 @@ const creditHref = (username: string) =>
   /* Split background — a catamaran cruise photo and a Deadvlei photo,
      side by side, each drifting independently on scroll (see
      setupComboSplitParallax in motion.ts) — the section's own "two
-     things become one day" idea made visual. A light wash sits on top
-     (heavier near the title, which sits directly on the photos; the
-     combo cards below are opaque so they don't need the protection)
-     rather than the postcards-style no-tint blur, since this section
-     leans on two full-color photos meeting at a hard edge for its
-     effect, not one soft ambient texture. */
+     things become one day" idea made visual. Shown fully defined, no
+     tint over the photos themselves (same no-overlay preference as the
+     homepage Reviews background) — the title gets its own small opaque
+     card instead of the whole section carrying a wash, since the combo
+     cards below are already opaque and don't need protecting either
+     way. */
   .combos-section {
     position: relative;
     z-index: 0;
@@ -835,16 +834,15 @@ const creditHref = (username: string) =>
     background-position: center;
   }
 
-  .combos-section__scrim {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(
-      180deg,
-      rgba(251, 247, 241, 0.92) 0%,
-      rgba(251, 247, 241, 0.6) 28%,
-      rgba(251, 247, 241, 0.42) 100%
-    );
+  /* The title sits directly on the split photos, so it gets its own
+     compact opaque card rather than dimming the photos to protect it —
+     everywhere else, the two photos show at full strength. */
+  .combos-section__intro {
+    display: inline-block;
+    background: rgba(251, 247, 241, 0.94);
+    border-radius: var(--radius-md);
+    padding: 1rem 1.5rem;
+    box-shadow: var(--shadow-md);
   }
 
   .combos-section__divider {
@@ -860,9 +858,16 @@ const creditHref = (username: string) =>
 
   @media (max-width: 700px) {
     .combos-section__split,
-    .combos-section__scrim,
     .combos-section__divider {
       display: none;
+    }
+
+    .combos-section__intro {
+      display: block;
+      background: none;
+      border-radius: 0;
+      padding: 0;
+      box-shadow: none;
     }
   }
 
