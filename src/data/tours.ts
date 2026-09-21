@@ -188,8 +188,8 @@ export const tours: Tour[] = [
     note: 'Departs at 08h00',
     included: ['Transfers', 'Water', 'Park fees'],
     imageUrl:
-      'https://images.unsplash.com/photo-1782841027397-1ffc35ea9eef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Trenton Alarcon', username: 'tatertots4robots' },
+      'https://images.unsplash.com/photo-1601870431533-c658027e3d96?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Seiji Seiji', username: 'seijiseiji' },
   },
   {
     slug: 'living-desert-tour',
@@ -361,8 +361,8 @@ export const tours: Tour[] = [
       'Transfers at additional cost',
     ],
     imageUrl:
-      'https://images.unsplash.com/photo-1782110112270-9f19439ad5dc?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Erwan Hesry', username: 'erwanhesry' },
+      'https://images.unsplash.com/photo-1786379290568-8c1e1429f76b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Aurora Song', username: 'auroras13' },
   },
   {
     slug: 'fat-bike-tour',
