@@ -642,19 +642,21 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
   root.addEventListener('focusout', start);
 }
 
-// Tours page photo bleed: each tour section's photo is meant to run
-// flush with the actual browser edge, not just the edge of its own
-// (fairly narrow, deeply-nested-in-a-centered-container) grid column —
-// a pure-CSS vw-based breakout (`margin-left: calc(50% - 50vw)` and
-// its relatives) doesn't reach the true viewport edge from this deep a
-// level of nesting, since the percentage in that formula resolves
-// against the element's own containing block, not the viewport,
-// confirmed by testing the trick in isolation. So instead this measures
-// each photo's actual distance from the viewport's left edge and
-// cancels it with an equal negative margin, which works regardless of
-// nesting because it's based on the real rendered position rather than
-// a formula. Skipped below the 900px breakpoint, where the photo is
-// meant to sit in normal full-width flow instead (see the CSS).
+// Tours page photo bleed: each tour section's photo is meant to sit just
+// off the actual browser edge (a small, deliberate gutter — not flush
+// with it, and not just the edge of its own fairly narrow,
+// deeply-nested-in-a-centered-container grid column) — a pure-CSS
+// vw-based breakout (`margin-left: calc(50% - 50vw)` and its relatives)
+// doesn't reach the true viewport edge from this deep a level of
+// nesting, since the percentage in that formula resolves against the
+// element's own containing block, not the viewport, confirmed by
+// testing the trick in isolation. So instead this measures each photo's
+// actual distance from the viewport's left edge and cancels out all but
+// TOUR_PHOTO_EDGE_GAP of it with a negative margin, which works
+// regardless of nesting because it's based on the real rendered
+// position rather than a formula. Skipped below the 900px breakpoint,
+// where the photo is meant to sit in normal full-width flow instead
+// (see the CSS).
 //
 // The CSS width (min(46vw, 560px)) is a viewport-relative target, but
 // the actual space available beside it isn't purely viewport-relative:
@@ -667,6 +669,7 @@ function setupTourRecapSlideshow(reduceMotion: boolean) {
 // beside it always keeps a readable minimum, rather than trusting a
 // vw-based CSS value that has no way to know about that squeeze.
 const TOUR_PHOTO_MIN_BODY_WIDTH = 260;
+const TOUR_PHOTO_EDGE_GAP = 24;
 
 function setupTourPhotoBleed() {
   const photos = Array.from(document.querySelectorAll<HTMLElement>('.tour-reveal__photo-wrap'));
@@ -695,7 +698,7 @@ function setupTourPhotoBleed() {
 
       photo.style.marginLeft = '0px';
       const offset = photo.getBoundingClientRect().left;
-      photo.style.marginLeft = `${-offset}px`;
+      photo.style.marginLeft = `${-(offset - TOUR_PHOTO_EDGE_GAP)}px`;
     });
   };
 
