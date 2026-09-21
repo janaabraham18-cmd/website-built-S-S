@@ -314,9 +314,12 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Orientation strip ---------- */
+  /* Section 2 of the page's light-to-dark progression (see the comment
+     above .adventures-section for the full sequence). */
   .orientation {
     padding-block: var(--space-xl);
     border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-alt);
   }
 
   .orientation__grid {
@@ -350,9 +353,18 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Adventures ---------- */
+  /* The tours page divides into bands that get a shade darker each time
+     you scroll into a new one — a deliberate, visible split between
+     sections (rather than the sitewide subtle body gradient) so each
+     one reads as its own zone to design against:
+       tour-journey (sand-50) -> orientation (sand-100) ->
+       adventures (sand-200) -> combos (beige-300) ->
+       build-your-own (warm gradient, already set) ->
+       closing (earth-700, flips to light text). */
   .adventures-section {
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
+    background: var(--color-sand-200);
   }
 
   .adventure-group {
@@ -769,6 +781,7 @@ const creditHref = (username: string) =>
   .combos-section {
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
+    background: var(--color-beige-300);
   }
 
   .combo-grid {
@@ -796,23 +809,28 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Closing ---------- */
+  /* Final, darkest band in the page's progression — dark enough that
+     the default earth-900 body text and text-muted no longer have
+     contrast against it, so both flip to the light on-dark tokens here. */
   .tours-closing {
     padding-block: var(--space-2xl);
-    border-top: 1px solid var(--color-border);
+    background: var(--color-earth-700);
   }
 
   .tours-closing__inner {
     max-width: 640px;
     margin-inline: auto;
     text-align: center;
+    color: var(--color-text-on-dark);
   }
 
   .tours-closing__inner h2 {
     margin: 0 0 var(--space-2xs);
+    color: var(--color-text-on-dark);
   }
 
   .tours-closing__inner p {
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
     margin: 0 0 var(--space-lg);
   }
 

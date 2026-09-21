@@ -365,8 +365,13 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   }
 
   /* ---------- Two-column journey ---------- */
+  /* First band in the tours page's light-to-dark section progression
+     (see tours.astro) — sits right after the hero photo, so it starts
+     at the same pale tone as the page background rather than an
+     abrupt jump. */
   .tour-journey {
     padding-block: var(--space-2xl);
+    background: var(--color-bg);
   }
 
   /* Deliberately not the sitewide .container (max-width: 1180px, sized
