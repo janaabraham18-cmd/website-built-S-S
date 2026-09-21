@@ -777,6 +777,7 @@ function setupTourMapGrowth() {
   const piecesLayer = container?.querySelector<HTMLElement>('[data-map-pieces]');
   const fullLayer = container?.querySelector<HTMLElement>('[data-map-full-layer]');
   const finalSlot = document.querySelector<HTMLElement>('[data-map-final]');
+  const recapBand = document.querySelector<HTMLElement>('[data-recap-band]');
   if (!container || !grid || !piecesLayer || !fullLayer) return;
 
   const pieces = Array.from(piecesLayer.querySelectorAll<HTMLElement>('[data-map-piece]'));
@@ -847,11 +848,28 @@ function setupTourMapGrowth() {
         const marginTop = Math.max(0, slotCenter - fullHeight / 2);
 
         gsap.to(container, { height: fullHeight, marginTop, duration: 0.7, ease: 'power2.out' });
+
+        // The shared band behind the recap card and the settled map:
+        // sized/positioned off the recap card's own rect (same numbers
+        // as slotRect/gridRect above), since the map is already centered
+        // on that same slot by the container tween just above.
+        if (recapBand) {
+          gsap.set(recapBand, {
+            top: slotRect.top - gridRect.top,
+            height: slotRect.height,
+            width: gridRect.width,
+          });
+          gsap.to(recapBand, { opacity: 1, duration: 0.6, ease: 'power2.out', delay: 0.1 });
+        }
       },
       onLeaveBack: () => {
         gsap.to(fullLayer, { opacity: 0, scale: 1.04, duration: 0.5, ease: 'power2.inOut' });
         gsap.to(piecesLayer, { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out', delay: 0.1 });
         syncTo(pieces.length - 1);
+
+        if (recapBand) {
+          gsap.to(recapBand, { opacity: 0, duration: 0.4, ease: 'power1.in' });
+        }
       },
     });
   }

@@ -131,6 +131,8 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
 <div class="tour-journey">
   <div class="tour-journey__grid">
+    <div class="tour-recap-band" data-recap-band aria-hidden="true"></div>
+
     <div class="tour-journey__sections">
       {
         stopsWithTours.map(({ pin, tour }, i) => (
@@ -477,6 +479,8 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
      everything left over, rather than the two fighting over fr shares
      the map's fixed width would just override anyway. */
   .tour-journey__grid {
+    position: relative;
+    z-index: 0;
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: start;
@@ -485,6 +489,22 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     max-width: 1600px;
     margin-inline: auto;
     padding-inline: var(--space-md);
+  }
+
+  /* Positioned/sized by setupTourMapGrowth once the map settles into its
+     complete form (see the finalSlot trigger in motion.ts) — spans the
+     grid's full width so the recap card and the settled map beside it
+     share one background instead of the card carrying its own. */
+  .tour-recap-band {
+    position: absolute;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    opacity: 0;
+    border-radius: var(--radius-lg);
+    background-color: var(--color-beige-300);
+    background-image: var(--gradient-dusk);
+    box-shadow: var(--shadow-lg);
   }
 
   .tour-journey__sections {
@@ -534,15 +554,11 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     transform-origin: center center;
   }
 
-  /* Same soft dusk glow as the .tour-recap card beside it (this layer
-     only shows once the map has fully settled — see setupTourMapGrowth
-     — so the glow arrives at the same moment as the card does). */
   .tour-map-growth__full {
     position: absolute;
     inset: 0;
     opacity: 1;
     transform-origin: center center;
-    background: radial-gradient(ellipse at center, rgba(211, 162, 79, 0.16) 0%, transparent 72%);
   }
 
   .tour-map-growth__piece {
@@ -712,20 +728,14 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
   /* ---------- Closing recap ---------- */
   /* The payoff moment of the growing map (it settles into one complete
-     map here, next to the slideshow of every tour) gets its own raised
-     card instead of just continuing the plain page background — a
-     soft warm glow using the same dusk token the page's own intro
-     uses, so the "journey" bookends itself: dusk opens the page, dusk
-     closes this section. */
+     map here, next to the slideshow of every tour) shares one background
+     with the map beside it — see .tour-recap-band, positioned to span
+     both — rather than boxing the card on its own. */
   .tour-recap {
     position: relative;
+    z-index: 1;
     margin-top: var(--space-xl);
     padding: var(--space-2xl) var(--space-xl);
-    background-color: var(--color-surface);
-    background-image: var(--gradient-dusk);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    overflow: hidden;
   }
 
   .tour-recap__heading {
