@@ -654,7 +654,7 @@ const faqItems = [
      specificity, beating the lower-specificity .brief-block/.itinerary-block
      glow rules below regardless of source order. */
   #brief, #itinerary, #faq { background-color: var(--color-bg-alt); }
-  #about { background-color: var(--color-sand-200); }
+  #about { background-color: var(--color-earth-700); }
 
   /* ---------- Desert Light: per-section glows ----------
      Soft, color-matched glow keyed to each section's own photos, layered
@@ -1000,15 +1000,25 @@ const faqItems = [
   }
 
   /* ---------- 04 About Us ---------- */
-  /* Sand-200 base (a step darker than Brief/Itinerary's sand-100 — see
-     the Desert Light comment near #brief) with a stronger version of
-     the coastal glow than the shared token (which Route also uses and
-     needs to stay subtle over its own photo) — this section lost its
-     own background photo earlier, which left it sitting on plain white
-     for a long stretch of prose with nothing else to break it up. */
+  /* Full dark band now — earth-700 (the same brown the coastal glow
+     tints toward, just at full strength as the background itself
+     rather than a faint accent) plus a warm dusk glow for depth, same
+     photo-free dark treatment as Our Fleet/.stamps-block. This section
+     lost its own background photo earlier, which left it sitting on
+     plain white for a long stretch of prose with nothing else to break
+     it up — text below flips to the light on-dark tokens to match. */
   .about-block {
     position: relative;
-    background-image: radial-gradient(1000px 550px at 85% 15%, #6b3a2c4d 0%, transparent 65%);
+    background-image: var(--gradient-dusk);
+    color: var(--color-text-on-dark);
+  }
+
+  .about-block .eyebrow {
+    color: var(--color-ochre-400);
+  }
+
+  .about-block .section-title {
+    color: var(--color-text-on-dark);
   }
 
   /* Small square profile photo + name/role caption, centered in normal
@@ -1029,7 +1039,7 @@ const faqItems = [
     font-family: var(--font-display);
     font-size: 1rem;
     font-weight: 600;
-    color: var(--color-earth-900);
+    color: var(--color-text-on-dark);
     margin: 0;
   }
 
@@ -1037,7 +1047,7 @@ const faqItems = [
     font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
     margin: 0.15rem 0 0;
   }
 
@@ -1076,7 +1086,7 @@ const faqItems = [
   .about-copy p {
     font-size: 1rem;
     line-height: 1.8;
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
     margin: 0 0 1.4rem;
   }
 
@@ -1090,7 +1100,7 @@ const faqItems = [
     margin: 0 auto 2.5rem;
     columns: 2;
     column-gap: 3.5rem;
-    column-rule: 1px solid var(--color-border);
+    column-rule: 1px solid rgba(251, 247, 241, 0.25);
   }
 
   .about-copy__columns > * {
@@ -1116,7 +1126,7 @@ const faqItems = [
     font-family: var(--font-display);
     font-size: clamp(1.4rem, 2.6vw, 1.75rem);
     line-height: 1.4;
-    color: var(--color-text);
+    color: var(--color-text-on-dark);
     margin-bottom: 1.75rem !important;
   }
 
@@ -1125,12 +1135,12 @@ const faqItems = [
     font-style: italic;
     font-size: clamp(1.2rem, 2.2vw, 1.45rem);
     line-height: 1.5;
-    color: var(--color-accent-strong);
+    color: var(--color-ochre-400);
     margin: 2rem 0 !important;
   }
 
   .about-copy__list {
-    color: var(--color-text);
+    color: var(--color-text-on-dark);
   }
 
   .about-copy__invite {
@@ -1138,26 +1148,26 @@ const faqItems = [
     letter-spacing: 0.08em;
     font-size: 0.85rem;
     font-weight: 600;
-    color: var(--color-text);
+    color: var(--color-text-on-dark);
   }
 
   .about-copy__signoff {
     margin-top: 2.5rem;
     padding-top: 1.75rem;
-    border-top: 1px solid var(--color-border);
+    border-top: 1px solid rgba(251, 247, 241, 0.25);
   }
 
   .about-copy__signoff-name {
     font-family: var(--font-display);
     font-size: 1.1rem;
-    color: var(--color-earth-900);
+    color: var(--color-text-on-dark);
     margin: 0 0 0.25rem;
   }
 
   .about-copy__signoff-tag {
     font-size: 0.85rem;
     font-style: italic;
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
     margin: 0;
   }
 
