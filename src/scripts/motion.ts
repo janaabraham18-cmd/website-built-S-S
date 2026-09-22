@@ -160,6 +160,58 @@ function setupAlternatingRows(reduceMotion: boolean) {
   }
 }
 
+// The Logbook: each landmark's photo "develops" up into view (a
+// clip-path wipe, like a print emerging from a tray) while its kicker
+// line types on in steps and the headline resolves out of a blur —
+// three separate motions reinforcing the same idea (history coming
+// into focus) rather than one generic fade-up. Reduced motion leaves
+// every element at its plain CSS resting state — nothing was ever
+// hidden, so there's nothing to reveal.
+function setupLogbookStories(reduceMotion: boolean) {
+  if (reduceMotion) return;
+
+  const stories = document.querySelectorAll<HTMLElement>('[data-logbook-story]');
+
+  for (const story of stories) {
+    const photo = story.querySelector<HTMLElement>('[data-logbook-photo]');
+    const kicker = story.querySelector<HTMLElement>('[data-logbook-kicker]');
+    const headline = story.querySelector<HTMLElement>('[data-logbook-headline]');
+    const body = story.querySelector<HTMLElement>('[data-logbook-body]');
+
+    if (photo) gsap.set(photo, { clipPath: 'inset(0% 0 100% 0)' });
+    if (kicker) gsap.set(kicker, { clipPath: 'inset(0 100% 0 0)' });
+    if (headline) gsap.set(headline, { opacity: 0, y: 16, filter: 'blur(10px)' });
+    if (body) gsap.set(body, { opacity: 0, y: 12 });
+
+    ScrollTrigger.create({
+      trigger: story,
+      start: 'top 78%',
+      once: true,
+      onEnter: () => {
+        if (photo) {
+          gsap.to(photo, { clipPath: 'inset(0% 0 0% 0)', duration: 0.9, ease: 'power3.out' });
+        }
+        if (kicker) {
+          gsap.to(kicker, { clipPath: 'inset(0 0% 0 0)', duration: 0.5, ease: 'steps(12)', delay: 0.15 });
+        }
+        if (headline) {
+          gsap.to(headline, {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.8,
+            ease: 'power2.out',
+            delay: 0.35,
+          });
+        }
+        if (body) {
+          gsap.to(body, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', delay: 0.55 });
+        }
+      },
+    });
+  }
+}
+
 // Hand-drawn connective thread: a short line draws in at the seam above
 // each Tour Programs item (skipping the first, which has no seam above
 // it), reviving the site's constellation-line idea as this list's
@@ -961,6 +1013,7 @@ export function initMotion() {
   setupTourPhotoBleed();
   setupItineraryFilter();
   setupPostcards();
+  setupLogbookStories(reduceMotion);
 
   let lenis: Lenis | undefined;
 

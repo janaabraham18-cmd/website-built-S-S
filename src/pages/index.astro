@@ -117,6 +117,102 @@ const routeDestinations = [
 const defaultRouteIndex = routeDestinations.findIndex((d) => d.slug === 'etosha-tour');
 const defaultRoute = routeDestinations[defaultRouteIndex];
 
+// "The Logbook" — eight landmarks that carry real weight in Namibia's
+// human and geological history, each tied to a confirmed photo of the
+// actual place rather than a generic stand-in. Order is a loose
+// chronological arc: deep prehistory, geological time, the age of
+// exploration, the diamond era, then a closing wide shot.
+const logbookStories = [
+  {
+    id: 'twyfelfontein',
+    fig: '01',
+    kicker: 'The Kunene Region — a record kept for 6,000 years',
+    headline: 'Where the Rock Remembers',
+    body: "Long before any road reached this valley, San hunters pressed images of lion, rhino and giraffe into sandstone slabs — more than 2,000 engravings in all, among the largest open-air galleries on the continent. Namibia's first UNESCO World Heritage Site reads less like ruins than an unfinished newspaper, still being deciphered panel by panel.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1745305947174-eccb8a2d5528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'Markus Kammermann', username: 'makabera' },
+    alt: 'An ancient San rock engraving of an animal pressed into sandstone at Twyfelfontein',
+  },
+  {
+    id: 'spitzkoppe',
+    fig: '02',
+    kicker: 'The Erongo Region — granite risen 1,784 metres',
+    headline: 'A Cathedral of Bare Stone',
+    body: "Locals call it the Matterhorn of Africa, though it rose from the desert floor some 120 million years before the Alps existed. Its overhangs shelter Bushman's Paradise, a hidden gallery of San paintings, and after dark the bare granite turns Spitzkoppe into one of the clearest amateur observatories south of the equator.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1656703324736-3663eafb4588?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
+    alt: 'Star trails circling above the granite peaks of Spitzkoppe at night',
+  },
+  {
+    id: 'etosha-pan',
+    fig: '03',
+    kicker: 'Owamboland — a lakebed silent since the Pleistocene',
+    headline: 'The Great Place of Dry Water',
+    body: "Etosha means 'great white place' — apt for a salt pan so vast it is visible from orbit. Once the floor of a lake fed by a river long since diverted, it now fills only after rare hard rain, drawing herds across kilometres of cracked white clay to drink at its fringes.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1785509210476-84acfc4f2279?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'aurélie sgnl', username: 'auresa' },
+    alt: 'The vast, cracked white surface of the Etosha salt pan under a clear sky',
+  },
+  {
+    id: 'deadvlei',
+    fig: '04',
+    kicker: 'The Namib-Naukluft — trees standing since roughly 900 AD',
+    headline: 'Nine Centuries Without Water',
+    body: "When the Tsauchab River changed course, it stranded a grove of camel thorn trees on a clay pan ringed by the world's tallest dunes. The desert air is too dry even for the wood to rot, leaving perfect black skeletons against red sand, largely unmoved for roughly a thousand years.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1514471244491-6fb96fcdf04f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'Parsing Eye', username: 'parsingeye' },
+    alt: 'The blackened, centuries-old dead trees of Deadvlei against red dunes',
+  },
+  {
+    id: 'skeleton-coast',
+    fig: '05',
+    kicker: 'The South Atlantic — where fog meets fire',
+    headline: 'The Coast the Charts Warned Against',
+    body: 'Early Portuguese sailors called it As Areias do Inferno — the Sands of Hell — for a shoreline where cold Benguela fog rolls into desert heat and pulls ships onto sandbars with no way back to open water. More than a thousand wrecks are said to lie along this coast, their ribs still surfacing from the dunes.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1667506609659-599fb1f59f94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+    alt: 'The rusted wreck of a ship stranded on the sand of the Skeleton Coast',
+  },
+  {
+    id: 'cape-cross',
+    fig: '06',
+    kicker: "The Skeleton Coast's southern gate — marked 1486",
+    headline: 'The First Marker on an Unmapped Shore',
+    body: 'Portuguese navigator Diogo Cão planted a stone cross here in 1486, the first recorded European landing on this stretch of coast — a replica still stands where the original was later removed to a Berlin museum. Today the cape belongs to some 100,000 Cape fur seals, one of the largest colonies on Earth.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1635764372997-a1cc39c48986?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'katsuma tanaka', username: 'kt2080' },
+    alt: 'The dense Cape fur seal colony crowding the shore at Cape Cross',
+  },
+  {
+    id: 'kolmanskop',
+    fig: '07',
+    kicker: 'The Sperrgebiet — diamonds found 1908',
+    headline: 'A Boomtown the Desert Took Back',
+    body: "A railway worker's glint in the sand touched off a diamond rush that built a town with a ballroom, a hospital and Africa's first x-ray unit, in the middle of the Namib. Richer deposits farther south drew everyone away within four decades, and the dunes have been moving back through the houses ever since.",
+    imageUrl:
+      'https://images.unsplash.com/photo-1588453588404-299e4d3e37d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'Max Murauer', username: 'maxtheaviator' },
+    alt: 'A sand-filled colonial building in the abandoned diamond town of Kolmanskop',
+  },
+  {
+    id: 'fish-river-canyon',
+    fig: '08',
+    kicker: 'The far south — carved over 500 million years',
+    headline: "Africa's Longest Scar",
+    body: 'Second in scale only to the Grand Canyon, this gorge was cut first by a shifting riverbed, then by glaciers, then by the Fish River itself — a geological record spanning half a billion years in one 160-kilometre trench. At dawn its terraces run copper, rust and violet before the heat sets in.',
+    imageUrl:
+      'https://images.unsplash.com/photo-1639402478735-7219a7e249ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
+    imageCredit: { name: 'Andrew Svk', username: 'andrew_svk' },
+    alt: 'The layered red-rock terraces of Fish River Canyon at sunset',
+  },
+];
+
 const itineraryFilters = [
   { key: 'all', label: 'All' },
   { key: 'desert', label: 'Desert' },
@@ -549,17 +645,42 @@ const faqItems = [
 
   <!-- ============ 06 · THE LOGBOOK ============ -->
   <section class="block logbook-block reveal" id="logbook">
-    <p class="eyebrow">The Logbook</p>
-    <h2 class="section-title">Namibia, in passing</h2>
-    <div class="logbook-grid reveal-item">
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1709192856319-255c881dd630?w=600&q=80&auto=format&fit=crop" alt="Fish River Canyon at dawn, one of the largest canyons in the world" loading="lazy" decoding="async" /></div><figcaption>dawn over the canyon</figcaption></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595652974715-571ba74668b5?w=600&q=80&auto=format&fit=crop" alt="A giraffe at sunset in Etosha National Park" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1696894134302-7e124a8bf2e8?w=600&q=80&auto=format&fit=crop" alt="A lone oryx crossing the red dunes of the Namib" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1669220228835-6c80412646d2?w=600&q=80&auto=format&fit=crop" alt="Spitzkoppe's granite peaks under a star-filled sky" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1621238705338-532e7df61de5?w=600&q=80&auto=format&fit=crop" alt="Cape fur seal colony at Cape Cross" loading="lazy" decoding="async" /></div><figcaption>seal colony, Cape Cross</figcaption></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595583945105-3138e8dd6b98?w=600&q=80&auto=format&fit=crop" alt="Mountains of Damaraland at sunset" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1595961664116-130d677eb080?w=600&q=80&auto=format&fit=crop" alt="A black rhino in its natural Namibian habitat" loading="lazy" decoding="async" /></div></figure>
-      <figure class="logbook-item"><div class="photo-frame photo-frame--sm"><img src="https://images.unsplash.com/photo-1665072523770-601bd7e96aef?w=600&q=80&auto=format&fit=crop" alt="Aerial view of Namib desert dune patterns" loading="lazy" decoding="async" /></div><figcaption>the dunes, from above</figcaption></figure>
+    <div class="logbook-masthead reveal-item">
+      <p class="eyebrow">The Logbook</p>
+      <h2 class="section-title">Namibia, in passing</h2>
+      <p class="logbook-masthead__dek">
+        Eight places that carry the weight of this country's history — from rock art older than
+        the pyramids to a boomtown the desert reclaimed in a single generation.
+      </p>
+    </div>
+
+    <div class="logbook-stories">
+      {
+        logbookStories.map((story) => (
+          <article class="logbook-story" data-logbook-story>
+            <figure class="logbook-story__photo">
+              <div class="logbook-story__frame" data-logbook-photo>
+                <img src={story.imageUrl} alt={story.alt} loading="lazy" decoding="async" />
+              </div>
+              <figcaption class="logbook-story__credit">
+                Fig. {story.fig} — Photograph:{' '}
+                <a
+                  href={`https://unsplash.com/@${story.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {story.imageCredit.name}
+                </a>
+              </figcaption>
+            </figure>
+            <div class="logbook-story__text">
+              <p class="logbook-story__kicker" data-logbook-kicker>{story.kicker}</p>
+              <h3 class="logbook-story__headline" data-logbook-headline>{story.headline}</h3>
+              <p class="logbook-story__body" data-logbook-body>{story.body}</p>
+            </div>
+          </article>
+        ))
+      }
     </div>
   </section>
 
@@ -654,8 +775,8 @@ const faqItems = [
     background-image: var(--gradient-glow-warm);
   }
 
-  /* A giraffe shot (also used in the Logbook grid) sits behind the route
-     map/card as ambient texture — the map and preview card both carry
+  /* A giraffe shot sits behind the route map/card as ambient texture —
+     the map and preview card both carry
      their own solid backgrounds, so this only shows through the
      section's own padding, never behind the card content. Lives on its
      own layer (rather than directly on .route-block's background) so it
@@ -1146,31 +1267,153 @@ const faqItems = [
     margin: 0;
   }
 
-  /* ---------- 06 The Logbook ---------- */
-  .logbook-grid {
-    columns: 4;
-    column-gap: 1rem;
+  /* ---------- 06 The Logbook ----------
+     An old-newspaper treatment: sharp-edged, permanently sepia photos
+     (not a hover effect — the tone is the point), ink-black rules
+     instead of the usual soft --color-border, a masthead double rule,
+     and a stronger local grain so the section reads as newsprint rather
+     than the site's usual warm-paper background. Motion lives in
+     setupLogbookStories() in motion.ts. */
+  .logbook-block {
+    position: relative;
   }
 
-  .logbook-item {
-    margin: 0 0 1rem;
-    break-inside: avoid;
+  .logbook-block::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: var(--texture-grain);
+    background-size: 160px 160px;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    pointer-events: none;
   }
 
-  .logbook-item:nth-child(3n+1) .photo-frame { aspect-ratio: 3 / 4; }
-  .logbook-item:nth-child(3n+2) .photo-frame { aspect-ratio: 1 / 1; }
-  .logbook-item:nth-child(3n) .photo-frame { aspect-ratio: 4 / 3; }
+  .logbook-masthead {
+    position: relative;
+    max-width: var(--content-width-narrow);
+    margin: 0 auto var(--space-xl);
+    text-align: center;
+  }
 
-  .logbook-item figcaption {
-    font-family: var(--font-display);
+  .logbook-masthead .section-title {
+    padding-bottom: var(--space-md);
+    border-bottom: 3px double var(--color-earth-900);
+  }
+
+  .logbook-masthead__dek {
+    margin: var(--space-sm) 0 0;
+    font-family: var(--font-display-italic);
     font-style: italic;
-    font-size: 0.85rem;
+    font-size: var(--fs-md);
     color: var(--color-text-muted);
-    margin-top: 0.5rem;
   }
 
-  @media (max-width: 960px) { .logbook-grid { columns: 2; } }
-  @media (max-width: 640px) { .logbook-grid { columns: 1; } }
+  .logbook-stories {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .logbook-story {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--color-earth-900);
+  }
+
+  .logbook-story:first-child {
+    padding-top: 0;
+    border-top: none;
+  }
+
+  .logbook-story:nth-child(even) {
+    flex-direction: row-reverse;
+  }
+
+  .logbook-story__photo {
+    flex: 0 0 40%;
+    margin: 0;
+  }
+
+  .logbook-story__frame {
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    border: 1px solid var(--color-earth-900);
+    box-shadow: var(--shadow-md);
+  }
+
+  .logbook-story__frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: sepia(0.55) contrast(1.08) brightness(0.96);
+  }
+
+  .logbook-story__credit {
+    margin: var(--space-2xs) 0 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .logbook-story__credit a {
+    color: inherit;
+  }
+
+  .logbook-story__text {
+    flex: 1 1 60%;
+  }
+
+  .logbook-story__kicker {
+    display: inline-block;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .logbook-story__headline {
+    font-size: var(--fs-2xl);
+    line-height: 1.15;
+    margin: 0 0 var(--space-sm);
+  }
+
+  .logbook-story__body {
+    margin: 0;
+    color: var(--color-text-muted);
+  }
+
+  .logbook-story__body::first-letter {
+    float: left;
+    font-family: var(--font-display);
+    font-size: 3.4em;
+    line-height: 0.8;
+    padding: 0.05em 0.08em 0 0;
+    color: var(--color-earth-900);
+  }
+
+  @media (max-width: 800px) {
+    .logbook-story,
+    .logbook-story:nth-child(even) {
+      flex-direction: column;
+      align-items: stretch;
+      gap: var(--space-md);
+    }
+
+    .logbook-story__photo {
+      flex-basis: auto;
+    }
+
+    .logbook-story__frame {
+      aspect-ratio: 16 / 10;
+    }
+  }
 
   /* ---------- 05 Our Fleet ---------- */
   .stamps-block {
