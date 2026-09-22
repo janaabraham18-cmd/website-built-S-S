@@ -125,10 +125,12 @@ const defaultRoute = routeDestinations[defaultRouteIndex];
 const logbookStories = [
   {
     id: 'twyfelfontein',
-    fig: '01',
     kicker: 'The Kunene Region — a record kept for 6,000 years',
     headline: 'Where the Rock Remembers',
-    body: "Long before any road reached this valley, San hunters pressed images of lion, rhino and giraffe into sandstone slabs — more than 2,000 engravings in all, among the largest open-air galleries on the continent. Namibia's first UNESCO World Heritage Site reads less like ruins than an unfinished newspaper, still being deciphered panel by panel.",
+    body: [
+      "Long before any road reached this valley, San hunters and herders pressed more than 2,000 images into the sandstone here — lion, rhino, giraffe, ostrich and human figures, some engraved as recently as a few centuries ago and others estimated at up to 6,000 years old. It's the largest concentration of rock art in Africa, and in 2007 it became Namibia's first UNESCO World Heritage Site.",
+      "The farmer who settled here in the 1940s named it Twyfelfontein — 'doubtful spring' — unsure the water source would last through a dry season. The most famous panel, the so-called Lion Man, shows a lion with five toes on each paw and a human footprint at the tip of its tail, a detail still debated by researchers studying what the engraving meant to the people who made it.",
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1745305947174-eccb8a2d5528?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'Markus Kammermann', username: 'makabera' },
@@ -136,10 +138,12 @@ const logbookStories = [
   },
   {
     id: 'spitzkoppe',
-    fig: '02',
     kicker: 'The Erongo Region — granite risen 1,784 metres',
     headline: 'A Cathedral of Bare Stone',
-    body: "Locals call it the Matterhorn of Africa, though it rose from the desert floor some 120 million years before the Alps existed. Its overhangs shelter Bushman's Paradise, a hidden gallery of San paintings, and after dark the bare granite turns Spitzkoppe into one of the clearest amateur observatories south of the equator.",
+    body: [
+      'Locals call it the Matterhorn of Africa, though the comparison undersells it: this granite inselberg rose from the desert floor roughly 120 million years ago, as Gondwana was still pulling apart, long before the Alps existed at all. It climbs 1,784 metres above sea level and around 700 metres above the surrounding plain, a single bald dome visible for miles across flat gravel desert.',
+      "Its overhangs shelter Bushman's Paradise, a hidden gallery of San paintings estimated at 2,000 to 4,000 years old. After dark, with no city light for a hundred kilometres in any direction, the bare granite turns Spitzkoppe into one of the clearest amateur observatories south of the equator — climbers have been coming since the first recorded ascent in 1946.",
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1656703324736-3663eafb4588?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'Colin Watts', username: 'colinwatts' },
@@ -147,10 +151,12 @@ const logbookStories = [
   },
   {
     id: 'etosha-pan',
-    fig: '03',
     kicker: 'Owamboland — a lakebed silent since the Pleistocene',
     headline: 'The Great Place of Dry Water',
-    body: "Etosha means 'great white place' — apt for a salt pan so vast it is visible from orbit. Once the floor of a lake fed by a river long since diverted, it now fills only after rare hard rain, drawing herds across kilometres of cracked white clay to drink at its fringes.",
+    body: [
+      "Etosha means 'great white place,' and the name undersells nothing: this salt pan covers roughly 4,800 square kilometres, big enough to be picked out from orbit. It was born when tectonic shifts, tens of thousands of years ago, diverted the river that once fed a permanent lake here, leaving behind a vast cracked bed of white clay and salt.",
+      'It fills only after unusually heavy rain, holding a few centimetres of water for a few weeks before evaporating again. The surrounding reserve was first proclaimed in 1907 by the German colonial administration, making Etosha National Park one of the oldest protected wildlife areas in Africa — its waterholes remain the reason animals gather here at all.',
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1785509210476-84acfc4f2279?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'aurélie sgnl', username: 'auresa' },
@@ -158,10 +164,12 @@ const logbookStories = [
   },
   {
     id: 'deadvlei',
-    fig: '04',
-    kicker: 'The Namib-Naukluft — trees standing since roughly 900 AD',
-    headline: 'Nine Centuries Without Water',
-    body: "When the Tsauchab River changed course, it stranded a grove of camel thorn trees on a clay pan ringed by the world's tallest dunes. The desert air is too dry even for the wood to rot, leaving perfect black skeletons against red sand, largely unmoved for roughly a thousand years.",
+    kicker: 'The Namib-Naukluft — trees dead 600 to 900 years',
+    headline: 'Centuries Without Water',
+    body: [
+      'When the Tsauchab River shifted course, it cut off a shallow clay pan from the water that once reached it, stranding a grove of camel thorn trees between dunes that now rank among the tallest on Earth — Big Daddy, just beside the pan, rises some 325 metres. The trees are thought to have died somewhere between 600 and 900 years ago.',
+      "What keeps them standing is the same aridity that killed them: this pocket of the Namib is too dry for the fungi and bacteria that would normally rot dead wood, so the trunks simply never decomposed. Their blackened colour isn't char from fire — it's centuries of direct sun scorching the exposed timber against a floor of pale, cracked clay and red dune sand.",
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1514471244491-6fb96fcdf04f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'Parsing Eye', username: 'parsingeye' },
@@ -169,10 +177,12 @@ const logbookStories = [
   },
   {
     id: 'skeleton-coast',
-    fig: '05',
     kicker: 'The South Atlantic — where fog meets fire',
     headline: 'The Coast the Charts Warned Against',
-    body: 'Early Portuguese sailors called it As Areias do Inferno — the Sands of Hell — for a shoreline where cold Benguela fog rolls into desert heat and pulls ships onto sandbars with no way back to open water. More than a thousand wrecks are said to lie along this coast, their ribs still surfacing from the dunes.',
+    body: [
+      'Early Portuguese sailors called this shoreline As Areias do Inferno — the Sands of Hell. The cold Benguela Current, sweeping up from Antarctica, meets the desert heat and produces thick fog on as many as 250 days a year, just often enough to pull ships onto sandbars with no way back to open water.',
+      "More than a thousand wrecks are said to lie along roughly 500 kilometres of this coast, their ribs still surfacing from the dunes decades later. Survivors who made it to shore then faced a crossing few managed: a waterless desert stretching inland, which is why the region's name in the local Ovahimba language translates to something like 'the land God made in anger.'",
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1667506609659-599fb1f59f94?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
@@ -180,10 +190,12 @@ const logbookStories = [
   },
   {
     id: 'cape-cross',
-    fig: '06',
     kicker: "The Skeleton Coast's southern gate — marked 1486",
     headline: 'The First Marker on an Unmapped Shore',
-    body: 'Portuguese navigator Diogo Cão planted a stone cross here in 1486, the first recorded European landing on this stretch of coast — a replica still stands where the original was later removed to a Berlin museum. Today the cape belongs to some 100,000 Cape fur seals, one of the largest colonies on Earth.',
+    body: [
+      'Portuguese navigator Diogo Cão planted a stone padrão here in 1486, inscribed in Portuguese and Latin, marking the first recorded European landing on this stretch of coast. German naval officers removed the original in 1893 and shipped it to a museum in Berlin, where it still stands; a replica has marked the cape since 1980.',
+      'Today the site belongs to the seals far more than to any explorer\'s monument. Numbers swing with the season, from roughly 80,000 up to 210,000 or more during the November-to-December pupping season, making Cape Cross home to one of the largest Cape fur seal colonies on the planet — animals that are, despite the name, more closely related to sea lions than true seals.',
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1635764372997-a1cc39c48986?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'katsuma tanaka', username: 'kt2080' },
@@ -191,10 +203,12 @@ const logbookStories = [
   },
   {
     id: 'kolmanskop',
-    fig: '07',
     kicker: 'The Sperrgebiet — diamonds found 1908',
     headline: 'A Boomtown the Desert Took Back',
-    body: "A railway worker's glint in the sand touched off a diamond rush that built a town with a ballroom, a hospital and Africa's first x-ray unit, in the middle of the Namib. Richer deposits farther south drew everyone away within four decades, and the dunes have been moving back through the houses ever since.",
+    body: [
+      'In April 1908, a railway worker named Zacharias Lewala picked a stray diamond out of the sand while clearing tracks, and within months this patch of desert had a boomtown. The German colonial government sealed the whole region off as a Sperrgebiet — a forbidden zone — and by the 1920s Kolmanskop had around 300 German residents, a hospital, a theatre, a bowling alley, and the first tram built in Africa.',
+      'A pipeline carried fresh water 120 kilometres from the Kuiseb River just to keep it running. Richer deposits found farther south, near the Orange River, drew the diamond trade away after 1928, and the last residents left by 1956. The dunes have been moving back through the empty houses ever since, filling rooms floor to window frame.',
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1588453588404-299e4d3e37d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'Max Murauer', username: 'maxtheaviator' },
@@ -202,10 +216,12 @@ const logbookStories = [
   },
   {
     id: 'fish-river-canyon',
-    fig: '08',
     kicker: 'The far south — carved over 500 million years',
     headline: "Africa's Longest Scar",
-    body: 'Second in scale only to the Grand Canyon, this gorge was cut first by a shifting riverbed, then by glaciers, then by the Fish River itself — a geological record spanning half a billion years in one 160-kilometre trench. At dawn its terraces run copper, rust and violet before the heat sets in.',
+    body: [
+      "Second only to the Grand Canyon in scale, this gorge runs about 160 kilometres long, up to 27 kilometres wide, and drops as deep as 550 metres in places. Its walls record roughly 500 million years of geological history — first a collapsing valley shaped by ancient tectonic movement, then reshaped again by glaciers some 300 million years ago, and finally cut by the Fish River itself, which still flows through it today.",
+      "The multi-day hiking trail through the canyon floor, around 90 kilometres end to end, is one of the most famous treks in southern Africa, and it's only open from May to September — the rest of the year the heat inside the canyon makes the walk dangerous. At dawn its terraced walls run copper, rust and violet before the sun clears the rim and the colour flattens out.",
+    ],
     imageUrl:
       'https://images.unsplash.com/photo-1639402478735-7219a7e249ff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600',
     imageCredit: { name: 'Andrew Svk', username: 'andrew_svk' },
@@ -671,23 +687,26 @@ const faqItems = [
       </div>
 
       <div class="logbook-article">
-        <p class="logbook-article__masthead-line">The Salt &amp; Sun Gazette — Dispatches From the Interior</p>
         {
           logbookStories.map((story, i) => (
             <div class="logbook-article__entry" data-logbook-entry aria-hidden={i === 0 ? 'false' : 'true'}>
               <p class="logbook-article__kicker">{story.kicker}</p>
               <h3 class="logbook-article__headline">{story.headline}</h3>
-              <div class="logbook-article__columns">
-                <p>{story.body}</p>
+              <div class="logbook-article__body">
+                {story.body.map((paragraph) => <p>{paragraph}</p>)}
               </div>
               <p class="logbook-article__credit">
-                Fig. {story.fig} — Photograph:{' '}
+                Photo:{' '}
                 <a
                   href={`https://unsplash.com/@${story.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
                   {story.imageCredit.name}
+                </a>{' '}
+                /{' '}
+                <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">
+                  Unsplash
                 </a>
               </p>
             </div>
@@ -1281,27 +1300,9 @@ const faqItems = [
   }
 
   /* ---------- 06 The Logbook ----------
-     An old-newspaper treatment: sharp-edged, permanently sepia photos
-     (not a hover effect — the tone is the point), ink-black rules
-     instead of the usual soft --color-border, a masthead double rule,
-     and a stronger local grain so the section reads as newsprint rather
-     than the site's usual warm-paper background. Motion lives in
-     setupLogbookSlideshow() in motion.ts. */
-  .logbook-block {
-    position: relative;
-  }
-
-  .logbook-block::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-image: var(--texture-grain);
-    background-size: 160px 160px;
-    opacity: 0.5;
-    mix-blend-mode: multiply;
-    pointer-events: none;
-  }
-
+     Plain "Desert Light" treatment matching the rest of the site: full-
+     colour photos in a rounded, shadowed frame, no ink rules or newsprint
+     texture. Motion lives in setupLogbookSlideshow() in motion.ts. */
   .logbook-masthead {
     position: relative;
     max-width: var(--content-width-narrow);
@@ -1309,15 +1310,8 @@ const faqItems = [
     text-align: center;
   }
 
-  .logbook-masthead .section-title {
-    padding-bottom: var(--space-md);
-    border-bottom: 3px double var(--color-earth-900);
-  }
-
   .logbook-masthead__dek {
     margin: var(--space-sm) 0 0;
-    font-family: var(--font-display-italic);
-    font-style: italic;
     font-size: var(--fs-md);
     color: var(--color-text-muted);
   }
@@ -1337,7 +1331,7 @@ const faqItems = [
     position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 1px solid var(--color-earth-900);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
     background: var(--color-earth-900);
   }
@@ -1358,22 +1352,22 @@ const faqItems = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: sepia(0.55) contrast(1.08) brightness(0.96);
   }
 
   .logbook-stage__nav {
     position: absolute;
     top: 50%;
     translate: 0 -50%;
-    width: 2.6rem;
-    height: 2.6rem;
-    border: 1px solid var(--color-text-on-dark);
+    width: 2.8rem;
+    height: 2.8rem;
+    border: none;
+    border-radius: 50%;
     background: rgba(58, 35, 28, 0.55);
     color: var(--color-text-on-dark);
-    font-family: var(--font-display);
     font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
+    box-shadow: var(--shadow-sm);
     transition: background-color 0.2s ease;
   }
 
@@ -1394,7 +1388,8 @@ const faqItems = [
     bottom: var(--space-sm);
     right: var(--space-sm);
     margin: 0;
-    padding: 0.2em 0.6em;
+    padding: 0.25em 0.7em;
+    border-radius: var(--radius-sm);
     background: rgba(58, 35, 28, 0.55);
     color: var(--color-text-on-dark);
     font-size: 0.75rem;
@@ -1404,17 +1399,6 @@ const faqItems = [
   /* ---- Article panel: all 8 articles are in the DOM (no-JS/SEO
      fallback shows the first one); JS toggles which is visible so the
      text swap isn't tied to the photo's slide animation. */
-  .logbook-article__masthead-line {
-    margin: 0 0 var(--space-md);
-    padding-bottom: var(--space-2xs);
-    border-bottom: 1px solid var(--color-earth-900);
-    text-transform: uppercase;
-    letter-spacing: 0.14em;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-  }
-
   .logbook-article__entry {
     display: none;
   }
@@ -1438,47 +1422,41 @@ const faqItems = [
     display: inline-block;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    font-size: 0.78rem;
+    font-size: var(--fs-sm);
     font-weight: 600;
     color: var(--color-accent-strong);
-    margin: 0 0 var(--space-2xs);
+    margin: 0 0 var(--space-xs);
   }
 
   .logbook-article__headline {
-    font-size: var(--fs-2xl);
-    line-height: 1.15;
-    margin: 0 0 var(--space-sm);
+    font-size: var(--fs-3xl);
+    line-height: 1.1;
+    margin: 0 0 var(--space-md);
   }
 
-  .logbook-article__columns {
-    columns: 2;
-    column-gap: var(--space-lg);
+  .logbook-article__body {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    font-size: var(--fs-md);
+    line-height: 1.7;
     color: var(--color-text-muted);
   }
 
-  .logbook-article__columns p {
+  .logbook-article__body p {
     margin: 0;
   }
 
-  .logbook-article__columns p::first-letter {
-    float: left;
-    font-family: var(--font-display);
-    font-size: 3.4em;
-    line-height: 0.8;
-    padding: 0.05em 0.08em 0 0;
-    color: var(--color-earth-900);
-  }
-
   .logbook-article__credit {
-    margin: var(--space-sm) 0 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.03em;
-    font-style: italic;
+    margin: var(--space-md) 0 0;
+    font-size: var(--fs-xs);
     color: var(--color-text-muted);
   }
 
   .logbook-article__credit a {
     color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   @media (max-width: 800px) {
@@ -1490,8 +1468,8 @@ const faqItems = [
       aspect-ratio: 16 / 10;
     }
 
-    .logbook-article__columns {
-      columns: 1;
+    .logbook-article__headline {
+      font-size: var(--fs-2xl);
     }
   }
 
