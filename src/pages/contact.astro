@@ -4,45 +4,96 @@ import ContactForm from '../components/ContactForm.astro';
 
 const address = '1st Street East, Walvis Bay, Namibia';
 const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
+
+const bgPhoto = {
+  url: 'https://images.unsplash.com/photo-1594398901358-5c87ee140ea3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Grant Durr', username: 'grant_durr' },
+};
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
 
 <BaseLayout title="Contact" description="Get in touch with Salt and Sun Tours in Swakopmund and Walvis Bay, Namibia.">
-  <header class="contact-header">
-    <div class="container">
-      <p class="contact-header__eyebrow">Say hello</p>
-      <h1 class="contact-header__heading">Get in touch</h1>
-      <p class="contact-header__body">
-        Have a question before you book, or want to talk through your trip
-        first? We're a small, local team based in Swakopmund and Walvis
-        Bay — reach out and you'll hear back from one of us directly, not
-        a call center.
-      </p>
-    </div>
-  </header>
+  <div class="contact-page">
+    <div class="contact-page__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
 
-  <section class="contact-grid-section reveal">
-    <div class="container contact-grid">
-      <div class="contact-grid__form reveal-item">
-        <ContactForm />
+    <header class="contact-header">
+      <div class="container">
+        <div class="contact-header__card">
+          <p class="contact-header__eyebrow">Say hello</p>
+          <h1 class="contact-header__heading">Get in touch</h1>
+          <p class="contact-header__body">
+            Have a question before you book, or want to talk through your trip
+            first? We're a small, local team based in Swakopmund and Walvis
+            Bay — reach out and you'll hear back from one of us directly, not
+            a call center.
+          </p>
+        </div>
       </div>
+    </header>
 
-      <div class="contact-grid__visual reveal-item">
-        <iframe
-          class="contact-map"
-          src={mapSrc}
-          title={`Map showing ${address}`}
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"
-        ></iframe>
-        <p class="contact-grid__address">{address}</p>
+    <section class="contact-grid-section reveal">
+      <div class="container contact-grid">
+        <div class="contact-grid__form reveal-item">
+          <div class="contact-panel">
+            <ContactForm />
+          </div>
+        </div>
+
+        <div class="contact-grid__visual reveal-item">
+          <iframe
+            class="contact-map"
+            src={mapSrc}
+            title={`Map showing ${address}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+          ></iframe>
+          <p class="contact-grid__address">{address}</p>
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <p class="contact-page__credit">
+      Photo:{' '}
+      <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
+      /{' '}
+      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  </div>
 </BaseLayout>
 
 <style>
+  /* One continuous background photo (the Swakopmund jetty — a pier
+     reaching out into the ocean, right where this team is based) behind
+     the whole page, shown at full strength: no scrim, no blur. The
+     header copy gets its own small opaque card, same resolution as the
+     booking page, rather than dimming the photo for everyone to protect
+     one block of text. */
+  .contact-page {
+    position: relative;
+    z-index: 0;
+  }
+
+  .contact-page__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center 65%;
+    background-color: var(--color-earth-700);
+  }
+
   .contact-header {
+    position: relative;
     padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .contact-header__card {
+    display: inline-block;
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
   }
 
   .contact-header__eyebrow {
@@ -50,22 +101,25 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&out
     letter-spacing: 0.14em;
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--color-accent-strong);
+    color: var(--color-ochre-400);
     margin-bottom: var(--space-2xs);
   }
 
   .contact-header__heading {
+    color: var(--color-text-on-dark);
     margin-bottom: var(--space-md);
   }
 
   .contact-header__body {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
     max-width: var(--content-width-narrow);
+    margin: 0;
   }
 
   .contact-grid-section {
+    position: relative;
     padding-block: var(--space-xl) var(--space-2xl);
   }
 
@@ -74,6 +128,13 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&out
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     gap: var(--space-2xl);
     align-items: start;
+  }
+
+  .contact-panel {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-xl);
   }
 
   .contact-grid__visual {
@@ -92,8 +153,25 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&out
   .contact-grid__address {
     margin: var(--space-sm) 0 0;
     font-size: var(--fs-sm);
-    color: var(--color-text-muted);
+    color: var(--color-text-on-dark);
     text-align: center;
+    text-shadow: 0 1px 4px rgba(58, 35, 28, 0.6);
+  }
+
+  .contact-page__credit {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    text-align: right;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .contact-page__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   @media (max-width: 860px) {
@@ -108,6 +186,12 @@ const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&out
 
     .contact-map {
       aspect-ratio: 16 / 10;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .contact-panel {
+      padding: var(--space-lg) var(--space-md);
     }
   }
 </style>
