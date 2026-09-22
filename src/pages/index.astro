@@ -653,7 +653,8 @@ const faqItems = [
      here would silently reset background-image back to none at ID-level
      specificity, beating the lower-specificity .brief-block/.itinerary-block
      glow rules below regardless of source order. */
-  #brief, #itinerary, #about, #faq { background-color: var(--color-bg-alt); }
+  #brief, #itinerary, #faq { background-color: var(--color-bg-alt); }
+  #about { background-color: var(--color-sand-200); }
 
   /* ---------- Desert Light: per-section glows ----------
      Soft, color-matched glow keyed to each section's own photos, layered
@@ -999,13 +1000,15 @@ const faqItems = [
   }
 
   /* ---------- 04 About Us ---------- */
-  /* Sand-100 base (see the Desert Light comment near #brief) with the
-     coastal glow rather than warm — this section lost its own
-     background photo earlier, which left it sitting on plain white for
-     a long stretch of prose with nothing else to break it up. */
+  /* Sand-200 base (a step darker than Brief/Itinerary's sand-100 — see
+     the Desert Light comment near #brief) with a stronger version of
+     the coastal glow than the shared token (which Route also uses and
+     needs to stay subtle over its own photo) — this section lost its
+     own background photo earlier, which left it sitting on plain white
+     for a long stretch of prose with nothing else to break it up. */
   .about-block {
     position: relative;
-    background-image: var(--gradient-glow-coastal);
+    background-image: radial-gradient(1000px 550px at 85% 15%, #6b3a2c4d 0%, transparent 65%);
   }
 
   /* Small square profile photo + name/role caption, centered in normal
