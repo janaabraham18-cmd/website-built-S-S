@@ -160,56 +160,85 @@ function setupAlternatingRows(reduceMotion: boolean) {
   }
 }
 
-// The Logbook: each landmark's photo "develops" up into view (a
-// clip-path wipe, like a print emerging from a tray) while its kicker
-// line types on in steps and the headline resolves out of a blur —
-// three separate motions reinforcing the same idea (history coming
-// into focus) rather than one generic fade-up. Reduced motion leaves
-// every element at its plain CSS resting state — nothing was ever
-// hidden, so there's nothing to reveal.
-function setupLogbookStories(reduceMotion: boolean) {
-  if (reduceMotion) return;
+// The Logbook: a single filmstrip carousel — all 8 landmark photos live
+// on one flex track and the track is translated by whole slide-widths,
+// so the incoming photo visibly slides in from the side rather than
+// cross-fading. The article text beneath swaps instantly with it (all 8
+// articles are in the DOM already for no-JS/SEO; JS just toggles which
+// one is visible) so the reading pace isn't tied to the photo's slide
+// duration. Autoplay advances every 1.5s and pauses on hover/focus so a
+// reader who stops to look isn't fighting the timer; reduced motion
+// keeps the slide-swap but drops the animated glide to an instant cut.
+function setupLogbookSlideshow(reduceMotion: boolean) {
+  const root = document.querySelector<HTMLElement>('[data-logbook-slideshow]');
+  if (!root) return;
 
-  const stories = document.querySelectorAll<HTMLElement>('[data-logbook-story]');
+  const track = root.querySelector<HTMLElement>('[data-logbook-track]');
+  const slides = root.querySelectorAll<HTMLElement>('[data-logbook-slide]');
+  const entries = root.querySelectorAll<HTMLElement>('[data-logbook-entry]');
+  const counter = root.querySelector<HTMLElement>('[data-logbook-counter]');
+  const prevBtn = root.querySelector<HTMLButtonElement>('[data-logbook-prev]');
+  const nextBtn = root.querySelector<HTMLButtonElement>('[data-logbook-next]');
+  if (!track || !slides.length || !entries.length) return;
 
-  for (const story of stories) {
-    const photo = story.querySelector<HTMLElement>('[data-logbook-photo]');
-    const kicker = story.querySelector<HTMLElement>('[data-logbook-kicker]');
-    const headline = story.querySelector<HTMLElement>('[data-logbook-headline]');
-    const body = story.querySelector<HTMLElement>('[data-logbook-body]');
+  const total = slides.length;
+  let index = 0;
+  let timer: ReturnType<typeof setInterval> | null = null;
 
-    if (photo) gsap.set(photo, { clipPath: 'inset(0% 0 100% 0)' });
-    if (kicker) gsap.set(kicker, { clipPath: 'inset(0 100% 0 0)' });
-    if (headline) gsap.set(headline, { opacity: 0, y: 16, filter: 'blur(10px)' });
-    if (body) gsap.set(body, { opacity: 0, y: 12 });
+  function render() {
+    const xPercent = -index * (100 / total);
+    if (reduceMotion) {
+      gsap.set(track, { xPercent });
+    } else {
+      gsap.to(track, { xPercent, duration: 0.7, ease: 'power3.inOut' });
+    }
 
-    ScrollTrigger.create({
-      trigger: story,
-      start: 'top 78%',
-      once: true,
-      onEnter: () => {
-        if (photo) {
-          gsap.to(photo, { clipPath: 'inset(0% 0 0% 0)', duration: 0.9, ease: 'power3.out' });
-        }
-        if (kicker) {
-          gsap.to(kicker, { clipPath: 'inset(0 0% 0 0)', duration: 0.5, ease: 'steps(12)', delay: 0.15 });
-        }
-        if (headline) {
-          gsap.to(headline, {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 0.8,
-            ease: 'power2.out',
-            delay: 0.35,
-          });
-        }
-        if (body) {
-          gsap.to(body, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', delay: 0.55 });
-        }
-      },
+    entries.forEach((entry, i) => {
+      entry.classList.toggle('is-active', i === index);
+      entry.setAttribute('aria-hidden', i === index ? 'false' : 'true');
     });
+    slides.forEach((slide, i) => slide.setAttribute('aria-hidden', i === index ? 'false' : 'true'));
+    if (counter) counter.textContent = String(index + 1).padStart(2, '0');
   }
+
+  function goTo(next: number) {
+    index = (next + total) % total;
+    render();
+  }
+
+  function stop() {
+    if (timer) {
+      clearInterval(timer);
+      timer = null;
+    }
+  }
+
+  function start() {
+    if (timer || reduceMotion) return;
+    timer = setInterval(() => goTo(index + 1), 1500);
+  }
+
+  function restart() {
+    stop();
+    start();
+  }
+
+  prevBtn?.addEventListener('click', () => {
+    goTo(index - 1);
+    restart();
+  });
+  nextBtn?.addEventListener('click', () => {
+    goTo(index + 1);
+    restart();
+  });
+
+  root.addEventListener('mouseenter', stop);
+  root.addEventListener('mouseleave', start);
+  root.addEventListener('focusin', stop);
+  root.addEventListener('focusout', start);
+
+  render();
+  start();
 }
 
 // Hand-drawn connective thread: a short line draws in at the seam above
@@ -1013,7 +1042,7 @@ export function initMotion() {
   setupTourPhotoBleed();
   setupItineraryFilter();
   setupPostcards();
-  setupLogbookStories(reduceMotion);
+  setupLogbookSlideshow(reduceMotion);
 
   let lenis: Lenis | undefined;
 

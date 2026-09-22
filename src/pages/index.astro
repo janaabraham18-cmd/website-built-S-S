@@ -654,15 +654,33 @@ const faqItems = [
       </p>
     </div>
 
-    <div class="logbook-stories">
-      {
-        logbookStories.map((story) => (
-          <article class="logbook-story" data-logbook-story>
-            <figure class="logbook-story__photo">
-              <div class="logbook-story__frame" data-logbook-photo>
+    <div class="logbook-slideshow reveal-item" data-logbook-slideshow>
+      <div class="logbook-stage" aria-roledescription="carousel" aria-label="Eight landmarks of Namibia">
+        <div class="logbook-stage__track" data-logbook-track>
+          {
+            logbookStories.map((story, i) => (
+              <figure class="logbook-stage__slide" data-logbook-slide aria-hidden={i === 0 ? 'false' : 'true'}>
                 <img src={story.imageUrl} alt={story.alt} loading="lazy" decoding="async" />
+              </figure>
+            ))
+          }
+        </div>
+        <button type="button" class="logbook-stage__nav logbook-stage__nav--prev" data-logbook-prev aria-label="Previous landmark">‹</button>
+        <button type="button" class="logbook-stage__nav logbook-stage__nav--next" data-logbook-next aria-label="Next landmark">›</button>
+        <p class="logbook-stage__counter"><span data-logbook-counter>01</span> / {String(logbookStories.length).padStart(2, '0')}</p>
+      </div>
+
+      <div class="logbook-article">
+        <p class="logbook-article__masthead-line">The Salt &amp; Sun Gazette — Dispatches From the Interior</p>
+        {
+          logbookStories.map((story, i) => (
+            <div class="logbook-article__entry" data-logbook-entry aria-hidden={i === 0 ? 'false' : 'true'}>
+              <p class="logbook-article__kicker">{story.kicker}</p>
+              <h3 class="logbook-article__headline">{story.headline}</h3>
+              <div class="logbook-article__columns">
+                <p>{story.body}</p>
               </div>
-              <figcaption class="logbook-story__credit">
+              <p class="logbook-article__credit">
                 Fig. {story.fig} — Photograph:{' '}
                 <a
                   href={`https://unsplash.com/@${story.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`}
@@ -671,16 +689,11 @@ const faqItems = [
                 >
                   {story.imageCredit.name}
                 </a>
-              </figcaption>
-            </figure>
-            <div class="logbook-story__text">
-              <p class="logbook-story__kicker" data-logbook-kicker>{story.kicker}</p>
-              <h3 class="logbook-story__headline" data-logbook-headline>{story.headline}</h3>
-              <p class="logbook-story__body" data-logbook-body>{story.body}</p>
+              </p>
             </div>
-          </article>
-        ))
-      }
+          ))
+        }
+      </div>
     </div>
   </section>
 
@@ -1273,7 +1286,7 @@ const faqItems = [
      instead of the usual soft --color-border, a masthead double rule,
      and a stronger local grain so the section reads as newsprint rather
      than the site's usual warm-paper background. Motion lives in
-     setupLogbookStories() in motion.ts. */
+     setupLogbookSlideshow() in motion.ts. */
   .logbook-block {
     position: relative;
   }
@@ -1309,66 +1322,119 @@ const faqItems = [
     color: var(--color-text-muted);
   }
 
-  .logbook-stories {
+  .logbook-slideshow {
     position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2xl);
-  }
-
-  .logbook-story {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: 42% 1fr;
     gap: var(--space-xl);
-    padding-top: var(--space-xl);
-    border-top: 1px solid var(--color-earth-900);
+    align-items: start;
   }
 
-  .logbook-story:first-child {
-    padding-top: 0;
-    border-top: none;
-  }
-
-  .logbook-story:nth-child(even) {
-    flex-direction: row-reverse;
-  }
-
-  .logbook-story__photo {
-    flex: 0 0 40%;
-    margin: 0;
-  }
-
-  .logbook-story__frame {
+  /* ---- Photo stage: one filmstrip track, all 8 slides side by side.
+     JS translates the track by whole slide-widths so the incoming
+     photo visibly slides in from the side; see setupLogbookSlideshow(). */
+  .logbook-stage {
+    position: relative;
     aspect-ratio: 4 / 5;
     overflow: hidden;
     border: 1px solid var(--color-earth-900);
     box-shadow: var(--shadow-md);
+    background: var(--color-earth-900);
   }
 
-  .logbook-story__frame img {
+  .logbook-stage__track {
+    display: flex;
+    width: 800%;
+    height: 100%;
+  }
+
+  .logbook-stage__slide {
+    flex: 0 0 12.5%;
+    height: 100%;
+    margin: 0;
+  }
+
+  .logbook-stage__slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     filter: sepia(0.55) contrast(1.08) brightness(0.96);
   }
 
-  .logbook-story__credit {
-    margin: var(--space-2xs) 0 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.03em;
-    font-style: italic;
+  .logbook-stage__nav {
+    position: absolute;
+    top: 50%;
+    translate: 0 -50%;
+    width: 2.6rem;
+    height: 2.6rem;
+    border: 1px solid var(--color-text-on-dark);
+    background: rgba(58, 35, 28, 0.55);
+    color: var(--color-text-on-dark);
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+
+  .logbook-stage__nav:hover {
+    background: rgba(58, 35, 28, 0.8);
+  }
+
+  .logbook-stage__nav--prev {
+    left: var(--space-sm);
+  }
+
+  .logbook-stage__nav--next {
+    right: var(--space-sm);
+  }
+
+  .logbook-stage__counter {
+    position: absolute;
+    bottom: var(--space-sm);
+    right: var(--space-sm);
+    margin: 0;
+    padding: 0.2em 0.6em;
+    background: rgba(58, 35, 28, 0.55);
+    color: var(--color-text-on-dark);
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+  }
+
+  /* ---- Article panel: all 8 articles are in the DOM (no-JS/SEO
+     fallback shows the first one); JS toggles which is visible so the
+     text swap isn't tied to the photo's slide animation. */
+  .logbook-article__masthead-line {
+    margin: 0 0 var(--space-md);
+    padding-bottom: var(--space-2xs);
+    border-bottom: 1px solid var(--color-earth-900);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 0.7rem;
+    font-weight: 600;
     color: var(--color-text-muted);
   }
 
-  .logbook-story__credit a {
-    color: inherit;
+  .logbook-article__entry {
+    display: none;
   }
 
-  .logbook-story__text {
-    flex: 1 1 60%;
+  /* No-JS fallback: show the first article. Once JS is running, .is-active
+     is the source of truth — the :not() rule below lets it override this
+     default the moment the first entry is navigated away from. */
+  .logbook-article__entry:first-child {
+    display: block;
   }
 
-  .logbook-story__kicker {
+  .logbook-article__entry.is-active {
+    display: block;
+  }
+
+  .logbook-article__entry:first-child:not(.is-active) {
+    display: none;
+  }
+
+  .logbook-article__kicker {
     display: inline-block;
     text-transform: uppercase;
     letter-spacing: 0.1em;
@@ -1378,18 +1444,23 @@ const faqItems = [
     margin: 0 0 var(--space-2xs);
   }
 
-  .logbook-story__headline {
+  .logbook-article__headline {
     font-size: var(--fs-2xl);
     line-height: 1.15;
     margin: 0 0 var(--space-sm);
   }
 
-  .logbook-story__body {
-    margin: 0;
+  .logbook-article__columns {
+    columns: 2;
+    column-gap: var(--space-lg);
     color: var(--color-text-muted);
   }
 
-  .logbook-story__body::first-letter {
+  .logbook-article__columns p {
+    margin: 0;
+  }
+
+  .logbook-article__columns p::first-letter {
     float: left;
     font-family: var(--font-display);
     font-size: 3.4em;
@@ -1398,20 +1469,29 @@ const faqItems = [
     color: var(--color-earth-900);
   }
 
+  .logbook-article__credit {
+    margin: var(--space-sm) 0 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.03em;
+    font-style: italic;
+    color: var(--color-text-muted);
+  }
+
+  .logbook-article__credit a {
+    color: inherit;
+  }
+
   @media (max-width: 800px) {
-    .logbook-story,
-    .logbook-story:nth-child(even) {
-      flex-direction: column;
-      align-items: stretch;
-      gap: var(--space-md);
+    .logbook-slideshow {
+      grid-template-columns: 1fr;
     }
 
-    .logbook-story__photo {
-      flex-basis: auto;
-    }
-
-    .logbook-story__frame {
+    .logbook-stage {
       aspect-ratio: 16 / 10;
+    }
+
+    .logbook-article__columns {
+      columns: 1;
     }
   }
 
