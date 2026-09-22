@@ -1,99 +1,497 @@
 ---
-import { categoryLabels, toursByCategory } from '../data/tours';
+import { categoryLabels, tours, type Tour } from '../data/tours';
 
 // Replace YOUR_FORM_ID with the real Formspree endpoint once created.
 const FORMSPREE_ID = 'YOUR_FORM_ID';
 
-const categories = (['tour', 'adventure', 'combo'] as const).map((category) => ({
-  label: categoryLabels[category].label,
-  tours: toursByCategory(category),
+const categoryBadge: Record<Tour['category'], string> = {
+  tour: 'Tour',
+  adventure: 'Adventure',
+  combo: 'Combo',
+};
+
+const filters = (['all', 'tour', 'adventure', 'combo'] as const).map((key) => ({
+  key,
+  label: key === 'all' ? 'All' : categoryLabels[key].label,
 }));
 ---
 
-<form class="form" action={`https://formspree.io/f/${FORMSPREE_ID}`} method="POST">
-  <div class="form-row-group">
-    <div class="form-row">
-      <label for="name">Full name</label>
-      <input type="text" id="name" name="name" autocomplete="name" required />
-    </div>
-    <div class="form-row">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" autocomplete="email" required />
-    </div>
-  </div>
+<div class="booking-form" data-booking-form>
+  <ol class="booking-form__progress" data-booking-progress>
+    <li class="is-active" data-booking-progress-step="1">
+      <span class="booking-form__progress-index">1</span> Choose your experience
+    </li>
+    <li data-booking-progress-step="2">
+      <span class="booking-form__progress-index">2</span> Your details
+    </li>
+  </ol>
 
-  <div class="form-row-group">
-    <div class="form-row">
-      <label for="phone">Phone</label>
-      <input type="tel" id="phone" name="phone" autocomplete="tel" />
+  <form class="form" action={`https://formspree.io/f/${FORMSPREE_ID}`} method="POST">
+    <div class="booking-form__step" data-booking-step="1">
+      <div class="booking-picker">
+        <div class="booking-picker__controls">
+          <div class="booking-picker__tabs" role="tablist" aria-label="Filter by type">
+            {
+              filters.map((f, i) => (
+                <button
+                  type="button"
+                  class:list={['booking-picker__tab', i === 0 && 'is-active']}
+                  data-booking-filter={f.key}
+                  role="tab"
+                  aria-selected={i === 0 ? 'true' : 'false'}
+                >
+                  {f.label}
+                </button>
+              ))
+            }
+          </div>
+
+          <label class="booking-picker__search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="6.5" />
+              <path d="m20 20-4.35-4.35" />
+            </svg>
+            <span class="visually-hidden">Search tours and adventures</span>
+            <input type="search" placeholder="Search tours and adventures…" data-booking-search />
+          </label>
+        </div>
+
+        <div class="booking-picker__grid" data-booking-grid>
+          {
+            tours.map((tour) => (
+              <div class="booking-option" data-booking-option data-category={tour.category} data-name={tour.name}>
+                <input
+                  type="radio"
+                  name="tour"
+                  value={tour.name}
+                  id={`tour-${tour.slug}`}
+                  class="booking-option__input"
+                  data-booking-slug={tour.slug}
+                  required
+                />
+                <label class="booking-option__label" for={`tour-${tour.slug}`}>
+                  <span class="booking-option__tag">{categoryBadge[tour.category]}</span>
+                  <span class="booking-option__name">{tour.name}</span>
+                  {tour.duration && <span class="booking-option__duration">{tour.duration}</span>}
+                </label>
+              </div>
+            ))
+          }
+
+          <div class="booking-option booking-option--custom" data-booking-option data-category="combo" data-name="Custom combo">
+            <input
+              type="radio"
+              name="tour"
+              value="Custom combo"
+              id="tour-custom"
+              class="booking-option__input"
+              data-booking-slug="custom"
+            />
+            <label class="booking-option__label" for="tour-custom">
+              <span class="booking-option__tag">Build your own</span>
+              <span class="booking-option__name">Custom combo</span>
+              <span class="booking-option__duration">Tell us what to pair below</span>
+            </label>
+          </div>
+        </div>
+
+        <p class="booking-picker__empty" data-booking-empty hidden>No matches — try a different search or category.</p>
+      </div>
+
+      <div class="booking-form__actions">
+        <button type="button" class="btn btn-primary" data-booking-next disabled>
+          Continue
+        </button>
+      </div>
     </div>
-    <div class="form-row">
-      <label for="guests">Number of guests</label>
-      <input type="number" id="guests" name="guests" min="1" step="1" required />
+
+    <div class="booking-form__step" data-booking-step="2">
+      <div class="booking-form__selection">
+        <div>
+          <p class="booking-form__selection-label">Your pick</p>
+          <p class="booking-form__selection-name" data-booking-selection-name>—</p>
+        </div>
+        <button type="button" class="booking-form__change" data-booking-back>Change</button>
+      </div>
+
+      <div class="form-row-group">
+        <div class="form-row">
+          <label for="name">Full name</label>
+          <input type="text" id="name" name="name" autocomplete="name" required />
+        </div>
+        <div class="form-row">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" autocomplete="email" required />
+        </div>
+      </div>
+
+      <div class="form-row-group">
+        <div class="form-row">
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" autocomplete="tel" />
+        </div>
+        <div class="form-row">
+          <label for="guests">Number of guests</label>
+          <div class="stepper" data-booking-stepper>
+            <button type="button" class="stepper__btn" data-booking-stepper-decrease aria-label="Decrease number of guests">−</button>
+            <input type="number" id="guests" name="guests" min="1" step="1" value="2" required />
+            <button type="button" class="stepper__btn" data-booking-stepper-increase aria-label="Increase number of guests">+</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="tour-date">Preferred date</label>
+        <input type="date" id="tour-date" name="tour_date" />
+      </div>
+
+      <div class="form-row">
+        <label for="message">Message</label>
+        <textarea
+          id="message"
+          name="message"
+          placeholder="Anything else we should know?"
+          data-booking-message
+        ></textarea>
+      </div>
+
+      <div class="booking-form__actions">
+        <button type="button" class="btn btn-outline" data-booking-prev>Back</button>
+        <button type="submit" class="btn btn-primary form-submit">Request booking</button>
+      </div>
     </div>
-  </div>
+  </form>
+</div>
 
-  <div class="form-row-group">
-    <div class="form-row">
-      <label for="tour-select">Preferred tour</label>
-      <select id="tour-select" name="tour" required>
-        <option value="" disabled selected>Choose a tour, adventure, or combo</option>
-        <option value="Custom combo" data-slug="custom">Custom combo (see message below)</option>
-        {
-          categories.map((group) => (
-            <optgroup label={group.label}>
-              {group.tours.map((tour) => (
-                <option value={tour.name} data-slug={tour.slug}>
-                  {tour.name}
-                </option>
-              ))}
-            </optgroup>
-          ))
-        }
-      </select>
-    </div>
-    <div class="form-row">
-      <label for="tour-date">Preferred date</label>
-      <input type="date" id="tour-date" name="tour_date" />
-    </div>
-  </div>
-
-  <div class="form-row">
-    <label for="message">Message</label>
-    <textarea id="message" name="message" placeholder="Anything else we should know?"></textarea>
-  </div>
-
-  <button type="submit" class="btn btn-primary form-submit">Request booking</button>
-</form>
-
-<script>
-  // Deep-link support: /booking?tour=<slug> (used by the "Book this tour"
-  // buttons on the tours page) pre-selects the matching option instead of
-  // leaving visitors to find it again in a long dropdown.
-  const params = new URLSearchParams(window.location.search);
-  const slug = params.get('tour');
-  const select = document.getElementById('tour-select') as HTMLSelectElement | null;
-
-  if (slug) {
-    const options = Array.from(select?.options ?? []);
-    const match = options.find((option) => option.dataset.slug === slug);
-    if (select && match) select.value = match.value;
+<style>
+  .booking-form {
+    max-width: var(--content-width-narrow);
   }
 
-  // Deep-link support: /booking?custom=<names joined by " + "> (used by
-  // the "Create Your Own Combo" builder on the tours page) — there's no
-  // single matching option for a combination nobody's pre-defined, so this
-  // selects the standing "Custom combo" option and writes the picks into
-  // the message field instead, rather than forcing a guess at the closest
-  // listed option.
-  const custom = params.get('custom');
-  if (custom && select) {
-    const customOption = Array.from(select.options).find((option) => option.dataset.slug === 'custom');
-    if (customOption) select.value = customOption.value;
+  /* ---------- Progress ---------- */
+  .booking-form__progress {
+    display: none;
+    list-style: none;
+    margin: 0 0 var(--space-lg);
+    padding: 0;
+    gap: var(--space-lg);
+  }
 
-    const message = document.getElementById('message') as HTMLTextAreaElement | null;
-    if (message && !message.value) {
-      message.value = `I'd like to build a custom combo: ${custom}`;
+  /* Only shown once JS has taken over the two-step flow — see
+     setupBookingForm() in motion.ts, which adds .is-wizard to the root.
+     Without JS the whole form renders as one long page, so a step
+     tracker referring to "steps" that don't visually exist would be
+     confusing rather than helpful. */
+  .booking-form.is-wizard .booking-form__progress {
+    display: flex;
+  }
+
+  .booking-form__progress li {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2xs);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text-muted);
+  }
+
+  .booking-form__progress li.is-active {
+    color: var(--color-accent-strong);
+  }
+
+  .booking-form__progress-index {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    font-size: var(--fs-xs);
+  }
+
+  /* ---------- Step 1: picker ---------- */
+  .booking-picker__controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-md);
+  }
+
+  .booking-picker__tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .booking-picker__tab {
+    font-family: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 100px;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
+  }
+
+  .booking-picker__tab:hover {
+    border-color: var(--color-accent-strong);
+    color: var(--color-accent-strong);
+  }
+
+  .booking-picker__tab.is-active {
+    background: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+    color: var(--color-bg);
+  }
+
+  .booking-picker__search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1 1 220px;
+    max-width: 280px;
+  }
+
+  .booking-picker__search svg {
+    position: absolute;
+    left: 0.75rem;
+    width: 1rem;
+    height: 1rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+  }
+
+  .booking-picker__search input {
+    width: 100%;
+    font-family: var(--font-body);
+    font-size: var(--fs-sm);
+    color: var(--color-text);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 0.55rem 0.75rem 0.55rem 2.2rem;
+    transition: border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .booking-picker__search input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 3px rgba(181, 98, 63, 0.15);
+  }
+
+  .booking-picker__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: var(--space-sm);
+    max-height: 420px;
+    overflow-y: auto;
+    padding: var(--space-3xs);
+    margin: calc(var(--space-3xs) * -1);
+  }
+
+  .booking-option__input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+  }
+
+  .booking-option__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    height: 100%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm);
+    cursor: pointer;
+    transition: border-color var(--duration-fast) var(--ease-out),
+      box-shadow var(--duration-fast) var(--ease-out),
+      background var(--duration-fast) var(--ease-out);
+  }
+
+  .booking-option__label:hover {
+    border-color: var(--color-accent-soft);
+  }
+
+  .booking-option__input:focus-visible + .booking-option__label {
+    outline: 2px solid var(--color-accent-strong);
+    outline-offset: 2px;
+  }
+
+  .booking-option:has(.booking-option__input:checked) .booking-option__label {
+    background: var(--color-sand-100);
+    border-color: var(--color-accent-strong);
+    box-shadow: 0 0 0 1px var(--color-accent-strong);
+  }
+
+  .booking-option__tag {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-accent-strong);
+  }
+
+  .booking-option--custom .booking-option__tag {
+    color: var(--color-ochre-500);
+  }
+
+  .booking-option__name {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+  }
+
+  .booking-option__duration {
+    font-size: var(--fs-xs);
+    color: var(--color-text-muted);
+    margin-top: auto;
+    padding-top: 0.2rem;
+  }
+
+  .booking-picker__empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    font-size: var(--fs-sm);
+    padding: var(--space-lg) 0;
+  }
+
+  /* ---------- Step actions ---------- */
+  .booking-form__actions {
+    display: flex;
+    gap: var(--space-sm);
+    margin-top: var(--space-lg);
+  }
+
+  .booking-form__actions .btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* ---------- Step 2: selection summary ---------- */
+  .booking-form__selection {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    background: var(--color-sand-100);
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-lg);
+  }
+
+  .booking-form__selection-label {
+    margin: 0;
+    font-size: var(--fs-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--color-text-muted);
+  }
+
+  .booking-form__selection-name {
+    margin: 0.15rem 0 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-md);
+    color: var(--color-text);
+  }
+
+  .booking-form__change {
+    flex-shrink: 0;
+    font-family: inherit;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    background: none;
+    border: none;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    cursor: pointer;
+  }
+
+  /* ---------- Guest stepper ---------- */
+  .stepper {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .stepper__btn {
+    flex-shrink: 0;
+    width: 2.4rem;
+    font-family: inherit;
+    font-size: 1.1rem;
+    line-height: 1;
+    color: var(--color-accent-strong);
+    background: var(--color-sand-100);
+    border: none;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out);
+  }
+
+  .stepper__btn:hover {
+    background: var(--color-beige-300);
+  }
+
+  .stepper input {
+    flex: 1;
+    min-width: 0;
+    text-align: center;
+    border: none;
+    border-radius: 0;
+    border-inline: 1px solid var(--color-border);
+  }
+
+  .stepper input:focus {
+    box-shadow: none;
+  }
+
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    .booking-picker__controls {
+      flex-direction: column;
+      flex-wrap: nowrap;
+      align-items: stretch;
+      justify-content: flex-start;
+    }
+
+    .booking-picker__search {
+      /* Reset the desktop rule's `flex: 1 1 220px` — that 220px basis
+         means "width" while the parent lays its children out in a row,
+         but once .booking-picker__controls switches to flex-direction:
+         column above, the same basis applies to the cross-flipped main
+         axis instead and inflates this element to 220px tall. */
+      flex: 0 0 auto;
+      max-width: none;
+    }
+
+    .booking-picker__grid {
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      max-height: 320px;
     }
   }
-</script>
+</style>

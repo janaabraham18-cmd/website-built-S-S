@@ -626,6 +626,139 @@ function setupComboBuilder(reduceMotion: boolean) {
   });
 }
 
+// Booking form: a two-step wizard once JS is running — pick an
+// experience from a searchable, filterable card grid, then fill in trip
+// details — collapsing to one long page (both "steps" visible, nothing
+// hidden) if JS never runs, since every option is a real radio input
+// that submits correctly either way. Only this function ever sets
+// step 2's `hidden` attribute; it's absent from the static markup on
+// purpose so a JS failure degrades to "long form", not "missing half
+// the form".
+function setupBookingForm() {
+  const root = document.querySelector<HTMLElement>('[data-booking-form]');
+  if (!root) return;
+
+  const step1 = root.querySelector<HTMLElement>('[data-booking-step="1"]');
+  const step2 = root.querySelector<HTMLElement>('[data-booking-step="2"]');
+  const nextBtn = root.querySelector<HTMLButtonElement>('[data-booking-next]');
+  const backBtn = root.querySelector<HTMLButtonElement>('[data-booking-back]');
+  const prevBtn = root.querySelector<HTMLButtonElement>('[data-booking-prev]');
+  const options = Array.from(root.querySelectorAll<HTMLElement>('[data-booking-option]'));
+  const radios = Array.from(root.querySelectorAll<HTMLInputElement>('.booking-option__input'));
+  const tabs = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-booking-filter]'));
+  const searchInput = root.querySelector<HTMLInputElement>('[data-booking-search]');
+  const emptyState = root.querySelector<HTMLElement>('[data-booking-empty]');
+  const selectionName = root.querySelector<HTMLElement>('[data-booking-selection-name]');
+  const progressSteps = Array.from(root.querySelectorAll<HTMLElement>('[data-booking-progress-step]'));
+  const messageField = root.querySelector<HTMLTextAreaElement>('[data-booking-message]');
+  const stepperRoot = root.querySelector<HTMLElement>('[data-booking-stepper]');
+
+  if (!step1 || !step2 || !nextBtn || !radios.length) return;
+
+  root.classList.add('is-wizard');
+  step2.hidden = true;
+
+  let activeFilter = 'all';
+  let searchTerm = '';
+
+  function applyFilter() {
+    let visibleCount = 0;
+    for (const option of options) {
+      const category = option.dataset.category ?? '';
+      const name = (option.dataset.name ?? '').toLowerCase();
+      const show = (activeFilter === 'all' || category === activeFilter) && (!searchTerm || name.includes(searchTerm));
+      option.hidden = !show;
+      if (show) visibleCount++;
+    }
+    if (emptyState) emptyState.hidden = visibleCount > 0;
+  }
+
+  for (const tab of tabs) {
+    tab.addEventListener('click', () => {
+      for (const t of tabs) {
+        t.classList.toggle('is-active', t === tab);
+        t.setAttribute('aria-selected', String(t === tab));
+      }
+      activeFilter = tab.dataset.bookingFilter ?? 'all';
+      applyFilter();
+    });
+  }
+
+  searchInput?.addEventListener('input', () => {
+    searchTerm = searchInput.value.trim().toLowerCase();
+    applyFilter();
+  });
+
+  function updateSelection() {
+    const checked = radios.find((r) => r.checked);
+    nextBtn!.disabled = !checked;
+    if (checked && selectionName) selectionName.textContent = checked.value;
+  }
+
+  for (const radio of radios) radio.addEventListener('change', updateSelection);
+
+  function goToStep(step: 1 | 2) {
+    step1!.hidden = step !== 1;
+    step2!.hidden = step !== 2;
+    for (const el of progressSteps) {
+      el.classList.toggle('is-active', el.dataset.bookingProgressStep === String(step));
+    }
+    if (step === 2) {
+      updateSelection();
+      root!.querySelector<HTMLInputElement>('#name')?.focus();
+    }
+  }
+
+  nextBtn.addEventListener('click', () => {
+    if (radios.some((r) => r.checked)) goToStep(2);
+  });
+  backBtn?.addEventListener('click', () => goToStep(1));
+  prevBtn?.addEventListener('click', () => goToStep(1));
+
+  if (stepperRoot) {
+    const input = stepperRoot.querySelector<HTMLInputElement>('input[type="number"]');
+    const decrease = stepperRoot.querySelector<HTMLButtonElement>('[data-booking-stepper-decrease]');
+    const increase = stepperRoot.querySelector<HTMLButtonElement>('[data-booking-stepper-increase]');
+    const adjust = (delta: number) => {
+      if (!input) return;
+      const min = Number(input.min) || 1;
+      const current = Number(input.value) || min;
+      input.value = String(Math.max(min, current + delta));
+    };
+    decrease?.addEventListener('click', () => adjust(-1));
+    increase?.addEventListener('click', () => adjust(1));
+  }
+
+  // Deep-link support: /booking?tour=<slug> (used by "Book this tour"
+  // buttons sitewide) pre-selects the matching card and jumps straight to
+  // step 2. /booking?custom=<names joined by " + "> (used by the "Create
+  // Your Own Combo" builder on the tours page) pre-selects Custom combo
+  // instead — there's no single matching option for a combination nobody's
+  // pre-defined — and writes the picks into the message field.
+  const params = new URLSearchParams(window.location.search);
+  const slug = params.get('tour');
+  const custom = params.get('custom');
+
+  if (slug) {
+    const match = radios.find((r) => r.dataset.bookingSlug === slug);
+    if (match) {
+      match.checked = true;
+      goToStep(2);
+    }
+  } else if (custom) {
+    const customRadio = radios.find((r) => r.dataset.bookingSlug === 'custom');
+    if (customRadio) {
+      customRadio.checked = true;
+      goToStep(2);
+    }
+    if (messageField && !messageField.value) {
+      messageField.value = `I'd like to build a custom combo: ${custom}`;
+    }
+  }
+
+  applyFilter();
+}
+
 // The Itinerary's filter pills: click toggles which category is shown,
 // hiding non-matching tour rows via the `hidden` attribute rather than
 // animating them out — a filter change is a direct result of a click, not
@@ -1043,6 +1176,7 @@ export function initMotion() {
   setupItineraryFilter();
   setupPostcards();
   setupLogbookSlideshow(reduceMotion);
+  setupBookingForm();
 
   let lenis: Lenis | undefined;
 
