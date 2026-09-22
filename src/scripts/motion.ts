@@ -166,7 +166,7 @@ function setupAlternatingRows(reduceMotion: boolean) {
 // cross-fading. The article text beneath swaps instantly with it (all 8
 // articles are in the DOM already for no-JS/SEO; JS just toggles which
 // one is visible) so the reading pace isn't tied to the photo's slide
-// duration. Autoplay advances every 1.5s and pauses on hover/focus so a
+// duration. Autoplay advances every 3.5s and pauses on hover/focus so a
 // reader who stops to look isn't fighting the timer; reduced motion
 // keeps the slide-swap but drops the animated glide to an instant cut.
 function setupLogbookSlideshow(reduceMotion: boolean) {
@@ -215,7 +215,7 @@ function setupLogbookSlideshow(reduceMotion: boolean) {
 
   function start() {
     if (timer || reduceMotion) return;
-    timer = setInterval(() => goTo(index + 1), 1500);
+    timer = setInterval(() => goTo(index + 1), 3500);
   }
 
   function restart() {
