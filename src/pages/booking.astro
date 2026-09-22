@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BookingForm from '../components/BookingForm.astro';
+import { categoryLabels, toursByCategory } from '../data/tours';
+
+const builderTours = toursByCategory('tour');
+const builderAdventures = toursByCategory('adventure');
 ---
 
 <BaseLayout title="Booking" description="Request a tour booking with Salt and Sun Tours in Swakopmund and Walvis Bay, Namibia.">
@@ -17,9 +21,91 @@ import BookingForm from '../components/BookingForm.astro';
     </div>
   </header>
 
+  <section class="booking-builder-section reveal">
+    <div class="container">
+      <div class="booking-builder-intro reveal-item">
+        <p class="booking-header__eyebrow">Not sure yet?</p>
+        <h2 class="booking-builder-intro__heading">Build your own combo</h2>
+        <p class="booking-builder-intro__body">
+          Pick two or more experiences below and we'll pre-fill your request — no need to
+          describe it yourself in the message field.
+        </p>
+      </div>
+
+      <div class="combo-builder reveal-item" data-combo-builder>
+        <div class="combo-builder__picker">
+          <div class="combo-builder__group">
+            <p class="combo-builder__group-label">{categoryLabels.tour.label}</p>
+            <div class="combo-builder__chips">
+              {builderTours.map((tour) => (
+                <button
+                  type="button"
+                  class="combo-builder__chip"
+                  data-builder-chip
+                  data-slug={tour.slug}
+                  data-name={tour.name}
+                  data-img={tour.imageUrl}
+                  aria-pressed="false"
+                >
+                  <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
+                  {tour.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div class="combo-builder__group">
+            <p class="combo-builder__group-label">{categoryLabels.adventure.label}</p>
+            <div class="combo-builder__chips">
+              {builderAdventures.map((tour) => (
+                <button
+                  type="button"
+                  class="combo-builder__chip"
+                  data-builder-chip
+                  data-slug={tour.slug}
+                  data-name={tour.name}
+                  data-img={tour.imageUrl}
+                  aria-pressed="false"
+                >
+                  <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
+                  {tour.name}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div class="combo-builder__preview">
+          <p class="combo-builder__count" data-builder-count role="status" aria-live="polite">
+            Pick at least 2 to build your combo
+          </p>
+
+          <div class="combo-builder__pairs" data-builder-pairs>
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div class="combo-builder__pair-slot" data-pair-slot={i} hidden>
+                <span class="combo-builder__plus" aria-hidden="true">+</span>
+                <div class="photo-frame photo-frame--sm combo-builder__pair-photo">
+                  <img data-pair-img alt="" loading="lazy" decoding="async" />
+                </div>
+                <p class="combo-builder__pair-name" data-pair-name></p>
+              </div>
+            ))}
+          </div>
+
+          <a class="btn btn-primary combo-builder__cta" data-builder-cta href="#" aria-disabled="true">
+            Fill in my request below
+          </a>
+          <p class="combo-builder__fallback">
+            Prefer to pick from the list instead? <a href="#booking-form">Use the dropdown ↓</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="booking-panel-section reveal">
     <div class="container">
-      <div class="booking-panel reveal-item">
+      <div class="booking-panel reveal-item" id="booking-form">
         <BookingForm />
       </div>
     </div>
@@ -28,6 +114,7 @@ import BookingForm from '../components/BookingForm.astro';
 
 <style>
   .booking-header,
+  .booking-builder-section,
   .booking-panel-section {
     position: relative;
     background-color: var(--color-earth-700);
@@ -58,6 +145,201 @@ import BookingForm from '../components/BookingForm.astro';
     line-height: var(--lh-normal);
     color: var(--color-sand-200);
     max-width: var(--content-width-narrow);
+  }
+
+  .booking-builder-section {
+    padding-block: var(--space-xl);
+  }
+
+  .booking-builder-intro {
+    max-width: 640px;
+    margin: 0 auto var(--space-lg);
+    text-align: center;
+  }
+
+  .booking-builder-intro__heading {
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .booking-builder-intro__body {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-200);
+    margin: 0;
+  }
+
+  /* ---------- Create Your Own Combo (mirrors tours.astro's builder) ---------- */
+  .combo-builder {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+    gap: var(--space-xl);
+    align-items: start;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg);
+    box-shadow: var(--shadow-lg);
+    color: var(--color-text);
+  }
+
+  .combo-builder__group {
+    margin-bottom: var(--space-md);
+  }
+
+  .combo-builder__group:last-child {
+    margin-bottom: 0;
+  }
+
+  .combo-builder__group-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.6rem;
+  }
+
+  .combo-builder__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .combo-builder__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.45rem 0.9rem 0.45rem 0.7rem;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .combo-builder__chip:hover,
+  .combo-builder__chip:focus-visible {
+    border-color: var(--color-accent-strong);
+  }
+
+  .combo-builder__chip-check {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    font-size: 0.6rem;
+    line-height: 1;
+    color: transparent;
+    flex-shrink: 0;
+    transition: background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .combo-builder__chip.is-selected {
+    background: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
+  }
+
+  .combo-builder__chip.is-selected .combo-builder__chip-check {
+    background: var(--color-text-on-dark);
+    border-color: var(--color-text-on-dark);
+    color: var(--color-accent-strong);
+  }
+
+  .combo-builder__preview {
+    background: var(--color-bg);
+    border-radius: var(--radius-md);
+    padding: var(--space-md);
+    position: sticky;
+    top: 5rem;
+  }
+
+  .combo-builder__count {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .combo-builder__pairs {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3.5rem;
+  }
+
+  .combo-builder__pair-slot[hidden] {
+    display: none;
+  }
+
+  .combo-builder__pair-slot {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .combo-builder__pair-slot:first-child .combo-builder__plus {
+    display: none;
+  }
+
+  .combo-builder__plus {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-accent-strong);
+    line-height: 1;
+  }
+
+  .combo-builder__pair-photo {
+    width: 2.75rem;
+    height: 2.75rem;
+    flex-shrink: 0;
+  }
+
+  .combo-builder__pair-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin: 0;
+    max-width: 5rem;
+  }
+
+  .combo-builder__cta {
+    width: 100%;
+    margin-top: var(--space-md);
+  }
+
+  .combo-builder__cta[aria-disabled='true'] {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+
+  .combo-builder__fallback {
+    font-size: 0.8rem;
+    color: var(--color-text-muted);
+    text-align: center;
+    margin: var(--space-sm) 0 0;
+  }
+
+  @media (max-width: 860px) {
+    .combo-builder {
+      grid-template-columns: 1fr;
+    }
+
+    .combo-builder__preview {
+      position: static;
+    }
   }
 
   .booking-panel-section {

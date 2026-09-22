@@ -608,7 +608,7 @@ function setupComboBuilder(reduceMotion: boolean) {
     cta.classList.toggle('is-ready', ready);
     cta.setAttribute('aria-disabled', String(!ready));
     cta.href = ready
-      ? `/booking?custom=${encodeURIComponent(selected.map((c) => c.dataset.name).join(' + '))}`
+      ? `/booking?custom=${encodeURIComponent(selected.map((c) => c.dataset.name).join(' + '))}#booking-form`
       : '#';
   };
 
