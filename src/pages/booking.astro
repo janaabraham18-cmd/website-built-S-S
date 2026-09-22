@@ -5,125 +5,171 @@ import { categoryLabels, toursByCategory } from '../data/tours';
 
 const builderTours = toursByCategory('tour');
 const builderAdventures = toursByCategory('adventure');
+
+const bgPhoto = {
+  url: 'https://images.unsplash.com/photo-1593347039440-9181d96772cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Grant Durr', username: 'grant_durr' },
+};
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
 
 <BaseLayout title="Booking" description="Request a tour booking with Salt and Sun Tours in Swakopmund and Walvis Bay, Namibia.">
-  <header class="booking-header">
-    <div class="container">
-      <p class="booking-header__eyebrow">Reserve your spot</p>
-      <h1 class="booking-header__heading">Book your tour</h1>
-      <p class="booking-header__body">
-        Tell us where you'd like to go, how many of you, and when — we'll
-        take it from there. Every request gets a real reply from our team
-        in Swakopmund, not an automated confirmation, so we can make sure
-        the day matches what you're picturing.
-      </p>
-    </div>
-  </header>
+  <div class="booking-page">
+    <div class="booking-page__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
 
-  <section class="booking-builder-section reveal">
-    <div class="container">
-      <div class="booking-builder-intro reveal-item">
-        <p class="booking-header__eyebrow">Not sure yet?</p>
-        <h2 class="booking-builder-intro__heading">Build your own combo</h2>
-        <p class="booking-builder-intro__body">
-          Pick two or more experiences below and we'll pre-fill your request — no need to
-          describe it yourself in the message field.
-        </p>
+    <header class="booking-header">
+      <div class="container">
+        <div class="booking-header__card">
+          <p class="booking-header__eyebrow">Reserve your spot</p>
+          <h1 class="booking-header__heading">Book your tour</h1>
+          <p class="booking-header__body">
+            Tell us where you'd like to go, how many of you, and when — we'll
+            take it from there. Every request gets a real reply from our team
+            in Swakopmund, not an automated confirmation, so we can make sure
+            the day matches what you're picturing.
+          </p>
+        </div>
       </div>
+    </header>
 
-      <div class="combo-builder reveal-item" data-combo-builder>
-        <div class="combo-builder__picker">
-          <div class="combo-builder__group">
-            <p class="combo-builder__group-label">{categoryLabels.tour.label}</p>
-            <div class="combo-builder__chips">
-              {builderTours.map((tour) => (
-                <button
-                  type="button"
-                  class="combo-builder__chip"
-                  data-builder-chip
-                  data-slug={tour.slug}
-                  data-name={tour.name}
-                  data-img={tour.imageUrl}
-                  aria-pressed="false"
-                >
-                  <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
-                  {tour.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div class="combo-builder__group">
-            <p class="combo-builder__group-label">{categoryLabels.adventure.label}</p>
-            <div class="combo-builder__chips">
-              {builderAdventures.map((tour) => (
-                <button
-                  type="button"
-                  class="combo-builder__chip"
-                  data-builder-chip
-                  data-slug={tour.slug}
-                  data-name={tour.name}
-                  data-img={tour.imageUrl}
-                  aria-pressed="false"
-                >
-                  <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
-                  {tour.name}
-                </button>
-              ))}
-            </div>
-          </div>
+    <section class="booking-builder-section reveal">
+      <div class="container">
+        <div class="booking-builder-intro reveal-item">
+          <p class="booking-header__eyebrow">Not sure yet?</p>
+          <h2 class="booking-builder-intro__heading">Build your own combo</h2>
+          <p class="booking-builder-intro__body">
+            Pick two or more experiences below and we'll pre-fill your request — no need to
+            describe it yourself in the message field.
+          </p>
         </div>
 
-        <div class="combo-builder__preview">
-          <p class="combo-builder__count" data-builder-count role="status" aria-live="polite">
-            Pick at least 2 to build your combo
-          </p>
-
-          <div class="combo-builder__pairs" data-builder-pairs>
-            {Array.from({ length: 8 }).map((_, i) => (
-              <div class="combo-builder__pair-slot" data-pair-slot={i} hidden>
-                <span class="combo-builder__plus" aria-hidden="true">+</span>
-                <div class="photo-frame photo-frame--sm combo-builder__pair-photo">
-                  <img data-pair-img alt="" loading="lazy" decoding="async" />
-                </div>
-                <p class="combo-builder__pair-name" data-pair-name></p>
+        <div class="combo-builder reveal-item" data-combo-builder>
+          <div class="combo-builder__picker">
+            <div class="combo-builder__group">
+              <p class="combo-builder__group-label">{categoryLabels.tour.label}</p>
+              <div class="combo-builder__chips">
+                {builderTours.map((tour) => (
+                  <button
+                    type="button"
+                    class="combo-builder__chip"
+                    data-builder-chip
+                    data-slug={tour.slug}
+                    data-name={tour.name}
+                    data-img={tour.imageUrl}
+                    aria-pressed="false"
+                  >
+                    <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
+                    {tour.name}
+                  </button>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <div class="combo-builder__group">
+              <p class="combo-builder__group-label">{categoryLabels.adventure.label}</p>
+              <div class="combo-builder__chips">
+                {builderAdventures.map((tour) => (
+                  <button
+                    type="button"
+                    class="combo-builder__chip"
+                    data-builder-chip
+                    data-slug={tour.slug}
+                    data-name={tour.name}
+                    data-img={tour.imageUrl}
+                    aria-pressed="false"
+                  >
+                    <span class="combo-builder__chip-check" aria-hidden="true">✓</span>
+                    {tour.name}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
 
-          <a class="btn btn-primary combo-builder__cta" data-builder-cta href="#" aria-disabled="true">
-            Fill in my request below
-          </a>
-          <p class="combo-builder__fallback">
-            Prefer to pick from the list instead? <a href="#booking-form">Use the dropdown ↓</a>
-          </p>
+          <div class="combo-builder__preview">
+            <p class="combo-builder__count" data-builder-count role="status" aria-live="polite">
+              Pick at least 2 to build your combo
+            </p>
+
+            <div class="combo-builder__pairs" data-builder-pairs>
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div class="combo-builder__pair-slot" data-pair-slot={i} hidden>
+                  <span class="combo-builder__plus" aria-hidden="true">+</span>
+                  <div class="photo-frame photo-frame--sm combo-builder__pair-photo">
+                    <img data-pair-img alt="" loading="lazy" decoding="async" />
+                  </div>
+                  <p class="combo-builder__pair-name" data-pair-name></p>
+                </div>
+              ))}
+            </div>
+
+            <a class="btn btn-primary combo-builder__cta" data-builder-cta href="#" aria-disabled="true">
+              Fill in my request below
+            </a>
+            <p class="combo-builder__fallback">
+              Prefer to pick from the list instead? <a href="#booking-form">Use the dropdown ↓</a>
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <section class="booking-panel-section reveal">
-    <div class="container">
-      <div class="booking-panel reveal-item" id="booking-form">
-        <BookingForm />
+    <section class="booking-panel-section reveal">
+      <div class="container">
+        <div class="booking-panel reveal-item" id="booking-form">
+          <BookingForm />
+        </div>
       </div>
-    </div>
-  </section>
+    </section>
+
+    <p class="booking-page__credit">
+      Photo:{' '}
+      <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
+      /{' '}
+      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  </div>
 </BaseLayout>
 
 <style>
+  /* One continuous background photo behind the whole page — shown at
+     full strength (no scrim, no blur: "fully defined" per the client's
+     call on the Combos section's split background). The header and
+     builder-intro copy sit directly on it, so each gets its own small
+     opaque card rather than dimming the photo for everyone to protect
+     text in just two spots. */
+  .booking-page {
+    position: relative;
+    z-index: 0;
+  }
+
+  .booking-page__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center 30%;
+    background-color: var(--color-earth-700);
+  }
+
   .booking-header,
   .booking-builder-section,
   .booking-panel-section {
     position: relative;
-    background-color: var(--color-earth-700);
-    background-image: var(--gradient-dusk);
     color: var(--color-text-on-dark);
   }
 
   .booking-header {
     padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .booking-header__card {
+    display: inline-block;
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
   }
 
   .booking-header__eyebrow {
@@ -145,6 +191,7 @@ const builderAdventures = toursByCategory('adventure');
     line-height: var(--lh-normal);
     color: var(--color-sand-200);
     max-width: var(--content-width-narrow);
+    margin: 0;
   }
 
   .booking-builder-section {
@@ -155,6 +202,10 @@ const builderAdventures = toursByCategory('adventure');
     max-width: 640px;
     margin: 0 auto var(--space-lg);
     text-align: center;
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
   }
 
   .booking-builder-intro__heading {
@@ -167,6 +218,22 @@ const builderAdventures = toursByCategory('adventure');
     line-height: var(--lh-normal);
     color: var(--color-sand-200);
     margin: 0;
+  }
+
+  .booking-page__credit {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    text-align: right;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .booking-page__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   /* ---------- Create Your Own Combo (mirrors tours.astro's builder) ---------- */
