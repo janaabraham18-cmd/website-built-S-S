@@ -1,10 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import BookingForm from '../components/BookingForm.astro';
-
-const visualCredit = { name: 'Grant Durr', username: 'grant_durr' };
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
 
 <BaseLayout title="Booking" description="Request a tour booking with Salt and Sun Tours in Swakopmund and Walvis Bay, Namibia.">
@@ -21,36 +17,24 @@ const creditHref = (username: string) =>
     </div>
   </header>
 
-  <section class="booking-grid-section reveal">
-    <div class="container booking-grid">
-      <div class="booking-grid__form reveal-item">
+  <section class="booking-panel-section reveal">
+    <div class="container">
+      <div class="booking-panel reveal-item">
         <BookingForm />
-      </div>
-
-      <div class="booking-grid__visual reveal-item">
-        <img
-          class="booking-visual__img"
-          src="https://images.unsplash.com/photo-1593347039440-9181d96772cb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900"
-          alt="A desert road stretching into the Namibian dunes"
-          loading="lazy"
-          decoding="async"
-        />
-        <p class="booking-visual__credit">
-          Photo:{' '}
-          <a href={creditHref(visualCredit.username)} target="_blank" rel="noopener noreferrer">
-            {visualCredit.name}
-          </a>{' '}
-          /{' '}
-          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">
-            Unsplash
-          </a>
-        </p>
       </div>
     </div>
   </section>
 </BaseLayout>
 
 <style>
+  .booking-header,
+  .booking-panel-section {
+    position: relative;
+    background-color: var(--color-earth-700);
+    background-image: var(--gradient-dusk);
+    color: var(--color-text-on-dark);
+  }
+
   .booking-header {
     padding-block: var(--space-2xl) var(--space-xl);
   }
@@ -60,71 +44,38 @@ const creditHref = (username: string) =>
     letter-spacing: 0.14em;
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--color-accent-strong);
+    color: var(--color-ochre-400);
     margin-bottom: var(--space-2xs);
   }
 
   .booking-header__heading {
+    color: var(--color-text-on-dark);
     margin-bottom: var(--space-md);
   }
 
   .booking-header__body {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
     max-width: var(--content-width-narrow);
   }
 
-  .booking-grid-section {
-    padding-block: var(--space-xl) var(--space-2xl);
+  .booking-panel-section {
+    padding-block: 0 var(--space-2xl);
   }
 
-  .booking-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: var(--space-2xl);
-    align-items: start;
-  }
-
-  .booking-grid__visual {
-    position: sticky;
-    top: 6rem;
-  }
-
-  .booking-visual__img {
-    display: block;
-    width: 100%;
-    aspect-ratio: 4 / 5;
-    object-fit: cover;
+  .booking-panel {
+    max-width: var(--content-width-narrow);
+    margin-inline: auto;
+    background: var(--color-surface);
     border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-xl);
   }
 
-  .booking-visual__credit {
-    margin: var(--space-sm) 0 0;
-    font-size: var(--fs-xs);
-    color: var(--color-text-muted);
-    text-align: center;
-  }
-
-  .booking-visual__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  @media (max-width: 860px) {
-    .booking-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .booking-grid__visual {
-      position: static;
-      order: -1;
-    }
-
-    .booking-visual__img {
-      aspect-ratio: 16 / 10;
+  @media (max-width: 640px) {
+    .booking-panel {
+      padding: var(--space-lg) var(--space-md);
     }
   }
 </style>
