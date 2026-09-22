@@ -11,7 +11,7 @@ const socialLinks = {
 ---
 
 <footer class="site-footer">
-  <div class="container site-footer__inner">
+  <div class="site-footer__inner">
     <div class="site-footer__brand">
       <p class="site-footer__logo">Salt and Sun Tours</p>
       <p class="site-footer__tagline">Where Life and Light Meet Adventure</p>
@@ -69,6 +69,14 @@ const socialLinks = {
   }
 
   .site-footer__inner {
+    /* Wider than the site's standard .container so the brand name sits
+       closer to the page's true left edge — the usual spot for a
+       footer's company name/logo — instead of inheriting the main
+       content column's wider centering margin. */
+    width: 100%;
+    max-width: 1400px;
+    margin-inline: auto;
+    padding-inline: var(--space-md);
     display: grid;
     grid-template-columns: 1.5fr 1fr 1fr;
     gap: var(--space-lg);
