@@ -8,6 +8,10 @@ const bgPhoto = {
   url: 'https://images.unsplash.com/photo-1688999989632-4aff12c12c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'Ultimate Safaris Namibia', username: 'ultimate_safaris_namibia' },
 };
+const mapBgPhoto = {
+  url: 'https://images.unsplash.com/photo-1639402477646-e88e811eef21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Andrew Svk', username: 'andrew_svk' },
+};
 const creditHref = (username: string) =>
   `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
@@ -33,6 +37,13 @@ const creditHref = (username: string) =>
           </p>
         </div>
       </div>
+
+      <p class="journeys-header__credit">
+        Photo:{' '}
+        <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
+        /{' '}
+        <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+      </p>
     </header>
 
     {
@@ -131,8 +142,10 @@ const creditHref = (username: string) =>
     {
       journeys.length > 0 && (
         <section class="journeys-map-section reveal">
+          <div class="journeys-map-section__bg" style={`background-image:url('${mapBgPhoto.url}')`} aria-hidden="true"></div>
+
           <div class="container">
-            <div class="section-intro reveal-item">
+            <div class="journeys-map-intro reveal-item">
               <p class="eyebrow">See it on the map</p>
               <h2>Where each Journey goes</h2>
               <p>Four routes across Namibia — tap a name to jump to its full itinerary above.</p>
@@ -172,16 +185,16 @@ const creditHref = (username: string) =>
               </ul>
             </div>
           </div>
+
+          <p class="journeys-map-section__credit">
+            Photo:{' '}
+            <a href={creditHref(mapBgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{mapBgPhoto.credit.name}</a>{' '}
+            /{' '}
+            <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+          </p>
         </section>
       )
     }
-
-    <p class="journeys-page__credit">
-      Photo:{' '}
-      <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
-      /{' '}
-      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-    </p>
   </div>
 </BaseLayout>
 
@@ -238,6 +251,21 @@ const creditHref = (username: string) =>
     line-height: var(--lh-normal);
     color: var(--color-sand-200);
     margin: 0;
+  }
+
+  .journeys-header__credit {
+    position: absolute;
+    right: var(--space-sm);
+    bottom: var(--space-sm);
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .journeys-header__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .journeys-empty {
@@ -489,10 +517,50 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Routes map ---------- */
+  /* Same "fully defined" full-strength background photo treatment as the
+     rest of the page — the map+legend panel is already an opaque white
+     card, so it only needed the intro copy protected. This section is
+     the last thing on the page: fully opaque throughout (photo, intro
+     card, white panel), so it meets the footer directly with no stray
+     strip of a different background showing through beneath it. */
   .journeys-map-section {
     position: relative;
-    background: var(--color-bg-alt);
+    z-index: 0;
     padding-block: var(--space-2xl);
+  }
+
+  .journeys-map-section__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+    background-color: var(--color-earth-700);
+  }
+
+  .journeys-map-intro {
+    max-width: var(--content-width-narrow);
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .journeys-map-intro .eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-ochre-400);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .journeys-map-intro h2 {
+    color: var(--color-text-on-dark);
+  }
+
+  .journeys-map-intro p:not(.eyebrow) {
+    color: var(--color-sand-200);
   }
 
   .journeys-map {
@@ -501,13 +569,13 @@ const creditHref = (username: string) =>
     gap: var(--space-2xl);
     align-items: center;
     margin-top: var(--space-lg);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-xl);
   }
 
   .journeys-map__canvas {
-    background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: var(--space-lg);
     aspect-ratio: 751 / 740;
   }
 
@@ -544,20 +612,21 @@ const creditHref = (username: string) =>
   @media (max-width: 780px) {
     .journeys-map {
       grid-template-columns: 1fr;
+      padding: var(--space-lg);
     }
   }
 
-  .journeys-page__credit {
+  .journeys-map-section__credit {
     position: relative;
     z-index: 1;
-    margin: 0;
-    padding: var(--space-sm) var(--space-md);
+    margin: var(--space-sm) 0 0;
+    padding: 0 var(--space-md);
     text-align: right;
     font-size: var(--fs-xs);
     color: rgba(251, 247, 241, 0.75);
   }
 
-  .journeys-page__credit a {
+  .journeys-map-section__credit a {
     color: inherit;
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -565,7 +634,8 @@ const creditHref = (username: string) =>
 
   @media (max-width: 640px) {
     .journeys-header__card,
-    .journeys-empty__card {
+    .journeys-empty__card,
+    .journeys-map-intro {
       padding: var(--space-lg) var(--space-md);
     }
   }
