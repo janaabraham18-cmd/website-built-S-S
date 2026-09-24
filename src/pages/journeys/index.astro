@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import NamibiaMap from '../../components/NamibiaMap.astro';
 import { journeys, tripTypeLabels } from '../../data/journeys';
+import { journeyRoutes } from '../../data/journeyRoutes';
 
 const bgPhoto = {
   url: 'https://images.unsplash.com/photo-1688999989632-4aff12c12c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
@@ -51,7 +53,6 @@ const creditHref = (username: string) =>
                 <h2 class="journey-feature__name">{journey.name}</h2>
                 <p class="journey-feature__tagline">{journey.tagline}</p>
                 <p class="journey-feature__regions">{journey.regions.join(' · ')}</p>
-                {journey.price && <p class="journey-feature__price">{journey.price}</p>}
                 <a
                   class="btn btn-primary journey-feature__cta"
                   href={`/booking?journey=${encodeURIComponent(journey.name)}#booking-form`}
@@ -121,6 +122,54 @@ const creditHref = (username: string) =>
                 <a class="btn btn-primary" href="/contact">Start planning a Journey</a>
                 <a class="btn btn-outline" href="/tours">See our single-day tours</a>
               </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    {
+      journeys.length > 0 && (
+        <section class="journeys-map-section reveal">
+          <div class="container">
+            <div class="section-intro reveal-item">
+              <p class="eyebrow">See it on the map</p>
+              <h2>Where each Journey goes</h2>
+              <p>Four routes across Namibia — tap a name to jump to its full itinerary above.</p>
+            </div>
+
+            <div class="journeys-map reveal-item">
+              <div class="journeys-map__canvas">
+                <NamibiaMap routes={journeyRoutes} />
+              </div>
+
+              <ul class="journeys-map__key">
+                {journeys.map((journey) => {
+                  const route = journeyRoutes.find((r) => r.slug === journey.slug);
+                  if (!route) return null;
+                  return (
+                    <li>
+                      <a href={`#${journey.slug}`}>
+                        <svg class="journeys-map__key-swatch" width="28" height="10" aria-hidden="true">
+                          <line
+                            x1="0"
+                            y1="5"
+                            x2="28"
+                            y2="5"
+                            stroke={route.color}
+                            stroke-width="3.5"
+                            stroke-dasharray={route.dash}
+                            stroke-linecap="round"
+                          />
+                        </svg>
+                        <span>
+                          <strong>{journey.durationDays}-Day</strong> {journey.name.replace(/^\d+-Day /, '')}
+                        </span>
+                      </a>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </section>
@@ -303,13 +352,6 @@ const creditHref = (username: string) =>
     margin: 0 0 var(--space-md);
   }
 
-  .journey-feature__price {
-    font-family: var(--font-display);
-    font-size: 1.1rem;
-    color: var(--color-text-on-dark);
-    margin: 0 0 var(--space-md);
-  }
-
   .journey-feature__credit {
     position: absolute;
     right: var(--space-sm);
@@ -442,6 +484,65 @@ const creditHref = (username: string) =>
     }
 
     .journey-feature__lists {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---------- Routes map ---------- */
+  .journeys-map-section {
+    position: relative;
+    background: var(--color-bg-alt);
+    padding-block: var(--space-2xl);
+  }
+
+  .journeys-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 260px;
+    gap: var(--space-2xl);
+    align-items: center;
+    margin-top: var(--space-lg);
+  }
+
+  .journeys-map__canvas {
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-md);
+    padding: var(--space-lg);
+    aspect-ratio: 751 / 740;
+  }
+
+  .journeys-map__key {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-md);
+  }
+
+  .journeys-map__key a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    text-decoration: none;
+    color: var(--color-text);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .journeys-map__key a:hover {
+    color: var(--color-accent-strong);
+  }
+
+  .journeys-map__key-swatch {
+    flex-shrink: 0;
+  }
+
+  .journeys-map__key strong {
+    font-family: var(--font-display);
+    font-weight: 400;
+  }
+
+  @media (max-width: 780px) {
+    .journeys-map {
       grid-template-columns: 1fr;
     }
   }

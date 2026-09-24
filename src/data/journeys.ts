@@ -35,8 +35,6 @@ export interface Journey {
   itinerary: JourneyDay[];
   includes: string[];
   excludes: string[];
-  /** e.g. "From N$X,XXX pp sharing" — omit until real pricing is confirmed. */
-  price?: string;
 }
 
 export const journeys: Journey[] = [
@@ -110,9 +108,7 @@ export const journeys: Journey[] = [
   // exact "layers of content" problem to avoid, so this uses the owner's
   // own pick for first-time visitors (the clockwise route) as the one
   // public itinerary, with the airport flexibility folded into a line of
-  // copy instead of duplicated as a separate product. Pricing follows the
-  // owner's own "strongest recommendation": one public "from" price
-  // instead of publishing all three tiers.
+  // copy instead of duplicated as a separate product.
   {
     slug: '10-day-namibia-grand-tour',
     name: '10-Day Namibia Grand Tour',
@@ -124,7 +120,6 @@ export const journeys: Journey[] = [
     heroImage:
       'https://images.unsplash.com/photo-1689917945545-bf7e6f744e10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
     imageCredit: { name: 'Ultimate Safaris Namibia', username: 'ultimate_safaris_namibia' },
-    price: 'From N$79,500 pp — final quote depends on group size, accommodation, and activities selected.',
     itinerary: [
       {
         day: 1,

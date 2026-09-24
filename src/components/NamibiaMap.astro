@@ -13,14 +13,23 @@
 // are styled distinctly from the other 11, which stay muted.
 import type { MapPin } from '../data/tourRegions';
 
+export interface MapRoute {
+  slug: string;
+  color: string;
+  /** SVG stroke-dasharray, e.g. "10 6" — lets two similarly-colored routes stay distinguishable. */
+  dash?: string;
+  points: { x: number; y: number }[];
+}
+
 interface Props {
   pins?: MapPin[];
   activeSlug?: string;
   viewBox?: string;
   labels?: boolean;
+  routes?: MapRoute[];
 }
 
-const { pins = [], activeSlug, viewBox = '0 0 751 740', labels = false } = Astro.props;
+const { pins = [], activeSlug, viewBox = '0 0 751 740', labels = false, routes = [] } = Astro.props;
 
 const regions: { id: string; active: boolean; points: string; labelPos?: [number, number] }[] = [
   { id: 'omusati', active: false, points: '140,44 220,42 220,190 140,190', labelPos: [180, 120] },
@@ -82,6 +91,31 @@ const regions: { id: string; active: boolean; points: string; labelPos?: [number
     }
 
     {
+      routes.map((route) => (
+        <g class="namibia-map__route" data-map-route={route.slug}>
+          <polyline
+            points={route.points.map((p) => `${p.x},${p.y}`).join(' ')}
+            fill="none"
+            stroke={route.color}
+            stroke-width="3.5"
+            stroke-dasharray={route.dash}
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          {route.points.map((p, i) => (
+            <circle
+              class:list={['namibia-map__route-stop', (i === 0 || i === route.points.length - 1) && 'namibia-map__route-stop--end']}
+              cx={p.x}
+              cy={p.y}
+              r={i === 0 || i === route.points.length - 1 ? 5.5 : 4}
+              fill={route.color}
+            />
+          ))}
+        </g>
+      ))
+    }
+
+    {
       labels &&
         regions.map((region) => (
           <text class="namibia-map__label" x={region.labelPos?.[0]} y={region.labelPos?.[1]}>
@@ -121,6 +155,19 @@ const regions: { id: string; active: boolean; points: string; labelPos?: [number
 
   .namibia-map__region--active {
     fill: var(--color-ochre-400);
+  }
+
+  .namibia-map__route polyline {
+    opacity: 0.9;
+  }
+
+  .namibia-map__route-stop {
+    stroke: var(--color-sand-50);
+    stroke-width: 1.5;
+  }
+
+  .namibia-map__route-stop--end {
+    stroke-width: 2;
   }
 
   .namibia-map__label {
