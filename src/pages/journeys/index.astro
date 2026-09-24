@@ -1,13 +1,21 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/Hero.astro';
 import NamibiaMap from '../../components/NamibiaMap.astro';
 import { journeys, tripTypeLabels } from '../../data/journeys';
 import { journeyRoutes } from '../../data/journeyRoutes';
 
-const bgPhoto = {
-  url: 'https://images.unsplash.com/photo-1688999989632-4aff12c12c42?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-  credit: { name: 'Ultimate Safaris Namibia', username: 'ultimate_safaris_namibia' },
-};
+// The top of the page previews the 4 real Journeys below it rather than
+// one generic photo behind a text card — same multi-panel slideshow
+// component as the homepage hero, built from each journey's own photo,
+// with its duration standing in for Hero.astro's single-letter badge.
+const heroPanels = journeys.map((journey) => ({
+  letter: String(journey.durationDays),
+  alt: journey.name,
+  imageUrl: journey.heroImage,
+  imageCredit: journey.imageCredit,
+}));
+
 const mapBgPhoto = {
   url: 'https://images.unsplash.com/photo-1639402477646-e88e811eef21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'Andrew Svk', username: 'andrew_svk' },
@@ -21,30 +29,31 @@ const creditHref = (username: string) =>
   description="Multi-day, multi-location journeys across Namibia with Salt and Sun Tours — a set route, planned day by day."
 >
   <div class="journeys-page">
-    <div class="journeys-page__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
-
-    <header class="journeys-header">
-      <div class="container">
-        <div class="journeys-header__card">
-          <p class="journeys-header__eyebrow">Beyond a single day</p>
-          <h1 class="journeys-header__heading">Journeys</h1>
-          <p class="journeys-header__body">
-            A Journey strings several of our tours and destinations together into one
-            set route — a real day-by-day itinerary across Namibia, not just a longer
-            version of a single tour. Where our Tours and Adventures pages cover what
-            you can do in and around Swakopmund and Walvis Bay in a day, Journeys are
-            for guests with more time who want to see more of the country.
-          </p>
-        </div>
-      </div>
-
-      <p class="journeys-header__credit">
-        Photo:{' '}
-        <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
-        /{' '}
-        <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-      </p>
-    </header>
+    {
+      journeys.length > 0 ? (
+        <Hero
+          title="Journeys"
+          eyebrow="Beyond a single day"
+          subhead="Four set routes across Namibia — from a short coastal escape to the full 13-day circuit. Pick one below, or tell us what you have in mind."
+          ctaLabel="Start exploring"
+          ctaHref={`#${journeys[0].slug}`}
+          panels={heroPanels}
+        />
+      ) : (
+        <header class="journeys-header journeys-header--plain">
+          <div class="container">
+            <p class="journeys-header__eyebrow">Beyond a single day</p>
+            <h1>Journeys</h1>
+            <p class="journeys-header__body">
+              A Journey strings several of our tours and destinations together into one
+              set route — a real day-by-day itinerary across Namibia, not just a longer
+              version of a single tour.
+            </p>
+          </div>
+        </header>
+      )
+    }
+    <div id="scroll-target"></div>
 
     {
       journeys.length > 0 ? (
@@ -199,37 +208,16 @@ const creditHref = (username: string) =>
 </BaseLayout>
 
 <style>
-  /* Same "fully defined" full-strength background photo treatment as
-     booking.astro/contact.astro: no scrim, no blur, header copy gets its
-     own small opaque card. */
   .journeys-page {
     position: relative;
     z-index: 0;
   }
 
-  .journeys-page__bg {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-size: cover;
-    background-position: center 55%;
-    background-color: var(--color-earth-700);
-  }
-
-  .journeys-header {
-    position: relative;
+  /* Fallback only for the (currently unused) zero-journeys case — the
+     real header is Hero.astro's multi-panel slideshow, built from each
+     journey's own photo, styled entirely within that component. */
+  .journeys-header--plain {
     padding-block: var(--space-2xl) var(--space-xl);
-    min-height: 60vh;
-    display: flex;
-    align-items: center;
-  }
-
-  .journeys-header__card {
-    max-width: var(--content-width-narrow);
-    background: rgba(58, 35, 28, 0.72);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
-    box-shadow: var(--shadow-lg);
   }
 
   .journeys-header__eyebrow {
@@ -237,35 +225,16 @@ const creditHref = (username: string) =>
     letter-spacing: 0.14em;
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--color-ochre-400);
+    color: var(--color-accent-strong);
     margin-bottom: var(--space-2xs);
   }
 
-  .journeys-header__heading {
-    color: var(--color-text-on-dark);
-    margin-bottom: var(--space-md);
-  }
-
-  .journeys-header__body {
+  .journeys-header--plain .journeys-header__body {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-sand-200);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
     margin: 0;
-  }
-
-  .journeys-header__credit {
-    position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-    margin: 0;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.75);
-  }
-
-  .journeys-header__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 
   .journeys-empty {
@@ -633,7 +602,6 @@ const creditHref = (username: string) =>
   }
 
   @media (max-width: 640px) {
-    .journeys-header__card,
     .journeys-empty__card,
     .journeys-map-intro {
       padding: var(--space-lg) var(--space-md);
