@@ -27,21 +27,9 @@ interface Props {
   viewBox?: string;
   labels?: boolean;
   routes?: MapRoute[];
-  /** Muted region fill/stroke for use on a dark background — see the Journeys hero. */
-  dark?: boolean;
-  /** Erongo/Kunene/Hardap's built-in highlight — off when routes are the whole point, not those 3 regions. */
-  highlightRegions?: boolean;
 }
 
-const {
-  pins = [],
-  activeSlug,
-  viewBox = '0 0 751 740',
-  labels = false,
-  routes = [],
-  dark = false,
-  highlightRegions = true,
-} = Astro.props;
+const { pins = [], activeSlug, viewBox = '0 0 751 740', labels = false, routes = [] } = Astro.props;
 
 const regions: { id: string; active: boolean; points: string; labelPos?: [number, number] }[] = [
   { id: 'omusati', active: false, points: '140,44 220,42 220,190 140,190', labelPos: [180, 120] },
@@ -91,12 +79,12 @@ const regions: { id: string; active: boolean; points: string; labelPos?: [number
 ];
 ---
 
-<svg class:list={['namibia-map', dark && 'namibia-map--dark']} viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Namibia highlighting the Erongo, Kunene, and Hardap regions">
+<svg class="namibia-map" viewBox={viewBox} xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Map of Namibia highlighting the Erongo, Kunene, and Hardap regions">
   <g data-map-zoom-group>
     {
       regions.map((region) => (
         <polygon
-          class:list={['namibia-map__region', region.active && highlightRegions && 'namibia-map__region--active']}
+          class:list={['namibia-map__region', region.active && 'namibia-map__region--active']}
           points={region.points}
         />
       ))
@@ -167,11 +155,6 @@ const regions: { id: string; active: boolean; points: string; labelPos?: [number
 
   .namibia-map__region--active {
     fill: var(--color-ochre-400);
-  }
-
-  .namibia-map--dark .namibia-map__region {
-    fill: var(--color-earth-700);
-    stroke: var(--color-earth-900);
   }
 
   .namibia-map__route polyline {

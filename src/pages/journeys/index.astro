@@ -4,14 +4,6 @@ import NamibiaMap from '../../components/NamibiaMap.astro';
 import { journeys, tripTypeLabels } from '../../data/journeys';
 import { journeyRoutes } from '../../data/journeyRoutes';
 
-// The bottom map's colours are tuned to read on its light card (and to
-// match the legend key), so earth-900 for the 8-day route disappears
-// against this hero's dark backdrop. The hero is atmospheric, not a
-// legend to read against, so it gets its own brighter palette — same
-// routes and dash patterns, recoloured for contrast on dark.
-const heroRouteColors = ['#f6ede1', '#d3a24f', '#e3cba7', '#d68a5c'];
-const heroRoutes = journeyRoutes.map((route, i) => ({ ...route, color: heroRouteColors[i] ?? route.color }));
-
 const mapBgPhoto = {
   url: 'https://images.unsplash.com/photo-1639402477646-e88e811eef21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'Andrew Svk', username: 'andrew_svk' },
@@ -26,22 +18,73 @@ const creditHref = (username: string) =>
 >
   <div class="journeys-page">
     <section class="journeys-hero">
-      {
-        journeys.length > 0 && (
-          <div class="journeys-hero__map" data-journeys-hero-map aria-hidden="true">
-            <NamibiaMap routes={heroRoutes} dark highlightRegions={false} />
-          </div>
-        )
-      }
+      <svg
+        class="journeys-hero__scene"
+        viewBox="0 0 1600 800"
+        preserveAspectRatio="xMidYMax slice"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <defs>
+          <clipPath id="journeys-sun-clip">
+            <circle cx="0" cy="0" r="50" />
+          </clipPath>
+        </defs>
+
+        <path
+          class="journeys-hero__dune journeys-hero__dune--back"
+          d="M0,560 C200,520 400,540 600,510 C800,480 1000,520 1200,500 C1400,480 1500,510 1600,495 L1600,800 L0,800 Z"
+        />
+        <path
+          class="journeys-hero__dune journeys-hero__dune--mid"
+          d="M0,640 C250,590 450,650 700,610 C950,570 1150,630 1350,590 C1450,575 1550,600 1600,590 L1600,800 L0,800 Z"
+        />
+
+        <path
+          data-journeys-trail
+          class="journeys-hero__trail"
+          d="M80,640 C280,560 380,680 580,600 C780,520 880,640 1080,580 C1280,500 1380,580 1560,540"
+          fill="none"
+        />
+
+        <g
+          data-journeys-sun
+          data-start-x="100"
+          data-start-y="600"
+          data-peak-x="800"
+          data-peak-y="140"
+          data-end-x="1500"
+          data-end-y="600"
+          class="journeys-hero__sun"
+        >
+          <circle class="journeys-hero__sun-glow" cx="0" cy="0" r="90" />
+          <g clip-path="url(#journeys-sun-clip)">
+            <rect x="-50" y="-50" width="100" height="48.75" fill="#e2884d" />
+            <rect x="-50" y="1.25" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="7.5" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="13.75" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="20" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="26.25" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="32.5" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="38.75" width="100" height="4" rx="2" fill="#a68885" />
+            <rect x="-50" y="45" width="100" height="4" rx="2" fill="#a68885" />
+          </g>
+        </g>
+
+        <path
+          class="journeys-hero__dune journeys-hero__dune--front"
+          d="M0,700 C300,630 500,720 800,660 C1050,610 1250,680 1450,630 C1520,615 1560,640 1600,630 L1600,800 L0,800 Z"
+        />
+      </svg>
 
       <div class="container journeys-hero__content">
         <p class="journeys-hero__eyebrow">Beyond a single day</p>
         <h1>Journeys</h1>
         <p class="journeys-hero__subhead">
           A Journey strings several of our tours and destinations together into one
-          set route across Namibia — planned day by day, not just a longer version
-          of a single tour. Four routes exist already, sketched out on the map
-          behind this text; tell us what you have in mind and we'll draw another.
+          set route across Namibia, planned day by day — not just a longer version
+          of a single tour. Four routes exist already; tell us what you have in
+          mind and we'll plan another.
         </p>
         {journeys.length > 0 && (
           <a class="btn btn-primary" href={`#${journeys[0].slug}`}>Start exploring</a>
@@ -223,38 +266,72 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Journeys hero ---------- */
-  /* No photo, no boxed card: the 4 routes themselves are the visual,
-     traced live across a muted backdrop map (see setupJourneysRoutesReveal
-     in motion.ts) and bleeding off the right edge so it reads as a big
-     atmospheric planning surface behind the text, not a diagram pinned
-     to the page. */
+  /* Not a photo and not a diagram: a day passing over the dunes. The
+     brand's own sun mark (same striped-reflection shape as the header
+     logo) arcs from one horizon to the other while a trail draws itself
+     in beneath it — movement (the arc), change (the sky it crosses) and
+     growth (the trail extending) in one scene, entirely original SVG,
+     no photography or map reuse. See setupJourneysHeroScene in motion.ts. */
   .journeys-hero {
     position: relative;
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     overflow: hidden;
-    background: var(--color-earth-900);
-    background-image: var(--gradient-dusk);
-    color: var(--color-text-on-dark);
+    background: linear-gradient(
+      180deg,
+      var(--color-sand-100) 0%,
+      var(--color-ochre-400) 45%,
+      var(--color-terracotta-600) 75%,
+      var(--color-earth-900) 100%
+    );
+    color: var(--color-earth-900);
   }
 
-  .journeys-hero__map {
+  .journeys-hero__scene {
     position: absolute;
-    top: 50%;
-    right: -14%;
-    transform: translateY(-50%);
-    width: min(62vw, 860px);
-    aspect-ratio: 751 / 740;
-    opacity: 0.92;
-    pointer-events: none;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .journeys-hero__dune {
+    fill: var(--color-ochre-500);
+  }
+
+  .journeys-hero__dune--mid {
+    fill: var(--color-terracotta-600);
+  }
+
+  .journeys-hero__dune--front {
+    fill: var(--color-earth-900);
+  }
+
+  .journeys-hero__trail {
+    stroke: rgba(251, 247, 241, 0.85);
+    stroke-width: 3;
+    stroke-linecap: round;
+  }
+
+  .journeys-hero__sun-glow {
+    fill: rgba(226, 136, 77, 0.35);
+  }
+
+  /* Resting position (also the reduced-motion state, since the arc/draw-in
+     JS never runs then): roughly where the arc's midpoint sits, so a
+     visitor who never sees the animation still gets a sensible scene
+     instead of the sun pinned to the SVG's raw (0,0) origin. GSAP's
+     inline transform overrides this the moment the animation starts. */
+  .journeys-hero__sun {
+    transform: translate(1150px, 560px);
   }
 
   .journeys-hero__content {
     position: relative;
     z-index: 1;
     max-width: 30rem;
-    padding-block: var(--space-2xl);
+    padding-top: clamp(5rem, 16vh, 9rem);
   }
 
   .journeys-hero__eyebrow {
@@ -262,19 +339,22 @@ const creditHref = (username: string) =>
     letter-spacing: 0.14em;
     font-size: var(--fs-sm);
     font-weight: 600;
-    color: var(--color-ochre-400);
+    color: var(--color-earth-900);
+    text-shadow: 0 1px 12px rgba(251, 247, 241, 0.5);
     margin: 0 0 var(--space-sm);
   }
 
   .journeys-hero__content h1 {
-    color: var(--color-text-on-dark);
+    color: var(--color-earth-900);
+    text-shadow: 0 1px 20px rgba(251, 247, 241, 0.4);
     margin: 0 0 var(--space-md);
   }
 
   .journeys-hero__subhead {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-sand-200);
+    color: var(--color-earth-900);
+    text-shadow: 0 1px 12px rgba(251, 247, 241, 0.4);
     margin: 0 0 var(--space-lg);
   }
 
@@ -286,7 +366,7 @@ const creditHref = (username: string) =>
     z-index: 1;
     width: 24px;
     height: 40px;
-    border: 2px solid rgba(251, 247, 241, 0.7);
+    border: 2px solid rgba(58, 35, 28, 0.5);
     border-radius: 999px;
     display: flex;
     justify-content: center;
@@ -297,7 +377,7 @@ const creditHref = (username: string) =>
     width: 3px;
     height: 8px;
     border-radius: 999px;
-    background: var(--color-sand-100);
+    background: var(--color-earth-900);
     animation: journeys-hero-scroll-cue 1.8s ease-in-out infinite;
   }
 
@@ -319,33 +399,9 @@ const creditHref = (username: string) =>
     }
   }
 
-  @media (max-width: 900px) {
-    .journeys-hero {
-      flex-direction: column;
-      align-items: stretch;
-      min-height: auto;
-      padding-block: var(--space-2xl) var(--space-xl);
-    }
-
+  @media (max-width: 640px) {
     .journeys-hero__content {
-      order: 1;
-      max-width: none;
-      padding-block: 0;
-    }
-
-    .journeys-hero__map {
-      order: 2;
-      position: relative;
-      top: auto;
-      right: auto;
-      transform: none;
-      width: 80%;
-      margin: var(--space-xl) auto 0;
-      opacity: 0.6;
-    }
-
-    .journeys-hero__scroll-cue {
-      display: none;
+      padding-top: var(--space-2xl);
     }
   }
 

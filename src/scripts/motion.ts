@@ -958,35 +958,37 @@ function setupTourMapGrowth() {
   }
 }
 
-// Journeys page hero: the 4 routes trace themselves across the backdrop
-// map one at a time, each line drawing in (stroke-dashoffset from its own
-// full length down to 0) followed by its stop-dots popping in — a "watch
-// your route get planned" moment instead of a static diagram. Runs once
-// on load, not on scroll, since it's the very first thing on the page.
-function setupJourneysRoutesReveal() {
-  const map = document.querySelector<SVGSVGElement>('[data-journeys-hero-map] svg');
-  if (!map) return;
+// Journeys page hero: a day passing over the dunes — the brand's own sun
+// mark arcs from one horizon to the other while a trail draws itself in
+// beneath it, tracing a route across the layered dune silhouettes. One
+// scene standing in for movement (the arc), change (the light crossing
+// the sky), and growth (the trail extending) all at once, rather than a
+// literal map or photo. Runs once on load, not on scroll.
+function setupJourneysHeroScene() {
+  const hero = document.querySelector<HTMLElement>('.journeys-hero');
+  if (!hero) return;
 
-  const groups = Array.from(map.querySelectorAll<SVGGElement>('[data-map-route]'));
-  if (!groups.length) return;
+  const sun = hero.querySelector<SVGGElement>('[data-journeys-sun]');
+  const trail = hero.querySelector<SVGGeometryElement>('[data-journeys-trail]');
+  if (!sun && !trail) return;
 
-  const tl = gsap.timeline({ delay: 0.4 });
+  const tl = gsap.timeline({ delay: 0.3 });
 
-  groups.forEach((group, i) => {
-    const line = group.querySelector<SVGGeometryElement>('polyline');
-    const dots = group.querySelectorAll<SVGElement>('.namibia-map__route-stop');
-    if (!line) return;
+  if (sun) {
+    // Two-segment rise-then-set reads as a smooth arc without needing a
+    // motion-path plugin: waypoints are set in the markup's data attrs
+    // (start/peak/end), each a plain x/y pair in the scene's viewBox.
+    const { startX, startY, peakX, peakY, endX, endY } = sun.dataset;
+    tl.set(sun, { x: startX, y: startY })
+      .to(sun, { x: peakX, y: peakY, duration: 2.2, ease: 'sine.out' }, 0)
+      .to(sun, { x: endX, y: endY, duration: 2.2, ease: 'sine.in' }, 2.2);
+  }
 
-    const length = line.getTotalLength();
-    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
-    gsap.set(dots, { opacity: 0, scale: 0, transformOrigin: '50% 50%' });
-
-    tl.to(line, { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' }, i * 0.6).to(
-      dots,
-      { opacity: 1, scale: 1, duration: 0.4, stagger: 0.05, ease: 'back.out(2)' },
-      '>-0.4'
-    );
-  });
+  if (trail) {
+    const length = trail.getTotalLength();
+    gsap.set(trail, { strokeDasharray: length, strokeDashoffset: length });
+    tl.to(trail, { strokeDashoffset: 0, duration: 3.2, ease: 'power1.inOut' }, 0.3);
+  }
 }
 
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
@@ -1117,7 +1119,7 @@ export function initMotion() {
     }
 
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
-    setupJourneysRoutesReveal();
+    setupJourneysHeroScene();
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureIndex(false);
