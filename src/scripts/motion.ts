@@ -958,6 +958,37 @@ function setupTourMapGrowth() {
   }
 }
 
+// Journeys page hero: the 4 routes trace themselves across the backdrop
+// map one at a time, each line drawing in (stroke-dashoffset from its own
+// full length down to 0) followed by its stop-dots popping in — a "watch
+// your route get planned" moment instead of a static diagram. Runs once
+// on load, not on scroll, since it's the very first thing on the page.
+function setupJourneysRoutesReveal() {
+  const map = document.querySelector<SVGSVGElement>('[data-journeys-hero-map] svg');
+  if (!map) return;
+
+  const groups = Array.from(map.querySelectorAll<SVGGElement>('[data-map-route]'));
+  if (!groups.length) return;
+
+  const tl = gsap.timeline({ delay: 0.4 });
+
+  groups.forEach((group, i) => {
+    const line = group.querySelector<SVGGeometryElement>('polyline');
+    const dots = group.querySelectorAll<SVGElement>('.namibia-map__route-stop');
+    if (!line) return;
+
+    const length = line.getTotalLength();
+    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
+    gsap.set(dots, { opacity: 0, scale: 0, transformOrigin: '50% 50%' });
+
+    tl.to(line, { strokeDashoffset: 0, duration: 1.8, ease: 'power2.inOut' }, i * 0.6).to(
+      dots,
+      { opacity: 1, scale: 1, duration: 0.4, stagger: 0.05, ease: 'back.out(2)' },
+      '>-0.4'
+    );
+  });
+}
+
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
 // "active" (wider, via flex-grow — see .hero__panel.is-active) so each
 // photo gets a turn filling most of the hero, like an expanding-photo
@@ -1086,6 +1117,7 @@ export function initMotion() {
     }
 
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
+    setupJourneysRoutesReveal();
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureIndex(false);
