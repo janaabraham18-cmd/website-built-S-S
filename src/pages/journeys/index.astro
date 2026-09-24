@@ -1,0 +1,247 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { journeys } from '../../data/journeys';
+
+const bgPhoto = {
+  url: 'https://images.unsplash.com/photo-1614062242265-cb2a4424a355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Sophia Louw', username: 'jam_en_kaas' },
+};
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+---
+
+<BaseLayout
+  title="Journeys"
+  description="Multi-day, multi-location journeys across Namibia with Salt and Sun Tours — a set route, planned day by day."
+>
+  <div class="journeys-page">
+    <div class="journeys-page__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
+
+    <header class="journeys-header">
+      <div class="container">
+        <div class="journeys-header__card">
+          <p class="journeys-header__eyebrow">Beyond a single day</p>
+          <h1 class="journeys-header__heading">Journeys</h1>
+          <p class="journeys-header__body">
+            A Journey strings several of our tours and destinations together into one
+            set route — a real day-by-day itinerary across Namibia, not just a longer
+            version of a single tour. Where our Tours and Adventures pages cover what
+            you can do in and around Swakopmund and Walvis Bay in a day, Journeys are
+            for guests with more time who want to see more of the country.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    {
+      journeys.length > 0 ? (
+        <section class="journeys-grid-section reveal">
+          <div class="container">
+            <div class="journeys-grid reveal-item">
+              {journeys.map((journey) => (
+                <a class="journey-card" href={`/journeys/${journey.slug}`}>
+                  <div class="photo-frame journey-card__photo">
+                    <img src={journey.heroImage} alt={journey.name} loading="lazy" decoding="async" />
+                  </div>
+                  <div class="journey-card__body">
+                    <p class="journey-card__meta">{journey.durationDays} days · {journey.regions.join(' · ')}</p>
+                    <h3>{journey.name}</h3>
+                    <p>{journey.tagline}</p>
+                  </div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : (
+        <section class="journeys-empty reveal">
+          <div class="container">
+            <div class="journeys-empty__card reveal-item">
+              <p class="journeys-header__eyebrow">Every journey starts with a conversation</p>
+              <h2 class="journeys-empty__heading">Tell us how long you have and where you'd like to go</h2>
+              <p class="journeys-empty__body">
+                We're still building out our set-route Journeys — but if you already know
+                you want more than one day, get in touch and we'll design a day-by-day
+                route around the time you have, combining tours and destinations across
+                Namibia into one trip.
+              </p>
+              <div class="journeys-empty__actions">
+                <a class="btn btn-primary" href="/contact">Start planning a Journey</a>
+                <a class="btn btn-outline" href="/tours">See our single-day tours</a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )
+    }
+
+    <p class="journeys-page__credit">
+      Photo:{' '}
+      <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
+      /{' '}
+      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Same "fully defined" full-strength background photo treatment as
+     booking.astro/contact.astro: no scrim, no blur, header copy gets its
+     own small opaque card. */
+  .journeys-page {
+    position: relative;
+    z-index: 0;
+  }
+
+  .journeys-page__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center 55%;
+    background-color: var(--color-earth-700);
+  }
+
+  .journeys-header {
+    position: relative;
+    padding-block: var(--space-2xl) var(--space-xl);
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .journeys-header__card {
+    max-width: var(--content-width-narrow);
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .journeys-header__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-ochre-400);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .journeys-header__heading {
+    color: var(--color-text-on-dark);
+    margin-bottom: var(--space-md);
+  }
+
+  .journeys-header__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-200);
+    margin: 0;
+  }
+
+  .journeys-empty {
+    position: relative;
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .journeys-empty__card {
+    max-width: var(--content-width-narrow);
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    padding: var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .journeys-empty__heading {
+    margin: 0 0 var(--space-sm);
+  }
+
+  .journeys-empty__body {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .journeys-empty__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .journeys-grid-section {
+    position: relative;
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .journeys-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .journey-card {
+    display: block;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    text-decoration: none;
+    color: inherit;
+    transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .journey-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .journey-card__photo {
+    aspect-ratio: 4 / 3;
+  }
+
+  .journey-card__body {
+    padding: var(--space-md);
+  }
+
+  .journey-card__meta {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.4rem;
+  }
+
+  .journey-card__body h3 {
+    margin: 0 0 0.4rem;
+  }
+
+  .journey-card__body p:not(.journey-card__meta) {
+    color: var(--color-text-muted);
+    line-height: var(--lh-normal);
+    margin: 0;
+  }
+
+  .journeys-page__credit {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    text-align: right;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .journeys-page__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .journeys-header__card,
+    .journeys-empty__card {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+</style>

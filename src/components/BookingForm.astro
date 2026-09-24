@@ -120,4 +120,19 @@ const categories = (['tour', 'adventure', 'combo'] as const).map((category) => (
       message.value = `I'd like to build a custom combo: ${custom}`;
     }
   }
+
+  // Deep-link support: /booking?journey=<name> (used by "Book this Journey"
+  // buttons on the Journeys pages) — same standing "Custom combo" option,
+  // since a multi-day Journey has no matching entry in this single-day list
+  // either, but its own message phrasing rather than the combo-builder text.
+  const journey = params.get('journey');
+  if (journey && select) {
+    const customOption = Array.from(select.options).find((option) => option.dataset.slug === 'custom');
+    if (customOption) select.value = customOption.value;
+
+    const message = document.getElementById('message') as HTMLTextAreaElement | null;
+    if (message && !message.value) {
+      message.value = `I'd like to book the following Journey: ${journey}`;
+    }
+  }
 </script>
