@@ -1,0 +1,228 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { tours, categoryLabels } from '../data/tours';
+import { journeys } from '../data/journeys';
+
+type GalleryCategory = 'tour' | 'adventure' | 'combo' | 'journey';
+
+interface GalleryItem {
+  slug: string;
+  name: string;
+  category: GalleryCategory;
+  imageUrl: string;
+  imageCredit?: { name: string; username: string };
+  href: string;
+}
+
+// Every real photo already sourced for the tours/adventures/combos and
+// journeys, gathered into one browsable set rather than re-sourced —
+// this page is a way to see them all together, not a new photo shoot.
+const galleryItems: GalleryItem[] = [
+  ...tours
+    .filter((tour): tour is typeof tour & { imageUrl: string } => !!tour.imageUrl)
+    .map((tour) => ({
+      slug: tour.slug,
+      name: tour.name,
+      category: tour.category,
+      imageUrl: tour.imageUrl,
+      imageCredit: tour.imageCredit,
+      href: tour.category === 'combo' ? '/tours#combos' : '/tours',
+    })),
+  ...journeys.map((journey) => ({
+    slug: journey.slug,
+    name: journey.name,
+    category: 'journey' as const,
+    imageUrl: journey.heroImage,
+    imageCredit: journey.imageCredit,
+    href: `/journeys#${journey.slug}`,
+  })),
+];
+
+const filters: { key: 'all' | GalleryCategory; label: string }[] = [
+  { key: 'all', label: 'All' },
+  { key: 'tour', label: categoryLabels.tour.label },
+  { key: 'adventure', label: categoryLabels.adventure.label },
+  { key: 'combo', label: categoryLabels.combo.label },
+  { key: 'journey', label: 'Journeys' },
+];
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+---
+
+<BaseLayout
+  title="Gallery"
+  description="Photos from every tour, adventure, combo and Journey Salt and Sun Tours offers in Swakopmund and Walvis Bay, Namibia."
+>
+  <header class="gallery-header">
+    <div class="container">
+      <p class="eyebrow">In pictures</p>
+      <h1>Gallery</h1>
+      <p class="gallery-header__body">
+        Every tour, adventure, combo and Journey on this site, gathered into one place —
+        tap a filter to narrow it down, or a photo to see the real thing.
+      </p>
+
+      <div class="gallery-filters" role="group" aria-label="Filter gallery by category">
+        {filters.map((filter, i) => (
+          <button
+            type="button"
+            class:list={['gallery-filters__pill', i === 0 && 'is-active']}
+            data-gallery-filter={filter.key}
+          >
+            {filter.label}
+          </button>
+        ))}
+      </div>
+    </div>
+  </header>
+
+  <section class="gallery-grid-section reveal">
+    <div class="container">
+      <div class="gallery-grid reveal-item">
+        {galleryItems.map((item) => (
+          <div class="gallery-tile" data-gallery-item data-category={item.category}>
+            <a class="gallery-tile__link" href={item.href}>
+              <div class="photo-frame gallery-tile__photo">
+                <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" />
+              </div>
+              <p class="gallery-tile__name">{item.name}</p>
+            </a>
+            {item.imageCredit && (
+              <p class="gallery-tile__credit">
+                Photo:{' '}
+                <a href={creditHref(item.imageCredit.username)} target="_blank" rel="noopener noreferrer">
+                  {item.imageCredit.name}
+                </a>{' '}
+                / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+              </p>
+            )}
+          </div>
+        ))}
+      </div>
+
+      <p class="gallery-empty" data-gallery-empty hidden>
+        Nothing in this category yet — try a different filter.
+      </p>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .gallery-header {
+    padding-block: var(--space-2xl) var(--space-xl);
+    background: var(--color-bg-alt);
+  }
+
+  .gallery-header h1 {
+    margin: 0 0 var(--space-sm);
+  }
+
+  .gallery-header__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .gallery-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .gallery-filters__pill {
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-muted);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    padding: 0.5rem 1.1rem;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out),
+      color var(--duration-fast) var(--ease-out);
+  }
+
+  .gallery-filters__pill:hover {
+    border-color: var(--color-accent-strong);
+    color: var(--color-accent-strong);
+  }
+
+  .gallery-filters__pill.is-active {
+    background: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
+  }
+
+  .gallery-grid-section {
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .gallery-tile__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .gallery-tile__photo {
+    aspect-ratio: 4 / 3;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-sm);
+  }
+
+  .gallery-tile__name {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-text);
+    margin: 0;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .gallery-tile__link:hover .gallery-tile__name {
+    color: var(--color-accent-strong);
+  }
+
+  .gallery-tile__credit {
+    font-size: 0.72rem;
+    color: var(--color-text-muted);
+    margin: 0.2rem 0 0;
+  }
+
+  .gallery-tile__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .gallery-tile[hidden] {
+    display: none;
+  }
+
+  .gallery-empty {
+    text-align: center;
+    color: var(--color-text-muted);
+    padding-block: var(--space-2xl);
+    margin: 0;
+  }
+
+  .gallery-empty[hidden] {
+    display: none;
+  }
+
+  @media (max-width: 640px) {
+    .gallery-grid {
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: var(--space-md);
+    }
+  }
+</style>

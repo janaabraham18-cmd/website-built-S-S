@@ -647,6 +647,31 @@ function setupItineraryFilter() {
   });
 }
 
+// Gallery page: same pill-filter pattern as the itinerary filter above,
+// plus an empty-state message for a category that (for now) has nothing
+// in it, since the gallery's categories aren't guaranteed non-empty the
+// way the itinerary's are.
+function setupGalleryFilter() {
+  const pills = document.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]');
+  const items = document.querySelectorAll<HTMLElement>('[data-gallery-item]');
+  const empty = document.querySelector<HTMLElement>('[data-gallery-empty]');
+  if (!pills.length || !items.length) return;
+
+  pills.forEach((pill) => {
+    pill.addEventListener('click', () => {
+      pills.forEach((p) => p.classList.toggle('is-active', p === pill));
+      const filter = pill.dataset.galleryFilter;
+      let visibleCount = 0;
+      items.forEach((item) => {
+        const show = filter === 'all' || item.dataset.category === filter;
+        item.hidden = !show;
+        if (show) visibleCount++;
+      });
+      if (empty) empty.hidden = visibleCount > 0;
+    });
+  });
+}
+
 // Postcards from the Road: one review visible at a time, cycled with
 // prev/next — click-driven UI switching, not scroll motion, so it isn't
 // gated behind reduced motion (the crossfade is a plain CSS opacity
@@ -1074,6 +1099,7 @@ export function initMotion() {
   setupTourIntroMap(reduceMotion);
   setupTourPhotoBleed();
   setupItineraryFilter();
+  setupGalleryFilter();
   setupPostcards();
   setupLogbookSlideshow(reduceMotion);
 
