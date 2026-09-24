@@ -51,8 +51,8 @@ export const journeys: Journey[] = [
     regions: ['Windhoek', 'Sossusvlei', 'Swakopmund', 'Walvis Bay'],
     tripType: 'guided',
     heroImage:
-      'https://images.unsplash.com/photo-1493062133140-518bd1f26539?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-    imageCredit: { name: 'Marcelo Novais', username: 'marnovais' },
+      'https://images.unsplash.com/photo-1761205930775-b2b634bfcbe6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Nathalie Lays', username: 'nath_lays' },
     itinerary: [
       {
         day: 1,
@@ -122,8 +122,8 @@ export const journeys: Journey[] = [
     regions: ['Windhoek', 'Sossusvlei', 'Swakopmund', 'Spitzkoppe', 'Damaraland', 'Etosha'],
     tripType: 'guided',
     heroImage:
-      'https://images.unsplash.com/photo-1643749678251-76783e5f1777?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-    imageCredit: { name: 'Bernd Dittrich', username: 'hdbernd' },
+      'https://images.unsplash.com/photo-1689917945545-bf7e6f744e10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Ultimate Safaris Namibia', username: 'ultimate_safaris_namibia' },
     price: 'From N$79,500 pp — final quote depends on group size, accommodation, and activities selected.',
     itinerary: [
       {
@@ -224,8 +224,8 @@ export const journeys: Journey[] = [
     regions: ['Windhoek', 'Swakopmund', 'Walvis Bay'],
     tripType: 'guided',
     heroImage:
-      'https://images.unsplash.com/photo-1669220228835-6c80412646d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-    imageCredit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+      'https://images.unsplash.com/photo-1693921148392-387157fc9a1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Ultimate Safaris Namibia', username: 'ultimate_safaris_namibia' },
     itinerary: [
       {
         day: 1,
