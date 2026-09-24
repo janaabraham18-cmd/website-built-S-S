@@ -1,6 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { journeys } from '../../data/journeys';
+import { journeys, tripTypeLabels } from '../../data/journeys';
 
 const bgPhoto = {
   url: 'https://images.unsplash.com/photo-1614062242265-cb2a4424a355?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
@@ -35,24 +35,76 @@ const creditHref = (username: string) =>
 
     {
       journeys.length > 0 ? (
-        <section class="journeys-grid-section reveal">
-          <div class="container">
-            <div class="journeys-grid reveal-item">
-              {journeys.map((journey) => (
-                <a class="journey-card" href={`/journeys/${journey.slug}`}>
-                  <div class="photo-frame journey-card__photo">
-                    <img src={journey.heroImage} alt={journey.name} loading="lazy" decoding="async" />
-                  </div>
-                  <div class="journey-card__body">
-                    <p class="journey-card__meta">{journey.durationDays} days · {journey.regions.join(' · ')}</p>
-                    <h3>{journey.name}</h3>
-                    <p>{journey.tagline}</p>
-                  </div>
+        journeys.map((journey, i) => (
+          <section
+            class:list={['journey-feature', 'reveal', i % 2 === 1 && 'journey-feature--reverse']}
+            id={journey.slug}
+          >
+            <div class="journey-feature__media">
+              <img src={journey.heroImage} alt={journey.name} loading="lazy" decoding="async" />
+              <div class="journey-feature__media-gradient" aria-hidden="true" />
+
+              <div class="journey-feature__media-content">
+                <p class="journey-feature__eyebrow">
+                  {journey.durationDays}-Day Journey · {tripTypeLabels[journey.tripType]}
+                </p>
+                <h2 class="journey-feature__name">{journey.name}</h2>
+                <p class="journey-feature__tagline">{journey.tagline}</p>
+                <p class="journey-feature__regions">{journey.regions.join(' · ')}</p>
+                {journey.price && <p class="journey-feature__price">{journey.price}</p>}
+                <a
+                  class="btn btn-primary journey-feature__cta"
+                  href={`/booking?journey=${encodeURIComponent(journey.name)}#booking-form`}
+                >
+                  Book this Journey
                 </a>
-              ))}
+              </div>
+
+              {journey.imageCredit && (
+                <p class="journey-feature__credit">
+                  Photo:{' '}
+                  <a href={creditHref(journey.imageCredit.username)} target="_blank" rel="noopener noreferrer">
+                    {journey.imageCredit.name}
+                  </a>{' '}
+                  / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                </p>
+              )}
             </div>
-          </div>
-        </section>
+
+            <div class="journey-feature__content reveal-item">
+              <h3 class="journey-feature__content-heading">Day by day</h3>
+              <ol class="journey-feature__timeline">
+                {journey.itinerary.map((day) => (
+                  <li class="journey-feature__timeline-item">
+                    <span class="journey-feature__timeline-day">Day {day.day}</span>
+                    <div>
+                      <h4>{day.title}</h4>
+                      <p class="journey-feature__timeline-location">{day.location}</p>
+                      <p>{day.description}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+
+              <div class="journey-feature__lists">
+                <div>
+                  <h4>Includes</h4>
+                  <ul>
+                    {journey.includes.map((item) => <li>{item}</li>)}
+                  </ul>
+                </div>
+                {journey.excludes.length > 0 && (
+                  <div>
+                    <h4>Excludes</h4>
+                    <ul>
+                      {journey.excludes.map((item) => <li>{item}</li>)}
+                    </ul>
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
+        ))
       ) : (
         <section class="journeys-empty reveal">
           <div class="container">
@@ -168,43 +220,153 @@ const creditHref = (username: string) =>
     gap: var(--space-sm);
   }
 
-  .journeys-grid-section {
+  /* ---------- Journey feature sections ---------- */
+  /* One full section per journey instead of a card grid — the photo
+     panel stays pinned while its own day-by-day content scrolls past
+     beside it, alternating sides journey to journey (same alternating
+     convention as .tour-row on the tours page). */
+  .journey-feature {
     position: relative;
-    padding-block: var(--space-xl) var(--space-2xl);
+    display: grid;
+    grid-template-columns: minmax(320px, 42%) 1fr;
+    scroll-margin-top: 5rem;
   }
 
-  .journeys-grid {
+  .journey-feature--reverse {
+    grid-template-columns: 1fr minmax(320px, 42%);
+  }
+
+  .journey-feature--reverse .journey-feature__media {
+    order: 2;
+  }
+
+  .journey-feature--reverse .journey-feature__content {
+    order: 1;
+  }
+
+  .journey-feature__media {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .journey-feature__media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .journey-feature__media-gradient {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(31, 18, 14, 0.15) 0%,
+      rgba(31, 18, 14, 0.05) 35%,
+      rgba(31, 18, 14, 0.85) 100%
+    );
+  }
+
+  .journey-feature__media-content {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: var(--space-xl) var(--space-lg);
+  }
+
+  .journey-feature__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--color-ochre-400);
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .journey-feature__name {
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .journey-feature__tagline {
+    font-size: var(--fs-base);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-200);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .journey-feature__regions {
+    font-size: var(--fs-sm);
+    color: var(--color-sand-100);
+    margin: 0 0 var(--space-md);
+  }
+
+  .journey-feature__price {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-md);
+  }
+
+  .journey-feature__credit {
+    position: absolute;
+    right: var(--space-sm);
+    top: var(--space-sm);
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .journey-feature__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .journey-feature__content {
+    background: var(--color-surface);
+    padding: var(--space-2xl) var(--space-xl);
+  }
+
+  .journey-feature__content-heading {
+    margin: 0 0 var(--space-md);
+  }
+
+  .journey-feature__timeline {
+    list-style: none;
+    margin: 0 0 var(--space-xl);
+    padding: 0;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: var(--space-lg);
   }
 
-  .journey-card {
-    display: block;
-    background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    text-decoration: none;
-    color: inherit;
-    transition: transform var(--duration-fast) var(--ease-out), box-shadow var(--duration-fast) var(--ease-out);
+  .journey-feature__timeline-item {
+    display: grid;
+    grid-template-columns: 5rem 1fr;
+    gap: var(--space-md);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
   }
 
-  .journey-card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+  .journey-feature__timeline-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
   }
 
-  .journey-card__photo {
-    aspect-ratio: 4 / 3;
+  .journey-feature__timeline-day {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--color-accent-strong);
   }
 
-  .journey-card__body {
-    padding: var(--space-md);
+  .journey-feature__timeline-item h4 {
+    margin: 0 0 0.2rem;
   }
 
-  .journey-card__meta {
-    font-size: 0.72rem;
+  .journey-feature__timeline-location {
+    font-size: 0.78rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 600;
@@ -212,14 +374,76 @@ const creditHref = (username: string) =>
     margin: 0 0 0.4rem;
   }
 
-  .journey-card__body h3 {
-    margin: 0 0 0.4rem;
-  }
-
-  .journey-card__body p:not(.journey-card__meta) {
+  .journey-feature__timeline-item p:not(.journey-feature__timeline-location) {
     color: var(--color-text-muted);
     line-height: var(--lh-normal);
     margin: 0;
+  }
+
+  .journey-feature__lists {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-lg);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--color-border);
+  }
+
+  .journey-feature__lists h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin: 0 0 var(--space-sm);
+  }
+
+  .journey-feature__lists ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+
+  .journey-feature__lists li {
+    font-size: 0.88rem;
+    color: var(--color-text-muted);
+    padding-left: 1.1rem;
+    position: relative;
+  }
+
+  .journey-feature__lists li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.5rem;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--color-accent-strong);
+  }
+
+  @media (max-width: 900px) {
+    .journey-feature,
+    .journey-feature--reverse {
+      grid-template-columns: 1fr;
+    }
+
+    .journey-feature--reverse .journey-feature__media,
+    .journey-feature--reverse .journey-feature__content {
+      order: initial;
+    }
+
+    .journey-feature__media {
+      position: relative;
+      height: 70vh;
+    }
+
+    .journey-feature__content {
+      padding: var(--space-xl) var(--space-md);
+    }
+
+    .journey-feature__lists {
+      grid-template-columns: 1fr;
+    }
   }
 
   .journeys-page__credit {
