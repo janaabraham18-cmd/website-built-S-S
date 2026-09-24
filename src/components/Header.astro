@@ -81,6 +81,20 @@ const navLinks = [
       rgba(251, 247, 241, 0.85);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid var(--color-border);
+    transition: opacity var(--duration-base) var(--ease-out);
+  }
+
+  /* Once scrolled off the top, the bar recedes to 40% opacity so it
+     stops competing with the page content — hovering (or a mobile tap
+     landing on it) brings it back to full strength so it's never
+     actually hard to read or use. */
+  .site-header.is-scrolled {
+    opacity: 0.4;
+  }
+
+  .site-header.is-scrolled:hover,
+  .site-header.is-scrolled:focus-within {
+    opacity: 1;
   }
 
   .site-header__inner {
@@ -231,4 +245,12 @@ const navLinks = [
     const isOpen = header?.classList.toggle('is-open');
     toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
   });
+
+  const SCROLL_FADE_THRESHOLD = 40;
+  const updateScrolledState = () => {
+    header?.classList.toggle('is-scrolled', window.scrollY > SCROLL_FADE_THRESHOLD);
+  };
+
+  updateScrolledState();
+  window.addEventListener('scroll', updateScrolledState, { passive: true });
 </script>
