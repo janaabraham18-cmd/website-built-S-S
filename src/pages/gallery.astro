@@ -2,7 +2,6 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { tours, categoryLabels } from '../data/tours';
 import { journeys } from '../data/journeys';
-import { hl } from '../utils/text';
 
 type GalleryCategory = 'tour' | 'adventure' | 'combo' | 'journey';
 
@@ -58,7 +57,7 @@ const creditHref = (username: string) =>
   <header class="gallery-header">
     <div class="container">
       <p class="eyebrow">The Photo Roll</p>
-      <h1 set:html={hl('Gallery', 'Gallery')} />
+      <h1>Gallery</h1>
       <p class="gallery-header__body">
         Every tour, adventure, combo and Journey we run — gathered in one place.
         Tap a filter to narrow it down, or a photo to see where it leads.

@@ -35,7 +35,7 @@ const creditHref = (username: string) =>
       <div class="container journeys-hero__content">
         <div class="journeys-hero__card">
           <p class="journeys-hero__eyebrow">Beyond a single day</p>
-          <h1 set:html={hl('Journeys', 'Journeys')} />
+          <h1>Journeys</h1>
           <p class="journeys-hero__subhead">
             A Journey strings several of our tours and destinations together into one
             set route across Namibia, planned day by day — not just a longer version
@@ -511,24 +511,26 @@ const creditHref = (username: string) =>
 
   .journey-feature__timeline-day {
     font-family: var(--font-display);
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: var(--color-accent-strong);
   }
 
   .journey-feature__timeline-item h4 {
-    margin: 0 0 0.2rem;
+    font-size: var(--fs-xl);
+    margin: 0 0 0.3rem;
   }
 
   .journey-feature__timeline-location {
-    font-size: 0.78rem;
+    font-size: 0.9rem;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 600;
     color: var(--color-accent-strong);
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.5rem;
   }
 
   .journey-feature__timeline-item p:not(.journey-feature__timeline-location) {
+    font-size: var(--fs-md);
     color: var(--color-text-muted);
     line-height: var(--lh-normal);
     margin: 0;

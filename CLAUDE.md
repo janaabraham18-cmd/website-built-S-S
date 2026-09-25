@@ -46,10 +46,14 @@ rather than leaving it plain. Selection rules:
 - Everything else → whatever's most distinctive/evocative in that specific
   heading. Never a filler word ("and", "the", "a", "day", etc.) — the point
   is a word with real content, not whichever one happens to be short.
-- A single-word heading (e.g. a page's own `<h1>Adventures</h1>`) just gets
-  that whole word colored.
+- A single-word heading (e.g. a page's own `<h1>Adventures</h1>`) stays
+  plain black — pass `''` as `word` (or just render the text with no `hl()`
+  call for a static heading) rather than coloring the whole word. The
+  accent only reads as "one word picked out of several"; on a single word
+  it just looks like the whole heading changed color.
 
 `hl()` only wraps the *first* occurrence of the exact substring passed as
 `word`, is used via `set:html` (safe here since every caller passes our own
-static/data-driven copy, never user input), and needs an exact-case
-substring match — pass the word precisely as it appears in the string.
+static/data-driven copy, never user input), needs an exact-case substring
+match — pass the word precisely as it appears in the string — and returns
+`text` unchanged when `word` is falsy/empty.

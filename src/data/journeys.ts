@@ -134,7 +134,7 @@ export const journeys: Journey[] = [
       {
         day: 1,
         title: 'Windhoek',
-        accentWord: 'Windhoek',
+        accentWord: '',
         location: 'Windhoek',
         description: 'Airport pickup and a Windhoek city tour, then an evening at leisure.',
       },
@@ -184,7 +184,7 @@ export const journeys: Journey[] = [
       {
         day: 8,
         title: 'Damaraland',
-        accentWord: 'Damaraland',
+        accentWord: '',
         location: 'Damaraland',
         description: "Twyfelfontein's rock engravings, the Organ Pipes and Burnt Mountain.",
       },
@@ -423,7 +423,7 @@ export const journeys: Journey[] = [
       {
         day: 13,
         title: 'Departure',
-        accentWord: 'Departure',
+        accentWord: '',
         location: 'Windhoek Airport',
         description: 'Drop-off at Hosea Kutako International Airport.',
       },
