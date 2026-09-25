@@ -968,10 +968,14 @@ const faqItems = [
      Plain "Desert Light" treatment matching the rest of the site: full-
      colour photos in a rounded, shadowed frame, no ink rules or newsprint
      texture. Motion lives in setupLogbookSlideshow() in motion.ts. */
+  .logbook-block {
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
+  }
+
   .logbook-masthead {
     position: relative;
     max-width: var(--content-width-narrow);
-    margin: 0 auto var(--space-xl);
+    margin: 0 auto var(--space-lg);
     text-align: center;
   }
 
@@ -984,17 +988,21 @@ const faqItems = [
   .logbook-slideshow {
     position: relative;
     display: grid;
-    grid-template-columns: 42% 1fr;
-    gap: var(--space-xl);
+    grid-template-columns: minmax(200px, 280px) 1fr;
+    gap: var(--space-lg);
     align-items: start;
   }
 
   /* ---- Photo stage: one filmstrip track, all 8 slides side by side.
      JS translates the track by whole slide-widths so the incoming
-     photo visibly slides in from the side; see setupLogbookSlideshow(). */
+     photo visibly slides in from the side; see setupLogbookSlideshow().
+     Capped to a fixed width range (not a percentage of the column) so
+     it stays a compact frame beside the article rather than scaling up
+     to fill however wide the section happens to be. */
   .logbook-stage {
     position: relative;
     aspect-ratio: 4 / 5;
+    max-height: 360px;
     overflow: hidden;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-md);
@@ -1094,9 +1102,9 @@ const faqItems = [
   }
 
   .logbook-article__headline {
-    font-size: var(--fs-3xl);
+    font-size: var(--fs-2xl);
     line-height: 1.1;
-    margin: 0 0 var(--space-md);
+    margin: 0 0 var(--space-sm);
   }
 
   .logbook-article__body {
@@ -1131,10 +1139,11 @@ const faqItems = [
 
     .logbook-stage {
       aspect-ratio: 16 / 10;
+      max-height: 260px;
     }
 
     .logbook-article__headline {
-      font-size: var(--fs-2xl);
+      font-size: var(--fs-xl);
     }
   }
 
