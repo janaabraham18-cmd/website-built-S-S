@@ -83,18 +83,17 @@ const closingBg = {
   <div class="adventures-page">
     <section class="adventures-hero">
       <div class="adventures-hero__bg" style={`background-image:url('${heroPhoto.url}')`} aria-hidden="true"></div>
+      <div class="adventures-hero__scrim" aria-hidden="true"></div>
 
       <div class="container adventures-hero__content">
-        <div class="adventures-hero__card">
-          <p class="adventures-hero__eyebrow">Closer to Town</p>
-          <h1>Adventures</h1>
-          <p class="adventures-hero__subhead">
-            {categoryLabels.adventure.description} Quad bikes, sandboarding, skydiving,
-            kayaking and more — all a short drive from Swakopmund or Walvis Bay, whenever
-            a full day isn't what you're after.
-          </p>
-          <a class="btn btn-primary" href="#adventures">Start exploring</a>
-        </div>
+        <p class="adventures-hero__eyebrow">Closer to Town</p>
+        <h1>Adventures</h1>
+        <p class="adventures-hero__subhead">
+          {categoryLabels.adventure.description} Quad bikes, sandboarding, skydiving,
+          kayaking and more — all a short drive from Swakopmund or Walvis Bay, whenever
+          a full day isn't what you're after.
+        </p>
+        <a class="btn btn-primary" href="#adventures">Start exploring</a>
       </div>
 
       {heroPhoto.credit && (
@@ -226,6 +225,7 @@ const closingBg = {
 
     <section class="adventures-closing reveal">
       <div class="adventures-closing__bg" style={`background-image:url('${closingBg.url}')`} aria-hidden="true"></div>
+      <div class="adventures-closing__scrim" aria-hidden="true"></div>
       <div class="container adventures-closing__inner reveal-item">
         <h2 set:html={hl('Want to pair this with a full day out?', 'pair')} />
         <p>Combine an adventure with one of our signature tours into a single day, or chart something entirely your own.</p>
@@ -263,9 +263,9 @@ const closingBg = {
   }
 
   /* ---------- Adventures hero ---------- */
-  /* Same "fully defined" treatment as the Journeys/contact/booking heroes:
-     one full-strength photo, no section-wide scrim — the header copy gets
-     its own small opaque card instead. */
+  /* Full-strength photo, text sits directly on it (no boxed card) — a
+     gradient darkens the bottom of the photo, where the text sits (the
+     section is bottom-aligned), and text-shadow backs it up further. */
   .adventures-hero {
     position: relative;
     min-height: 70vh;
@@ -283,18 +283,18 @@ const closingBg = {
     background-position: center 40%;
   }
 
+  .adventures-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(0deg, rgba(31, 18, 14, 0.85) 0%, rgba(31, 18, 14, 0.35) 45%, rgba(31, 18, 14, 0) 80%);
+  }
+
   .adventures-hero__content {
     position: relative;
     z-index: 1;
-    padding-block: var(--space-2xl);
-  }
-
-  .adventures-hero__card {
     max-width: 30rem;
-    background: rgba(58, 35, 28, 0.72);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
-    box-shadow: var(--shadow-lg);
+    padding-block: var(--space-2xl);
   }
 
   .adventures-hero__eyebrow {
@@ -304,10 +304,12 @@ const closingBg = {
     font-weight: 600;
     color: var(--color-ochre-400);
     margin: 0 0 var(--space-sm);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
   }
 
-  .adventures-hero__card h1 {
+  .adventures-hero__content h1 {
     color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     margin: 0 0 var(--space-md);
   }
 
@@ -315,6 +317,7 @@ const closingBg = {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
     color: var(--color-sand-200);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     margin: 0 0 var(--space-lg);
   }
 
@@ -335,8 +338,8 @@ const closingBg = {
   }
 
   @media (max-width: 640px) {
-    .adventures-hero__card {
-      padding: var(--space-lg) var(--space-md);
+    .adventures-hero__content {
+      max-width: none;
     }
   }
 
@@ -746,9 +749,9 @@ const closingBg = {
 
   /* ---------- Closing ---------- */
   /* Same "fully defined" background-photo treatment as the rest of the
-     site (full-strength photo, no scrim — the heading gets its own small
-     opaque card instead) so the page ends on the same energy it opened
-     with, rather than fading out to a flat color band. */
+     site: full-strength photo, text sits directly on it (no boxed card)
+     backed by a soft gradient wash and text-shadow, so the page ends on
+     the same energy it opened with instead of fading to a flat band. */
   .adventures-closing {
     position: relative;
     z-index: 0;
@@ -765,23 +768,28 @@ const closingBg = {
     background-position: center;
   }
 
+  .adventures-closing__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(31, 18, 14, 0.62) 0%, rgba(31, 18, 14, 0.42) 100%);
+  }
+
   .adventures-closing__inner {
     max-width: 640px;
     margin-inline: auto;
     text-align: center;
-    background: rgba(58, 35, 28, 0.72);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
-    box-shadow: var(--shadow-lg);
   }
 
   .adventures-closing__inner h2 {
     color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     margin: 0 0 var(--space-2xs);
   }
 
   .adventures-closing__inner p {
     color: var(--color-sand-200);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     margin: 0 0 var(--space-lg);
   }
 

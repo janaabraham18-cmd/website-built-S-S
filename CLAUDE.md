@@ -57,3 +57,35 @@ rather than leaving it plain. Selection rules:
 static/data-driven copy, never user input), needs an exact-case substring
 match — pass the word precisely as it appears in the string — and returns
 `text` unchanged when `word` is falsy/empty.
+
+## Never put a heading in a card/bubble over a photo
+
+Explicitly banned by the client as "a very AI generic thing to have": a
+semi-transparent dark rounded box (`background: rgba(58, 35, 28, 0.72)`,
+`border-radius`, `box-shadow`) sitting behind heading/eyebrow/body text on
+top of a background photo. Every page used to do this (About Us, every
+hero header on Contact/FAQ/Booking/Adventures/Journeys, the Tours combo
+section, the Journeys route-map intro) and it's been removed everywhere —
+do not reintroduce it on any new section.
+
+Instead, when text needs to sit on a photo: add a separate gradient-scrim
+element (a sibling `<div>` after the `__bg` photo layer, e.g.
+`.about-block__scrim`, `.adventures-hero__scrim`) with a `linear-gradient`
+that darkens only the zone behind the text and clears elsewhere, plus
+`text-shadow` on the text itself as backup. Pick the gradient direction to
+match where the text sits:
+- Text at the top of a photo that continues behind other content below →
+  `180deg` (dark at 0%, clearing by ~55-65%) — see `.about-block__scrim`,
+  `.contact-page__scrim`, `.faq-page__scrim`, `.booking-page__scrim`,
+  `.journeys-map-section__scrim`.
+- Text at the bottom of a bottom-aligned hero → `0deg` (dark at 0%,
+  clearing by ~80%) — see `.adventures-hero__scrim`,
+  `.journeys-hero__scrim`.
+- Centered text on a photo with opaque content below it (nothing needs
+  the photo to stay clear) → a flatter, more uniform wash — see
+  `.build-combo__scrim`, `.adventures-closing__scrim`.
+
+This does not apply to genuine functional UI cards (a form panel, the FAQ
+accordion items, the combo builder, the route-map canvas+legend panel) —
+those keep their card styling. The rule is specifically: no card wrapping
+just a heading/eyebrow/body-text block.

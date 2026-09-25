@@ -380,6 +380,7 @@ const testimonials = [
   <!-- ============ 04 · ABOUT US ============ -->
   <section class="block about-block reveal" id="about">
     <div class="about-block__bg" style={`background-image:url('${aboutBgPhoto.url}')`} aria-hidden="true"></div>
+    <div class="about-block__scrim" aria-hidden="true"></div>
 
     <div class="about-block__intro">
       <p class="eyebrow">About Us</p>
@@ -729,22 +730,30 @@ const testimonials = [
     background-position: center;
   }
 
+  /* No card behind the intro text — a soft gradient darkens just the top
+     of the photo (where the eyebrow/heading sit) and clears by the time
+     the about-layout row starts, so the text reads directly against the
+     photo instead of sitting in a boxed enclosure. */
+  .about-block__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(31, 18, 14, 0.75) 0%, rgba(31, 18, 14, 0.35) 32%, rgba(31, 18, 14, 0) 58%);
+  }
+
   .about-block__intro {
-    display: inline-block;
-    background: rgba(58, 35, 28, 0.72);
-    border-radius: var(--radius-lg);
-    padding: var(--space-md) var(--space-lg);
-    box-shadow: var(--shadow-lg);
     margin-bottom: var(--space-xl);
   }
 
   .about-block__intro .eyebrow {
     color: var(--color-ochre-400);
     margin-bottom: 0.4rem;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
   }
 
   .about-block__intro .section-title {
     color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     margin: 0;
   }
 

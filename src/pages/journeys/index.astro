@@ -31,21 +31,20 @@ const creditHref = (username: string) =>
   <div class="journeys-page">
     <section class="journeys-hero">
       <div class="journeys-hero__bg" style={`background-image:url('${heroPhoto.url}')`} aria-hidden="true"></div>
+      <div class="journeys-hero__scrim" aria-hidden="true"></div>
 
       <div class="container journeys-hero__content">
-        <div class="journeys-hero__card">
-          <p class="journeys-hero__eyebrow">Beyond a single day</p>
-          <h1>Journeys</h1>
-          <p class="journeys-hero__subhead">
-            A Journey strings several of our tours and destinations together into one
-            set route across Namibia, planned day by day — not just a longer version
-            of a single tour. Four routes exist already; tell us what you have in
-            mind and we'll plan another.
-          </p>
-          {journeys.length > 0 && (
-            <a class="btn btn-primary" href={`#${journeys[0].slug}`}>Start exploring</a>
-          )}
-        </div>
+        <p class="journeys-hero__eyebrow">Beyond a single day</p>
+        <h1>Journeys</h1>
+        <p class="journeys-hero__subhead">
+          A Journey strings several of our tours and destinations together into one
+          set route across Namibia, planned day by day — not just a longer version
+          of a single tour. Four routes exist already; tell us what you have in
+          mind and we'll plan another.
+        </p>
+        {journeys.length > 0 && (
+          <a class="btn btn-primary" href={`#${journeys[0].slug}`}>Start exploring</a>
+        )}
       </div>
 
       <a href="#scroll-target" class="journeys-hero__scroll-cue" aria-label="Scroll to content">
@@ -161,6 +160,7 @@ const creditHref = (username: string) =>
       journeys.length > 0 && (
         <section class="journeys-map-section reveal">
           <div class="journeys-map-section__bg" style={`background-image:url('${mapBgPhoto.url}')`} aria-hidden="true"></div>
+          <div class="journeys-map-section__scrim" aria-hidden="true"></div>
 
           <div class="container">
             <div class="journeys-map-intro reveal-item">
@@ -254,18 +254,18 @@ const creditHref = (username: string) =>
     background-position: center 35%;
   }
 
+  .journeys-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(0deg, rgba(31, 18, 14, 0.85) 0%, rgba(31, 18, 14, 0.35) 45%, rgba(31, 18, 14, 0) 80%);
+  }
+
   .journeys-hero__content {
     position: relative;
     z-index: 1;
-    padding-block: var(--space-2xl) calc(var(--space-2xl) + 2.5rem);
-  }
-
-  .journeys-hero__card {
     max-width: 30rem;
-    background: rgba(58, 35, 28, 0.72);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
-    box-shadow: var(--shadow-lg);
+    padding-block: var(--space-2xl) calc(var(--space-2xl) + 2.5rem);
   }
 
   .journeys-hero__eyebrow {
@@ -275,10 +275,12 @@ const creditHref = (username: string) =>
     font-weight: 600;
     color: var(--color-ochre-400);
     margin: 0 0 var(--space-sm);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
   }
 
-  .journeys-hero__card h1 {
+  .journeys-hero__content h1 {
     color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     margin: 0 0 var(--space-md);
   }
 
@@ -286,6 +288,7 @@ const creditHref = (username: string) =>
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
     color: var(--color-sand-200);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     margin: 0 0 var(--space-lg);
   }
 
@@ -347,8 +350,8 @@ const creditHref = (username: string) =>
   }
 
   @media (max-width: 640px) {
-    .journeys-hero__card {
-      padding: var(--space-lg) var(--space-md);
+    .journeys-hero__content {
+      max-width: none;
     }
   }
 
@@ -624,12 +627,15 @@ const creditHref = (username: string) =>
     background-color: var(--color-earth-700);
   }
 
+  .journeys-map-section__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(31, 18, 14, 0.68) 0%, rgba(31, 18, 14, 0.25) 55%, rgba(31, 18, 14, 0) 85%);
+  }
+
   .journeys-map-intro {
     max-width: var(--content-width-narrow);
-    background: rgba(58, 35, 28, 0.72);
-    border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-xl);
-    box-shadow: var(--shadow-lg);
   }
 
   .journeys-map-intro .eyebrow {
@@ -639,14 +645,17 @@ const creditHref = (username: string) =>
     font-weight: 600;
     color: var(--color-ochre-400);
     margin: 0 0 var(--space-2xs);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
   }
 
   .journeys-map-intro h2 {
     color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
   }
 
   .journeys-map-intro p:not(.eyebrow) {
     color: var(--color-sand-200);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
   }
 
   .journeys-map {
@@ -719,8 +728,7 @@ const creditHref = (username: string) =>
   }
 
   @media (max-width: 640px) {
-    .journeys-empty__card,
-    .journeys-map-intro {
+    .journeys-empty__card {
       padding: var(--space-lg) var(--space-md);
     }
   }
