@@ -328,8 +328,8 @@ export const journeys: Journey[] = [
     regions: ['Windhoek', 'Kalahari', 'Fish River Canyon', 'Sossusvlei', 'Swakopmund', 'Damaraland', 'Etosha'],
     tripType: 'guided',
     heroImage:
-      'https://images.unsplash.com/photo-1588453603478-3fda575e236c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-    imageCredit: { name: 'Max Murauer', username: 'maxtheaviator' },
+      'https://images.unsplash.com/photo-1739036177683-47c806ab4761?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Tim G', username: 'tim1001' },
     itinerary: [
       {
         day: 1,
