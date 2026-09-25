@@ -1,53 +1,13 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import TourMapJourney from '../components/TourMapJourney.astro';
-import { toursByCategory, tourBySlug, categoryLabels } from '../data/tours';
-import type { Tour } from '../data/tours';
+import { toursByCategory, categoryLabels } from '../data/tours';
 
 // Everything bookable, minus the pre-built combo deals — the raw material for
 // the "Create Your Own Combo" builder below. Combos aren't included as
 // pickable pieces themselves (combining a combo doesn't make sense).
 const builderTours = toursByCategory('tour');
 const builderAdventures = toursByCategory('adventure');
-
-// Adventures read as two themed chapters rather than one dense wall. Each
-// chapter is a compact name index next to one large shared photo — picking
-// a name (hover, focus, or tap) swaps the photo and caption beside it — so
-// the emphasis lands on the photography instead of on 13 identically-sized
-// tiles. `spotlight` is just the first, most-requested name in that
-// chapter's list — the one shown by default before anyone's picked anything.
-interface AdventureGroup {
-  key: string;
-  eyebrow: string;
-  intro: string;
-  items: Tour[];
-}
-
-const adventureGroupDefs = [
-  {
-    key: 'dunes',
-    eyebrow: 'On the Dunes',
-    intro: 'Quad bikes, boards, and fat-tyre bikes — the classic Swakopmund dune activities.',
-    slugs: ['quad-bike-tour', 'explorer-tour', 'breakfast-run', 'special-quad-90min', 'sandboarding', 'fat-bike-tour'],
-  },
-  {
-    key: 'sky-sea',
-    eyebrow: 'Sky, Sea & Culture',
-    intro: 'From 10,000 feet to sea level, plus the slower-paced days built around the coast’s people and wildlife.',
-    slugs: ['tandem-skydive', 'paragliding', 'kayaking', 'fishing', 'sandwich-harbour-half-day', 'camel-ride', 'township-tour'],
-  },
-];
-
-const adventureGroups: AdventureGroup[] = adventureGroupDefs
-  .map((g) => {
-    const items = g.slugs.map((s) => tourBySlug(s)).filter((t): t is Tour => !!t);
-    if (!items.length) return null;
-    return { key: g.key, eyebrow: g.eyebrow, intro: g.intro, items };
-  })
-  .filter((g): g is AdventureGroup => !!g);
-
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
 
 <BaseLayout
@@ -67,89 +27,13 @@ const creditHref = (username: string) =>
         <span class="orientation__num">02</span>
         <h3>Adventures</h3>
         <p>Shorter, activity-based excursions around Swakopmund and Walvis Bay — an hour or an afternoon, not a full day.</p>
+        <a class="orientation__link" href="/adventures">See all adventures →</a>
       </div>
       <div class="orientation__item reveal-item">
         <span class="orientation__num">03</span>
         <h3>Combos</h3>
         <p>Pair two experiences into one day — or skip ahead and build something entirely your own.</p>
       </div>
-    </div>
-  </section>
-
-  <section class="adventures-section reveal" id="adventures">
-    <div class="container">
-      <div class="section-intro reveal-item">
-        <p class="eyebrow">Closer to Town</p>
-        <h2 class="adventures-heading">
-          {categoryLabels.adventure.description}
-          <svg class="adventures-heading__line" data-heading-line width="150" height="20" viewBox="0 0 150 20" aria-hidden="true">
-            <path d="M2 12 C 26 2, 48 19, 74 10 S 124 2, 148 12" fill="none" stroke="var(--color-accent-strong)" stroke-width="3" stroke-linecap="round" />
-          </svg>
-        </h2>
-        <p class="section-intro__hint">Pick a name, watch the photo change.</p>
-      </div>
-
-      {
-        adventureGroups.map((group) => (
-          <div class="adventure-group">
-            <div class="adventure-group__head reveal-item">
-              <p class="adventure-group__eyebrow">{group.eyebrow}</p>
-              <p class="adventure-group__intro">{group.intro}</p>
-            </div>
-
-            <div class="adventure-index reveal-item" data-adventure-index>
-              <div class="adventure-index__list-wrap">
-                <p class="adventure-index__list-label">{group.items.length} activities — tap one to preview ↓</p>
-                <div class="adventure-index__list">
-                {group.items.map((tour, i) => (
-                  <button
-                    type="button"
-                    class:list={['adventure-index__item', i === 0 && 'is-active']}
-                    data-index-item
-                    data-slug={tour.slug}
-                    data-name={tour.name}
-                    data-duration={tour.duration ?? ''}
-                    data-desc={tour.description}
-                    data-img={tour.imageUrl}
-                    data-credit-name={tour.imageCredit?.name ?? ''}
-                    data-credit-username={tour.imageCredit?.username ?? ''}
-                    aria-current={i === 0 ? 'true' : 'false'}
-                  >
-                    <span class="adventure-index__mark" aria-hidden="true">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                        <path d="M2 11c3-6 7-8 12-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                      </svg>
-                    </span>
-                    <span class="adventure-index__name">{tour.name}</span>
-                    {i === 0 && <span class="adventure-index__badge">Most requested</span>}
-                    {tour.duration && <span class="adventure-index__duration">{tour.duration}</span>}
-                  </button>
-                ))}
-                </div>
-              </div>
-
-              <div class="adventure-index__preview" data-index-preview>
-                <div class="photo-frame adventure-index__photo">
-                  <img data-preview-img src={group.items[0].imageUrl} alt={group.items[0].name} loading="lazy" decoding="async" />
-                  <p class="adventure-index__credit" data-preview-credit hidden={!group.items[0].imageCredit}>
-                    Photo:{' '}
-                    <a data-preview-credit-name href={group.items[0].imageCredit ? creditHref(group.items[0].imageCredit.username) : '#'} target="_blank" rel="noopener noreferrer">
-                      {group.items[0].imageCredit?.name}
-                    </a>{' '}
-                    / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-                  </p>
-                </div>
-                <div class="adventure-index__preview-body">
-                  <p class="adventure-index__preview-duration" data-preview-duration hidden={!group.items[0].duration}>{group.items[0].duration}</p>
-                  <h3 data-preview-name>{group.items[0].name}</h3>
-                  <p data-preview-desc>{group.items[0].description}</p>
-                  <a class="book-link" data-preview-cta href={`/booking?tour=${group.items[0].slug}`}>Book this →</a>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))
-      }
     </div>
   </section>
 
@@ -274,24 +158,7 @@ const creditHref = (username: string) =>
     margin-top: var(--space-2xs) !important;
   }
 
-  .adventures-heading {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.4rem;
-  }
-
-  .adventures-heading__line {
-    display: block;
-  }
-
-  .adventures-heading__line path {
-    vector-effect: non-scaling-stroke;
-  }
-
   /* ---------- Orientation strip ---------- */
-  /* Section 2 of the page's light-to-dark progression (see the comment
-     above .adventures-section for the full sequence). */
   .orientation {
     padding-block: var(--space-xl);
     border-bottom: 1px solid var(--color-border);
@@ -328,251 +195,19 @@ const creditHref = (username: string) =>
     .orientation__grid { grid-template-columns: 1fr; gap: var(--space-md); }
   }
 
-  /* ---------- Adventures ---------- */
-  /* The tours page divides into bands, each reading as its own zone
-     rather than one continuous body gradient:
-       tour-journey (sand-50) -> orientation (sand-100) ->
-       adventures (dark earth-700 + dusk glow, flips to light text —
-       the same treatment as About Us/Our Fleet/booking, used here to
-       call out the activity-based excursions as their own chapter) ->
-       build-your-own (warm gradient) -> closing (earth-700, flips to
-       light text). */
-  .adventures-section {
-    padding-block: var(--space-2xl);
-    scroll-margin-top: 5rem;
-    background: var(--color-earth-700);
-    background-image: var(--gradient-dusk);
-    color: var(--color-text-on-dark);
-  }
-
-  .adventures-section .eyebrow {
-    color: var(--color-ochre-400);
-  }
-
-  .adventures-section h2 {
-    color: var(--color-text-on-dark);
-  }
-
-  .adventures-section .section-intro p {
-    color: var(--color-sand-200);
-  }
-
-  .adventures-section .book-link {
-    color: var(--color-text-on-dark);
-  }
-
-  .adventure-group {
-    margin-bottom: var(--space-2xl);
-  }
-
-  .adventure-group:last-child {
-    margin-bottom: 0;
-  }
-
-  .adventure-group__head {
-    display: flex;
-    align-items: baseline;
-    gap: var(--space-md);
-    flex-wrap: wrap;
-    margin-bottom: var(--space-md);
-    padding-bottom: var(--space-sm);
-    border-bottom: 1px solid rgba(251, 247, 241, 0.2);
-  }
-
-  .adventure-group__eyebrow {
-    font-family: var(--font-display);
-    font-size: 1.3rem;
-    color: var(--color-text-on-dark);
-    margin: 0;
-    white-space: nowrap;
-  }
-
-  .adventure-group__intro {
-    font-size: 0.88rem;
-    color: var(--color-sand-200);
-    margin: 0;
-  }
-
-  /* ---------- Adventures index + preview ---------- */
-  /* A compact name list beside one large shared photo, instead of a wall
-     of same-sized cards — picking a name (hover/focus/tap) swaps the
-     photo and caption next to it. List stays before the preview in DOM
-     order (a control before what it controls), independent of which
-     visually sits first at each breakpoint. */
-  .adventure-index {
-    display: grid;
-    grid-template-columns: minmax(240px, 320px) 1fr;
-    grid-template-areas: 'list preview';
-    gap: var(--space-xl);
-    align-items: start;
-  }
-
-  /* A visible card, not plain text on the page background — the list
-     needs to read unmistakably as "more choices live here", not as
-     secondary/decorative copy next to the big photo. */
-  .adventure-index__list-wrap {
-    grid-area: list;
-  }
-
-  .adventure-index__list-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--color-ochre-400);
-    margin: 0 0 0.6rem;
-  }
-
-  .adventure-index__list {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 0 var(--space-md);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .adventure-index__item {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem 0.6rem;
-    width: 100%;
-    background: none;
-    border: none;
-    border-top: 1px solid var(--color-border);
-    padding: 0.85rem 0.1rem;
-    margin: 0;
-    font-family: var(--font-body);
-    text-align: left;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-index__item:first-child {
-    border-top: none;
-  }
-
-  .adventure-index__item:hover,
-  .adventure-index__item:focus-visible,
-  .adventure-index__item.is-active {
-    color: var(--color-accent-strong);
-  }
-
-  .adventure-index__mark {
-    flex-shrink: 0;
-    display: flex;
-    color: var(--color-border);
-    opacity: 0.7;
-    transition: color var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-index__item:hover .adventure-index__mark,
-  .adventure-index__item:focus-visible .adventure-index__mark,
-  .adventure-index__item.is-active .adventure-index__mark {
-    color: var(--color-accent-strong);
-    opacity: 1;
-  }
-
-  .adventure-index__name {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    color: var(--color-text);
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-index__item:hover .adventure-index__name,
-  .adventure-index__item:focus-visible .adventure-index__name,
-  .adventure-index__item.is-active .adventure-index__name {
-    color: var(--color-accent-strong);
-  }
-
-  .adventure-index__badge {
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
+  .orientation__link {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
     font-weight: 600;
     color: var(--color-accent-strong);
-    background: var(--color-sand-100);
-    border-radius: 999px;
-    padding: 0.2rem 0.55rem;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color var(--duration-fast) var(--ease-out);
   }
 
-  .adventure-index__duration {
-    margin-left: auto;
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .adventure-index__preview {
-    grid-area: preview;
-  }
-
-  .adventure-index__photo {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    box-shadow: var(--shadow-md);
-  }
-
-  .adventure-index__credit {
-    position: absolute;
-    right: var(--space-2xs);
-    bottom: var(--space-2xs);
-    z-index: 1;
-    margin: 0;
-    font-size: 0.65rem;
-    color: rgba(251, 247, 241, 0.85);
-  }
-
-  .adventure-index__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
-  .adventure-index__preview-body {
-    padding-top: var(--space-sm);
-    max-width: 42rem;
-  }
-
-  .adventure-index__preview-duration {
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--color-accent-strong);
-    margin: 0 0 0.3rem;
-  }
-
-  .adventure-index__preview-body h3 {
-    color: var(--color-text-on-dark);
-    margin: 0 0 0.5rem;
-  }
-
-  .adventure-index__preview-body p:not(.adventure-index__preview-duration) {
-    color: var(--color-sand-200);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-sm);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  @media (max-width: 860px) {
-    .adventure-index {
-      grid-template-columns: 1fr;
-      grid-template-areas: 'preview' 'list';
-      gap: var(--space-md);
-    }
-
-    .adventure-index__photo {
-      aspect-ratio: 16 / 11;
-    }
+  .orientation__link:hover {
+    border-color: var(--color-accent-strong);
   }
 
   /* ---------- Create Your Own Combo ---------- */

@@ -1,0 +1,562 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { tourBySlug, categoryLabels } from '../data/tours';
+import type { Tour } from '../data/tours';
+
+// Adventures read as two themed chapters rather than one dense wall. Each
+// chapter is a compact name index next to one large shared photo — picking
+// a name (hover, focus, or tap) swaps the photo and caption beside it — so
+// the emphasis lands on the photography instead of on 13 identically-sized
+// tiles. `spotlight` is just the first, most-requested name in that
+// chapter's list — the one shown by default before anyone's picked anything.
+interface AdventureGroup {
+  key: string;
+  eyebrow: string;
+  intro: string;
+  items: Tour[];
+}
+
+const adventureGroupDefs = [
+  {
+    key: 'dunes',
+    eyebrow: 'On the Dunes',
+    intro: 'Quad bikes, boards, and fat-tyre bikes — the classic Swakopmund dune activities.',
+    slugs: ['quad-bike-tour', 'explorer-tour', 'breakfast-run', 'special-quad-90min', 'sandboarding', 'fat-bike-tour'],
+  },
+  {
+    key: 'sky-sea',
+    eyebrow: 'Sky, Sea & Culture',
+    intro: 'From 10,000 feet to sea level, plus the slower-paced days built around the coast’s people and wildlife.',
+    slugs: ['tandem-skydive', 'paragliding', 'kayaking', 'fishing', 'sandwich-harbour-half-day', 'camel-ride', 'township-tour'],
+  },
+];
+
+const adventureGroups: AdventureGroup[] = adventureGroupDefs
+  .map((g) => {
+    const items = g.slugs.map((s) => tourBySlug(s)).filter((t): t is Tour => !!t);
+    if (!items.length) return null;
+    return { key: g.key, eyebrow: g.eyebrow, intro: g.intro, items };
+  })
+  .filter((g): g is AdventureGroup => !!g);
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+
+const heroPhoto = {
+  url: 'https://images.unsplash.com/photo-1534639809741-2444a584d307?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
+  credit: { name: 'Anqi Lu', username: 'anqilu' },
+};
+---
+
+<BaseLayout
+  title="Adventures"
+  description="Quad bikes, sandboarding, skydiving, kayaking and more — an hour or an afternoon of activity-based excursions around Swakopmund and Walvis Bay with Salt and Sun Tours."
+>
+  <div class="adventures-page">
+    <section class="adventures-hero">
+      <div class="adventures-hero__bg" style={`background-image:url('${heroPhoto.url}')`} aria-hidden="true"></div>
+
+      <div class="container adventures-hero__content">
+        <div class="adventures-hero__card">
+          <p class="adventures-hero__eyebrow">Closer to Town</p>
+          <h1>Adventures</h1>
+          <p class="adventures-hero__subhead">
+            {categoryLabels.adventure.description} Quad bikes, sandboarding, skydiving,
+            kayaking and more — all a short drive from Swakopmund or Walvis Bay, whenever
+            a full day isn't what you're after.
+          </p>
+          <a class="btn btn-primary" href="#adventures">Start exploring</a>
+        </div>
+      </div>
+
+      {heroPhoto.credit && (
+        <p class="adventures-hero__credit">
+          Photo:{' '}
+          <a href={creditHref(heroPhoto.credit.username)} target="_blank" rel="noopener noreferrer">
+            {heroPhoto.credit.name}
+          </a>{' '}
+          / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+        </p>
+      )}
+    </section>
+
+    <section class="adventures-section reveal" id="adventures">
+      <div class="container">
+        <div class="section-intro reveal-item">
+          <h2 class="adventures-heading">
+            Pick your adventure
+            <svg class="adventures-heading__line" data-heading-line width="150" height="20" viewBox="0 0 150 20" aria-hidden="true">
+              <path d="M2 12 C 26 2, 48 19, 74 10 S 124 2, 148 12" fill="none" stroke="var(--color-accent-strong)" stroke-width="3" stroke-linecap="round" />
+            </svg>
+          </h2>
+          <p class="section-intro__hint">Pick a name, watch the photo change.</p>
+        </div>
+
+        {
+          adventureGroups.map((group) => (
+            <div class="adventure-group">
+              <div class="adventure-group__head reveal-item">
+                <p class="adventure-group__eyebrow">{group.eyebrow}</p>
+                <p class="adventure-group__intro">{group.intro}</p>
+              </div>
+
+              <div class="adventure-index reveal-item" data-adventure-index>
+                <div class="adventure-index__list-wrap">
+                  <p class="adventure-index__list-label">{group.items.length} activities — tap one to preview ↓</p>
+                  <div class="adventure-index__list">
+                  {group.items.map((tour, i) => (
+                    <button
+                      type="button"
+                      class:list={['adventure-index__item', i === 0 && 'is-active']}
+                      data-index-item
+                      data-slug={tour.slug}
+                      data-name={tour.name}
+                      data-duration={tour.duration ?? ''}
+                      data-desc={tour.description}
+                      data-img={tour.imageUrl}
+                      data-credit-name={tour.imageCredit?.name ?? ''}
+                      data-credit-username={tour.imageCredit?.username ?? ''}
+                      aria-current={i === 0 ? 'true' : 'false'}
+                    >
+                      <span class="adventure-index__mark" aria-hidden="true">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                          <path d="M2 11c3-6 7-8 12-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                        </svg>
+                      </span>
+                      <span class="adventure-index__name">{tour.name}</span>
+                      {i === 0 && <span class="adventure-index__badge">Most requested</span>}
+                      {tour.duration && <span class="adventure-index__duration">{tour.duration}</span>}
+                    </button>
+                  ))}
+                  </div>
+                </div>
+
+                <div class="adventure-index__preview" data-index-preview>
+                  <div class="photo-frame adventure-index__photo">
+                    <img data-preview-img src={group.items[0].imageUrl} alt={group.items[0].name} loading="lazy" decoding="async" />
+                    <p class="adventure-index__credit" data-preview-credit hidden={!group.items[0].imageCredit}>
+                      Photo:{' '}
+                      <a data-preview-credit-name href={group.items[0].imageCredit ? creditHref(group.items[0].imageCredit.username) : '#'} target="_blank" rel="noopener noreferrer">
+                        {group.items[0].imageCredit?.name}
+                      </a>{' '}
+                      / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+                    </p>
+                  </div>
+                  <div class="adventure-index__preview-body">
+                    <p class="adventure-index__preview-duration" data-preview-duration hidden={!group.items[0].duration}>{group.items[0].duration}</p>
+                    <h3 data-preview-name>{group.items[0].name}</h3>
+                    <p data-preview-desc>{group.items[0].description}</p>
+                    <a class="book-link" data-preview-cta href={`/booking?tour=${group.items[0].slug}`}>Book this →</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))
+        }
+      </div>
+    </section>
+
+    <section class="adventures-closing reveal">
+      <div class="container adventures-closing__inner reveal-item">
+        <h2>Want to pair this with a full day out?</h2>
+        <p>Combine an adventure with one of our signature tours into a single day, or chart something entirely your own.</p>
+        <div class="adventures-closing__ctas">
+          <a class="btn btn-primary" href="/tours#build-your-own">Build a combo</a>
+          <a class="btn btn-outline" href="/booking">Start booking</a>
+        </div>
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .eyebrow {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .adventures-page {
+    position: relative;
+    z-index: 0;
+  }
+
+  /* ---------- Adventures hero ---------- */
+  /* Same "fully defined" treatment as the Journeys/contact/booking heroes:
+     one full-strength photo, no section-wide scrim — the header copy gets
+     its own small opaque card instead. */
+  .adventures-hero {
+    position: relative;
+    min-height: 70vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background-color: var(--color-earth-700);
+  }
+
+  .adventures-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center 40%;
+  }
+
+  .adventures-hero__content {
+    position: relative;
+    z-index: 1;
+    padding-block: var(--space-2xl);
+  }
+
+  .adventures-hero__card {
+    max-width: 30rem;
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .adventures-hero__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-ochre-400);
+    margin: 0 0 var(--space-sm);
+  }
+
+  .adventures-hero__card h1 {
+    color: var(--color-text-on-dark);
+    margin: 0 0 var(--space-md);
+  }
+
+  .adventures-hero__subhead {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-200);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .adventures-hero__credit {
+    position: absolute;
+    right: var(--space-md);
+    bottom: var(--space-md);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .adventures-hero__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .adventures-hero__card {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+
+  .section-intro {
+    max-width: var(--content-width-narrow);
+    margin-bottom: var(--space-xl);
+  }
+
+  .section-intro h2 {
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .section-intro p {
+    color: var(--color-text-muted);
+    margin: 0;
+  }
+
+  .section-intro__hint {
+    font-size: 0.85rem;
+    font-style: italic;
+    margin-top: var(--space-2xs) !important;
+  }
+
+  .adventures-heading {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .adventures-heading__line {
+    display: block;
+  }
+
+  .adventures-heading__line path {
+    vector-effect: non-scaling-stroke;
+  }
+
+  /* ---------- Adventures index ---------- */
+  /* Dark chapter treatment (same as About Us/Our Fleet/booking elsewhere
+     on the site) so the page's main content reads as a distinct, focused
+     zone rather than a plain continuation of the hero. */
+  .adventures-section {
+    padding-block: var(--space-2xl);
+    scroll-margin-top: 5rem;
+    background: var(--color-earth-700);
+    background-image: var(--gradient-dusk);
+    color: var(--color-text-on-dark);
+  }
+
+  .adventures-section h2 {
+    color: var(--color-text-on-dark);
+  }
+
+  .adventures-section .section-intro p {
+    color: var(--color-sand-200);
+  }
+
+  .adventures-section .book-link {
+    color: var(--color-text-on-dark);
+  }
+
+  .adventure-group {
+    margin-bottom: var(--space-2xl);
+  }
+
+  .adventure-group:last-child {
+    margin-bottom: 0;
+  }
+
+  .adventure-group__head {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(251, 247, 241, 0.2);
+  }
+
+  .adventure-group__eyebrow {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    color: var(--color-text-on-dark);
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .adventure-group__intro {
+    font-size: 0.88rem;
+    color: var(--color-sand-200);
+    margin: 0;
+  }
+
+  /* ---------- Adventures index + preview ---------- */
+  /* A compact name list beside one large shared photo, instead of a wall
+     of same-sized cards — picking a name (hover/focus/tap) swaps the
+     photo and caption next to it. List stays before the preview in DOM
+     order (a control before what it controls), independent of which
+     visually sits first at each breakpoint. */
+  .adventure-index {
+    display: grid;
+    grid-template-columns: minmax(240px, 320px) 1fr;
+    grid-template-areas: 'list preview';
+    gap: var(--space-xl);
+    align-items: start;
+  }
+
+  .adventure-index__list-wrap {
+    grid-area: list;
+  }
+
+  .adventure-index__list-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-ochre-400);
+    margin: 0 0 0.6rem;
+  }
+
+  .adventure-index__list {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 0 var(--space-md);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .adventure-index__item {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.6rem;
+    width: 100%;
+    background: none;
+    border: none;
+    border-top: 1px solid var(--color-border);
+    padding: 0.85rem 0.1rem;
+    margin: 0;
+    font-family: var(--font-body);
+    text-align: left;
+    color: var(--color-text-muted);
+    cursor: pointer;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .adventure-index__item:first-child {
+    border-top: none;
+  }
+
+  .adventure-index__item:hover,
+  .adventure-index__item:focus-visible,
+  .adventure-index__item.is-active {
+    color: var(--color-accent-strong);
+  }
+
+  .adventure-index__mark {
+    flex-shrink: 0;
+    display: flex;
+    color: var(--color-border);
+    opacity: 0.7;
+    transition: color var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
+  }
+
+  .adventure-index__item:hover .adventure-index__mark,
+  .adventure-index__item:focus-visible .adventure-index__mark,
+  .adventure-index__item.is-active .adventure-index__mark {
+    color: var(--color-accent-strong);
+    opacity: 1;
+  }
+
+  .adventure-index__name {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--color-text);
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .adventure-index__item:hover .adventure-index__name,
+  .adventure-index__item:focus-visible .adventure-index__name,
+  .adventure-index__item.is-active .adventure-index__name {
+    color: var(--color-accent-strong);
+  }
+
+  .adventure-index__badge {
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    background: var(--color-sand-100);
+    border-radius: 999px;
+    padding: 0.2rem 0.55rem;
+  }
+
+  .adventure-index__duration {
+    margin-left: auto;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+  }
+
+  .adventure-index__preview {
+    grid-area: preview;
+  }
+
+  .adventure-index__photo {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    box-shadow: var(--shadow-md);
+  }
+
+  .adventure-index__credit {
+    position: absolute;
+    right: var(--space-2xs);
+    bottom: var(--space-2xs);
+    z-index: 1;
+    margin: 0;
+    font-size: 0.65rem;
+    color: rgba(251, 247, 241, 0.85);
+  }
+
+  .adventure-index__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .adventure-index__preview-body {
+    padding-top: var(--space-sm);
+    max-width: 42rem;
+  }
+
+  .adventure-index__preview-duration {
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.3rem;
+  }
+
+  .adventure-index__preview-body h3 {
+    color: var(--color-text-on-dark);
+    margin: 0 0 0.5rem;
+  }
+
+  .adventure-index__preview-body p:not(.adventure-index__preview-duration) {
+    color: var(--color-sand-200);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  @media (max-width: 860px) {
+    .adventure-index {
+      grid-template-columns: 1fr;
+      grid-template-areas: 'preview' 'list';
+      gap: var(--space-md);
+    }
+
+    .adventure-index__photo {
+      aspect-ratio: 16 / 11;
+    }
+  }
+
+  /* ---------- Closing ---------- */
+  .adventures-closing {
+    padding-block: var(--space-2xl);
+    background: var(--color-bg-alt);
+  }
+
+  .adventures-closing__inner {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+  }
+
+  .adventures-closing__inner h2 {
+    margin: 0 0 var(--space-2xs);
+  }
+
+  .adventures-closing__inner p {
+    color: var(--color-text-muted);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .adventures-closing__ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+</style>
