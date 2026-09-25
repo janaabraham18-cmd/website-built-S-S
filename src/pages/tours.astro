@@ -8,6 +8,13 @@ import { toursByCategory, categoryLabels } from '../data/tours';
 // pickable pieces themselves (combining a combo doesn't make sense).
 const builderTours = toursByCategory('tour');
 const builderAdventures = toursByCategory('adventure');
+
+const buildComboBg = {
+  url: 'https://images.unsplash.com/photo-1761205930562-e176cfa86e64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Nathalie Lays', username: 'nath_lays' },
+};
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
 
 <BaseLayout
@@ -38,6 +45,9 @@ const builderAdventures = toursByCategory('adventure');
   </section>
 
   <section class="build-combo reveal" id="build-your-own">
+    <div class="build-combo__bg" style={`background-image:url('${buildComboBg.url}')`} aria-hidden="true"></div>
+    <div class="build-combo__wash" aria-hidden="true"></div>
+
     <div class="container">
       <div class="section-intro reveal-item">
         <p class="eyebrow">Off the Menu</p>
@@ -114,6 +124,16 @@ const builderAdventures = toursByCategory('adventure');
         </div>
       </div>
     </div>
+
+    {buildComboBg.credit && (
+      <p class="build-combo__credit">
+        Photo:{' '}
+        <a href={creditHref(buildComboBg.credit.username)} target="_blank" rel="noopener noreferrer">
+          {buildComboBg.credit.name}
+        </a>{' '}
+        / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+      </p>
+    )}
   </section>
 
   <section class="tours-closing reveal">
@@ -211,10 +231,59 @@ const builderAdventures = toursByCategory('adventure');
   }
 
   /* ---------- Create Your Own Combo ---------- */
+  /* A real photo behind the section instead of a flat gradient — same
+     blurred-photo-plus-wash technique as the map recap band further up
+     this same page (TourMapJourney.astro's .tour-recap-band): the eyebrow/
+     heading/intro sit directly on top with no card of their own, so the
+     photo can't be shown at full strength (not enough contrast for that
+     text) — a blur keeps it as texture/mood rather than a sharp
+     background someone tries to read, and the translucent wash on top is
+     the same warm ochre-to-terracotta gradient the section used before,
+     just letting the photo show through it instead of replacing it. */
   .build-combo {
-    background: var(--gradient-warm);
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
+    background: var(--color-terracotta-600);
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
+  }
+
+  .build-combo__bg {
+    position: absolute;
+    inset: -40px;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    filter: blur(4px);
+  }
+
+  .build-combo__wash {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      135deg,
+      rgba(211, 162, 79, 0.82) 0%,
+      rgba(181, 98, 63, 0.82) 55%,
+      rgba(156, 77, 51, 0.85) 100%
+    );
+  }
+
+  .build-combo__credit {
+    position: relative;
+    z-index: 1;
+    margin: var(--space-sm) 0 0;
+    padding: 0 var(--space-md);
+    text-align: right;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .build-combo__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
 
   .build-combo .section-intro {
