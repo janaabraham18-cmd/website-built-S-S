@@ -79,8 +79,12 @@ match where the text sits:
   `.contact-page__scrim`, `.faq-page__scrim`, `.booking-page__scrim`,
   `.journeys-map-section__scrim`.
 - Text at the bottom of a bottom-aligned hero → `0deg` (dark at 0%,
-  clearing by ~80%) — see `.adventures-hero__scrim`,
-  `.journeys-hero__scrim`.
+  clearing by ~80%) — see `.adventures-hero__scrim`.
+- Text at the top of a top-aligned hero, where the photo doesn't continue
+  behind other content below → `180deg` (dark at 0%, clearing by ~80%,
+  flatter than the "photo continues below" case since nothing below needs
+  to stay clear) — see `.journeys-hero__scrim` (client asked for this
+  hero's heading/copy in the top-left corner specifically).
 - Centered text on a photo with opaque content below it (nothing needs
   the photo to stay clear) → a flatter, more uniform wash — see
   `.build-combo__scrim`, `.adventures-closing__scrim`.
