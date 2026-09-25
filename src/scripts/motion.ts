@@ -118,48 +118,6 @@ function setupAdventureCards() {
   }
 }
 
-// Alternating editorial rows (About / Tour Programs): the photo settles
-// in from a slight scale while the copy trails ~150ms behind it, instead
-// of the generic uniform fade-up every other section uses. This is the
-// site's one alternating photo/copy layout, so it earns its own
-// entrance rather than borrowing setupReveals — the DOM order inside
-// each row is always [media, copy], the `.reverse` modifier only flips
-// which side they render on via CSS `order`.
-function setupAlternatingRows(reduceMotion: boolean) {
-  const rows = gsap.utils.toArray<HTMLElement>('[data-alt-row]');
-
-  for (const row of rows) {
-    const media = row.children[0] as HTMLElement | undefined;
-    const copy = row.children[1] as HTMLElement | undefined;
-    if (!media || !copy) continue;
-
-    if (reduceMotion) {
-      gsap.set([media, copy], { opacity: 0 });
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => gsap.to([media, copy], { opacity: 1, duration: 0.3, ease: 'power1.out' }),
-      });
-      continue;
-    }
-
-    gsap.set(media, { opacity: 0, scale: 1.04 });
-    gsap.set(copy, { opacity: 0, y: 14 });
-
-    gsap
-      .timeline({
-        scrollTrigger: {
-          trigger: row,
-          start: 'top 85%',
-          toggleActions: 'play none none none',
-        },
-      })
-      .to(media, { opacity: 1, scale: 1, duration: 0.9, ease: 'power2.out' })
-      .to(copy, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '<+=0.15');
-  }
-}
-
 // The Logbook: a single filmstrip carousel — all 8 landmark photos live
 // on one flex track and the track is translated by whole slide-widths,
 // so the incoming photo visibly slides in from the side rather than
@@ -239,145 +197,6 @@ function setupLogbookSlideshow(reduceMotion: boolean) {
 
   render();
   start();
-}
-
-// Hand-drawn connective thread: a short line draws in at the seam above
-// each Tour Programs item (skipping the first, which has no seam above
-// it), reviving the site's constellation-line idea as this list's
-// throughline instead of leaving that motif retired. Purely decorative
-// (aria-hidden) — under reduced motion it renders fully drawn rather
-// than animating, so there's nothing to "miss" by skipping the draw-in.
-function setupProgramThreads(reduceMotion: boolean) {
-  const items = document.querySelectorAll<HTMLElement>('[data-thread]');
-
-  for (const item of items) {
-    // Styled entirely inline rather than via the stylesheet's scoped
-    // `.thread-node` rule: Astro's CSS scoping attaches a data-astro-cid
-    // attribute to elements at render time, which an element created here
-    // (after that render already happened) never receives — the class
-    // name alone wouldn't match the scoped selector, and an unstyled
-    // <svg viewBox="0 0 4 64"> left to size itself from a ~570px-wide
-    // column stretches to preserve that 1:16 aspect ratio (~9000px tall).
-    const node = document.createElement('div');
-    node.className = 'thread-node';
-    node.setAttribute('aria-hidden', 'true');
-    node.style.cssText =
-      'position:absolute; top:-32px; left:50%; width:4px; height:64px; transform:translateX(-50%); pointer-events:none;';
-    node.innerHTML =
-      '<svg width="4" height="64" viewBox="0 0 4 64" style="display:block; overflow:visible;"><line x1="2" y1="0" x2="2" y2="64" stroke="var(--color-accent-strong)" stroke-width="2" stroke-linecap="round"></line></svg>';
-    item.prepend(node);
-
-    const line = node.querySelector<SVGLineElement>('line');
-    if (!line) continue;
-
-    const length = line.getTotalLength();
-
-    if (reduceMotion) {
-      gsap.set(line, { strokeDasharray: length, strokeDashoffset: 0 });
-      continue;
-    }
-
-    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
-    ScrollTrigger.create({
-      trigger: item,
-      start: 'top 85%',
-      once: true,
-      onEnter: () => gsap.to(line, { strokeDashoffset: 0, duration: 0.7, ease: 'power1.inOut' }),
-    });
-  }
-}
-
-// The Route: five route lines draw in (once, on scroll) the same way the
-// itinerary threads do above, then hover/focus on a destination swaps the
-// shared preview panel's photo, copy, and booking link and highlights that
-// stop's line. The first destination is the server-rendered resting state
-// (see index.astro) so there's nothing to wait on JS for.
-function setupRouteMap(reduceMotion: boolean) {
-  const map = document.querySelector<HTMLElement>('[data-route-map]');
-  const preview = document.querySelector<HTMLElement>('[data-route-preview]');
-  if (!map || !preview) return;
-
-  const stops = Array.from(map.querySelectorAll<HTMLButtonElement>('.route-stop'));
-  const lines = Array.from(map.querySelectorAll<SVGLineElement>('.route-line'));
-  if (!stops.length) return;
-
-  const previewImg = preview.querySelector<HTMLImageElement>('[data-preview-img]');
-  const previewTag = preview.querySelector<HTMLElement>('[data-preview-tag]');
-  const previewName = preview.querySelector<HTMLElement>('[data-preview-name]');
-  const previewTeaser = preview.querySelector<HTMLElement>('[data-preview-teaser]');
-  const previewCreditName = preview.querySelector<HTMLAnchorElement>('[data-preview-credit-name]');
-  const previewCta = preview.querySelector<HTMLAnchorElement>('[data-preview-cta]');
-
-  const lineFor = (dest: string) => lines.find((l) => l.dataset.dest === dest);
-
-  const activate = (stop: HTMLButtonElement) => {
-    stops.forEach((s) => s.classList.toggle('is-active', s === stop));
-    lines.forEach((l) => l.classList.toggle('is-active', l === lineFor(stop.dataset.dest ?? '')));
-
-    const { name, tag, teaser, img, creditName, creditUsername, slug } = stop.dataset;
-    if (previewImg && img) { previewImg.src = img; previewImg.alt = name ?? ''; }
-    if (previewTag && tag) previewTag.textContent = tag;
-    if (previewName && name) previewName.textContent = name;
-    if (previewTeaser && teaser) previewTeaser.textContent = teaser;
-    if (previewCreditName && creditName && creditUsername) {
-      previewCreditName.textContent = creditName;
-      previewCreditName.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
-    }
-    if (previewCta && slug) previewCta.href = `/booking?tour=${slug}`;
-  };
-
-  stops.forEach((stop) => {
-    stop.addEventListener('mouseenter', () => activate(stop));
-    stop.addEventListener('focus', () => activate(stop));
-  });
-
-  // Sync the initially-active line to whichever stop is already
-  // server-rendered as active, rather than assuming it's the first one.
-  const initialStop = stops.find((s) => s.classList.contains('is-active')) ?? stops[0];
-  lines.forEach((l) => l.classList.toggle('is-active', l === lineFor(initialStop.dataset.dest ?? '')));
-
-  if (reduceMotion) {
-    lines.forEach((line) => {
-      const length = line.getTotalLength();
-      gsap.set(line, { strokeDasharray: length, strokeDashoffset: 0 });
-    });
-    return;
-  }
-
-  lines.forEach((line) => {
-    const length = line.getTotalLength();
-    gsap.set(line, { strokeDasharray: length, strokeDashoffset: length });
-  });
-
-  ScrollTrigger.create({
-    trigger: map,
-    start: 'top 80%',
-    once: true,
-    onEnter: () =>
-      gsap.to(lines, { strokeDashoffset: 0, duration: 0.9, ease: 'power1.inOut', stagger: 0.12 }),
-  });
-}
-
-// The Route section's giraffe background photo drifts slower than the
-// page scrolls — same technique as the pinned section's .section__bg —
-// scrubbed across the section's own scroll range rather than a pin.
-// Only called under no-preference; the layer sits still otherwise.
-function setupRouteParallax() {
-  const bg = document.querySelector<HTMLElement>('[data-route-bg]');
-  const section = document.querySelector<HTMLElement>('.route-block');
-  if (!bg || !section) return;
-
-  gsap.set(bg, { yPercent: -8 });
-  gsap.to(bg, {
-    yPercent: 8,
-    ease: 'none',
-    scrollTrigger: {
-      trigger: section,
-      start: 'top bottom',
-      end: 'bottom top',
-      scrub: true,
-    },
-  });
 }
 
 // Adventures index: replaces a wall of same-sized cards with a compact
@@ -604,27 +423,8 @@ function setupComboBuilder(reduceMotion: boolean) {
 // hiding non-matching tour rows via the `hidden` attribute rather than
 // animating them out — a filter change is a direct result of a click, not
 // a moment that needs its own motion.
-function setupItineraryFilter() {
-  const pills = document.querySelectorAll<HTMLButtonElement>('.filter-pill');
-  const items = document.querySelectorAll<HTMLElement>('.itinerary-block .program-item');
-  if (!pills.length || !items.length) return;
-
-  pills.forEach((pill) => {
-    pill.addEventListener('click', () => {
-      pills.forEach((p) => p.classList.toggle('is-active', p === pill));
-      const filter = pill.dataset.filter;
-      items.forEach((item) => {
-        const show = filter === 'all' || item.dataset.category === filter;
-        item.hidden = !show;
-      });
-    });
-  });
-}
-
-// Gallery page: same pill-filter pattern as the itinerary filter above,
-// plus an empty-state message for a category that (for now) has nothing
-// in it, since the gallery's categories aren't guaranteed non-empty the
-// way the itinerary's are.
+// Gallery page: clicking a category pill shows/hides matching tiles, plus
+// an empty-state message for a category that (for now) has nothing in it.
 function setupGalleryFilter() {
   const pills = document.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]');
   const items = document.querySelectorAll<HTMLElement>('[data-gallery-item]');
@@ -1039,7 +839,6 @@ export function initMotion() {
   setupHeroPanelSlideshow(reduceMotion);
   setupTourIntroMap(reduceMotion);
   setupTourPhotoBleed();
-  setupItineraryFilter();
   setupGalleryFilter();
   setupPostcards();
   setupLogbookSlideshow(reduceMotion);
@@ -1092,10 +891,6 @@ export function initMotion() {
     setupComboBuilder(false);
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
-    setupAlternatingRows(false);
-    setupProgramThreads(false);
-    setupRouteMap(false);
-    setupRouteParallax();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
@@ -1152,9 +947,6 @@ export function initMotion() {
     setupAdventureIndex(true);
     setupComboBuilder(true);
     setupTourRecapSlideshow(true);
-    setupAlternatingRows(true);
-    setupProgramThreads(true);
-    setupRouteMap(true);
   });
 
   window.addEventListener('load', () => ScrollTrigger.refresh());

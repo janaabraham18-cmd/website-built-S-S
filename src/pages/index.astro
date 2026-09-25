@@ -1,6 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
+import HomeTeaserCard from '../components/HomeTeaserCard.astro';
+import { tourBySlug } from '../data/tours';
+import type { Tour } from '../data/tours';
+import { journeys, tripTypeLabels } from '../data/journeys';
 
 const heroPanels = [
   {
@@ -54,68 +58,17 @@ const heroPanels = [
   },
 ];
 
-// "The Route" — five destinations fanning out from the two basecamps.
-// Coordinates are a stylized (not geographically literal) 0-100 layout;
-// each route-stop button and its matching SVG line share the same
-// percentage so they stay coincident regardless of viewport width.
-const routeDestinations = [
-  {
-    slug: 'sossusvlei-tour',
-    name: 'Sossusvlei',
-    tag: 'Desert · Half-day',
-    teaser: 'Where the dunes turn red at dawn.',
-    x: 45,
-    y: 78,
-    imageUrl: 'https://images.unsplash.com/photo-1587321174565-73cffc72e10a?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Felipe Labate', username: 'felipelabate' },
-  },
-  {
-    slug: 'sandwich-harbour-full-day',
-    name: 'Sandwich Harbour',
-    tag: 'Coastal · Full-day',
-    teaser: 'Dunes dropping straight into the Atlantic.',
-    x: 20,
-    y: 72,
-    imageUrl: 'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Bernd Dittrich', username: 'hdbernd' },
-  },
-  {
-    slug: 'etosha-tour',
-    name: 'Etosha',
-    tag: 'Wildlife · Multi-day',
-    teaser: 'Wildlife gathered at every waterhole.',
-    x: 70,
-    y: 18,
-    imageUrl: 'https://images.unsplash.com/photo-1596225893172-1685676f0a50?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Eelco Böhtlingk', username: 'eelco_bohtlingk' },
-  },
-  {
-    slug: 'skeleton-coast-tour',
-    name: 'Skeleton Coast',
-    tag: 'Coastal · Full-day',
-    teaser: 'Shipwrecks and fog along a wild shoreline.',
-    x: 15,
-    y: 10,
-    imageUrl: 'https://images.unsplash.com/photo-1551176968-bf1e434355f6?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'Sam Power', username: 'sampowerphoto' },
-  },
-  {
-    slug: 'pelican-point-tour',
-    name: 'Pelican Point',
-    tag: 'Coastal · Half-day',
-    teaser: 'Thousands of Cape fur seals, up close.',
-    x: 25,
-    y: 60,
-    imageUrl: 'https://images.unsplash.com/photo-1635764857370-911375b7a87a?w=900&q=80&auto=format&fit=crop',
-    imageCredit: { name: 'katsuma tanaka', username: 'kt2080' },
-  },
-];
+// Three homepage product bands (Tours / Adventures / Journeys), each a
+// curated handful of real entries pulled straight from the same data the
+// /tours and /journeys pages use — not resourced or re-described, just a
+// smaller preview that leads to the full listing.
+const toursPreview = ['etosha-tour', 'sossusvlei-tour', 'sandwich-harbour-full-day', 'skeleton-coast-tour']
+  .map((slug) => tourBySlug(slug))
+  .filter((t): t is Tour => !!t);
 
-// The Sossusvlei photo already opens the page in the Brief banner and
-// repeats in the Itinerary row below, so this preview defaults to Etosha
-// instead to avoid a third repeat of the same shot right after the hero.
-const defaultRouteIndex = routeDestinations.findIndex((d) => d.slug === 'etosha-tour');
-const defaultRoute = routeDestinations[defaultRouteIndex];
+const adventuresPreview = ['quad-bike-tour', 'sandboarding', 'tandem-skydive', 'kayaking']
+  .map((slug) => tourBySlug(slug))
+  .filter((t): t is Tour => !!t);
 
 // "The Logbook" — eight landmarks that carry real weight in Namibia's
 // human and geological history, each tied to a confirmed photo of the
@@ -229,15 +182,6 @@ const logbookStories = [
   },
 ];
 
-const itineraryFilters = [
-  { key: 'all', label: 'All' },
-  { key: 'desert', label: 'Desert' },
-  { key: 'coastal', label: 'Coastal' },
-  { key: 'adventure', label: 'Adventure' },
-  { key: 'wildlife', label: 'Wildlife' },
-  { key: 'culture', label: 'Culture' },
-];
-
 // Placeholder lineup — swap in real fleet photos once supplied.
 interface FleetVehicle {
   name: string;
@@ -311,237 +255,85 @@ const faqItems = [
 
   <div id="scroll-target"></div>
 
-  <!-- ============ 01 · THE BRIEF ============ -->
-  <section class="block brief-block reveal" id="brief">
-    <p class="eyebrow">The Brief</p>
-    <div class="brief-spread">
-      <div class="brief-copy reveal-item">
-        <blockquote class="brief-quote">"We run every tour out of Swakopmund and Walvis Bay — no call center, no middleman."</blockquote>
-        <p>Just guides who know the dunes and the coastline because they work them every day — covering both ends of what Namibia does best, the towering red dunes inland and the seal colonies and Atlantic swell along the coast, often on the same day if that's how you want to build your trip.</p>
-      </div>
-      <div class="brief-vitals reveal-item">
-        <div class="vital"><b>2</b><span>Basecamps</span></div>
-        <div class="vital"><b>31</b><span>Experiences</span></div>
-        <div class="vital"><b>0</b><span>Middlemen</span></div>
-      </div>
-    </div>
-    <div class="brief-banner reveal-item">
-      <div class="photo-frame">
-        <img
-          src="https://images.unsplash.com/photo-1587321174565-73cffc72e10a?w=1600&q=80&auto=format&fit=crop"
-          alt="The ancient dead camel-thorn trees of Deadvlei rising from the red dunes"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 02 · THE ROUTE ============ -->
-  <section class="block route-block reveal" id="route">
-    <div class="route-block__bg" data-route-bg aria-hidden="true"></div>
-    <p class="eyebrow">The Route</p>
-    <h2 class="section-title">Two basecamps, five routes worth taking</h2>
-
-    <div class="route-layout reveal-item">
-      <div class="route-map" data-route-map>
-        <svg class="route-map__lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-          <circle class="route-map__base" cx="12" cy="35" r="1.6" />
-          <circle class="route-map__base" cx="12" cy="55" r="1.6" />
-          {
-            routeDestinations.map((d) => {
-              const fromSwakopmund = d.slug === 'skeleton-coast-tour' || d.slug === 'etosha-tour';
-              return <line class="route-line" data-dest={d.slug} x1="12" y1={fromSwakopmund ? 35 : 55} x2={d.x} y2={d.y} />;
-            })
-          }
-        </svg>
-        <span class="route-map__label" style={`left:9%; top:41%;`}>Swakopmund</span>
-        <span class="route-map__label" style={`left:9%; top:61%;`}>Walvis Bay</span>
-
-        {
-          routeDestinations.map((d, i) => (
-            <button
-              type="button"
-              class:list={['route-stop', i === defaultRouteIndex && 'is-active']}
-              data-dest={d.slug}
-              data-name={d.name}
-              data-tag={d.tag}
-              data-teaser={d.teaser}
-              data-slug={d.slug}
-              data-img={d.imageUrl}
-              data-credit-name={d.imageCredit.name}
-              data-credit-username={d.imageCredit.username}
-              style={`left:${d.x}%; top:${d.y}%;`}
-            >
-              <span class="route-stop__dot" aria-hidden="true" />
-              <span class="visually-hidden">{d.name}</span>
-            </button>
-          ))
-        }
-      </div>
-
-      <div class="route-preview" data-route-preview>
-        <div class="photo-frame route-preview__photo">
-          <img
-            data-preview-img
-            src={defaultRoute.imageUrl}
-            alt={defaultRoute.name}
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <p class="route-preview__tag" data-preview-tag>{defaultRoute.tag}</p>
-        <h3 class="route-preview__name" data-preview-name>{defaultRoute.name}</h3>
-        <p class="route-preview__teaser" data-preview-teaser>{defaultRoute.teaser}</p>
-        <p class="route-preview__credit">
-          Photo:{' '}
-          <a data-preview-credit-name href={`https://unsplash.com/@${defaultRoute.imageCredit.username}?utm_source=salt-and-sun-tours&utm_medium=referral`} target="_blank" rel="noopener noreferrer">{defaultRoute.imageCredit.name}</a>{' '}
-          /{' '}
-          <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-        </p>
-        <a class="btn btn-outline route-preview__cta" data-preview-cta href={`/booking?tour=${defaultRoute.slug}`}>Book this route</a>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 03 · THE ITINERARY ============ -->
-  <section class="block itinerary-block reveal" id="itinerary">
+  <!-- ============ 01 · TOURS ============ -->
+  <section class="block home-band reveal" id="home-tours">
     <p class="eyebrow">The Itinerary</p>
-    <h2 class="section-title">A closer look at the lineup</h2>
+    <h2 class="section-title">Ten signature tours across Namibia</h2>
+    <p class="home-band__intro">
+      Full-day trips to Namibia's most iconic destinations — the red dunes of Sossusvlei,
+      the wildlife of Etosha, the wrecks of the Skeleton Coast — run out of Swakopmund and Walvis Bay.
+    </p>
 
-    <div class="itinerary-filters reveal-item" role="group" aria-label="Filter tours by type">
+    <div class="home-band__grid reveal-item">
       {
-        itineraryFilters.map((f, i) => (
-          <button type="button" class:list={['filter-pill', i === 0 && 'is-active']} data-filter={f.key}>{f.label}</button>
+        toursPreview.map((tour) => (
+          <HomeTeaserCard
+            href="/tours"
+            imageUrl={tour.imageUrl!}
+            imageCredit={tour.imageCredit}
+            name={tour.name}
+            meta={tour.duration}
+            desc={tour.description}
+          />
         ))
       }
     </div>
 
-    <div class="program-item" data-alt-row data-category="desert">
-      <div class="program-media">
-        <span class="ticket-stub">Half<br />Day</span>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1587321174565-73cffc72e10a?w=900&q=80&auto=format&fit=crop"
-            alt="The dead trees of Deadvlei at Sossusvlei"
-            loading="lazy"
-            decoding="async"
+    <a class="btn btn-outline" href="/tours">See all tours →</a>
+  </section>
+
+  <!-- ============ 02 · ADVENTURES ============ -->
+  <section class="block home-band reveal" id="home-adventures">
+    <p class="eyebrow">Closer to Town</p>
+    <h2 class="section-title">An hour or an afternoon, right around Swakopmund</h2>
+    <p class="home-band__intro">
+      Shorter, activity-based excursions for whenever a full day isn't what you're after —
+      quad bikes, sandboarding, skydiving and more, all closer to home.
+    </p>
+
+    <div class="home-band__grid reveal-item">
+      {
+        adventuresPreview.map((tour) => (
+          <HomeTeaserCard
+            href="/tours#adventures"
+            imageUrl={tour.imageUrl!}
+            imageCredit={tour.imageCredit}
+            name={tour.name}
+            meta={tour.duration}
+            desc={tour.description}
           />
-        </div>
-      </div>
-      <div class="program-copy">
-        <p class="program-tag">Desert Tour · Half-day</p>
-        <p class="tour-name">Sossusvlei Tour</p>
-        <h3>Namibia's most photographed dunes</h3>
-        <p>Deep in the Namib-Naukluft, the dunes at Sossusvlei rise over 300 metres above the pan floor. We time the drive for early light, when the red sand and the dead trees at Deadvlei throw the longest shadows of the day.</p>
-        <a class="book-link" href="/booking?tour=sossusvlei-tour">Book this tour</a>
-      </div>
+        ))
+      }
     </div>
 
-    <div class="program-item reverse" data-alt-row data-thread data-category="coastal">
-      <div class="program-media">
-        <span class="ticket-stub">Full<br />Day</span>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?w=900&q=80&auto=format&fit=crop"
-            alt="Sandwich Harbour where dunes meet the ocean"
-            loading="lazy"
-            decoding="async"
+    <a class="btn btn-outline" href="/tours#adventures">See all adventures →</a>
+  </section>
+
+  <!-- ============ 03 · JOURNEYS ============ -->
+  <section class="block home-band reveal" id="home-journeys">
+    <p class="eyebrow">Beyond a Single Day</p>
+    <h2 class="section-title">Four routes, planned day by day</h2>
+    <p class="home-band__intro">
+      A Journey strings several tours and destinations into one set route across Namibia —
+      not just a longer tour, a whole trip planned start to finish.
+    </p>
+
+    <div class="home-band__grid reveal-item">
+      {
+        journeys.map((journey) => (
+          <HomeTeaserCard
+            href={`/journeys#${journey.slug}`}
+            imageUrl={journey.heroImage}
+            imageCredit={journey.imageCredit}
+            name={journey.name}
+            meta={`${journey.durationDays}-Day · ${tripTypeLabels[journey.tripType]}`}
+            desc={journey.tagline}
           />
-        </div>
-      </div>
-      <div class="program-copy">
-        <p class="program-tag">Coastal Tour · Full-day</p>
-        <p class="tour-name">Sandwich Harbour Tour</p>
-        <h3>Where the dunes plunge into the Atlantic</h3>
-        <p>A 4x4 run past salt pans and flamingo-filled lagoons to Namibia's most photographed meeting of desert and ocean — towering dunes dropping straight into the sea.</p>
-        <a class="book-link" href="/booking?tour=sandwich-harbour-full-day">Book this tour</a>
-      </div>
+        ))
+      }
     </div>
 
-    <div class="program-item" data-alt-row data-thread data-category="adventure">
-      <div class="program-media">
-        <span class="ticket-stub">Half<br />Day</span>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1769450290445-3daed0c8fe63?w=900&q=80&auto=format&fit=crop"
-            alt="Quad biking on the dunes"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-      <div class="program-copy">
-        <p class="program-tag">Adventure · Half-day</p>
-        <p class="tour-name">Quad Bike Tour</p>
-        <h3>Ride the dunes yourself</h3>
-        <p>A guided quad bike run through the dune belt outside Swakopmund, built for anyone who wants to do more than just look at the sand.</p>
-        <a class="book-link" href="/booking?tour=quad-bike-tour">Book this tour</a>
-      </div>
-    </div>
-
-    <div class="program-item reverse" data-alt-row data-thread data-category="coastal">
-      <div class="program-media">
-        <span class="ticket-stub">Half<br />Day</span>
-        <div class="photo-frame">
-          <img
-            src="/images/catamaran-cruise.jpg"
-            alt="Catamaran cruise with dolphins"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-      <div class="program-copy">
-        <p class="program-tag">Coastal · Half-day</p>
-        <p class="tour-name">Dolphin &amp; Seal Catamaran Cruise</p>
-        <h3>Dolphins, seals, and the Walvis Bay lagoon</h3>
-        <p>A catamaran cruise out of Walvis Bay past the seal colony at Pelican Point, with a good chance of dolphins riding the bow wake along the way.</p>
-        <a class="book-link" href="/booking?tour=dolphin-seal-catamaran-cruise">Book this tour</a>
-      </div>
-    </div>
-
-    <div class="program-item" data-alt-row data-thread data-category="wildlife">
-      <div class="program-media">
-        <span class="ticket-stub">Multi<br />Day</span>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1596225893172-1685676f0a50?w=900&q=80&auto=format&fit=crop"
-            alt="Lioness at Etosha National Park"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-      <div class="program-copy">
-        <p class="program-tag">Wildlife · Multi-day</p>
-        <p class="tour-name">Etosha Tour</p>
-        <h3>Namibia's flagship game park</h3>
-        <p>Etosha's salt pan and waterholes concentrate wildlife in a way few parks can match — oryx, zebra, elephant, and the cats that follow them.</p>
-        <a class="book-link" href="/booking?tour=etosha-tour">Book this tour</a>
-      </div>
-    </div>
-
-    <div class="program-item reverse" data-alt-row data-thread data-category="culture">
-      <div class="program-media">
-        <span class="ticket-stub">Half<br />Day</span>
-        <div class="photo-frame">
-          <img
-            src="https://images.unsplash.com/photo-1603703182693-51a19941fa59?w=900&q=80&auto=format&fit=crop"
-            alt="Township tour in Swakopmund"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-      <div class="program-copy">
-        <p class="program-tag">Culture · Half-day</p>
-        <p class="tour-name">Township Tour</p>
-        <h3>Life in Mondesa and DRC</h3>
-        <p>A guided walk through Swakopmund's townships, led by people who live there — the side of town most visitors never see.</p>
-        <a class="book-link" href="/booking?tour=township-tour">Book this tour</a>
-      </div>
-    </div>
+    <a class="btn btn-outline" href="/journeys">See all journeys →</a>
   </section>
 
   <!-- ============ 04 · ABOUT US ============ -->
@@ -792,44 +584,18 @@ const faqItems = [
 
   /* background-color only (not the `background` shorthand) — a shorthand
      here would silently reset background-image back to none at ID-level
-     specificity, beating the lower-specificity .brief-block/.itinerary-block
-     glow rules below regardless of source order. */
-  #brief, #itinerary, #faq { background-color: var(--color-bg-alt); }
+     specificity, beating the lower-specificity .home-band glow rule
+     below regardless of source order. */
+  #home-adventures, #faq { background-color: var(--color-bg-alt); }
   #about { background-color: var(--color-earth-700); }
 
   /* ---------- Desert Light: per-section glows ----------
-     Soft, color-matched glow keyed to each section's own photos, layered
-     on top of the background colors above rather than replacing them.
-     Placed after .block/#brief,#itinerary,#faq so these longhand
-     background-image declarations win at equal specificity. */
-  .brief-block,
-  .itinerary-block {
+     Soft, warm glow layered on top of the background colors above
+     rather than replacing them. Placed after .block/#home-adventures,#faq
+     so these longhand background-image declarations win at equal
+     specificity. */
+  .home-band {
     background-image: var(--gradient-glow-warm);
-  }
-
-  /* A giraffe shot sits behind the route map/card as ambient texture —
-     the map and preview card both carry
-     their own solid backgrounds, so this only shows through the
-     section's own padding, never behind the card content. Lives on its
-     own layer (rather than directly on .route-block's background) so it
-     can be pushed taller than the section and scrubbed with scroll for
-     a parallax drift, the same technique as .section__bg elsewhere. */
-  .route-block {
-    position: relative;
-    z-index: 0;
-    overflow: hidden;
-  }
-
-  .route-block__bg {
-    position: absolute;
-    inset: -15% 0;
-    background-image: var(--gradient-glow-coastal),
-      url('https://images.unsplash.com/photo-1595652974715-571ba74668b5?w=1600&q=80&auto=format&fit=crop');
-    background-size: auto, cover;
-    background-position: 0 0, center;
-    background-repeat: no-repeat, no-repeat;
-    z-index: -1;
-    will-change: transform;
   }
 
   .logbook-block {
@@ -854,277 +620,34 @@ const faqItems = [
     max-width: 700px;
   }
 
-  /* ---------- 01 The Brief ---------- */
-  .brief-spread {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 3rem;
-    margin-bottom: 3rem;
-  }
-
-  .brief-quote {
-    font-family: var(--font-display);
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
-    line-height: 1.3;
-    margin: 0 0 1.25rem;
-    color: var(--color-text);
-    text-wrap: balance;
-  }
-
-  .brief-copy p {
+  /* ---------- 01-03 Tours / Adventures / Journeys bands ----------
+     Three parallel sections, each doing the same job for one product
+     line — a short intro plus a handful of real entries that lead
+     straight to that product's own page, rather than one abstract brand
+     section followed by a map gimmick. One shared card pattern
+     (HomeTeaserCard) across all three, so the repetition itself reads
+     as "here are the three things we do." */
+  .home-band__intro {
+    max-width: 42rem;
     font-size: 1rem;
     line-height: 1.7;
     color: var(--color-text-muted);
-    margin: 0;
-    max-width: 52ch;
+    margin: -2.75rem 0 2.75rem;
   }
 
-  .brief-vitals {
-    align-self: start;
-    background: var(--color-surface);
-    border: 1px dashed var(--color-accent-strong);
-    border-radius: var(--radius-md);
-    padding: 1.5rem;
+  .home-band__grid {
     display: grid;
-    gap: 1.1rem;
-  }
-
-  .vital { display: flex; align-items: baseline; gap: 0.6rem; }
-  .vital b {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    color: var(--color-accent-strong);
-    line-height: 1;
-  }
-  .vital span {
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-muted);
-  }
-
-  .brief-banner .photo-frame { aspect-ratio: 21 / 8; }
-
-  @media (max-width: 800px) {
-    .brief-spread { grid-template-columns: 1fr; }
-    .brief-banner .photo-frame { aspect-ratio: 4 / 3; }
-  }
-
-  /* ---------- 02 The Route ---------- */
-  .route-layout {
-    display: grid;
-    grid-template-columns: 1.3fr 1fr;
-    gap: 3rem;
-    align-items: center;
-  }
-
-  .route-map {
-    position: relative;
-    aspect-ratio: 4 / 3;
-    background: var(--color-bg-alt);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    overflow: hidden;
-    transform: scale(0.7);
-  }
-
-  .route-map__lines { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .route-map__base { fill: var(--color-accent-strong); }
-
-  .route-line {
-    stroke: var(--color-border);
-    stroke-width: 0.4;
-    stroke-dasharray: 1.6 1.6;
-    transition: stroke var(--duration-base) var(--ease-out), stroke-width var(--duration-base) var(--ease-out);
-  }
-
-  .route-line.is-active {
-    stroke: var(--color-accent-strong);
-    stroke-width: 0.7;
-  }
-
-  .route-map__label {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    font-size: 0.65rem;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-    font-weight: 600;
-  }
-
-  .route-stop {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    width: 26px;
-    height: 26px;
-    padding: 0;
-    border: none;
-    background: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .route-stop__dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: var(--color-surface);
-    border: 2px solid var(--color-accent-strong);
-    transition: transform var(--duration-fast) var(--ease-out), background var(--duration-fast) var(--ease-out);
-  }
-
-  .route-stop:hover .route-stop__dot,
-  .route-stop:focus-visible .route-stop__dot,
-  .route-stop.is-active .route-stop__dot {
-    background: var(--color-accent-strong);
-    transform: scale(1.35);
-  }
-
-  .route-preview {
-    background: var(--color-surface);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-md);
-    padding: 1.5rem;
-  }
-
-  .route-preview__photo { aspect-ratio: 4 / 3; margin-bottom: 1rem; }
-
-  .route-preview__tag {
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent-strong);
-    font-weight: 600;
-    margin: 0 0 0.4rem;
-  }
-
-  .route-preview__name {
-    font-family: var(--font-display);
-    font-size: 1.5rem;
-    font-weight: 400;
-    margin: 0 0 0.5rem;
-    color: var(--color-text);
-  }
-
-  .route-preview__teaser {
-    color: var(--color-text-muted);
-    font-size: 0.95rem;
-    line-height: 1.6;
-    margin: 0 0 0.75rem;
-  }
-
-  .route-preview__credit {
-    font-size: 0.7rem;
-    color: var(--color-text-muted);
-    margin: 0 0 1.1rem;
-  }
-  .route-preview__credit a { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
-
-  @media (max-width: 800px) {
-    .route-layout { grid-template-columns: 1fr; }
-  }
-
-  /* ---------- 03 The Itinerary ---------- */
-  .itinerary-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--space-lg);
     margin-bottom: 2.5rem;
   }
 
-  .filter-pill {
-    font-family: inherit;
-    font-size: 0.78rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--color-text-muted);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 100px;
-    padding: 0.5rem 1.1rem;
-    cursor: pointer;
-    transition: background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+  @media (max-width: 700px) {
+    .home-band__grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
   }
 
-  .filter-pill:hover { border-color: var(--color-accent-strong); color: var(--color-accent-strong); }
-
-  .filter-pill.is-active {
-    background: var(--color-accent-strong);
-    border-color: var(--color-accent-strong);
-    color: var(--color-bg);
-  }
-
-  .program-item {
-    position: relative;
-    display: grid;
-    grid-template-columns: 1fr 1.1fr;
-    gap: 3.5rem;
-    align-items: center;
-    padding: 3.5rem 0;
-    border-top: 1px solid rgba(58, 35, 28, 0.12);
-  }
-
-  .program-item[hidden] { display: none; }
-
-  .program-item:first-of-type { border-top: none; padding-top: 0; }
-  .program-item.reverse .program-media { order: 2; }
-  .program-item.reverse .program-copy { order: 1; }
-  .program-media { position: relative; }
-  .program-media .photo-frame { height: 340px; }
-
-  .ticket-stub {
-    position: absolute;
-    top: 0.9rem;
-    left: -0.6rem;
-    z-index: 1;
-    background: var(--color-bg-alt);
-    border: 1px dashed var(--color-accent-strong);
-    border-radius: var(--radius-sm);
-    color: var(--color-accent-strong);
-    font-size: 0.6rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    line-height: 1.3;
-    text-align: center;
-    padding: 0.35rem 0.55rem;
-    transform: rotate(-6deg);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .program-tag {
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-accent-strong);
-    font-weight: 600;
-    margin: 0 0 0.6rem 0;
-  }
-
-  .tour-name {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    font-weight: 400;
-    color: var(--color-text);
-    margin: 0 0 0.4rem 0;
-  }
-
-  .program-copy h3 {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 400;
-    margin: 0 0 1rem 0;
-    color: var(--color-text);
-  }
-
-  .program-copy p {
-    font-size: 0.95rem;
-    line-height: 1.7;
-    color: var(--color-text-muted);
-    margin: 0 0 1.25rem 0;
+  @media (max-width: 480px) {
+    .home-band__grid { grid-template-columns: 1fr; }
   }
 
   /* ---------- 04 About Us ---------- */
@@ -1702,11 +1225,6 @@ const faqItems = [
   .faq-more a { color: var(--color-accent-strong); font-weight: 600; }
 
   @media (max-width: 800px) {
-    .program-item { grid-template-columns: 1fr; }
-    .program-item.reverse .program-media,
-    .program-item.reverse .program-copy {
-      order: initial;
-    }
     .section-title { font-size: 1.875rem; }
   }
 

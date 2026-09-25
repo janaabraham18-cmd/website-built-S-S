@@ -1,0 +1,98 @@
+---
+interface Props {
+  href: string;
+  imageUrl: string;
+  imageCredit?: { name: string; username: string };
+  name: string;
+  meta?: string;
+  desc: string;
+}
+
+const { href, imageUrl, imageCredit, name, meta, desc } = Astro.props;
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+---
+
+<div class="home-teaser">
+  <a class="home-teaser__link" href={href}>
+    <div class="photo-frame home-teaser__photo">
+      <img src={imageUrl} alt={name} loading="lazy" decoding="async" />
+    </div>
+    {meta && <p class="home-teaser__meta">{meta}</p>}
+    <h3 class="home-teaser__name">{name}</h3>
+    <p class="home-teaser__desc">{desc}</p>
+  </a>
+  {imageCredit && (
+    <p class="home-teaser__credit">
+      Photo:{' '}
+      <a href={creditHref(imageCredit.username)} target="_blank" rel="noopener noreferrer">
+        {imageCredit.name}
+      </a>{' '}
+      / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  )}
+</div>
+
+<style>
+  .home-teaser__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .home-teaser__photo {
+    aspect-ratio: 4 / 3;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: var(--space-sm);
+    transition: box-shadow var(--duration-fast) var(--ease-out);
+  }
+
+  .home-teaser__link:hover .home-teaser__photo {
+    box-shadow: var(--shadow-md);
+  }
+
+  .home-teaser__meta {
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-accent-strong);
+    margin: 0 0 0.3rem;
+  }
+
+  .home-teaser__name {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: var(--color-text);
+    margin: 0 0 0.3rem;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .home-teaser__link:hover .home-teaser__name {
+    color: var(--color-accent-strong);
+  }
+
+  .home-teaser__desc {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--color-text-muted);
+    margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .home-teaser__credit {
+    font-size: 0.68rem;
+    color: var(--color-text-muted);
+    margin: 0.3rem 0 0;
+  }
+
+  .home-teaser__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>
