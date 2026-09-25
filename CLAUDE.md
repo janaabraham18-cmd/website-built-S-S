@@ -58,6 +58,20 @@ static/data-driven copy, never user input), needs an exact-case substring
 match — pass the word precisely as it appears in the string — and returns
 `text` unchanged when `word` is falsy/empty.
 
+**Orange is reserved for that one accent word — don't color eyebrows.** The
+small uppercase label above a heading (`.eyebrow`, `.section__eyebrow`,
+`.hero__eyebrow`, `.*-header__eyebrow`, etc.) used to be colored orange too
+(`--color-accent-strong` on light backgrounds, `--color-ochre-400` on
+photo/dark backgrounds) — client flagged this as too much orange stacked
+right next to the heading's own accent word. Eyebrows now use a neutral
+color instead: `--color-text-muted` on light backgrounds, `--color-sand-100`
+on dark/photo backgrounds (matching what `Hero.astro`'s `.hero__eyebrow` and
+`Section.astro`'s `.section--photo .section__eyebrow` already did). Keep any
+new eyebrow-style label neutral too — the orange is the heading's device,
+not the label above it. Links, hover/active states, buttons, and small UI
+borders/badges still use the accent colors as normal — this rule is
+specifically about eyebrow-style label text.
+
 ## Never put a heading in a card/bubble over a photo
 
 Explicitly banned by the client as "a very AI generic thing to have": a
