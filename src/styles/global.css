@@ -92,7 +92,12 @@
      Section.astro, unused sitewide). */
   --font-display: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-display-italic: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, sans-serif;
-  --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
+  /* Manrope: a quiet, clean geometric-humanist sans for everything that
+     isn't a heading (eyebrows, body copy, nav, buttons) — picked to sit
+     back and let Bricolage Grotesque's bolder, more irregular character
+     lead, rather than competing with it. Chosen from a set of specimens
+     shown to the client. */
+  --font-body: "Manrope", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
 
   --fs-xs: 0.8rem;
