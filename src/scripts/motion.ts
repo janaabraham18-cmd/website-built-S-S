@@ -957,39 +957,6 @@ function setupTourMapGrowth() {
   }
 }
 
-// Journeys page hero: a day passing over the dunes — the brand's own sun
-// mark arcs from one horizon to the other while a trail draws itself in
-// beneath it, tracing a route across the layered dune silhouettes. One
-// scene standing in for movement (the arc), change (the light crossing
-// the sky), and growth (the trail extending) all at once, rather than a
-// literal map or photo. Runs once on load, not on scroll.
-function setupJourneysHeroScene() {
-  const hero = document.querySelector<HTMLElement>('.journeys-hero');
-  if (!hero) return;
-
-  const sun = hero.querySelector<SVGGElement>('[data-journeys-sun]');
-  const trail = hero.querySelector<SVGGeometryElement>('[data-journeys-trail]');
-  if (!sun && !trail) return;
-
-  const tl = gsap.timeline({ delay: 0.3 });
-
-  if (sun) {
-    // Two-segment rise-then-set reads as a smooth arc without needing a
-    // motion-path plugin: waypoints are set in the markup's data attrs
-    // (start/peak/end), each a plain x/y pair in the scene's viewBox.
-    const { startX, startY, peakX, peakY, endX, endY } = sun.dataset;
-    tl.set(sun, { x: startX, y: startY })
-      .to(sun, { x: peakX, y: peakY, duration: 2.2, ease: 'sine.out' }, 0)
-      .to(sun, { x: endX, y: endY, duration: 2.2, ease: 'sine.in' }, 2.2);
-  }
-
-  if (trail) {
-    const length = trail.getTotalLength();
-    gsap.set(trail, { strokeDasharray: length, strokeDashoffset: length });
-    tl.to(trail, { strokeDashoffset: 0, duration: 3.2, ease: 'power1.inOut' }, 0.3);
-  }
-}
-
 // Hero panel slideshow: the 7 NAMIBIA panels cycle through which one is
 // "active" (wider, via flex-grow — see .hero__panel.is-active) so each
 // photo gets a turn filling most of the hero, like an expanding-photo
@@ -1119,7 +1086,6 @@ export function initMotion() {
     }
 
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
-    setupJourneysHeroScene();
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureIndex(false);
