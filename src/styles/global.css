@@ -75,14 +75,18 @@
   );
 
   /* --- Typography ---
-     Cormorant Garamond: a higher-contrast, more overtly luxury serif than
-     Libre Bodoni's editorial warmth — tall, slender letterforms in the
-     Garamond tradition, the kind of face boutique hospitality/travel
-     brands reach for. Ships its own italic, so --font-display-italic
-     stays the same family rather than a second imported face — the
-     whole site still loads exactly two Google Fonts. */
-  --font-display: "Cormorant Garamond", Georgia, "Times New Roman", "Iowan Old Style", serif;
-  --font-display-italic: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+     Bricolage Grotesque: a variable grotesque built around deliberate
+     irregularity — letterforms read as slightly hand-placed rather than
+     machine-perfect, which is the point (a personalized, "a bit
+     unsymmetrical, bold" heading face instead of a safe, symmetrical
+     one). Its `opsz` axis is what supplies that character at heading
+     sizes; see `font-optical-sizing: auto` below, which lets the browser
+     dial it in per element instead of hardcoding one value everywhere.
+     No italic on Google Fonts, so --font-display-italic points at the
+     same family (an actual italic use is currently dead code — see
+     Section.astro, unused sitewide). */
+  --font-display: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-display-italic: "Bricolage Grotesque", -apple-system, BlinkMacSystemFont, sans-serif;
   --font-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, "Helvetica Neue", Arial, sans-serif;
 
@@ -224,9 +228,10 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
+  font-optical-sizing: auto;
   line-height: var(--lh-tight);
   margin: 0 0 var(--space-sm);
-  font-weight: 400;
+  font-weight: 700;
   color: var(--color-earth-900);
 }
 
