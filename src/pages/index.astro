@@ -679,6 +679,10 @@ const faqItems = [
     position: relative;
     background-image: var(--gradient-dusk);
     color: var(--color-text-on-dark);
+    /* Tighter than the generic .block padding — the same text reads as
+       a shorter section once the internal spacing below is trimmed, so
+       the section shell doesn't need as much breathing room either. */
+    padding-block: clamp(2.5rem, 6vw, 4.5rem);
   }
 
   .about-block .eyebrow {
@@ -696,7 +700,7 @@ const faqItems = [
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    margin: 3rem auto 0;
+    margin: 2rem auto 0;
   }
 
   .about-profile-caption {
@@ -721,8 +725,8 @@ const faqItems = [
 
   .about-profile {
     flex-shrink: 0;
-    width: 330px;
-    height: 330px;
+    width: 220px;
+    height: 220px;
     border-radius: var(--radius-md);
     overflow: hidden;
     border: 3px solid var(--color-surface);
@@ -753,21 +757,21 @@ const faqItems = [
 
   .about-copy p {
     font-size: 1rem;
-    line-height: 1.8;
+    line-height: 1.6;
     color: var(--color-sand-200);
-    margin: 0 0 1.4rem;
+    margin: 0 0 1rem;
   }
 
-  /* Two-column flow for the long-form body — text fills the left column
-     top to bottom, then continues in the right column, so the section
-     doesn't force a very long single-column scroll. Collapses back to
-     one column on narrow viewports where side-by-side reading columns
-     don't work. */
+  /* Three-column flow (up from two) for the long-form body — same text,
+     same reading order (fills column 1 top to bottom, then column 2,
+     then 3), just spread wider so the section runs noticeably shorter
+     top to bottom. Collapses to one column on narrow viewports where
+     multi-column reading doesn't work. */
   .about-copy__columns {
-    max-width: 64rem;
-    margin: 0 auto 2.5rem;
-    columns: 2;
-    column-gap: 3.5rem;
+    max-width: 72rem;
+    margin: 0 auto 1.75rem;
+    columns: 3;
+    column-gap: 2.75rem;
     column-rule: 1px solid rgba(251, 247, 241, 0.25);
   }
 
@@ -780,6 +784,12 @@ const faqItems = [
   .about-copy__close {
     max-width: 40rem;
     margin-inline: auto;
+  }
+
+  @media (max-width: 1000px) {
+    .about-copy__columns {
+      columns: 2;
+    }
   }
 
   @media (max-width: 800px) {
@@ -795,7 +805,7 @@ const faqItems = [
     font-size: clamp(1.4rem, 2.6vw, 1.75rem);
     line-height: 1.4;
     color: var(--color-text-on-dark);
-    margin-bottom: 1.75rem !important;
+    margin-bottom: 1.25rem !important;
   }
 
   .about-copy__pull {
@@ -804,7 +814,7 @@ const faqItems = [
     font-size: clamp(1.2rem, 2.2vw, 1.45rem);
     line-height: 1.5;
     color: var(--color-ochre-400);
-    margin: 2rem 0 !important;
+    margin: 1.25rem 0 !important;
   }
 
   .about-copy__list {
@@ -820,8 +830,8 @@ const faqItems = [
   }
 
   .about-copy__signoff {
-    margin-top: 2.5rem;
-    padding-top: 1.75rem;
+    margin-top: 1.75rem;
+    padding-top: 1.25rem;
     border-top: 1px solid rgba(251, 247, 241, 0.25);
   }
 
