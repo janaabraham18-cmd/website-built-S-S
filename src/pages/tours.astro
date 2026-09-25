@@ -1,13 +1,10 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import ComboCard from '../components/ComboCard.astro';
 import TourMapJourney from '../components/TourMapJourney.astro';
 import { toursByCategory, tourBySlug, categoryLabels } from '../data/tours';
 import type { Tour } from '../data/tours';
 
-const combos = toursByCategory('combo');
-
-// Everything bookable that isn't already a combo — the raw material for
+// Everything bookable, minus the pre-built combo deals — the raw material for
 // the "Create Your Own Combo" builder below. Combos aren't included as
 // pickable pieces themselves (combining a combo doesn't make sense).
 const builderTours = toursByCategory('tour');
@@ -153,43 +150,6 @@ const creditHref = (username: string) =>
           </div>
         ))
       }
-    </div>
-  </section>
-
-  <section class="combos-section reveal" id="combos">
-    <div class="combos-section__split" aria-hidden="true">
-      <div class="combos-section__half">
-        <div
-          class="combos-section__photo"
-          data-combo-parallax
-          style="background-image:url('/images/catamaran-cruise.jpg')"
-        />
-      </div>
-      <div class="combos-section__half">
-        <div
-          class="combos-section__photo"
-          data-combo-parallax
-          style="background-image:url('https://images.unsplash.com/photo-1645341777045-8f18b88e2712?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1600')"
-        />
-      </div>
-    </div>
-    <div class="combos-section__divider" aria-hidden="true"></div>
-
-    <div class="container">
-      <div class="section-intro combos-section__intro reveal-item">
-        <p class="eyebrow">Two in One Day</p>
-        <h2>{categoryLabels.combo.description}</h2>
-      </div>
-
-      <div class="combo-grid reveal-item">
-        {
-          combos.map((combo) => (
-            <div class="combo-grid__item">
-              <ComboCard combo={combo} />
-            </div>
-          ))
-        }
-      </div>
     </div>
   </section>
 
@@ -375,8 +335,8 @@ const creditHref = (username: string) =>
        adventures (dark earth-700 + dusk glow, flips to light text —
        the same treatment as About Us/Our Fleet/booking, used here to
        call out the activity-based excursions as their own chapter) ->
-       combos (beige-300) -> build-your-own (warm gradient) ->
-       closing (earth-700, flips to light text). */
+       build-your-own (warm gradient) -> closing (earth-700, flips to
+       light text). */
   .adventures-section {
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
@@ -810,110 +770,6 @@ const creditHref = (username: string) =>
     .combo-builder__preview {
       position: static;
     }
-  }
-
-  /* ---------- Combos ---------- */
-  /* Split background — a catamaran cruise photo and a Deadvlei photo,
-     side by side, each drifting independently on scroll (see
-     setupComboSplitParallax in motion.ts) — the section's own "two
-     things become one day" idea made visual. Shown fully defined, no
-     tint over the photos themselves (same no-overlay preference as the
-     homepage Reviews background) — the title gets its own small opaque
-     card instead of the whole section carrying a wash, since the combo
-     cards below are already opaque and don't need protecting either
-     way. */
-  .combos-section {
-    position: relative;
-    z-index: 0;
-    overflow: hidden;
-    padding-block: var(--space-2xl);
-    scroll-margin-top: 5rem;
-    background: var(--color-beige-300);
-  }
-
-  .combos-section__split {
-    position: absolute;
-    inset: 0;
-    z-index: -2;
-    display: flex;
-  }
-
-  .combos-section__half {
-    position: relative;
-    width: 50%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .combos-section__photo {
-    position: absolute;
-    inset: -12% 0;
-    height: 124%;
-    background-size: cover;
-    background-position: center;
-  }
-
-  /* The title sits directly on the split photos, so it gets its own
-     compact opaque card rather than dimming the photos to protect it —
-     everywhere else, the two photos show at full strength. */
-  .combos-section__intro {
-    display: inline-block;
-    background: rgba(251, 247, 241, 0.94);
-    border-radius: var(--radius-md);
-    padding: 1rem 1.5rem;
-    box-shadow: var(--shadow-md);
-  }
-
-  .combos-section__divider {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 50%;
-    z-index: -1;
-    width: 2px;
-    transform: translateX(-1px);
-    background: rgba(251, 247, 241, 0.75);
-  }
-
-  @media (max-width: 700px) {
-    .combos-section__split,
-    .combos-section__divider {
-      display: none;
-    }
-
-    .combos-section__intro {
-      display: block;
-      background: none;
-      border-radius: 0;
-      padding: 0;
-      box-shadow: none;
-    }
-  }
-
-  /* Uniform grid — every combo card is now the same compact shape, so
-     nothing needs a wider "featured" span to stand out; a plain,
-     evenly-filled grid reads as more orderly than mixed card widths. */
-  .combo-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: var(--space-md);
-    align-items: stretch;
-  }
-
-  .combo-grid__item {
-    display: flex;
-  }
-
-  .combo-grid__item :global(.combo-card) {
-    width: 100%;
-  }
-
-  @media (max-width: 700px) {
-    .combo-grid { grid-template-columns: repeat(2, 1fr); }
-  }
-
-  @media (max-width: 420px) {
-    .combo-grid { grid-template-columns: 1fr; }
   }
 
   /* ---------- Closing ---------- */

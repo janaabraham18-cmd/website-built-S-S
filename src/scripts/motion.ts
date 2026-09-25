@@ -380,32 +380,6 @@ function setupRouteParallax() {
   });
 }
 
-// Combos section split background: the catamaran and Deadvlei halves
-// drift independently on scroll — opposite directions, so the "two
-// things becoming one" idea the split itself represents carries into
-// the motion too, rather than both photos just moving in lockstep.
-// Only called under no-preference; both halves sit still otherwise.
-function setupComboSplitParallax() {
-  const section = document.querySelector<HTMLElement>('.combos-section');
-  const layers = Array.from(document.querySelectorAll<HTMLElement>('[data-combo-parallax]'));
-  if (!section || !layers.length) return;
-
-  layers.forEach((layer, i) => {
-    const direction = i % 2 === 0 ? 1 : -1;
-    gsap.set(layer, { yPercent: -8 * direction });
-    gsap.to(layer, {
-      yPercent: 8 * direction,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true,
-      },
-    });
-  });
-}
-
 // Adventures index: replaces a wall of same-sized cards with a compact
 // name list beside one large shared photo per themed group — picking a
 // name (hover, focus, or tap) crossfades the photo/caption beside it. The
@@ -1156,7 +1130,6 @@ export function initMotion() {
     setupProgramThreads(false);
     setupRouteMap(false);
     setupRouteParallax();
-    setupComboSplitParallax();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This
