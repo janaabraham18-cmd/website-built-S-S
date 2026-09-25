@@ -31,13 +31,13 @@ const creditHref = (username: string) =>
 <style>
   /* A short full-bleed photo strip between the homepage's product bands —
      just a breather between three back-to-back content sections, not
-     another thing to read. The photo is oversized (see the -22% inset)
-     so setupPictureBreakParallax in motion.ts has room to drift it
-     without exposing an edge, and its own mask fades a generous band at
-     both the top and bottom to transparent — only a thin strip in the
-     middle stays fully opaque — so the section's own background color
-     (a neutral shared by every band's background) blends in gradually
-     instead of a hard photo/color seam. */
+     another thing to read. Shown fully defined (full strength, no wash
+     over the photo — same "fully defined" treatment as booking/contact):
+     only the outer top/bottom edges fade to transparent so the section's
+     own background color shows through gradually there, while the rest
+     of the photo stays completely opaque. The photo is oversized (see
+     the -22% inset) so setupPictureBreakParallax in motion.ts has room
+     to drift it without ever exposing a hard edge. */
   .picture-break {
     position: relative;
     min-height: clamp(260px, 34vw, 460px);
@@ -50,9 +50,8 @@ const creditHref = (username: string) =>
     inset: -22% 0;
     background-size: cover;
     background-position: center;
-    opacity: 0.85;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 47%, black 53%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, black 47%, black 53%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 16%, black 84%, transparent 100%);
     will-change: transform;
   }
 
