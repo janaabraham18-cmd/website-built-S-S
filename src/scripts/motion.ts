@@ -482,6 +482,40 @@ function setupPostcards() {
   });
 }
 
+// About Us card: same prev/counter/next pagination as Postcards above,
+// its own instance since it pages through prose, not photo cards. Click-
+// driven, not gated behind reduced motion.
+function setupAboutPages() {
+  const root = document.querySelector<HTMLElement>('[data-about-pages]');
+  if (!root) return;
+
+  const pages = Array.from(root.querySelectorAll<HTMLElement>('[data-about-page]'));
+  const prevBtn = root.querySelector<HTMLButtonElement>('[data-about-prev]');
+  const nextBtn = root.querySelector<HTMLButtonElement>('[data-about-next]');
+  const counter = root.querySelector<HTMLElement>('[data-about-current]');
+  if (!pages.length || !prevBtn || !nextBtn) return;
+
+  let index = 0;
+
+  function render() {
+    pages.forEach((page, i) => {
+      page.hidden = i !== index;
+      page.classList.toggle('is-active', i === index);
+    });
+    if (counter) counter.textContent = String(index + 1);
+  }
+
+  prevBtn.addEventListener('click', () => {
+    index = (index - 1 + pages.length) % pages.length;
+    render();
+  });
+
+  nextBtn.addEventListener('click', () => {
+    index = (index + 1) % pages.length;
+    render();
+  });
+}
+
 // Tours page closing recap: small auto-cycling slideshow through the
 // tour photos next to the complete assembled map. Same accessibility
 // pattern as the hero panel slideshow below — click a dot to jump
@@ -866,6 +900,7 @@ export function initMotion() {
   setupTourPhotoBleed();
   setupGalleryFilter();
   setupPostcards();
+  setupAboutPages();
   setupLogbookSlideshow(reduceMotion);
 
   let lenis: Lenis | undefined;
