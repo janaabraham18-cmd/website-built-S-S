@@ -604,7 +604,15 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
      text column handles it predictably. */
   .tour-reveal__inner {
     display: flex;
-    align-items: center;
+    /* flex-start, not center: the photo's height is fixed by its own
+       aspect-ratio while the text column's height varies with how much
+       the description wraps, so centering left the two visibly
+       misaligned at the top whenever their heights diverged — most
+       noticeable on laptop-width screens, where the description wraps
+       to more lines than it does on a wide desktop/TV monitor. Starting
+       both at the same top edge keeps them "in line" regardless of how
+       tall either one ends up. */
+    align-items: flex-start;
     gap: var(--space-lg);
     min-width: 0;
   }
@@ -612,7 +620,14 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   .tour-reveal__photo-wrap {
     position: relative;
     flex: 0 0 auto;
-    width: min(46vw, 560px);
+    /* clamp(), not a bare min(46vw, 560px): the old formula let the
+       photo shrink continuously with viewport width right down to this
+       breakpoint's floor, so it read as noticeably smaller on a laptop
+       than on a big monitor even though both are "desktop". The clamp
+       floor keeps it a substantial, consistent size across the whole
+       two-column range (laptop through TV-size monitors), not just at
+       the widest end. */
+    width: clamp(480px, 46vw, 560px);
     min-width: 0;
   }
 
