@@ -653,6 +653,31 @@ function setupTourPhotoBleed() {
 // already reads as the finished result with nothing left to animate —
 // there's no reason to make a reduced-motion visitor sit through the
 // collage phase at all when the useful end state is right there.
+// Homepage picture breaks (between the Tours/Adventures/Journeys bands):
+// each photo layer is oversized (see PictureBreak.astro's -18% inset) and
+// scrubbed slower than the page scrolls, same technique as the old Route
+// background. Only called under no-preference; layers sit still otherwise.
+function setupPictureBreakParallax() {
+  const layers = document.querySelectorAll<HTMLElement>('[data-picture-break-photo]');
+
+  layers.forEach((layer) => {
+    const section = layer.closest<HTMLElement>('.picture-break');
+    if (!section) return;
+
+    gsap.set(layer, { yPercent: -8 });
+    gsap.to(layer, {
+      yPercent: 8,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: section,
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+      },
+    });
+  });
+}
+
 function setupTourMapGrowth() {
   const container = document.querySelector<HTMLElement>('[data-map-growth]');
   const grid = document.querySelector<HTMLElement>('.tour-journey__grid');
@@ -891,6 +916,7 @@ export function initMotion() {
     setupComboBuilder(false);
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
+    setupPictureBreakParallax();
 
     // Pinned section: background pans slowly while content sits in place
     // for a beat before the page releases back into normal scroll. This

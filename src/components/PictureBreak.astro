@@ -1,0 +1,72 @@
+---
+interface Props {
+  imageUrl: string;
+  imageCredit?: { name: string; username: string };
+}
+
+const { imageUrl, imageCredit } = Astro.props;
+
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+---
+
+<div class="picture-break">
+  <div
+    class="picture-break__photo"
+    data-picture-break-photo
+    style={`background-image:url('${imageUrl}')`}
+    aria-hidden="true"
+  ></div>
+  {imageCredit && (
+    <p class="picture-break__credit">
+      Photo:{' '}
+      <a href={creditHref(imageCredit.username)} target="_blank" rel="noopener noreferrer">
+        {imageCredit.name}
+      </a>{' '}
+      / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  )}
+</div>
+
+<style>
+  /* A short full-bleed photo strip between the homepage's product bands —
+     just a breather between three back-to-back content sections, not
+     another thing to read. The photo is oversized (see the -18% inset)
+     so setupPictureBreakParallax in motion.ts has room to drift it
+     without exposing an edge, and its own mask fades both the top and
+     bottom edges to transparent so the section's own background color
+     (a neutral shared by every band's background) shows through instead
+     of a hard photo/color seam. */
+  .picture-break {
+    position: relative;
+    min-height: clamp(200px, 28vw, 360px);
+    overflow: hidden;
+    background: var(--color-sand-50);
+  }
+
+  .picture-break__photo {
+    position: absolute;
+    inset: -18% 0;
+    background-size: cover;
+    background-position: center;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 24%, black 76%, transparent 100%);
+    will-change: transform;
+  }
+
+  .picture-break__credit {
+    position: absolute;
+    right: var(--space-md);
+    bottom: var(--space-xs);
+    z-index: 1;
+    margin: 0;
+    font-size: var(--fs-xs);
+    color: rgba(58, 35, 28, 0.55);
+  }
+
+  .picture-break__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+</style>

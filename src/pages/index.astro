@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import Hero from '../components/Hero.astro';
 import HomeTeaserCard from '../components/HomeTeaserCard.astro';
+import PictureBreak from '../components/PictureBreak.astro';
 import { tourBySlug } from '../data/tours';
 import type { Tour } from '../data/tours';
 import { journeys, tripTypeLabels } from '../data/journeys';
@@ -69,6 +70,18 @@ const toursPreview = ['etosha-tour', 'sossusvlei-tour', 'sandwich-harbour-full-d
 const adventuresPreview = ['quad-bike-tour', 'sandboarding', 'tandem-skydive', 'kayaking']
   .map((slug) => tourBySlug(slug))
   .filter((t): t is Tour => !!t);
+
+// Picture breaks between the three bands above — a short full-bleed photo
+// with faded top/bottom edges and a scroll parallax drift (see
+// PictureBreak.astro and setupPictureBreakParallax in motion.ts).
+const toursAdventuresBreak = {
+  imageUrl: 'https://images.unsplash.com/photo-1647927617971-de48dff82ecf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  imageCredit: { name: 'Bernd Dittrich', username: 'hdbernd' },
+};
+const adventuresJourneysBreak = {
+  imageUrl: 'https://images.unsplash.com/photo-1677163058000-db9f8b1ea482?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  imageCredit: { name: 'Nicolas Cortois', username: 'nico_cort3' },
+};
 
 // "The Logbook" — eight landmarks that carry real weight in Namibia's
 // human and geological history, each tied to a confirmed photo of the
@@ -282,6 +295,8 @@ const faqItems = [
     <a class="btn btn-outline" href="/tours">See all tours →</a>
   </section>
 
+  <PictureBreak imageUrl={toursAdventuresBreak.imageUrl} imageCredit={toursAdventuresBreak.imageCredit} />
+
   <!-- ============ 02 · ADVENTURES ============ -->
   <section class="block home-band reveal" id="home-adventures">
     <p class="eyebrow">Closer to Town</p>
@@ -308,6 +323,8 @@ const faqItems = [
 
     <a class="btn btn-outline" href="/tours#adventures">See all adventures →</a>
   </section>
+
+  <PictureBreak imageUrl={adventuresJourneysBreak.imageUrl} imageCredit={adventuresJourneysBreak.imageCredit} />
 
   <!-- ============ 03 · JOURNEYS ============ -->
   <section class="block home-band reveal" id="home-journeys">
