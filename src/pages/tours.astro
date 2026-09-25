@@ -46,7 +46,6 @@ const creditHref = (username: string) =>
 
   <section class="build-combo reveal" id="build-your-own">
     <div class="build-combo__bg" style={`background-image:url('${buildComboBg.url}')`} aria-hidden="true"></div>
-    <div class="build-combo__wash" aria-hidden="true"></div>
 
     <div class="container">
       <div class="section-intro reveal-item">
@@ -231,43 +230,26 @@ const creditHref = (username: string) =>
   }
 
   /* ---------- Create Your Own Combo ---------- */
-  /* A real photo behind the section instead of a flat gradient — same
-     blurred-photo-plus-wash technique as the map recap band further up
-     this same page (TourMapJourney.astro's .tour-recap-band): the eyebrow/
-     heading/intro sit directly on top with no card of their own, so the
-     photo can't be shown at full strength (not enough contrast for that
-     text) — a blur keeps it as texture/mood rather than a sharp
-     background someone tries to read, and the translucent wash on top is
-     the same warm ochre-to-terracotta gradient the section used before,
-     just letting the photo show through it instead of replacing it. */
+  /* "Fully defined" background photo — same treatment as booking/contact/
+     About Us: the photo is shown at full strength (no blur, no opacity
+     wash over it), and the intro copy gets its own small opaque card
+     instead of dimming the photo for everyone to protect one block of
+     text. */
   .build-combo {
     position: relative;
     z-index: 0;
     overflow: hidden;
-    background: var(--color-terracotta-600);
+    background: var(--color-earth-700);
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
   }
 
   .build-combo__bg {
     position: absolute;
-    inset: -40px;
-    z-index: -2;
-    background-size: cover;
-    background-position: center;
-    filter: blur(4px);
-  }
-
-  .build-combo__wash {
-    position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(
-      135deg,
-      rgba(211, 162, 79, 0.82) 0%,
-      rgba(181, 98, 63, 0.82) 55%,
-      rgba(156, 77, 51, 0.85) 100%
-    );
+    background-size: cover;
+    background-position: center;
   }
 
   .build-combo__credit {
@@ -290,11 +272,15 @@ const creditHref = (username: string) =>
     max-width: 640px;
     margin-inline: auto;
     text-align: center;
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
   }
 
   .build-combo .eyebrow {
-    color: var(--color-text-on-dark);
-    opacity: 0.85;
+    color: var(--color-ochre-400);
+    opacity: 1;
   }
 
   .build-combo h2 {
@@ -302,7 +288,7 @@ const creditHref = (username: string) =>
   }
 
   .build-combo .section-intro p {
-    color: var(--color-sand-100);
+    color: var(--color-sand-200);
   }
 
   .combo-builder {
