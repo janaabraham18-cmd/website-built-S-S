@@ -1,0 +1,203 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const bgPhoto = {
+  url: 'https://images.unsplash.com/photo-1539527783216-403e0d1b6747?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Alan J. Hendry', username: 'imedianamibia' },
+};
+const creditHref = (username: string) =>
+  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+
+const faqItems = [
+  {
+    q: 'Do I need to book in advance?',
+    a: "Most tours can be arranged with a few days' notice, but popular dates fill up faster in peak season.",
+  },
+  {
+    q: 'Where do tours depart from?',
+    a: "Most tours depart from Swakopmund or Walvis Bay; we'll confirm your pick-up point when we plan your day.",
+  },
+  {
+    q: 'Can tours be combined?',
+    a: 'Yes — many guests pair a tour with a shorter adventure or a combo deal; see the tours page for options.',
+  },
+  {
+    q: 'What should I bring?',
+    a: "Comfortable shoes, sun protection, and a camera; we'll flag anything tour-specific when we confirm your booking.",
+  },
+];
+---
+
+<BaseLayout
+  title="FAQ"
+  description="Answers to common questions about booking, departures, and planning a tour with Salt and Sun Tours in Namibia."
+>
+  <div class="faq-page">
+    <div class="faq-page__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
+
+    <header class="faq-header">
+      <div class="container">
+        <div class="faq-header__card">
+          <p class="faq-header__eyebrow">Before You Go</p>
+          <h1 class="faq-header__heading">A few things people ask</h1>
+          <p class="faq-header__body">
+            The questions that come up most before a booking — if yours isn't
+            here, get in touch and we'll answer it directly.
+          </p>
+        </div>
+      </div>
+    </header>
+
+    <section class="faq-section reveal">
+      <div class="container">
+        <div class="faq-list reveal-item">
+          {
+            faqItems.map((item) => (
+              <details class="faq-item">
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))
+          }
+        </div>
+        <p class="faq-more">Have a different question? <a href="/contact">Get in touch</a>.</p>
+      </div>
+    </section>
+
+    <p class="faq-page__credit">
+      Photo:{' '}
+      <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
+      /{' '}
+      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
+    </p>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Same "fully defined" treatment as contact/booking: one continuous
+     background photo at full strength behind the whole page, no scrim.
+     The header copy gets its own small opaque card instead of dimming
+     the photo for everyone. */
+  .faq-page {
+    position: relative;
+    z-index: 0;
+  }
+
+  .faq-page__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center 60%;
+    background-color: var(--color-earth-700);
+  }
+
+  .faq-header {
+    position: relative;
+    padding-block: var(--space-2xl) var(--space-xl);
+  }
+
+  .faq-header__card {
+    display: inline-block;
+    background: rgba(58, 35, 28, 0.72);
+    border-radius: var(--radius-lg);
+    padding: var(--space-lg) var(--space-xl);
+    box-shadow: var(--shadow-lg);
+  }
+
+  .faq-header__eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-ochre-400);
+    margin-bottom: var(--space-2xs);
+  }
+
+  .faq-header__heading {
+    color: var(--color-text-on-dark);
+    margin-bottom: var(--space-md);
+  }
+
+  .faq-header__body {
+    font-size: var(--fs-md);
+    line-height: var(--lh-normal);
+    color: var(--color-sand-200);
+    max-width: var(--content-width-narrow);
+    margin: 0;
+  }
+
+  .faq-section {
+    position: relative;
+    padding-block: var(--space-xl) var(--space-2xl);
+  }
+
+  .faq-list {
+    max-width: var(--content-width-narrow, 720px);
+    margin-inline: auto;
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .faq-item {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.4rem;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .faq-item summary {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--color-text);
+    cursor: pointer;
+    list-style: none;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+
+  .faq-item summary::after {
+    content: '+';
+    float: right;
+    font-family: var(--font-body);
+    color: var(--color-accent-strong);
+  }
+  .faq-item[open] summary::after { content: '\2212'; }
+
+  .faq-item p {
+    margin: 0.9rem 0 0;
+    color: var(--color-text-muted);
+    font-size: 0.92rem;
+    line-height: 1.65;
+  }
+
+  .faq-more {
+    text-align: center;
+    color: var(--color-text-on-dark);
+    text-shadow: 0 1px 4px rgba(58, 35, 28, 0.6);
+    margin: 2rem 0 0;
+  }
+  .faq-more a { color: var(--color-ochre-400); font-weight: 600; }
+
+  .faq-page__credit {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    padding: var(--space-sm) var(--space-md);
+    text-align: right;
+    font-size: var(--fs-xs);
+    color: rgba(251, 247, 241, 0.75);
+  }
+
+  .faq-page__credit a {
+    color: inherit;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  @media (max-width: 640px) {
+    .faq-item {
+      padding: 1rem 1.1rem;
+    }
+  }
+</style>

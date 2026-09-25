@@ -241,25 +241,6 @@ const testimonials = [
   },
 ];
 
-const faqItems = [
-  {
-    q: 'Do I need to book in advance?',
-    a: "Most tours can be arranged with a few days' notice, but popular dates fill up faster in peak season.",
-  },
-  {
-    q: 'Where do tours depart from?',
-    a: "Most tours depart from Swakopmund or Walvis Bay; we'll confirm your pick-up point when we plan your day.",
-  },
-  {
-    q: 'Can tours be combined?',
-    a: 'Yes — many guests pair a tour with a shorter adventure or a combo deal; see the tours page for options.',
-  },
-  {
-    q: 'What should I bring?',
-    a: "Comfortable shoes, sun protection, and a camera; we'll flag anything tour-specific when we confirm your booking.",
-  },
-];
-
 ---
 
 <BaseLayout
@@ -563,24 +544,7 @@ const faqItems = [
     </div>
   </section>
 
-  <!-- ============ 07 · BEFORE YOU GO ============ -->
-  <section class="block faq-block reveal" id="faq">
-    <p class="eyebrow">Before You Go</p>
-    <h2 class="section-title">A few things people ask</h2>
-    <div class="faq-list reveal-item">
-      {
-        faqItems.map((item) => (
-          <details class="faq-item">
-            <summary>{item.q}</summary>
-            <p>{item.a}</p>
-          </details>
-        ))
-      }
-    </div>
-    <p class="faq-more">Have a different question? <a href="/contact">Get in touch</a>.</p>
-  </section>
-
-  <!-- ============ 08 · POSTCARDS FROM THE ROAD ============ -->
+  <!-- ============ 07 · POSTCARDS FROM THE ROAD ============ -->
   <section class="block postcards-block reveal" id="postcards">
     <div class="postcards-block__bg" data-postcards-bg aria-hidden="true"></div>
     <p class="eyebrow">Postcards from the Road</p>
@@ -641,11 +605,11 @@ const faqItems = [
      here would silently reset background-image back to none at ID-level
      specificity, beating the lower-specificity .home-band glow rule
      below regardless of source order. */
-  #home-adventures, #faq { background-color: var(--color-bg-alt); }
+  #home-adventures { background-color: var(--color-bg-alt); }
 
   /* ---------- Desert Light: per-section glows ----------
      Soft, warm glow layered on top of the background colors above
-     rather than replacing them. Placed after .block/#home-adventures,#faq
+     rather than replacing them. Placed after .block/#home-adventures
      so these longhand background-image declarations win at equal
      specificity. */
   .home-band {
@@ -1223,7 +1187,7 @@ const faqItems = [
     text-underline-offset: 2px;
   }
 
-  /* ---------- 08 Postcards ---------- */
+  /* ---------- 07 Postcards ---------- */
   .postcards-block {
     position: relative;
     z-index: 0;
@@ -1333,47 +1297,6 @@ const faqItems = [
   .postcards__arrow svg { width: 1rem; height: 1rem; }
   .postcards__arrow:hover { background: var(--color-accent); color: var(--color-text-on-dark); transform: scale(1.06); }
   .postcards__counter { font-size: 0.85rem; color: var(--color-text-muted); margin: 0; }
-
-  /* ---------- 07 Before You Go ---------- */
-  .faq-list { max-width: var(--content-width-narrow, 720px); margin-inline: auto; display: grid; gap: 0.75rem; }
-
-  .faq-item {
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    padding: 1.1rem 1.4rem;
-  }
-
-  .faq-item summary {
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    color: var(--color-text);
-    cursor: pointer;
-    list-style: none;
-  }
-  .faq-item summary::-webkit-details-marker { display: none; }
-
-  .faq-item summary::after {
-    content: '+';
-    float: right;
-    font-family: var(--font-body);
-    color: var(--color-accent-strong);
-  }
-  .faq-item[open] summary::after { content: '\2212'; }
-
-  .faq-item p {
-    margin: 0.9rem 0 0;
-    color: var(--color-text-muted);
-    font-size: 0.92rem;
-    line-height: 1.65;
-  }
-
-  .faq-more {
-    text-align: center;
-    color: var(--color-text-muted);
-    margin: 2rem 0 0;
-  }
-  .faq-more a { color: var(--color-accent-strong); font-weight: 600; }
 
   @media (max-width: 800px) {
     .section-title { font-size: 1.875rem; }
