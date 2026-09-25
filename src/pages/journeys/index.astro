@@ -3,6 +3,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import NamibiaMap from '../../components/NamibiaMap.astro';
 import { journeys, tripTypeLabels } from '../../data/journeys';
 import { journeyRoutes } from '../../data/journeyRoutes';
+import { hl } from '../../utils/text';
+
+const journeyAccentWords: Record<string, string> = {
+  '5-day-sossusvlei-coast': 'Coast',
+  '10-day-namibia-grand-tour': 'Grand',
+  '8-day-windhoek-coastal-discovery': 'Discovery',
+  '13-day-namibia-complete-safari': 'Safari',
+};
 
 const heroPhoto = {
   url: 'https://images.unsplash.com/photo-1658239828111-75a642ac6b6d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
@@ -27,7 +35,7 @@ const creditHref = (username: string) =>
       <div class="container journeys-hero__content">
         <div class="journeys-hero__card">
           <p class="journeys-hero__eyebrow">Beyond a single day</p>
-          <h1>Journeys</h1>
+          <h1 set:html={hl('Journeys', 'Journeys')} />
           <p class="journeys-hero__subhead">
             A Journey strings several of our tours and destinations together into one
             set route across Namibia, planned day by day — not just a longer version
@@ -71,7 +79,7 @@ const creditHref = (username: string) =>
                 <p class="journey-feature__eyebrow">
                   {journey.durationDays}-Day Journey · {tripTypeLabels[journey.tripType]}
                 </p>
-                <h2 class="journey-feature__name">{journey.name}</h2>
+                <h2 class="journey-feature__name" set:html={hl(journey.name, journeyAccentWords[journey.slug])} />
                 <p class="journey-feature__tagline">{journey.tagline}</p>
                 <p class="journey-feature__regions">{journey.regions.join(' · ')}</p>
                 <a
@@ -94,13 +102,13 @@ const creditHref = (username: string) =>
             </div>
 
             <div class="journey-feature__content reveal-item">
-              <h3 class="journey-feature__content-heading">Day by day</h3>
+              <h3 class="journey-feature__content-heading" set:html={hl('Day by day', 'day')} />
               <ol class="journey-feature__timeline">
                 {journey.itinerary.map((day) => (
                   <li class="journey-feature__timeline-item">
                     <span class="journey-feature__timeline-day">Day {day.day}</span>
                     <div>
-                      <h4>{day.title}</h4>
+                      <h4 set:html={hl(day.title, day.accentWord)} />
                       <p class="journey-feature__timeline-location">{day.location}</p>
                       <p>{day.description}</p>
                     </div>
@@ -132,7 +140,7 @@ const creditHref = (username: string) =>
           <div class="container">
             <div class="journeys-empty__card reveal-item">
               <p class="journeys-header__eyebrow">Every journey starts with a conversation</p>
-              <h2 class="journeys-empty__heading">Tell us how long you have and where you'd like to go</h2>
+              <h2 class="journeys-empty__heading" set:html={hl("Tell us how long you have and where you'd like to go", 'go')} />
               <p class="journeys-empty__body">
                 We're still building out our set-route Journeys — but if you already know
                 you want more than one day, get in touch and we'll design a day-by-day
@@ -157,7 +165,7 @@ const creditHref = (username: string) =>
           <div class="container">
             <div class="journeys-map-intro reveal-item">
               <p class="eyebrow">The Route Book</p>
-              <h2>Every Route, Plotted</h2>
+              <h2 set:html={hl('Every Route, Plotted', 'Plotted')} />
               <p>Four routes charted across Namibia — tap a name to jump straight to its itinerary above.</p>
             </div>
 

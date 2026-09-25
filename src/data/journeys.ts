@@ -19,6 +19,11 @@ export const tripTypeLabels: Record<TripType, string> = {
 export interface JourneyDay {
   day: number;
   title: string;
+  /** The word in `title` to render as the page's one-word-per-heading
+   * accent (see src/utils/text.ts's hl()) — deliberately varied day to
+   * day between a place name and a distinct activity/feature word,
+   * never the same choice twice in a row within one journey. */
+  accentWord: string;
   location: string;
   description: string;
 }
@@ -55,6 +60,7 @@ export const journeys: Journey[] = [
       {
         day: 1,
         title: 'Windhoek Arrival & Drive to Sossusvlei',
+        accentWord: 'Sossusvlei',
         location: 'Windhoek → Sossusvlei',
         description:
           'Airport pickup, a Windhoek city tour, then the drive into the Namib Desert to your lodge near Sossusvlei.',
@@ -62,6 +68,7 @@ export const journeys: Journey[] = [
       {
         day: 2,
         title: 'Sossusvlei, Dead Vlei & Dune 45',
+        accentWord: 'Dune',
         location: 'Sossusvlei',
         description:
           'Sunrise climb up Dune 45, then Sossusvlei, Dead Vlei and Sesriem Canyon, with time to relax back at the lodge in the afternoon.',
@@ -69,6 +76,7 @@ export const journeys: Journey[] = [
       {
         day: 3,
         title: 'Into the Namib to Swakopmund',
+        accentWord: 'Swakopmund',
         location: 'Sossusvlei → Swakopmund',
         description:
           'A scenic drive through the Gaub and Kuiseb Passes, with a stop at Dune 7, before arriving on the coast in Swakopmund.',
@@ -76,6 +84,7 @@ export const journeys: Journey[] = [
       {
         day: 4,
         title: 'Sandwich Harbour & Catamaran Cruise',
+        accentWord: 'Cruise',
         location: 'Swakopmund / Walvis Bay',
         description:
           'A morning dolphin and seal catamaran cruise, then an afternoon Sandwich Harbour 4x4 excursion, finishing with sunset on the beach.',
@@ -83,6 +92,7 @@ export const journeys: Journey[] = [
       {
         day: 5,
         title: 'Quad Biking, Camel Ride & Departure',
+        accentWord: 'Camel',
         location: 'Swakopmund → Walvis Bay Airport',
         description:
           'Morning quad biking in the dunes and a camel ride, then a Swakopmund town tour before your transfer to the airport.',
@@ -124,36 +134,42 @@ export const journeys: Journey[] = [
       {
         day: 1,
         title: 'Windhoek',
+        accentWord: 'Windhoek',
         location: 'Windhoek',
         description: 'Airport pickup and a Windhoek city tour, then an evening at leisure.',
       },
       {
         day: 2,
         title: 'Into the Namib Desert',
+        accentWord: 'Namib',
         location: 'Windhoek → Sossusvlei',
         description: 'Drive into the Namib Desert to Sesriem, with a dune experience if time allows.',
       },
       {
         day: 3,
         title: 'Sossusvlei & Dead Vlei',
+        accentWord: 'Vlei',
         location: 'Sossusvlei',
         description: 'Sunrise at Dune 45, then Sossusvlei and Dead Vlei, followed by Sesriem Canyon.',
       },
       {
         day: 4,
         title: 'To the Coast',
+        accentWord: 'Coast',
         location: 'Sossusvlei → Swakopmund',
         description: 'A scenic drive via Solitaire and the Kuiseb area to Swakopmund.',
       },
       {
         day: 5,
         title: 'Sandwich Harbour & Walvis Bay Lagoon',
+        accentWord: 'Lagoon',
         location: 'Swakopmund / Walvis Bay',
         description: 'A Sandwich Harbour 4x4 excursion and the Walvis Bay Lagoon’s flamingos.',
       },
       {
         day: 6,
         title: 'Swakopmund Adventure Activity',
+        accentWord: 'Adventure',
         location: 'Swakopmund',
         description:
           'Choice of one activity — catamaran cruise, quad biking, camel riding, Living Desert tour, sandboarding, kayaking, or skydiving.',
@@ -161,24 +177,28 @@ export const journeys: Journey[] = [
       {
         day: 7,
         title: 'Spitzkoppe to Damaraland',
+        accentWord: 'Spitzkoppe',
         location: 'Swakopmund → Damaraland',
         description: "A stop at Spitzkoppe's granite peaks, then on to Damaraland.",
       },
       {
         day: 8,
         title: 'Damaraland',
+        accentWord: 'Damaraland',
         location: 'Damaraland',
         description: "Twyfelfontein's rock engravings, the Organ Pipes and Burnt Mountain.",
       },
       {
         day: 9,
         title: 'To Etosha',
+        accentWord: 'Etosha',
         location: 'Damaraland → Etosha',
         description: 'Travel to Etosha National Park, with an afternoon game drive.',
       },
       {
         day: 10,
         title: 'Etosha & Departure',
+        accentWord: 'Departure',
         location: 'Etosha → Windhoek',
         description: 'A final morning game drive, then the drive back to Windhoek for your departure.',
       },
@@ -225,12 +245,14 @@ export const journeys: Journey[] = [
       {
         day: 1,
         title: 'Arrival in Windhoek',
+        accentWord: 'Windhoek',
         location: 'Windhoek',
         description: 'Arrival and a relaxed day settling in, with sightseeing around the city.',
       },
       {
         day: 2,
         title: 'Windhoek Day Trip',
+        accentWord: 'Trip',
         location: 'Windhoek',
         description:
           'Choose one: the Na’ankusê Wildlife Sanctuary, a San Bushmen cultural walk, or a game drive at Daan Viljoen.',
@@ -238,6 +260,7 @@ export const journeys: Journey[] = [
       {
         day: 3,
         title: 'Drive to the Coast',
+        accentWord: 'Coast',
         location: 'Windhoek → Swakopmund',
         description:
           'A scenic drive through Karibib and Usakos, with an optional detour to Spitzkoppe, arriving in the German-influenced coastal town of Swakopmund.',
@@ -245,6 +268,7 @@ export const journeys: Journey[] = [
       {
         day: 4,
         title: 'Swakopmund City Tour',
+        accentWord: 'Tour',
         location: 'Swakopmund',
         description:
           'A relaxed morning followed by a town tour taking in the historic German architecture, the Aquarium, and the Kristall Galerie.',
@@ -252,6 +276,7 @@ export const journeys: Journey[] = [
       {
         day: 5,
         title: 'Sandwich Harbour Adventure',
+        accentWord: 'Harbour',
         location: 'Walvis Bay / Sandwich Harbour',
         description:
           "A 4x4 excursion through Walvis Bay's lagoon, salt works and pink lake en route to Sandwich Harbour, passing Pelican Point.",
@@ -259,18 +284,21 @@ export const journeys: Journey[] = [
       {
         day: 6,
         title: 'Catamaran Cruise',
+        accentWord: 'Cruise',
         location: 'Walvis Bay',
         description: 'A boat cruise with seals and pelicans, plus drinks and snacks on board.',
       },
       {
         day: 7,
         title: 'Quad Biking & Camel Rides',
+        accentWord: 'Camel',
         location: 'Swakopmund Dunes',
         description: 'An adrenaline-filled day in the dunes on quad bikes, followed by a camel ride.',
       },
       {
         day: 8,
         title: 'Henties Bay & Departure',
+        accentWord: 'Departure',
         location: 'Swakopmund → Henties Bay',
         description:
           'A drive up the coast through the fishing town of Henties Bay, passing a shipwreck, with the option to visit the seal colony at Cape Cross before departure.',
@@ -306,12 +334,14 @@ export const journeys: Journey[] = [
       {
         day: 1,
         title: 'Arrival in Windhoek',
+        accentWord: 'Windhoek',
         location: 'Windhoek',
         description: 'Airport pickup and a relaxed first day.',
       },
       {
         day: 2,
         title: 'Windhoek City Tour & Kalahari',
+        accentWord: 'Kalahari',
         location: 'Windhoek → Kalahari',
         description:
           'A city tour taking in the Christuskirche and Alte Feste, then a sundowner drive into the Kalahari.',
@@ -319,6 +349,7 @@ export const journeys: Journey[] = [
       {
         day: 3,
         title: 'Bushmen Wisdom & Quivertree Forest',
+        accentWord: 'Quivertree',
         location: 'Kalahari → Keetmanshoop',
         description:
           "A San Bushmen cultural experience, then the Quivertree Forest and Giant's Playground rock formations.",
@@ -326,6 +357,7 @@ export const journeys: Journey[] = [
       {
         day: 4,
         title: 'Fish River Canyon & Kolmanskop',
+        accentWord: 'Kolmanskop',
         location: 'Fish River Canyon / Lüderitz',
         description:
           'A morning at Fish River Canyon, a visit to the ghost town of Kolmanskop, and an afternoon with the area’s wild horses.',
@@ -333,18 +365,21 @@ export const journeys: Journey[] = [
       {
         day: 5,
         title: 'Into the Namib to Sossusvlei',
+        accentWord: 'Sossusvlei',
         location: '→ Sossusvlei',
         description: 'The drive north to Sossusvlei, with an afternoon stop at Elim Dune and Sesriem Canyon.',
       },
       {
         day: 6,
         title: 'Sossusvlei & Dead Vlei',
+        accentWord: 'Vlei',
         location: 'Sossusvlei',
         description: 'A full day exploring Sossusvlei, Dead Vlei, Big Daddy Dune and Dune 45.',
       },
       {
         day: 7,
         title: 'To Swakopmund via the Moon Landscape',
+        accentWord: 'Moon',
         location: 'Sossusvlei → Swakopmund',
         description:
           "Departure through Solitaire and the Kuiseb Pass's moon landscape, arriving in Swakopmund for an afternoon of quad biking in the dunes.",
@@ -352,6 +387,7 @@ export const journeys: Journey[] = [
       {
         day: 8,
         title: 'Marine & Desert Adventure',
+        accentWord: 'Marine',
         location: 'Swakopmund / Walvis Bay',
         description:
           'A morning dolphin and seal cruise, then an afternoon Sandwich Harbour 4x4 excursion with stops at the pink lake and its flamingos.',
@@ -359,30 +395,35 @@ export const journeys: Journey[] = [
       {
         day: 9,
         title: 'Along the Coast to Damaraland',
+        accentWord: 'Damaraland',
         location: '→ Damaraland',
         description: 'More time at the pink lake and lagoon, then the drive to Twyfelfontein, passing the Zeila shipwreck.',
       },
       {
         day: 10,
         title: 'Twyfelfontein & Himba Village',
+        accentWord: 'Himba',
         location: 'Damaraland',
         description: 'The rock art at Twyfelfontein in the morning, then a visit to a Himba village in the afternoon.',
       },
       {
         day: 11,
         title: 'Etosha National Park',
+        accentWord: 'Etosha',
         location: 'Etosha',
         description: 'A full day of game drives in Etosha National Park.',
       },
       {
         day: 12,
         title: 'Etosha & Okahandja',
+        accentWord: 'Okahandja',
         location: 'Etosha → Okahandja',
         description: "A final morning game drive, then a stop at the Okahandja woodcarvers' market.",
       },
       {
         day: 13,
         title: 'Departure',
+        accentWord: 'Departure',
         location: 'Windhoek Airport',
         description: 'Drop-off at Hosea Kutako International Airport.',
       },

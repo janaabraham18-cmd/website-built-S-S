@@ -6,6 +6,29 @@ import PictureBreak from '../components/PictureBreak.astro';
 import { tourBySlug } from '../data/tours';
 import type { Tour } from '../data/tours';
 import { journeys, tripTypeLabels } from '../data/journeys';
+import { hl } from '../utils/text';
+
+// One accent word per teaser card, keyed by slug — see CLAUDE.md for the
+// selection rules (2-word name -> last word; otherwise pick whatever's
+// most distinctive, never a filler word).
+const tourAccentWords: Record<string, string> = {
+  'etosha-tour': 'Tour',
+  'sossusvlei-tour': 'Tour',
+  'sandwich-harbour-full-day': 'Harbour',
+  'skeleton-coast-tour': 'Skeleton',
+};
+const adventureAccentWords: Record<string, string> = {
+  'quad-bike-tour': 'Quad',
+  sandboarding: 'Sandboarding',
+  'tandem-skydive': 'Skydive',
+  kayaking: 'Kayaking',
+};
+const journeyAccentWords: Record<string, string> = {
+  '5-day-sossusvlei-coast': 'Coast',
+  '10-day-namibia-grand-tour': 'Grand',
+  '8-day-windhoek-coastal-discovery': 'Discovery',
+  '13-day-namibia-complete-safari': 'Safari',
+};
 
 const heroPanels = [
   {
@@ -102,6 +125,7 @@ const logbookStories = [
     id: 'twyfelfontein',
     kicker: 'The Kunene Region — a record kept for 6,000 years',
     headline: 'Where the Rock Remembers',
+    accentWord: 'Rock',
     body: [
       "Long before any road reached this valley, San hunters and herders pressed more than 2,000 images into the sandstone here — lion, rhino, giraffe, ostrich and human figures, some engraved as recently as a few centuries ago and others estimated at up to 6,000 years old. It's the largest concentration of rock art in Africa, and in 2007 it became Namibia's first UNESCO World Heritage Site.",
       "The farmer who settled here in the 1940s named it Twyfelfontein — 'doubtful spring' — unsure the water source would last through a dry season. The most famous panel, the so-called Lion Man, shows a lion with five toes on each paw and a human footprint at the tip of its tail, a detail still debated by researchers studying what the engraving meant to the people who made it.",
@@ -115,6 +139,7 @@ const logbookStories = [
     id: 'spitzkoppe',
     kicker: 'The Erongo Region — granite risen 1,784 metres',
     headline: 'A Cathedral of Bare Stone',
+    accentWord: 'Cathedral',
     body: [
       'Locals call it the Matterhorn of Africa, though the comparison undersells it: this granite inselberg rose from the desert floor roughly 120 million years ago, as Gondwana was still pulling apart, long before the Alps existed at all. It climbs 1,784 metres above sea level and around 700 metres above the surrounding plain, a single bald dome visible for miles across flat gravel desert.',
       "Its overhangs shelter Bushman's Paradise, a hidden gallery of San paintings estimated at 2,000 to 4,000 years old. After dark, with no city light for a hundred kilometres in any direction, the bare granite turns Spitzkoppe into one of the clearest amateur observatories south of the equator — climbers have been coming since the first recorded ascent in 1946.",
@@ -128,6 +153,7 @@ const logbookStories = [
     id: 'etosha-pan',
     kicker: 'Owamboland — a lakebed silent since the Pleistocene',
     headline: 'The Great Place of Dry Water',
+    accentWord: 'Water',
     body: [
       "Etosha means 'great white place,' and the name undersells nothing: this salt pan covers roughly 4,800 square kilometres, big enough to be picked out from orbit. It was born when tectonic shifts, tens of thousands of years ago, diverted the river that once fed a permanent lake here, leaving behind a vast cracked bed of white clay and salt.",
       'It fills only after unusually heavy rain, holding a few centimetres of water for a few weeks before evaporating again. The surrounding reserve was first proclaimed in 1907 by the German colonial administration, making Etosha National Park one of the oldest protected wildlife areas in Africa — its waterholes remain the reason animals gather here at all.',
@@ -141,6 +167,7 @@ const logbookStories = [
     id: 'deadvlei',
     kicker: 'The Namib-Naukluft — trees dead 600 to 900 years',
     headline: 'Centuries Without Water',
+    accentWord: 'Centuries',
     body: [
       'When the Tsauchab River shifted course, it cut off a shallow clay pan from the water that once reached it, stranding a grove of camel thorn trees between dunes that now rank among the tallest on Earth — Big Daddy, just beside the pan, rises some 325 metres. The trees are thought to have died somewhere between 600 and 900 years ago.',
       "What keeps them standing is the same aridity that killed them: this pocket of the Namib is too dry for the fungi and bacteria that would normally rot dead wood, so the trunks simply never decomposed. Their blackened colour isn't char from fire — it's centuries of direct sun scorching the exposed timber against a floor of pale, cracked clay and red dune sand.",
@@ -154,6 +181,7 @@ const logbookStories = [
     id: 'skeleton-coast',
     kicker: 'The South Atlantic — where fog meets fire',
     headline: 'The Coast the Charts Warned Against',
+    accentWord: 'Charts',
     body: [
       'Early Portuguese sailors called this shoreline As Areias do Inferno — the Sands of Hell. The cold Benguela Current, sweeping up from Antarctica, meets the desert heat and produces thick fog on as many as 250 days a year, just often enough to pull ships onto sandbars with no way back to open water.',
       "More than a thousand wrecks are said to lie along roughly 500 kilometres of this coast, their ribs still surfacing from the dunes decades later. Survivors who made it to shore then faced a crossing few managed: a waterless desert stretching inland, which is why the region's name in the local Ovahimba language translates to something like 'the land God made in anger.'",
@@ -167,6 +195,7 @@ const logbookStories = [
     id: 'cape-cross',
     kicker: "The Skeleton Coast's southern gate — marked 1486",
     headline: 'The First Marker on an Unmapped Shore',
+    accentWord: 'Unmapped',
     body: [
       'Portuguese navigator Diogo Cão planted a stone padrão here in 1486, inscribed in Portuguese and Latin, marking the first recorded European landing on this stretch of coast. German naval officers removed the original in 1893 and shipped it to a museum in Berlin, where it still stands; a replica has marked the cape since 1980.',
       'Today the site belongs to the seals far more than to any explorer\'s monument. Numbers swing with the season, from roughly 80,000 up to 210,000 or more during the November-to-December pupping season, making Cape Cross home to one of the largest Cape fur seal colonies on the planet — animals that are, despite the name, more closely related to sea lions than true seals.',
@@ -180,6 +209,7 @@ const logbookStories = [
     id: 'kolmanskop',
     kicker: 'The Sperrgebiet — diamonds found 1908',
     headline: 'A Boomtown the Desert Took Back',
+    accentWord: 'Boomtown',
     body: [
       'In April 1908, a railway worker named Zacharias Lewala picked a stray diamond out of the sand while clearing tracks, and within months this patch of desert had a boomtown. The German colonial government sealed the whole region off as a Sperrgebiet — a forbidden zone — and by the 1920s Kolmanskop had around 300 German residents, a hospital, a theatre, a bowling alley, and the first tram built in Africa.',
       'A pipeline carried fresh water 120 kilometres from the Kuiseb River just to keep it running. Richer deposits found farther south, near the Orange River, drew the diamond trade away after 1928, and the last residents left by 1956. The dunes have been moving back through the empty houses ever since, filling rooms floor to window frame.',
@@ -193,6 +223,7 @@ const logbookStories = [
     id: 'fish-river-canyon',
     kicker: 'The far south — carved over 500 million years',
     headline: "Africa's Longest Scar",
+    accentWord: 'Scar',
     body: [
       "Second only to the Grand Canyon in scale, this gorge runs about 160 kilometres long, up to 27 kilometres wide, and drops as deep as 550 metres in places. Its walls record roughly 500 million years of geological history — first a collapsing valley shaped by ancient tectonic movement, then reshaped again by glaciers some 300 million years ago, and finally cut by the Fish River itself, which still flows through it today.",
       "The multi-day hiking trail through the canyon floor, around 90 kilometres end to end, is one of the most famous treks in southern Africa, and it's only open from May to September — the rest of the year the heat inside the canyon makes the walk dangerous. At dawn its terraced walls run copper, rust and violet before the sun clears the rim and the colour flattens out.",
@@ -261,7 +292,7 @@ const testimonials = [
   <!-- ============ 01 · TOURS ============ -->
   <section class="block home-band reveal" id="home-tours">
     <p class="eyebrow">The Itinerary</p>
-    <h2 class="section-title">Ten signature tours across Namibia</h2>
+    <h2 class="section-title" set:html={hl('Ten signature tours across Namibia', 'signature')} />
     <p class="home-band__intro">
       Full-day trips to Namibia's most iconic destinations — the red dunes of Sossusvlei,
       the wildlife of Etosha, the wrecks of the Skeleton Coast — run out of Swakopmund and Walvis Bay.
@@ -275,6 +306,7 @@ const testimonials = [
             imageUrl={tour.imageUrl!}
             imageCredit={tour.imageCredit}
             name={tour.name}
+            accentWord={tourAccentWords[tour.slug]}
             meta={tour.duration}
             desc={tour.description}
           />
@@ -290,7 +322,7 @@ const testimonials = [
   <!-- ============ 02 · ADVENTURES ============ -->
   <section class="block home-band reveal" id="home-adventures">
     <p class="eyebrow">Closer to Town</p>
-    <h2 class="section-title">An hour or an afternoon, right around Swakopmund</h2>
+    <h2 class="section-title" set:html={hl('An hour or an afternoon, right around Swakopmund', 'Swakopmund')} />
     <p class="home-band__intro">
       Shorter, activity-based excursions for whenever a full day isn't what you're after —
       quad bikes, sandboarding, skydiving and more, all closer to home.
@@ -304,6 +336,7 @@ const testimonials = [
             imageUrl={tour.imageUrl!}
             imageCredit={tour.imageCredit}
             name={tour.name}
+            accentWord={adventureAccentWords[tour.slug]}
             meta={tour.duration}
             desc={tour.description}
           />
@@ -319,7 +352,7 @@ const testimonials = [
   <!-- ============ 03 · JOURNEYS ============ -->
   <section class="block home-band reveal" id="home-journeys">
     <p class="eyebrow">Beyond a Single Day</p>
-    <h2 class="section-title">Four routes, planned day by day</h2>
+    <h2 class="section-title" set:html={hl('Four routes, planned day by day', 'routes')} />
     <p class="home-band__intro">
       A Journey strings several tours and destinations into one set route across Namibia —
       not just a longer tour, a whole trip planned start to finish.
@@ -333,6 +366,7 @@ const testimonials = [
             imageUrl={journey.heroImage}
             imageCredit={journey.imageCredit}
             name={journey.name}
+            accentWord={journeyAccentWords[journey.slug]}
             meta={`${journey.durationDays}-Day · ${tripTypeLabels[journey.tripType]}`}
             desc={journey.tagline}
           />
@@ -349,7 +383,7 @@ const testimonials = [
 
     <div class="about-block__intro">
       <p class="eyebrow">About Us</p>
-      <h2 class="section-title">More than a journey</h2>
+      <h2 class="section-title" set:html={hl('More than a journey', 'journey')} />
     </div>
 
     <div class="about-layout reveal-item">
@@ -443,7 +477,7 @@ const testimonials = [
   <section class="stamps-block reveal" id="fleet">
     <div class="stamps-inner">
       <p class="eyebrow">Our Fleet</p>
-      <h2 class="section-title">What gets you there</h2>
+      <h2 class="section-title" set:html={hl('What gets you there', 'there')} />
       <div class="fleet-grid reveal-item">
         {
           fleetVehicles.map((v) => (
@@ -491,7 +525,7 @@ const testimonials = [
   <section class="block logbook-block reveal" id="logbook">
     <div class="logbook-masthead reveal-item">
       <p class="eyebrow">The Logbook</p>
-      <h2 class="section-title">Namibia, in passing</h2>
+      <h2 class="section-title" set:html={hl('Namibia, in passing', 'Namibia')} />
       <p class="logbook-masthead__dek">
         Eight places that carry the weight of this country's history — from rock art older than
         the pyramids to a boomtown the desert reclaimed in a single generation.
@@ -519,7 +553,7 @@ const testimonials = [
           logbookStories.map((story, i) => (
             <div class="logbook-article__entry" data-logbook-entry aria-hidden={i === 0 ? 'false' : 'true'}>
               <p class="logbook-article__kicker">{story.kicker}</p>
-              <h3 class="logbook-article__headline">{story.headline}</h3>
+              <h3 class="logbook-article__headline" set:html={hl(story.headline, story.accentWord)} />
               <div class="logbook-article__body">
                 {story.body.map((paragraph) => <p>{paragraph}</p>)}
               </div>
@@ -548,7 +582,7 @@ const testimonials = [
   <section class="block postcards-block reveal" id="postcards">
     <div class="postcards-block__bg" data-postcards-bg aria-hidden="true"></div>
     <p class="eyebrow">Postcards from the Road</p>
-    <h2 class="section-title">What guests say</h2>
+    <h2 class="section-title" set:html={hl('What guests say', 'guests')} />
 
     <div class="postcards reveal-item" data-postcards>
       <div class="postcards__stack">

@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { hl } from '../utils/text';
 
 const bgPhoto = {
   url: 'https://images.unsplash.com/photo-1539527783216-403e0d1b6747?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
@@ -39,7 +40,7 @@ const faqItems = [
       <div class="container">
         <div class="faq-header__card">
           <p class="faq-header__eyebrow">Before You Go</p>
-          <h1 class="faq-header__heading">A few things people ask</h1>
+          <h1 class="faq-header__heading" set:html={hl('A few things people ask', 'ask')} />
           <p class="faq-header__body">
             The questions that come up most before a booking — if yours isn't
             here, get in touch and we'll answer it directly.

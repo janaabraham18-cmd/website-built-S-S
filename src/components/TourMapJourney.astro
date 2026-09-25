@@ -20,10 +20,25 @@
 import { tours } from '../data/tours';
 import { mapJourney } from '../data/tourRegions';
 import NamibiaMap from './NamibiaMap.astro';
+import { hl } from '../utils/text';
 
 const introBg = {
   url: 'https://images.unsplash.com/photo-1772289093080-831ca03c76e1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'NIR HIMI', username: 'nirhimi' },
+};
+
+// One accent word per tour name — see CLAUDE.md for the selection rules.
+const tourAccentWords: Record<string, string> = {
+  'etosha-tour': 'Tour',
+  'sossusvlei-tour': 'Tour',
+  'skeleton-coast-tour': 'Skeleton',
+  'sandwich-harbour-full-day': 'Harbour',
+  'spitzkoppe-tour': 'Tour',
+  'pelican-point-tour': 'Pelican',
+  'moonlandscape-tour': 'Tour',
+  'cape-cross': 'Cross',
+  'living-desert-tour': 'Desert',
+  'dolphin-seal-catamaran-cruise': 'Dolphin',
 };
 
 const stopsWithTours = mapJourney.map((pin) => {
@@ -108,7 +123,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   <div class="tour-intro__grid container">
     <div class="tour-intro__copy">
       <p class="tour-intro__eyebrow">Salt and Sun Tours</p>
-      <h1 class="tour-intro__heading">Tours &amp; Adventures</h1>
+      <h1 class="tour-intro__heading" set:html={hl('Tours &amp; Adventures', 'Adventures')} />
       <p class="tour-intro__body">
         Ten signature destinations across three regions, plus every
         shorter adventure and combo deal we run out of Swakopmund and
@@ -165,7 +180,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
               <div class="tour-reveal__body reveal-item">
                 <p class="tour-reveal__region">{pin.regionLabel}</p>
-                <h2 class="tour-reveal__title">{tour.name}</h2>
+                <h2 class="tour-reveal__title" set:html={hl(tour.name, tourAccentWords[tour.slug])} />
                 <p class="tour-reveal__desc">{tour.description}</p>
 
                 {highlightsBySlug[tour.slug] && (
@@ -205,7 +220,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
            beside it can keep using the same non-sticky
            margin-top-repositioning trick to end up level with it. -->
       <div class="tour-recap reveal" data-map-final>
-        <h2 class="tour-recap__heading reveal-item">Ten tours, three regions</h2>
+        <h2 class="tour-recap__heading reveal-item" set:html={hl('Ten tours, three regions', 'regions')} />
         <p class="tour-recap__lede reveal-item">
           Every tour, together on one map — see exactly where each one takes you.
         </p>

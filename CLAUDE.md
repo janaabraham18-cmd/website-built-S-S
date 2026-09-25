@@ -28,3 +28,28 @@ differently. When building or changing any layout:
 - Verify with Playwright at a few widths in that range (1024, 1280, 1440,
   1920 are a reasonable spread) before calling a layout done, the same way
   this codebase already screenshots mobile and one desktop size.
+
+## The one-accent-word-per-heading device
+
+Every real heading sitewide (h1-h4, including dynamic ones like tour/journey
+names and journey day titles) gets exactly one word rendered in the accent
+orange (`--color-heading-accent`, `.accent-word` class, both in
+`src/styles/global.css`) via `hl(text, word)` from `src/utils/text.ts`. This
+is the site's deliberate "personal touch" — do this for any new heading
+rather than leaving it plain. Selection rules:
+
+- Exactly 2 words → the last word.
+- The Journeys day-by-day titles (`src/data/journeys.ts`, `JourneyDay.
+  accentWord`) → a place name or a distinctive activity/feature word, never
+  the same *kind* of choice two days running within one journey, and never
+  the literal same word twice in a row.
+- Everything else → whatever's most distinctive/evocative in that specific
+  heading. Never a filler word ("and", "the", "a", "day", etc.) — the point
+  is a word with real content, not whichever one happens to be short.
+- A single-word heading (e.g. a page's own `<h1>Adventures</h1>`) just gets
+  that whole word colored.
+
+`hl()` only wraps the *first* occurrence of the exact substring passed as
+`word`, is used via `set:html` (safe here since every caller passes our own
+static/data-driven copy, never user input), and needs an exact-case
+substring match — pass the word precisely as it appears in the string.

@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
 import ContactForm from '../components/ContactForm.astro';
+import { hl } from '../utils/text';
 
 const address = '1st Street East, Walvis Bay, Namibia';
 const mapSrc = `https://www.google.com/maps?q=${encodeURIComponent(address)}&output=embed`;
@@ -21,7 +22,7 @@ const creditHref = (username: string) =>
       <div class="container">
         <div class="contact-header__card">
           <p class="contact-header__eyebrow">Reach the Crew</p>
-          <h1 class="contact-header__heading">Get in touch</h1>
+          <h1 class="contact-header__heading" set:html={hl('Get in touch', 'touch')} />
           <p class="contact-header__body">
             Have a question before you book, or want to talk through your trip
             first? We're a small, local team based in Swakopmund and Walvis

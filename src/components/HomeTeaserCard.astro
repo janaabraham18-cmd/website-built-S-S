@@ -1,14 +1,17 @@
 ---
+import { hl } from '../utils/text';
+
 interface Props {
   href: string;
   imageUrl: string;
   imageCredit?: { name: string; username: string };
   name: string;
+  accentWord: string;
   meta?: string;
   desc: string;
 }
 
-const { href, imageUrl, imageCredit, name, meta, desc } = Astro.props;
+const { href, imageUrl, imageCredit, name, accentWord, meta, desc } = Astro.props;
 
 const creditHref = (username: string) =>
   `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
@@ -20,7 +23,7 @@ const creditHref = (username: string) =>
       <img src={imageUrl} alt={name} loading="lazy" decoding="async" />
     </div>
     {meta && <p class="home-teaser__meta">{meta}</p>}
-    <h3 class="home-teaser__name">{name}</h3>
+    <h3 class="home-teaser__name" set:html={hl(name, accentWord)} />
     <p class="home-teaser__desc">{desc}</p>
   </a>
   {imageCredit && (

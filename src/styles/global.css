@@ -26,6 +26,11 @@
   --color-accent: var(--color-terracotta-500);
   --color-accent-strong: var(--color-terracotta-600);
   --color-accent-soft: var(--color-ochre-400);
+  /* The one-word-per-heading accent (see .accent-word below) — a true
+     warm orange, distinct from the more golden ochre-400 and the more
+     brick-red terracotta tones used elsewhere, so it reads unmistakably
+     as its own device rather than blending into the existing palette. */
+  --color-heading-accent: var(--color-ochre-500);
   --color-border: var(--color-beige-300);
   --color-error: #8c2f1f;
 
@@ -233,6 +238,15 @@ h4 {
   margin: 0 0 var(--space-sm);
   font-weight: 700;
   color: var(--color-earth-900);
+}
+
+/* The sitewide "personal touch" heading device: one deliberately chosen
+   word per heading (see src/utils/text.ts's hl()) rendered in the accent
+   orange instead of the heading's own color — inherits everything else
+   (weight, size) from its parent so it reads as emphasis within the
+   heading, not a different style of text. */
+.accent-word {
+  color: var(--color-heading-accent);
 }
 
 h1 {
