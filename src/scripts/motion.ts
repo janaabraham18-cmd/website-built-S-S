@@ -482,12 +482,18 @@ function setupPostcards() {
   });
 }
 
-// About Us card: same prev/counter/next pagination as Postcards above,
-// its own instance since it pages through prose, not photo cards. Click-
-// driven, not gated behind reduced motion.
-function setupAboutPages() {
-  const root = document.querySelector<HTMLElement>('[data-about-pages]');
-  if (!root) return;
+// About Us card: pages advance by clicking prev/next, or — for visitors
+// who haven't asked for reduced motion — automatically as they scroll,
+// since the whole section pins in place for a stretch of scroll and each
+// third of that pinned range shows one page (same pin + ScrollTrigger
+// pattern as the .section--pinned background pan elsewhere on this
+// page). Reduced motion drops the pin entirely; the arrows are the only
+// way through either way, so state (index/render) is shared between both
+// paths rather than duplicated.
+function setupAboutCard(reduceMotion: boolean) {
+  const section = document.querySelector<HTMLElement>('.about-block');
+  const root = section?.querySelector<HTMLElement>('[data-about-pages]');
+  if (!section || !root) return;
 
   const pages = Array.from(root.querySelectorAll<HTMLElement>('[data-about-page]'));
   const prevBtn = root.querySelector<HTMLButtonElement>('[data-about-prev]');
@@ -498,10 +504,7 @@ function setupAboutPages() {
   let index = 0;
 
   function render() {
-    pages.forEach((page, i) => {
-      page.hidden = i !== index;
-      page.classList.toggle('is-active', i === index);
-    });
+    pages.forEach((page, i) => page.classList.toggle('is-active', i === index));
     if (counter) counter.textContent = String(index + 1);
   }
 
@@ -513,6 +516,25 @@ function setupAboutPages() {
   nextBtn.addEventListener('click', () => {
     index = (index + 1) % pages.length;
     render();
+  });
+
+  if (reduceMotion || pages.length < 2) return;
+
+  const steps = pages.length - 1;
+  ScrollTrigger.create({
+    trigger: section,
+    start: 'top top',
+    end: `+=${steps * 100}%`,
+    pin: true,
+    pinSpacing: true,
+    scrub: true,
+    onUpdate: (self) => {
+      const next = Math.min(steps, Math.round(self.progress * steps));
+      if (next !== index) {
+        index = next;
+        render();
+      }
+    },
   });
 }
 
@@ -900,7 +922,6 @@ export function initMotion() {
   setupTourPhotoBleed();
   setupGalleryFilter();
   setupPostcards();
-  setupAboutPages();
   setupLogbookSlideshow(reduceMotion);
 
   let lenis: Lenis | undefined;
@@ -945,6 +966,7 @@ export function initMotion() {
     }
 
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
+    setupAboutCard(false);
     setupTourRows(false);
     setupAdventureCards();
     setupAdventureIndex(false);
@@ -1003,6 +1025,7 @@ export function initMotion() {
   // Reduced motion: simple opacity fades, no parallax, no pin, no autoplay drift.
   mm.add('(prefers-reduced-motion: reduce)', () => {
     setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
+    setupAboutCard(true);
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
     setupAdventureIndex(true);
