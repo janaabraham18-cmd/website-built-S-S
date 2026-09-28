@@ -45,9 +45,6 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
   { key: 'combo', label: categoryLabels.combo.label },
   { key: 'journey', label: 'Journeys' },
 ];
-
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 ---
 
 <BaseLayout
@@ -88,15 +85,6 @@ const creditHref = (username: string) =>
               </div>
               <p class="gallery-tile__name">{item.name}</p>
             </a>
-            {item.imageCredit && (
-              <p class="gallery-tile__credit">
-                Photo:{' '}
-                <a href={creditHref(item.imageCredit.username)} target="_blank" rel="noopener noreferrer">
-                  {item.imageCredit.name}
-                </a>{' '}
-                / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-              </p>
-            )}
           </div>
         ))}
       </div>
@@ -190,18 +178,6 @@ const creditHref = (username: string) =>
 
   .gallery-tile__link:hover .gallery-tile__name {
     color: var(--color-accent-strong);
-  }
-
-  .gallery-tile__credit {
-    font-size: 0.72rem;
-    color: var(--color-text-muted);
-    margin: 0.2rem 0 0;
-  }
-
-  .gallery-tile__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 
   .gallery-tile[hidden] {

@@ -4,10 +4,7 @@ interface Props {
   imageCredit?: { name: string; username: string };
 }
 
-const { imageUrl, imageCredit } = Astro.props;
-
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+const { imageUrl } = Astro.props;
 ---
 
 <div class="picture-break">
@@ -17,15 +14,6 @@ const creditHref = (username: string) =>
     style={`background-image:url('${imageUrl}')`}
     aria-hidden="true"
   ></div>
-  {imageCredit && (
-    <p class="picture-break__credit">
-      Photo:{' '}
-      <a href={creditHref(imageCredit.username)} target="_blank" rel="noopener noreferrer">
-        {imageCredit.name}
-      </a>{' '}
-      / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-    </p>
-  )}
 </div>
 
 <style>
@@ -55,19 +43,4 @@ const creditHref = (username: string) =>
     will-change: transform;
   }
 
-  .picture-break__credit {
-    position: absolute;
-    right: var(--space-md);
-    bottom: var(--space-xs);
-    z-index: 1;
-    margin: 0;
-    font-size: var(--fs-xs);
-    color: rgba(58, 35, 28, 0.55);
-  }
-
-  .picture-break__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
 </style>

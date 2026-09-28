@@ -227,13 +227,11 @@ function setupAdventureIndex(reduceMotion: boolean) {
     const previewName = preview.querySelector<HTMLElement>('[data-preview-name]');
     const previewDesc = preview.querySelector<HTMLElement>('[data-preview-desc]');
     const previewCta = preview.querySelector<HTMLAnchorElement>('[data-preview-cta]');
-    const previewCredit = preview.querySelector<HTMLElement>('[data-preview-credit]');
-    const previewCreditName = preview.querySelector<HTMLAnchorElement>('[data-preview-credit-name]');
 
     let active = items.find((i) => i.classList.contains('is-active')) ?? items[0];
 
     const applyContent = (item: HTMLButtonElement) => {
-      const { name, duration, desc, img, slug, creditName, creditUsername } = item.dataset;
+      const { name, duration, desc, img, slug } = item.dataset;
       if (previewImg && img) {
         previewImg.src = img;
         previewImg.alt = name ?? '';
@@ -245,11 +243,6 @@ function setupAdventureIndex(reduceMotion: boolean) {
       if (previewName && name) previewName.textContent = name;
       if (previewDesc && desc) previewDesc.textContent = desc;
       if (previewCta && slug) previewCta.href = `/booking?tour=${slug}`;
-      if (previewCredit) previewCredit.hidden = !creditName;
-      if (previewCreditName && creditName && creditUsername) {
-        previewCreditName.textContent = creditName;
-        previewCreditName.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
-      }
     };
 
     const activate = (item: HTMLButtonElement) => {
@@ -851,21 +844,8 @@ function setupHeroPanelSlideshow(reduceMotion: boolean) {
   const panels = Array.from(track.querySelectorAll<HTMLElement>('[data-hero-panel]'));
   if (panels.length < 2) return;
 
-  const creditEl = document.querySelector<HTMLElement>('[data-hero-credit]');
-  const creditLink = creditEl?.querySelector<HTMLAnchorElement>('[data-hero-credit-name]');
-
   const setActive = (index: number) => {
     panels.forEach((panel, i) => panel.classList.toggle('is-active', i === index));
-
-    const { creditName, creditUsername } = panels[index].dataset;
-    if (!creditEl || !creditLink) return;
-    if (creditName && creditUsername) {
-      creditLink.textContent = creditName;
-      creditLink.href = `https://unsplash.com/@${creditUsername}?utm_source=salt-and-sun-tours&utm_medium=referral`;
-      creditEl.hidden = false;
-    } else {
-      creditEl.hidden = true;
-    }
   };
 
   if (reduceMotion) return;

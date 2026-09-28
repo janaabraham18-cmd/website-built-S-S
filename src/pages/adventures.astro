@@ -59,9 +59,6 @@ const adventureGroups: AdventureGroupWithBanner[] = adventureGroupDefs
 
 const totalActivities = adventureGroups.reduce((n, g) => n + g.items.length, 0);
 
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
-
 const heroPhoto = {
   url: 'https://images.unsplash.com/photo-1534639809741-2444a584d307?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
   credit: { name: 'Anqi Lu', username: 'anqilu' },
@@ -95,16 +92,6 @@ const closingBg = {
         </p>
         <a class="btn btn-primary" href="#adventures">Start exploring</a>
       </div>
-
-      {heroPhoto.credit && (
-        <p class="adventures-hero__credit">
-          Photo:{' '}
-          <a href={creditHref(heroPhoto.credit.username)} target="_blank" rel="noopener noreferrer">
-            {heroPhoto.credit.name}
-          </a>{' '}
-          / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-        </p>
-      )}
     </section>
 
     <section class="adventures-stats reveal" aria-label="Quick facts">
@@ -156,15 +143,6 @@ const closingBg = {
                   <p class="adventure-group__eyebrow">{group.eyebrow}</p>
                   <p class="adventure-group__intro">{group.intro}</p>
                 </div>
-                {group.bannerCredit && (
-                  <p class="adventure-group__banner-credit">
-                    Photo:{' '}
-                    <a href={creditHref(group.bannerCredit.username)} target="_blank" rel="noopener noreferrer">
-                      {group.bannerCredit.name}
-                    </a>{' '}
-                    / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-                  </p>
-                )}
               </div>
 
               <div class="adventure-index reveal-item" data-adventure-index>
@@ -181,8 +159,6 @@ const closingBg = {
                       data-duration={tour.duration ?? ''}
                       data-desc={tour.description}
                       data-img={tour.imageUrl}
-                      data-credit-name={tour.imageCredit?.name ?? ''}
-                      data-credit-username={tour.imageCredit?.username ?? ''}
                       aria-current={i === 0 ? 'true' : 'false'}
                     >
                       <span class="adventure-index__mark" aria-hidden="true">
@@ -201,13 +177,6 @@ const closingBg = {
                 <div class="adventure-index__preview" data-index-preview>
                   <div class="photo-frame adventure-index__photo">
                     <img data-preview-img src={group.items[0].imageUrl} alt={group.items[0].name} loading="lazy" decoding="async" />
-                    <p class="adventure-index__credit" data-preview-credit hidden={!group.items[0].imageCredit}>
-                      Photo:{' '}
-                      <a data-preview-credit-name href={group.items[0].imageCredit ? creditHref(group.items[0].imageCredit.username) : '#'} target="_blank" rel="noopener noreferrer">
-                        {group.items[0].imageCredit?.name}
-                      </a>{' '}
-                      / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-                    </p>
                   </div>
                   <div class="adventure-index__preview-body">
                     <p class="adventure-index__preview-duration" data-preview-duration hidden={!group.items[0].duration}>{group.items[0].duration}</p>
@@ -234,15 +203,6 @@ const closingBg = {
           <a class="btn btn-outline" href="/booking">Start booking</a>
         </div>
       </div>
-      {closingBg.credit && (
-        <p class="adventures-closing__credit">
-          Photo:{' '}
-          <a href={creditHref(closingBg.credit.username)} target="_blank" rel="noopener noreferrer">
-            {closingBg.credit.name}
-          </a>{' '}
-          / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-        </p>
-      )}
     </section>
   </div>
 </BaseLayout>
@@ -321,21 +281,6 @@ const closingBg = {
     margin: 0 0 var(--space-lg);
   }
 
-  .adventures-hero__credit {
-    position: absolute;
-    right: var(--space-md);
-    bottom: var(--space-md);
-    z-index: 1;
-    margin: 0;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.75);
-  }
-
-  .adventures-hero__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
 
   @media (max-width: 640px) {
     .adventures-hero__content {
@@ -532,22 +477,6 @@ const closingBg = {
     margin: 0;
   }
 
-  .adventure-group__banner-credit {
-    position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-    z-index: 1;
-    margin: 0;
-    font-size: 0.65rem;
-    color: rgba(251, 247, 241, 0.75);
-  }
-
-  .adventure-group__banner-credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
   @media (max-width: 640px) {
     .adventure-group__banner {
       aspect-ratio: 4 / 5;
@@ -690,22 +619,6 @@ const closingBg = {
     box-shadow: var(--shadow-md);
   }
 
-  .adventure-index__credit {
-    position: absolute;
-    right: var(--space-2xs);
-    bottom: var(--space-2xs);
-    z-index: 1;
-    margin: 0;
-    font-size: 0.65rem;
-    color: rgba(251, 247, 241, 0.85);
-  }
-
-  .adventure-index__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-
   .adventure-index__preview-body {
     padding-top: var(--space-sm);
     max-width: 42rem;
@@ -800,19 +713,4 @@ const closingBg = {
     flex-wrap: wrap;
   }
 
-  .adventures-closing__credit {
-    position: relative;
-    z-index: 1;
-    margin: var(--space-sm) 0 0;
-    padding: 0 var(--space-md);
-    text-align: right;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.75);
-  }
-
-  .adventures-closing__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
 </style>

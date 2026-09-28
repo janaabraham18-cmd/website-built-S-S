@@ -46,9 +46,6 @@ const stopsWithTours = mapJourney.map((pin) => {
   return { pin, tour };
 }).filter((s): s is { pin: typeof mapJourney[number]; tour: NonNullable<typeof s.tour> } => !!s.tour);
 
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
-
 // 2-4 highlight phrases per tour, each lifted directly from that tour's
 // own description in tours.ts (never invented) — a scannable recap of
 // concrete things you'll see/do, distinct from the Includes line below
@@ -113,13 +110,6 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   <div class="tour-intro__bg" style={`background-image:url('${introBg.url}')`} aria-hidden="true"></div>
   <div class="tour-intro__scrim" aria-hidden="true"></div>
 
-  <p class="tour-intro__credit">
-    Photo:{' '}
-    <a href={creditHref(introBg.credit.username)} target="_blank" rel="noopener noreferrer">{introBg.credit.name}</a>{' '}
-    /{' '}
-    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-  </p>
-
   <div class="tour-intro__grid container">
     <div class="tour-intro__copy">
       <p class="tour-intro__eyebrow">Salt and Sun Tours</p>
@@ -168,14 +158,6 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
                   loading={i === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                 />
-                {tour.imageCredit && (
-                  <p class="tour-reveal__credit">
-                    Photo:{' '}
-                    <a href={creditHref(tour.imageCredit.username)} target="_blank" rel="noopener noreferrer">{tour.imageCredit.name}</a>{' '}
-                    /{' '}
-                    <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-                  </p>
-                )}
               </div>
 
               <div class="tour-reveal__body reveal-item">
@@ -325,22 +307,6 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
       rgba(31, 18, 14, 0.4) 45%,
       rgba(31, 18, 14, 0.8) 100%
     );
-  }
-
-  .tour-intro__credit {
-    position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-    z-index: 1;
-    margin: 0;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.65);
-  }
-
-  .tour-intro__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 
   .tour-intro__grid {
@@ -706,21 +672,6 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     object-fit: cover;
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-  }
-
-  .tour-reveal__credit {
-    position: absolute;
-    right: var(--space-sm);
-    bottom: var(--space-sm);
-    margin: 0;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.85);
-  }
-
-  .tour-reveal__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
   }
 
   .tour-reveal__region {

@@ -11,10 +11,7 @@ interface Props {
   desc: string;
 }
 
-const { href, imageUrl, imageCredit, name, accentWord, meta, desc } = Astro.props;
-
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
+const { href, imageUrl, name, accentWord, meta, desc } = Astro.props;
 ---
 
 <div class="home-teaser">
@@ -26,15 +23,6 @@ const creditHref = (username: string) =>
     <h3 class="home-teaser__name" set:html={hl(name, accentWord)} />
     <p class="home-teaser__desc">{desc}</p>
   </a>
-  {imageCredit && (
-    <p class="home-teaser__credit">
-      Photo:{' '}
-      <a href={creditHref(imageCredit.username)} target="_blank" rel="noopener noreferrer">
-        {imageCredit.name}
-      </a>{' '}
-      / <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-    </p>
-  )}
 </div>
 
 <style>
@@ -87,15 +75,4 @@ const creditHref = (username: string) =>
     overflow: hidden;
   }
 
-  .home-teaser__credit {
-    font-size: 0.68rem;
-    color: var(--color-text-muted);
-    margin: 0.3rem 0 0;
-  }
-
-  .home-teaser__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
 </style>

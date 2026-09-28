@@ -6,8 +6,6 @@ const bgPhoto = {
   url: 'https://images.unsplash.com/photo-1539527783216-403e0d1b6747?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'Alan J. Hendry', username: 'imedianamibia' },
 };
-const creditHref = (username: string) =>
-  `https://unsplash.com/@${username}?utm_source=salt-and-sun-tours&utm_medium=referral`;
 
 const faqItems = [
   {
@@ -63,13 +61,6 @@ const faqItems = [
         <p class="faq-more">Have a different question? <a href="/contact">Get in touch</a>.</p>
       </div>
     </section>
-
-    <p class="faq-page__credit">
-      Photo:{' '}
-      <a href={creditHref(bgPhoto.credit.username)} target="_blank" rel="noopener noreferrer">{bgPhoto.credit.name}</a>{' '}
-      /{' '}
-      <a href="https://unsplash.com/?utm_source=salt-and-sun-tours&utm_medium=referral" target="_blank" rel="noopener noreferrer">Unsplash</a>
-    </p>
   </div>
 </BaseLayout>
 
@@ -180,22 +171,6 @@ const faqItems = [
     margin: 2rem 0 0;
   }
   .faq-more a { color: var(--color-ochre-400); font-weight: 600; }
-
-  .faq-page__credit {
-    position: relative;
-    z-index: 1;
-    margin: 0;
-    padding: var(--space-sm) var(--space-md);
-    text-align: right;
-    font-size: var(--fs-xs);
-    color: rgba(251, 247, 241, 0.75);
-  }
-
-  .faq-page__credit a {
-    color: inherit;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
 
   @media (max-width: 640px) {
     .faq-item {
