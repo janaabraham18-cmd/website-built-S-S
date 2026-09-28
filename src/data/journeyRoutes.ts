@@ -63,4 +63,16 @@ export const journeyRoutes: MapRoute[] = [
       windhoek,
     ],
   },
+  {
+    slug: '3-day-windhoek-sossusvlei-swakopmund-escape',
+    color: '#6b3a2c', // earth-700
+    dash: '4 4',
+    points: [windhoek, sossusvlei, swakopmund, walvisBay, windhoek],
+  },
+  {
+    slug: '3-day-walvis-bay-escape',
+    color: '#d3a24f', // ochre-400
+    dash: '1 4',
+    points: [walvisBay, swakopmund, sossusvlei, walvisBay],
+  },
 ];

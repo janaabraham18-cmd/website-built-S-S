@@ -10,6 +10,8 @@ const journeyAccentWords: Record<string, string> = {
   '10-day-namibia-grand-tour': 'Grand',
   '8-day-windhoek-coastal-discovery': 'Discovery',
   '13-day-namibia-complete-safari': 'Safari',
+  '3-day-windhoek-sossusvlei-swakopmund-escape': 'Escape',
+  '3-day-walvis-bay-escape': 'Escape',
 };
 
 const heroPhoto = {
@@ -39,7 +41,7 @@ const creditHref = (username: string) =>
         <p class="journeys-hero__subhead">
           A Journey strings several of our tours and destinations together into one
           set route across Namibia, planned day by day — not just a longer version
-          of a single tour. Four routes exist already; tell us what you have in
+          of a single tour. Six routes exist already; tell us what you have in
           mind and we'll plan another.
         </p>
         {journeys.length > 0 && (
@@ -166,7 +168,7 @@ const creditHref = (username: string) =>
             <div class="journeys-map-intro reveal-item">
               <p class="eyebrow">The Route Book</p>
               <h2 set:html={hl('Every Route, Plotted', 'Plotted')} />
-              <p>Four routes charted across Namibia — tap a name to jump straight to its itinerary above.</p>
+              <p>Six routes charted across Namibia — tap a name to jump straight to its itinerary above.</p>
             </div>
 
             <div class="journeys-map reveal-item">
@@ -213,6 +215,20 @@ const creditHref = (username: string) =>
         </section>
       )
     }
+
+    <section class="journeys-self-drive reveal">
+      <div class="container journeys-self-drive__inner reveal-item">
+        <h2 set:html={hl('Want to explore at your own pace?', 'pace')} />
+        <p>
+          Self-drive itineraries, car hire, and camping packages are available too —
+          tell us what you have in mind and we'll help you plan the route.
+        </p>
+        <div class="journeys-self-drive__ctas">
+          <a class="btn btn-primary" href="/contact">Plan a self-drive trip</a>
+          <a class="btn btn-outline" href="/tours">See our single-day tours</a>
+        </div>
+      </div>
+    </section>
   </div>
 </BaseLayout>
 
@@ -733,5 +749,38 @@ const creditHref = (username: string) =>
     .journeys-empty__card {
       padding: var(--space-lg) var(--space-md);
     }
+  }
+
+  /* ---------- Self-drive / car hire / camping callout ---------- */
+  /* Plain block, no photo — same lightweight pattern as Tours' own
+     closing callout (.tours-closing), since this is a short pointer to
+     get in touch rather than a section that needs a photo of its own. */
+  .journeys-self-drive {
+    padding-block: var(--space-2xl);
+    background: var(--color-earth-700);
+  }
+
+  .journeys-self-drive__inner {
+    max-width: 640px;
+    margin-inline: auto;
+    text-align: center;
+    color: var(--color-text-on-dark);
+  }
+
+  .journeys-self-drive__inner h2 {
+    margin: 0 0 var(--space-2xs);
+    color: var(--color-text-on-dark);
+  }
+
+  .journeys-self-drive__inner p {
+    color: var(--color-sand-200);
+    margin: 0 0 var(--space-lg);
+  }
+
+  .journeys-self-drive__ctas {
+    display: flex;
+    gap: var(--space-md);
+    justify-content: center;
+    flex-wrap: wrap;
   }
 </style>

@@ -442,6 +442,119 @@ export const journeys: Journey[] = [
       'Meals not specified as included',
     ],
   },
+
+  // Short 3-day package from the owner — Windhoek-based, ending back in
+  // Windhoek. Flights are handled the same way for both new short
+  // packages: excluded, but the owner will arrange them on request, or a
+  // guest can book their own and we run the rest of the package —
+  // captured as a note on the excluded flights line rather than a new
+  // includes/excludes field, since it's a one-off clarification, not a
+  // new shape of data.
+  {
+    slug: '3-day-windhoek-sossusvlei-swakopmund-escape',
+    name: '3-Day Windhoek – Sossusvlei – Swakopmund Escape',
+    tagline:
+      "A fast-paced taste of Namibia's icons — Sossusvlei's red dunes, Dead Vlei's ghost trees, and Swakopmund's coastal adventures, packed into three action-filled days.",
+    durationDays: 3,
+    regions: ['Windhoek', 'Sossusvlei', 'Swakopmund', 'Walvis Bay'],
+    tripType: 'guided',
+    heroImage:
+      'https://images.unsplash.com/photo-1739036178003-5fa2789c4dff?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Tim G', username: 'tim1001' },
+    itinerary: [
+      {
+        day: 1,
+        title: 'Windhoek Arrival & Drive to Sossusvlei',
+        accentWord: 'Sossusvlei',
+        location: 'Windhoek → Sossusvlei',
+        description:
+          'Airport pickup in Windhoek, then the drive into the Namib Desert towards Sossusvlei, with a stop at Sesriem Canyon on the way.',
+      },
+      {
+        day: 2,
+        title: 'Sossusvlei, Dead Vlei & Big Daddy Dune',
+        accentWord: 'Dune',
+        location: 'Sossusvlei → Swakopmund',
+        description:
+          'A full day among the towering red dunes — the climb up Big Daddy and the ghostly white pan of Dead Vlei — then the drive north to Swakopmund.',
+      },
+      {
+        day: 3,
+        title: 'Swakopmund Adventures & Return to Windhoek',
+        accentWord: 'Swakopmund',
+        location: 'Swakopmund / Walvis Bay → Windhoek',
+        description:
+          "A morning Sandwich Harbour 4x4 excursion and catamaran cruise, then quad biking and a camel ride in the dunes, before the drive back to Windhoek for your departure.",
+      },
+    ],
+    includes: [
+      'Private transport with a professional guide',
+      'Accommodation, sharing basis',
+      'Activities listed in the itinerary',
+      'Airport transfers',
+    ],
+    excludes: [
+      "International flights — arranged on request, or book your own and we'll handle the rest of the package",
+      'Travel insurance',
+      'Personal spending and gratuities',
+      'Meals not specified as included',
+    ],
+  },
+
+  // Same core route as the Windhoek escape above, run the other
+  // direction and based out of Walvis Bay instead — kept as its own
+  // entry rather than folded into the Windhoek one since the owner
+  // drafted it as a distinct package for guests already on the coast.
+  {
+    slug: '3-day-walvis-bay-escape',
+    name: '3-Day Walvis Bay Escape',
+    tagline:
+      "Namibia's dunes and ocean in one quick escape from Walvis Bay — Sandwich Harbour, a catamaran cruise, dune adventures and Sossusvlei's red sand, all in three days.",
+    durationDays: 3,
+    regions: ['Walvis Bay', 'Swakopmund', 'Sossusvlei'],
+    tripType: 'guided',
+    heroImage:
+      'https://images.unsplash.com/photo-1761205930562-e176cfa86e64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Nathalie Lays', username: 'nath_lays' },
+    itinerary: [
+      {
+        day: 1,
+        title: 'Sandwich Harbour & Catamaran Cruise',
+        accentWord: 'Cruise',
+        location: 'Walvis Bay',
+        description:
+          'Arrival in Walvis Bay, a Sandwich Harbour 4x4 excursion along the dunes meeting the Atlantic, then a dolphin and seal catamaran cruise on the lagoon.',
+      },
+      {
+        day: 2,
+        title: 'Camel Ride, Quad Biking & Drive to Sossusvlei',
+        accentWord: 'Sossusvlei',
+        location: 'Swakopmund Dunes → Sossusvlei',
+        description:
+          'A morning camel ride and quad biking adventure in the dunes near Swakopmund, then the scenic drive inland to Sossusvlei.',
+      },
+      {
+        day: 3,
+        title: 'Sossusvlei, Sesriem Canyon, Big Daddy & Dead Vlei',
+        accentWord: 'Canyon',
+        location: 'Sossusvlei → Walvis Bay',
+        description:
+          'A full day among the red dunes — Sesriem Canyon, the climb up Big Daddy, and the ghostly white pan of Dead Vlei — before the drive back to Walvis Bay for your departure.',
+      },
+    ],
+    includes: [
+      'Private transport with a professional guide',
+      'Accommodation, sharing basis',
+      'Activities listed in the itinerary',
+      'Transfers, including to and from Walvis Bay',
+    ],
+    excludes: [
+      "International flights — arranged on request, or book your own and we'll handle the rest of the package",
+      'Travel insurance',
+      'Personal spending and gratuities',
+      'Meals not specified as included',
+    ],
+  },
 ];
 
 export const journeyBySlug = (slug: string): Journey | undefined =>
