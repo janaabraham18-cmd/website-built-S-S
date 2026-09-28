@@ -28,6 +28,16 @@ differently. When building or changing any layout:
 - Verify with Playwright at a few widths in that range (1024, 1280, 1440,
   1920 are a reasonable spread) before calling a layout done, the same way
   this codebase already screenshots mobile and one desktop size.
+- The site header's desktop nav (`Header.astro`, `.site-header__nav`) needs
+  ~1180px of unbroken width for the full logo wordmark plus all 8 links
+  (measured directly, zero breathing room) — it used to switch to the
+  hamburger menu at 768px, which left the entire tablet range and any
+  laptop window narrower than ~1180px with neither the logo nor the nav
+  having room, wrapping the logo text into a multi-line stack that
+  overlapped the nav underneath it. The breakpoint is now 1200px, with
+  margin. If more nav links or a longer logo string are ever added, re-measure
+  (`getBoundingClientRect().width` on `.site-header__logo` and
+  `.site-header__nav`, summed) rather than assuming 1200px still clears it.
 
 ## The one-accent-word-per-heading device
 

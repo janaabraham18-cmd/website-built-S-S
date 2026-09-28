@@ -126,6 +126,8 @@ const navLinks = [
     text-transform: uppercase;
     color: var(--color-earth-900);
     letter-spacing: 0.04em;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   .site-header__mark {
@@ -235,7 +237,14 @@ const navLinks = [
     transform: translateY(-7px) rotate(-45deg);
   }
 
-  @media (max-width: 768px) {
+  /* The full logo wordmark + all 8 nav links need ~1180px with zero
+     breathing room (measured directly) — comfortably more than the
+     768px this used to switch at, which let the tablet range (~768–
+     900px) and narrower laptop windows reach this with neither the desktop
+     nav nor the logo having room, wrapping the logo text into a stack
+     that overlaps the nav. Switching to the hamburger pattern earlier,
+     at 1200px, guarantees they never compete for space. */
+  @media (max-width: 1200px) {
     .site-header__nav {
       display: none;
     }
