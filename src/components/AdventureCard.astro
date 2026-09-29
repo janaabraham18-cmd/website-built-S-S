@@ -1,5 +1,6 @@
 ---
 import type { Tour } from '../data/tours';
+import { hl } from '../utils/text';
 
 interface Props {
   tour: Tour;
@@ -13,6 +14,30 @@ const { tour, featured = false } = Astro.props;
 // exactly the long-sentence-on-a-card problem this component exists to
 // avoid, so only genuinely short values get shown here at all.
 const shortDuration = tour.duration && tour.duration.length <= 16 ? tour.duration : undefined;
+
+// One accent word per card title, same rule as every other heading
+// sitewide (see CLAUDE.md) — keyed here rather than passed in from each
+// page, since the word choice is a property of the tour's own name, not
+// of wherever the card happens to be shown. Covers every adventure-
+// category tour, not just the ones the live Adventures page currently
+// displays, so the component stays correct if that selection changes.
+// 'sandwich-harbour-half-day' reuses 'Harbour', matching the accent
+// word tourAccentWords already picked for its full-day sibling.
+const adventureAccentWords: Record<string, string> = {
+  'quad-bike-tour': 'Quad',
+  'explorer-tour': 'Explorer',
+  'breakfast-run': 'Run',
+  paragliding: '',
+  'camel-ride': 'Ride',
+  'special-quad-90min': 'Quad',
+  sandboarding: '',
+  'township-tour': 'Tour',
+  'sandwich-harbour-half-day': 'Harbour',
+  kayaking: '',
+  'fat-bike-tour': 'Fat',
+  fishing: '',
+  'tandem-skydive': 'Skydive',
+};
 ---
 
 <article class:list={['adventure-card', featured && 'adventure-card--featured']}>
@@ -27,7 +52,7 @@ const shortDuration = tour.duration && tour.duration.length <= 16 ? tour.duratio
       }
     </div>
     <div class="adventure-card__caption">
-      <h3 class="adventure-card__title">{tour.name}</h3>
+      <h3 class="adventure-card__title" set:html={hl(tour.name, adventureAccentWords[tour.slug])} />
       {shortDuration && <span class="adventure-card__duration">{shortDuration}</span>}
     </div>
   </a>
