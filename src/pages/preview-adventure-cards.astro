@@ -35,8 +35,7 @@ const items = slugs
     <p>
       A representative sample — 8 of the ~25 adventures and combos —
       showing the grid rhythm with three featured spans (Quad Bike Tour,
-      Dolphin &amp; Seal Catamaran Cruise, Tandem Skydive). Scroll each
-      card into and out of view to see the reversible dim/fade.
+      Dolphin &amp; Seal Catamaran Cruise, Tandem Skydive).
     </p>
   </div>
 
@@ -62,23 +61,20 @@ const items = slugs
 
   .adventure-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: 240px;
-    grid-auto-flow: dense;
-    gap: var(--space-md);
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: var(--space-lg) var(--space-md);
     padding-block: var(--space-xl) var(--space-2xl);
   }
 
   @media (max-width: 960px) {
     .adventure-grid {
-      grid-template-columns: repeat(2, 1fr);
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
   @media (max-width: 640px) {
     .adventure-grid {
-      grid-template-columns: 1fr;
-      grid-auto-rows: 280px;
+      grid-template-columns: minmax(0, 1fr);
     }
   }
 </style>

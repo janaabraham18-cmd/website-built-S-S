@@ -7,216 +7,95 @@ interface Props {
 }
 
 const { tour, featured = false } = Astro.props;
+
+// Some tours' `duration` field is a real sentence (pickup times, a
+// scheduling note) rather than a short "30 min"/"2h30min" — those read as
+// exactly the long-sentence-on-a-card problem this component exists to
+// avoid, so only genuinely short values get shown here at all.
+const shortDuration = tour.duration && tour.duration.length <= 16 ? tour.duration : undefined;
 ---
 
 <article class:list={['adventure-card', featured && 'adventure-card--featured']}>
-  {
-    tour.imageUrl ? (
-      <img class="adventure-card__img" src={tour.imageUrl} alt="" loading="lazy" decoding="async" />
-    ) : (
-      <div class="adventure-card__img adventure-card__img--placeholder" aria-hidden="true" />
-    )
-  }
-
-  <div class="adventure-card__scrim" aria-hidden="true"></div>
-  <div class="adventure-card__scrim-strong" aria-hidden="true"></div>
-
-  <button
-    type="button"
-    class="adventure-card__tap-hint"
-    aria-expanded="false"
-    data-adventure-toggle
-  >
-    Tap for details
-  </button>
-
-  <div class="adventure-card__content">
-    <h3 class="adventure-card__title">{tour.name}</h3>
-
-    <div class="adventure-card__details" data-adventure-details>
-      <p class="adventure-card__desc">{tour.description}</p>
-      <p class="adventure-card__included">
-        <span class="adventure-card__included-label">Includes</span> {tour.included.join(', ')}
-      </p>
-      <a class="adventure-card__book" href={`/booking?tour=${tour.slug}`}>Book this →</a>
+  <a class="adventure-card__link" href={`/booking?tour=${tour.slug}`}>
+    <div class="photo-frame adventure-card__photo">
+      {
+        tour.imageUrl ? (
+          <img src={tour.imageUrl} alt="" loading="lazy" decoding="async" />
+        ) : (
+          <div class="adventure-card__photo-placeholder" aria-hidden="true" />
+        )
+      }
     </div>
-  </div>
+    <div class="adventure-card__caption">
+      <h3 class="adventure-card__title">{tour.name}</h3>
+      {shortDuration && <span class="adventure-card__duration">{shortDuration}</span>}
+    </div>
+  </a>
 </article>
 
 <style>
-  .adventure-card {
-    position: relative;
-    overflow: hidden;
-    border-radius: var(--radius-lg);
-    grid-column: span 1;
-    grid-row: span 1;
+  .adventure-card__link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .adventure-card__photo {
+    aspect-ratio: 4 / 3;
   }
 
   .adventure-card--featured {
     grid-column: span 2;
-    grid-row: span 2;
   }
 
-  .adventure-card__img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .adventure-card__img--placeholder {
-    background: var(--gradient-warm);
-  }
-
-  .adventure-card__scrim {
-    position: absolute;
-    inset: 0;
-    background: var(--gradient-overlay-photo);
-  }
-
-  .adventure-card__scrim-strong {
-    position: absolute;
-    inset: 0;
-    background: var(--gradient-overlay-photo-strong);
-  }
-
-  .adventure-card__content {
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: var(--space-md);
-  }
-
-  .adventure-card__title {
-    /* Ordered after .adventure-card__details (which sits first in the
-       markup for a11y — heading before body text) so the name is always
-       the bottom-most line on the card instead of floating above the
-       description, which reads as "the middle" once details are capped
-       to a few lines. */
-    order: 2;
-    font-size: var(--fs-lg);
-    color: var(--color-text-on-dark);
-    margin: 0;
-  }
-
-  .adventure-card--featured .adventure-card__title {
-    font-size: var(--fs-2xl);
-  }
-
-  .adventure-card__details {
-    order: 1;
-    margin-bottom: var(--space-xs);
-    /* Capped so long copy can never grow past the card's fixed height and
-       push the title (a flex sibling under justify-content: flex-end) up
-       and out of the visible box — opacity: 0 hides content but doesn't
-       remove it from flex layout, so uncapped text still counts toward
-       flex sizing even while "invisible". Overflow fades out softly
-       instead of clipping mid-line. */
-    max-height: 8rem;
-    overflow: hidden;
-    mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-    -webkit-mask-image: linear-gradient(to bottom, black 70%, transparent 100%);
-  }
-
-  .adventure-card--featured .adventure-card__details {
-    max-height: 14rem;
-  }
-
-  .adventure-card__desc {
-    font-size: var(--fs-sm);
-    line-height: var(--lh-normal);
-    color: var(--color-sand-100);
-    margin: 0 0 var(--space-2xs);
-  }
-
-  .adventure-card--featured .adventure-card__desc {
-    font-size: var(--fs-base);
-  }
-
-  .adventure-card__included {
-    font-size: var(--fs-xs);
-    line-height: var(--lh-normal);
-    color: var(--color-sand-200);
-    margin: 0;
-  }
-
-  .adventure-card__included-label {
-    font-weight: 600;
-    color: var(--color-text-on-dark);
-  }
-
-  .adventure-card__book {
-    display: inline-block;
-    margin-top: var(--space-2xs);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    text-decoration: none;
-    color: var(--color-text-on-dark);
-    border-bottom: 1px solid var(--color-ochre-400);
-    padding-bottom: 1px;
-    transition: color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-card__book:hover {
-    color: var(--color-ochre-400);
-    border-color: var(--color-text-on-dark);
-  }
-
-  .adventure-card__tap-hint {
-    display: none;
-    position: absolute;
-    top: var(--space-sm);
-    right: var(--space-sm);
-    z-index: 2;
-    font-family: var(--font-body);
-    font-size: var(--fs-xs);
-    font-weight: 600;
-    color: var(--color-text-on-dark);
-    background: rgba(58, 35, 28, 0.65);
-    border: 1px solid rgba(251, 247, 241, 0.4);
-    border-radius: 999px;
-    padding: var(--space-3xs) var(--space-sm);
-    cursor: pointer;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .adventure-card__tap-hint {
-      display: inline-flex;
-    }
-
-    .adventure-card__scrim-strong {
-      opacity: 0;
-      transition: opacity var(--duration-fast) ease;
-    }
-
-    .adventure-card__details {
-      opacity: 0;
-      transition: opacity var(--duration-fast) ease;
-    }
-
-    .adventure-card__scrim-strong.is-expanded,
-    .adventure-card__details.is-expanded {
-      opacity: 1;
-    }
-  }
-
-  @media (max-width: 960px) {
-    .adventure-card--featured {
-      grid-column: span 2;
-      grid-row: span 1;
-    }
+  .adventure-card--featured .adventure-card__photo {
+    aspect-ratio: 16 / 9;
   }
 
   @media (max-width: 640px) {
     .adventure-card--featured {
       grid-column: span 1;
-      grid-row: span 1;
     }
+  }
+
+  .adventure-card__photo-placeholder {
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-warm);
+  }
+
+  .adventure-card__caption {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+
+  .adventure-card__title {
+    font-size: var(--fs-base);
+    color: var(--color-text);
+    margin: 0;
+    transition: color var(--duration-fast) var(--ease-out);
+  }
+
+  .adventure-card--featured .adventure-card__title {
+    font-size: var(--fs-lg);
+  }
+
+  .adventure-card__link:hover .adventure-card__title {
+    color: var(--color-accent-strong);
+  }
+
+  .adventure-card__duration {
+    flex-shrink: 0;
+    max-width: 40%;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--color-text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 </style>

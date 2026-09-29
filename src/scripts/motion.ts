@@ -88,36 +88,6 @@ function setupTourRows(reduceMotion: boolean) {
   }
 }
 
-// Adventure/combo grid cards: the description dims in over the photo on
-// scroll and reverses when scrolled back out — these are meant to be
-// browsed quickly, not settled into one at a time like the tour rows.
-function setupAdventureCards() {
-  const cards = gsap.utils.toArray<HTMLElement>('.adventure-card');
-
-  for (const card of cards) {
-    const scrimStrong = card.querySelector<HTMLElement>('.adventure-card__scrim-strong');
-    const details = card.querySelector<HTMLElement>('.adventure-card__details');
-    if (!scrimStrong || !details) continue;
-
-    gsap.set(scrimStrong, { opacity: 0 });
-    gsap.set(details, { opacity: 0, y: 12 });
-
-    const tl = gsap.timeline({ paused: true })
-      .to(scrimStrong, { opacity: 1, duration: 0.6, ease: 'power2.out' }, 0)
-      .to(details, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0.05);
-
-    ScrollTrigger.create({
-      trigger: card,
-      start: 'top 85%',
-      end: 'bottom 15%',
-      onEnter: () => tl.play(),
-      onLeave: () => tl.reverse(),
-      onEnterBack: () => tl.play(),
-      onLeaveBack: () => tl.reverse(),
-    });
-  }
-}
-
 // The Logbook: a single filmstrip carousel — all 8 landmark photos live
 // on one flex track and the track is translated by whole slide-widths,
 // so the incoming photo visibly slides in from the side rather than
@@ -763,26 +733,6 @@ function setupHeroPanelSlideshow(reduceMotion: boolean) {
   hero?.addEventListener('focusout', start);
 }
 
-// Reduced motion: no scroll-linked dim/fade at all — a small always-visible
-// "Tap for details" button (shown via CSS under prefers-reduced-motion)
-// toggles full info instantly instead.
-function setupAdventureCardsReducedMotion() {
-  const toggles = document.querySelectorAll<HTMLButtonElement>('[data-adventure-toggle]');
-
-  for (const toggle of toggles) {
-    toggle.addEventListener('click', () => {
-      const card = toggle.closest('.adventure-card');
-      const details = card?.querySelector('.adventure-card__details');
-      const scrimStrong = card?.querySelector('.adventure-card__scrim-strong');
-      if (!details || !scrimStrong) return;
-
-      const expanded = details.classList.toggle('is-expanded');
-      scrimStrong.classList.toggle('is-expanded', expanded);
-      toggle.setAttribute('aria-expanded', String(expanded));
-    });
-  }
-}
-
 export function initMotion() {
   const reduceMotion = window.matchMedia(
     '(prefers-reduced-motion: reduce)'
@@ -839,7 +789,6 @@ export function initMotion() {
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
     setupAboutCard(false);
     setupTourRows(false);
-    setupAdventureCards();
     setupAdventuresHeadingLine(false);
     setupComboBuilder(false);
     setupTourRecapSlideshow(false);
@@ -898,7 +847,6 @@ export function initMotion() {
     setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
     setupAboutCard(true);
     setupTourRows(true);
-    setupAdventureCardsReducedMotion();
     setupAdventuresHeadingLine(true);
     setupComboBuilder(true);
     setupTourRecapSlideshow(true);
