@@ -74,7 +74,7 @@ const selfDriveBg = {
                   <p class="journey-feature__flagship-badge">Our Flagship Camping Journey · Dark Sky Reserve</p>
                 )}
                 <p class="journey-feature__eyebrow">
-                  {journey.durationDays}-Day Journey · {tripTypeLabels[journey.tripType]}
+                  {journey.durationDays}-Day Journey · {tripTypeLabels[journey.tripType]} · Also Self-Drive
                 </p>
                 <h2 class="journey-feature__name" set:html={hl(journey.name, journeyAccentWords[journey.slug])} />
                 <p class="journey-feature__tagline">{journey.tagline}</p>
@@ -106,7 +106,7 @@ const selfDriveBg = {
               <div class="journey-feature__lists">
                 {journey.includes.length > 0 && (
                   <div>
-                    <h4>{journey.campingTiers ? 'Every Guest Gets' : 'Includes'}</h4>
+                    <h4>Every Guest Gets</h4>
                     <ul>
                       {journey.includes.map((item) => <li>{item}</li>)}
                     </ul>
@@ -122,32 +122,42 @@ const selfDriveBg = {
                 )}
               </div>
 
+              <div class="journey-feature__tiers">
+                <div class="journey-feature__tier">
+                  <h4>{journey.tiers.primary.label}</h4>
+                  <ul>
+                    {journey.tiers.primary.includes.map((item) => <li>{item}</li>)}
+                  </ul>
+                  {journey.tiers.primary.excludes.length > 0 && (
+                    <>
+                      <p class="journey-feature__tier-excludes-label">Not included</p>
+                      <ul class="journey-feature__tier-excludes">
+                        {journey.tiers.primary.excludes.map((item) => <li>{item}</li>)}
+                      </ul>
+                    </>
+                  )}
+                </div>
+                <div class="journey-feature__tier">
+                  <h4>{journey.tiers.selfDrive.label}</h4>
+                  <ul>
+                    {journey.tiers.selfDrive.includes.map((item) => <li>{item}</li>)}
+                  </ul>
+                  {journey.tiers.selfDrive.excludes.length > 0 && (
+                    <>
+                      <p class="journey-feature__tier-excludes-label">Not included</p>
+                      <ul class="journey-feature__tier-excludes">
+                        {journey.tiers.selfDrive.excludes.map((item) => <li>{item}</li>)}
+                      </ul>
+                    </>
+                  )}
+                </div>
+              </div>
+
               {
-                journey.campingTiers && (
-                  <div class="journey-feature__tiers">
-                    <div class="journey-feature__tier">
-                      <h4>Fully-Outfitted</h4>
-                      <ul>
-                        {journey.campingTiers.fullyOutfitted.includes.map((item) => <li>{item}</li>)}
-                      </ul>
-                      {journey.campingTiers.fullyOutfitted.excludes.length > 0 && (
-                        <ul class="journey-feature__tier-excludes">
-                          {journey.campingTiers.fullyOutfitted.excludes.map((item) => <li>{item}</li>)}
-                        </ul>
-                      )}
-                    </div>
-                    <div class="journey-feature__tier">
-                      <h4>Self-Drive / BYO</h4>
-                      <ul>
-                        {journey.campingTiers.selfDrive.includes.map((item) => <li>{item}</li>)}
-                      </ul>
-                      {journey.campingTiers.selfDrive.excludes.length > 0 && (
-                        <ul class="journey-feature__tier-excludes">
-                          {journey.campingTiers.selfDrive.excludes.map((item) => <li>{item}</li>)}
-                        </ul>
-                      )}
-                    </div>
-                  </div>
+                journey.campingUpgrade && (
+                  <p class="journey-feature__camping-upsell">
+                    <a href={journey.campingUpgrade.href}>{journey.campingUpgrade.text}</a>
+                  </p>
                 )
               }
             </div>
@@ -623,8 +633,16 @@ const selfDriveBg = {
     gap: 0.4rem;
   }
 
+  .journey-feature__tier-excludes-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-text-muted);
+    margin: var(--space-sm) 0 0.4rem;
+  }
+
   .journey-feature__tier-excludes {
-    margin-top: 0.4rem;
+    margin-top: 0;
   }
 
   .journey-feature__tier li {
@@ -647,6 +665,24 @@ const selfDriveBg = {
 
   .journey-feature__tier-excludes li::before {
     background: var(--color-text-muted);
+  }
+
+  .journey-feature__camping-upsell {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    margin: var(--space-lg) 0 0;
+  }
+
+  .journey-feature__camping-upsell a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  }
+
+  .journey-feature__camping-upsell a:hover {
+    text-decoration-color: currentColor;
   }
 
   @media (max-width: 900px) {

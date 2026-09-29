@@ -28,9 +28,10 @@ export interface JourneyDay {
   description: string;
 }
 
-/** One tier's own includes/excludes — only used by a `campingTiers` journey
- * (see below), where the same route is offered two ways. */
-export interface CampingTier {
+/** One tier's own includes/excludes, plus a short label for its column
+ * heading — used by any journey offered two ways (see `tiers` below). */
+export interface Tier {
+  label: string;
   includes: string[];
   excludes: string[];
 }
@@ -49,22 +50,26 @@ export interface Journey {
   heroImage: string;
   imageCredit?: { name: string; username: string };
   itinerary: JourneyDay[];
-  /** Shared across every guest on this journey. For a two-tier camping
-   * journey (see `campingTiers`), this holds only what both tiers actually
-   * share (e.g. park fees) — tier-specific items (a guide, camping gear,
-   * campsite bookings) live in `campingTiers` instead so the page doesn't
-   * show a fully-outfitted guest's private guide as something a self-drive
-   * guest also gets. */
+  /** Shared across every guest on this journey regardless of tier (e.g.
+   * accommodation, activities, park fees) — tier-specific items (a private
+   * guide and vehicle vs. self-drive route planning) live in `tiers`
+   * instead, so the page doesn't show a guided guest's private driver as
+   * something a self-drive guest also gets. */
   includes: string[];
   excludes: string[];
-  /** Only for a `tripType: 'camping'` journey sold two ways from one route —
-   * fully-outfitted (we supply gear/cook) vs. self-drive/BYO. When set, the
-   * page renders both tiers' includes/excludes alongside the shared ones
-   * above instead of duplicating the whole journey as a second entry. */
-  campingTiers?: {
-    fullyOutfitted: CampingTier;
-    selfDrive: CampingTier;
+  /** Every journey here can be run guided (private vehicle/driver, or for
+   * the camping journey, fully-outfitted) or self-drive (own/hired vehicle,
+   * we plan the route and book ahead) — this holds each tier's own
+   * includes/excludes alongside the shared ones above, instead of
+   * duplicating the whole journey as a second entry per tier. */
+  tiers: {
+    primary: Tier;
+    selfDrive: Tier;
   };
+  /** A one-line cross-sell to the flagship camping journey, for a route
+   * that already passes overnight through Sossusvlei and/or Spitzkoppe —
+   * mirrors Tour['campingUpgrade'] in tours.ts. */
+  campingUpgrade?: { text: string; href: string };
 }
 
 export const journeys: Journey[] = [
@@ -141,8 +146,9 @@ export const journeys: Journey[] = [
     ],
     includes: ['Park and conservation fees'],
     excludes: ['International flights', 'Travel insurance', 'Personal spending and gratuities'],
-    campingTiers: {
-      fullyOutfitted: {
+    tiers: {
+      primary: {
+        label: 'Fully-Outfitted',
         includes: [
           'Private transport with a professional guide',
           'Camping equipment (tents, mattresses, bedding)',
@@ -153,6 +159,7 @@ export const journeys: Journey[] = [
         excludes: [],
       },
       selfDrive: {
+        label: 'Self-Drive / BYO',
         includes: ['Campsite bookings at Spitzkoppe and NamibRand', 'A pre-departure route and camp briefing'],
         excludes: ['Vehicle and camping-gear hire (unless you already have your own)'],
       },
@@ -214,18 +221,33 @@ export const journeys: Journey[] = [
           'Morning quad biking in the dunes and a camel ride, then a Swakopmund town tour before your transfer to the airport.',
       },
     ],
-    includes: [
-      'Private transport with a professional guide',
-      'Accommodation, sharing basis',
-      'Activities listed in the itinerary',
-      'Airport transfers',
-    ],
+    includes: ['Accommodation, sharing basis', 'Activities listed in the itinerary'],
     excludes: [
       'International flights',
       'Travel insurance',
       'Personal spending and gratuities',
       'Meals not specified as included',
     ],
+    tiers: {
+      primary: {
+        label: 'Guided',
+        includes: ['Private transport with a professional guide', 'Airport transfers'],
+        excludes: [],
+      },
+      selfDrive: {
+        label: 'Self-Drive',
+        includes: [
+          'Turn-by-turn route notes and daily driving distances',
+          'Accommodation booked on your behalf',
+          'A pre-departure briefing',
+        ],
+        excludes: ['Vehicle hire and fuel (unless you already have your own)', 'Airport transfer'],
+      },
+    },
+    campingUpgrade: {
+      text: 'Camp the Sossusvlei night instead of a lodge — see our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
   },
 
   // Flagship route — the owner drafted three versions of this same 10-day
@@ -322,10 +344,7 @@ export const journeys: Journey[] = [
     includes: [
       'High-end lodge/hotel accommodation, sharing basis',
       'Breakfast daily, dinner where noted',
-      'Private 4x4 vehicle with professional guide/driver',
-      'Fuel and all planned transfers',
       'Park and conservation fees',
-      'Airport transfers',
     ],
     excludes: [
       'International flights',
@@ -333,6 +352,26 @@ export const journeys: Journey[] = [
       'Upgrades beyond the included Swakopmund activity',
       'Personal spending and gratuities',
     ],
+    tiers: {
+      primary: {
+        label: 'Guided',
+        includes: ['Private 4x4 vehicle with professional guide/driver', 'Fuel and all planned transfers', 'Airport transfers'],
+        excludes: [],
+      },
+      selfDrive: {
+        label: 'Self-Drive',
+        includes: [
+          'A detailed route plan with daily driving notes',
+          'Lodge bookings made on your behalf',
+          'A pre-departure briefing',
+        ],
+        excludes: ['4x4 vehicle hire and fuel (unless you already have your own)', 'Airport transfer'],
+      },
+    },
+    campingUpgrade: {
+      text: 'Camping upgrade available on request for the Sossusvlei night or the Spitzkoppe stop — see our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
   },
 
   // Source doc was titled "11 day tour" but only ever describes 8 days of
@@ -420,16 +459,25 @@ export const journeys: Journey[] = [
           'A drive up the coast through the fishing town of Henties Bay, passing a shipwreck, with the option to visit the seal colony at Cape Cross before departure.',
       },
     ],
-    includes: [
-      'Private transport with a professional guide',
-      'Optional day-trip activities available (priced individually — ask us for current rates)',
-    ],
+    includes: ['Optional day-trip activities available (priced individually — ask us for current rates)'],
     excludes: [
       'Accommodation (quoted separately based on your preference)',
       'International flights',
       'Travel insurance',
       'Personal spending and gratuities',
     ],
+    tiers: {
+      primary: {
+        label: 'Guided',
+        includes: ['Private transport with a professional guide'],
+        excludes: [],
+      },
+      selfDrive: {
+        label: 'Self-Drive',
+        includes: ['A day-by-day route plan for the coast drive', 'A pre-departure briefing'],
+        excludes: ['Vehicle hire and fuel (unless you already have your own)'],
+      },
+    },
   },
 
   // Longest and southernmost route — the only journey reaching Fish River
@@ -544,19 +592,39 @@ export const journeys: Journey[] = [
         description: 'Drop-off at Hosea Kutako International Airport.',
       },
     ],
-    includes: [
-      'Private transport with a professional guide',
-      'Accommodation, sharing basis',
-      'Park and conservation fees',
-      'Activities listed in the itinerary',
-      'Airport transfers',
-    ],
+    includes: ['Accommodation, sharing basis', 'Park and conservation fees', 'Activities listed in the itinerary'],
     excludes: [
       'International flights',
       'Travel insurance',
       'Personal spending and gratuities',
       'Meals not specified as included',
     ],
+    tiers: {
+      primary: {
+        label: 'Guided',
+        includes: ['Private transport with a professional guide', 'Airport transfers'],
+        excludes: [],
+      },
+      // The Kalahari and Fish River Canyon legs are more remote than this
+      // journey's other stops — still a normal self-drive route by
+      // Namibian tourism standards (this is one of the country's most
+      // common self-drive loops), but flagged here since it's the longest,
+      // most involved route offering it: confirm before actually running
+      // a self-drive guest through the far south unsupported.
+      selfDrive: {
+        label: 'Self-Drive',
+        includes: [
+          'A full route plan covering the Kalahari, Fish River Canyon and coastal legs',
+          'Accommodation booked on your behalf',
+          'A pre-departure briefing',
+        ],
+        excludes: ['4x4 vehicle hire and fuel (unless you already have your own)', 'Airport transfer'],
+      },
+    },
+    campingUpgrade: {
+      text: 'Camping upgrade available on request for the Sossusvlei night — see our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
   },
 
   // Short 3-day package from the owner — Windhoek-based, ending back in
@@ -603,18 +671,33 @@ export const journeys: Journey[] = [
           "A morning Sandwich Harbour 4x4 excursion and catamaran cruise, then quad biking and a camel ride in the dunes, before the drive back to Windhoek for your departure.",
       },
     ],
-    includes: [
-      'Private transport with a professional guide',
-      'Accommodation, sharing basis',
-      'Activities listed in the itinerary',
-      'Airport transfers',
-    ],
+    includes: ['Accommodation, sharing basis', 'Activities listed in the itinerary'],
     excludes: [
       "International flights — arranged on request, or book your own and we'll handle the rest of the package",
       'Travel insurance',
       'Personal spending and gratuities',
       'Meals not specified as included',
     ],
+    tiers: {
+      primary: {
+        label: 'Guided',
+        includes: ['Private transport with a professional guide', 'Airport transfers'],
+        excludes: [],
+      },
+      selfDrive: {
+        label: 'Self-Drive',
+        includes: [
+          'Turn-by-turn route notes for the Windhoek–Sossusvlei–Swakopmund loop',
+          'Accommodation booked on your behalf',
+          'A pre-departure briefing',
+        ],
+        excludes: ['Vehicle hire and fuel (unless you already have your own)', 'Airport transfer'],
+      },
+    },
+    campingUpgrade: {
+      text: 'Camp the Sossusvlei night instead — see our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
   },
 
   // Same core route as the Windhoek escape above, run the other
@@ -658,18 +741,33 @@ export const journeys: Journey[] = [
           'A full day among the red dunes — Sesriem Canyon, the climb up Big Daddy, and the ghostly white pan of Dead Vlei — before the drive back to Walvis Bay for your departure.',
       },
     ],
-    includes: [
-      'Private transport with a professional guide',
-      'Accommodation, sharing basis',
-      'Activities listed in the itinerary',
-      'Transfers, including to and from Walvis Bay',
-    ],
+    includes: ['Accommodation, sharing basis', 'Activities listed in the itinerary'],
     excludes: [
       "International flights — arranged on request, or book your own and we'll handle the rest of the package",
       'Travel insurance',
       'Personal spending and gratuities',
       'Meals not specified as included',
     ],
+    tiers: {
+      primary: {
+        label: 'Guided',
+        includes: ['Private transport with a professional guide', 'Transfers, including to and from Walvis Bay'],
+        excludes: [],
+      },
+      selfDrive: {
+        label: 'Self-Drive',
+        includes: [
+          'Turn-by-turn route notes for the Walvis Bay–Sossusvlei loop',
+          'Accommodation booked on your behalf',
+          'A pre-departure briefing',
+        ],
+        excludes: ['Vehicle hire and fuel (unless you already have your own)'],
+      },
+    },
+    campingUpgrade: {
+      text: 'Camp the Sossusvlei night instead — see our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
   },
 ];
 

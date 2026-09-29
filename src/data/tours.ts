@@ -60,6 +60,10 @@ export const tours: Tour[] = [
     description:
       "Are you eager for an unforgettable wildlife experience? Join our Etosha Tour to explore one of Namibia's most iconic national parks, home to elephants, lions, rhinos, giraffes, and rich birdlife, set against breathtaking natural landscapes.",
     duration: 'Overnight · 2 days',
+    campingUpgrade: {
+      text: 'Prefer to sleep under the stars instead of a guesthouse? Ask us about swapping to a fenced camp inside Etosha.',
+      href: '/contact',
+    },
     included: [
       'Comfortable transport',
       'Professional guide',
