@@ -28,6 +28,13 @@ export interface JourneyDay {
   description: string;
 }
 
+/** One tier's own includes/excludes — only used by a `campingTiers` journey
+ * (see below), where the same route is offered two ways. */
+export interface CampingTier {
+  includes: string[];
+  excludes: string[];
+}
+
 export interface Journey {
   slug: string;
   name: string;
@@ -35,14 +42,123 @@ export interface Journey {
   durationDays: number;
   regions: string[];
   tripType: TripType;
+  /** Pins this journey first on /journeys and gives it a small distinguishing
+   * badge instead of the plain trip-type label — reserved for a genuine
+   * flagship, not a general-purpose "highlight" flag every journey reaches for. */
+  featured?: boolean;
   heroImage: string;
   imageCredit?: { name: string; username: string };
   itinerary: JourneyDay[];
+  /** Shared across every guest on this journey. For a two-tier camping
+   * journey (see `campingTiers`), this holds only what both tiers actually
+   * share (e.g. park fees) — tier-specific items (a guide, camping gear,
+   * campsite bookings) live in `campingTiers` instead so the page doesn't
+   * show a fully-outfitted guest's private guide as something a self-drive
+   * guest also gets. */
   includes: string[];
   excludes: string[];
+  /** Only for a `tripType: 'camping'` journey sold two ways from one route —
+   * fully-outfitted (we supply gear/cook) vs. self-drive/BYO. When set, the
+   * page renders both tiers' includes/excludes alongside the shared ones
+   * above instead of duplicating the whole journey as a second entry. */
+  campingTiers?: {
+    fullyOutfitted: CampingTier;
+    selfDrive: CampingTier;
+  };
 }
 
 export const journeys: Journey[] = [
+  // Flagship — the one journey built specifically around camping rather
+  // than treating it as a lodge-based route with tents swapped in. Kept as
+  // a single new route rather than a camping "twin" of an existing journey
+  // (see the 10-Day Grand Tour's own comment below on why three near-
+  // identical routes were rejected once already) — Spitzkoppe and
+  // NamibRand/Sossusvlei are both genuinely camping-first destinations
+  // (Spitzkoppe's granite arches are where the classic Namibian camping
+  // photos come from; NamibRand is part of the world's first internationally
+  // certified Dark Sky Reserve), so the route earns its own existence
+  // instead of reusing another journey's itinerary with a different tag.
+  {
+    slug: '6-day-spitzkoppe-sossusvlei-camping-safari',
+    name: '6-Day Spitzkoppe & Sossusvlei Camping Safari',
+    tagline:
+      "No lodge walls between you and the stars — rock art at Spitzkoppe, sunrise on the dunes at Sossusvlei, and a campfire in between.",
+    durationDays: 6,
+    regions: ['Windhoek', 'Spitzkoppe', 'NamibRand', 'Sossusvlei'],
+    tripType: 'camping',
+    featured: true,
+    heroImage:
+      'https://images.unsplash.com/photo-1639402479828-78bb0b67698d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+    imageCredit: { name: 'Andrew Svk', username: 'andrew_svk' },
+    itinerary: [
+      {
+        day: 1,
+        title: 'Windhoek to Spitzkoppe',
+        accentWord: 'Spitzkoppe',
+        location: 'Windhoek → Spitzkoppe',
+        description:
+          'Airport pickup in Windhoek, then the drive out to Spitzkoppe’s granite arches, arriving in time to watch the rock face turn copper at sunset over your first campfire.',
+      },
+      {
+        day: 2,
+        title: 'Rock Art, Campfire, Stars',
+        accentWord: 'Stars',
+        location: 'Spitzkoppe',
+        description:
+          'A morning walk to Bushman’s Paradise for its San rock art, an afternoon free to climb or simply sit with the silence, then a campfire dinner under some of the clearest, least light-polluted skies on the continent.',
+      },
+      {
+        day: 3,
+        title: 'Spitzkoppe to Sossusvlei',
+        accentWord: 'Sossusvlei',
+        location: 'Spitzkoppe → NamibRand',
+        description:
+          'The drive south into the NamibRand Nature Reserve — the world’s first internationally certified Dark Sky Reserve — arriving at camp for sundowners as the dunes catch the last light.',
+      },
+      {
+        day: 4,
+        title: 'Sunrise on the Dunes',
+        accentWord: 'Sunrise',
+        location: 'NamibRand / Sossusvlei',
+        description:
+          'Up before the sun for the climb up Dune 45 or Big Daddy, watching the light change the dune face from the inside instead of racing a lodge shuttle to beat the gate. Dead Vlei and Sesriem Canyon in the afternoon, then a second night by the fire under the reserve’s dark sky.',
+      },
+      {
+        day: 5,
+        title: 'NamibRand to Windhoek',
+        accentWord: 'NamibRand',
+        location: 'NamibRand → Windhoek',
+        description:
+          'One more unhurried morning at camp — a short nature walk or a second dune, whichever you didn’t get to — before the drive back to Windhoek.',
+      },
+      {
+        day: 6,
+        title: 'Windhoek & Departure',
+        accentWord: '',
+        location: 'Windhoek',
+        description: 'A free morning in Windhoek before your transfer to the airport.',
+      },
+    ],
+    includes: ['Park and conservation fees'],
+    excludes: ['International flights', 'Travel insurance', 'Personal spending and gratuities'],
+    campingTiers: {
+      fullyOutfitted: {
+        includes: [
+          'Private transport with a professional guide',
+          'Camping equipment (tents, mattresses, bedding)',
+          'All meals, camp-cooked, dinner Day 1 through breakfast Day 5',
+          'Campfire dinners and a guided stargazing session at both camps',
+          'Airport transfers',
+        ],
+        excludes: [],
+      },
+      selfDrive: {
+        includes: ['Campsite bookings at Spitzkoppe and NamibRand', 'A pre-departure route and camp briefing'],
+        excludes: ['Vehicle and camping-gear hire (unless you already have your own)'],
+      },
+    },
+  },
+
   // Generalized from a 5-day/4-night draft written for a specific group and
   // travel dates — group size and dates dropped, route and activities kept.
   {

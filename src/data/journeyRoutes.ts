@@ -30,6 +30,13 @@ const luderitz = { x: 220, y: 610 };
 
 export const journeyRoutes: MapRoute[] = [
   {
+    slug: '6-day-spitzkoppe-sossusvlei-camping-safari',
+    color: '#e3cba7', // beige-300 — the one unused warm token, and solid
+    // (no dash) rather than one of the existing dash patterns so the
+    // flagship route reads distinctly against the other six on the map.
+    points: [windhoek, spitzkoppe, sossusvlei, windhoek],
+  },
+  {
     slug: '5-day-sossusvlei-coast',
     color: '#9c4d33', // terracotta-600
     points: [windhoek, sossusvlei, swakopmund, walvisBay],
