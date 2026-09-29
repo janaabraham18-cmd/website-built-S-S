@@ -1,18 +1,21 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import AdventureCard from '../components/AdventureCard.astro';
 import { tourBySlug, categoryLabels } from '../data/tours';
 import type { Tour } from '../data/tours';
 import { hl } from '../utils/text';
 
-// Adventures read as two themed chapters rather than one dense wall. Each
-// chapter is a compact name index next to one large shared photo — picking
-// a name (hover, focus, or tap) swaps the photo and caption beside it — so
-// the emphasis lands on the photography instead of on 13 identically-sized
-// tiles. `spotlight` is just the first, most-requested name in that
-// chapter's list — the one shown by default before anyone's picked anything.
+// Adventures read as two themed chapters, each a photo-grid of cards (the
+// same AdventureCard used in the component preview) rather than the old
+// "pick a name, watch one shared photo change" index — every activity gets
+// its own always-visible photo instead of 12 of the 13 staying hidden
+// behind a click. The first item in each chapter's slug list is its
+// most-requested/flagship activity, shown as the larger `featured` card so
+// the grid still has visual hierarchy instead of 13 identical tiles.
 interface AdventureGroup {
   key: string;
   eyebrow: string;
+  accentWord: string;
   intro: string;
   items: Tour[];
 }
@@ -21,41 +24,26 @@ const adventureGroupDefs = [
   {
     key: 'dunes',
     eyebrow: 'On the Dunes',
+    accentWord: 'Dunes',
     intro: 'Quad bikes, boards, and fat-tyre bikes — the classic Swakopmund dune activities.',
     slugs: ['quad-bike-tour', 'explorer-tour', 'breakfast-run', 'special-quad-90min', 'sandboarding', 'fat-bike-tour'],
   },
   {
     key: 'sky-sea',
     eyebrow: 'Sky, Sea & Culture',
+    accentWord: 'Sky',
     intro: 'From 10,000 feet to sea level, plus the slower-paced days built around the coast’s people and wildlife.',
     slugs: ['tandem-skydive', 'paragliding', 'kayaking', 'fishing', 'sandwich-harbour-half-day', 'camel-ride', 'township-tour'],
   },
 ];
 
-interface AdventureGroupWithBanner extends AdventureGroup {
-  bannerUrl: string;
-  bannerCredit: { name: string; username: string } | undefined;
-}
-
-// Each chapter's banner reuses its own spotlight tour's photo at a wider
-// crop — real photography already sourced for that activity, not a new
-// stock image, so the banner and the list beneath it always show the same
-// place/activity rather than two disconnected photos.
-const adventureGroups: AdventureGroupWithBanner[] = adventureGroupDefs
+const adventureGroups: AdventureGroup[] = adventureGroupDefs
   .map((g) => {
     const items = g.slugs.map((s) => tourBySlug(s)).filter((t): t is Tour => !!t);
     if (!items.length) return null;
-    const spotlight = items[0];
-    return {
-      key: g.key,
-      eyebrow: g.eyebrow,
-      intro: g.intro,
-      items,
-      bannerUrl: spotlight.imageUrl!.replace('w=900', 'w=2200'),
-      bannerCredit: spotlight.imageCredit,
-    };
+    return { key: g.key, eyebrow: g.eyebrow, accentWord: g.accentWord, intro: g.intro, items };
   })
-  .filter((g): g is AdventureGroupWithBanner => !!g);
+  .filter((g): g is AdventureGroup => !!g);
 
 const totalActivities = adventureGroups.reduce((n, g) => n + g.items.length, 0);
 
@@ -124,67 +112,21 @@ const closingBg = {
               <path d="M2 12 C 26 2, 48 19, 74 10 S 124 2, 148 12" fill="none" stroke="var(--color-accent-strong)" stroke-width="3" stroke-linecap="round" />
             </svg>
           </h2>
-          <p class="section-intro__hint">Pick a name, watch the photo change.</p>
         </div>
 
         {
           adventureGroups.map((group) => (
             <div class="adventure-group">
-              <div class="adventure-group__banner reveal-item">
-                <img
-                  class="adventure-group__banner-img"
-                  src={group.bannerUrl}
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                />
-                <div class="adventure-group__banner-gradient" aria-hidden="true" />
-                <div class="adventure-group__banner-content">
-                  <p class="adventure-group__eyebrow">{group.eyebrow}</p>
-                  <p class="adventure-group__intro">{group.intro}</p>
-                </div>
+              <div class="adventure-group__header reveal-item">
+                <p class="eyebrow">{group.items.length} Activities</p>
+                <h3 set:html={hl(group.eyebrow, group.accentWord)} />
+                <p class="adventure-group__intro">{group.intro}</p>
               </div>
 
-              <div class="adventure-index reveal-item" data-adventure-index>
-                <div class="adventure-index__list-wrap">
-                  <p class="adventure-index__list-label">{group.items.length} activities — tap one to preview ↓</p>
-                  <div class="adventure-index__list">
-                  {group.items.map((tour, i) => (
-                    <button
-                      type="button"
-                      class:list={['adventure-index__item', i === 0 && 'is-active']}
-                      data-index-item
-                      data-slug={tour.slug}
-                      data-name={tour.name}
-                      data-duration={tour.duration ?? ''}
-                      data-desc={tour.description}
-                      data-img={tour.imageUrl}
-                      aria-current={i === 0 ? 'true' : 'false'}
-                    >
-                      <span class="adventure-index__mark" aria-hidden="true">
-                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                          <path d="M2 11c3-6 7-8 12-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
-                        </svg>
-                      </span>
-                      <span class="adventure-index__name">{tour.name}</span>
-                      {i === 0 && <span class="adventure-index__badge">Most requested</span>}
-                      {tour.duration && <span class="adventure-index__duration">{tour.duration}</span>}
-                    </button>
-                  ))}
-                  </div>
-                </div>
-
-                <div class="adventure-index__preview" data-index-preview>
-                  <div class="photo-frame adventure-index__photo">
-                    <img data-preview-img src={group.items[0].imageUrl} alt={group.items[0].name} loading="lazy" decoding="async" />
-                  </div>
-                  <div class="adventure-index__preview-body">
-                    <p class="adventure-index__preview-duration" data-preview-duration hidden={!group.items[0].duration}>{group.items[0].duration}</p>
-                    <h3 data-preview-name>{group.items[0].name}</h3>
-                    <p data-preview-desc>{group.items[0].description}</p>
-                    <a class="book-link" data-preview-cta href={`/booking?tour=${group.items[0].slug}`}>Book this →</a>
-                  </div>
-                </div>
+              <div class="adventure-grid reveal-item">
+                {group.items.map((tour, i) => (
+                  <AdventureCard tour={tour} featured={i === 0} />
+                ))}
               </div>
             </div>
           ))
@@ -223,14 +165,15 @@ const closingBg = {
   }
 
   /* ---------- Adventures hero ---------- */
-  /* Full-strength photo, text sits directly on it (no boxed card) — a
-     gradient darkens the bottom of the photo, where the text sits (the
-     section is bottom-aligned), and text-shadow backs it up further. */
+  /* Full-strength photo, text sits directly on it (no boxed card) — text
+     sits top-left (same treatment as the Journeys hero), backed by a
+     gradient that darkens the top of the photo and clears toward the
+     bottom, plus text-shadow on the text itself. */
   .adventures-hero {
     position: relative;
     min-height: 70vh;
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     overflow: hidden;
     background-color: var(--color-earth-700);
   }
@@ -247,7 +190,7 @@ const closingBg = {
     position: absolute;
     inset: 0;
     z-index: 0;
-    background: linear-gradient(0deg, rgba(31, 18, 14, 0.85) 0%, rgba(31, 18, 14, 0.35) 45%, rgba(31, 18, 14, 0) 80%);
+    background: linear-gradient(180deg, rgba(31, 18, 14, 0.85) 0%, rgba(31, 18, 14, 0.35) 45%, rgba(31, 18, 14, 0) 80%);
   }
 
   .adventures-hero__content {
@@ -255,6 +198,8 @@ const closingBg = {
     z-index: 1;
     max-width: 30rem;
     padding-block: var(--space-2xl);
+    margin-inline: 0;
+    padding-left: clamp(1.5rem, 6vw, 5rem);
   }
 
   .adventures-hero__eyebrow {
@@ -291,10 +236,13 @@ const closingBg = {
   /* ---------- Quick-facts strip ---------- */
   /* A punchy row of real numbers (skydive altitude, freefall speed, the
      shortest activity on offer) right where the hero hands off — instant
-     proof this page has energy before anyone scrolls to the list. */
+     proof this page has energy before anyone scrolls to the list. White,
+     like the rest of the page's non-photo backgrounds — a thin bottom
+     border is the only seam between this and the section below. */
   .adventures-stats {
-    background: var(--color-earth-900);
+    background: var(--color-surface);
     padding-block: var(--space-lg);
+    border-bottom: 1px solid var(--color-border);
   }
 
   .adventures-stats__row {
@@ -306,7 +254,7 @@ const closingBg = {
   .adventures-stats__stat {
     text-align: center;
     padding-inline: var(--space-sm);
-    border-left: 1px solid rgba(251, 247, 241, 0.15);
+    border-left: 1px solid var(--color-border);
   }
 
   .adventures-stats__stat:first-child {
@@ -336,7 +284,7 @@ const closingBg = {
     letter-spacing: 0.06em;
     text-transform: uppercase;
     font-weight: 600;
-    color: var(--color-sand-200);
+    color: var(--color-text-muted);
   }
 
   @media (max-width: 640px) {
@@ -359,17 +307,6 @@ const closingBg = {
     margin: 0 0 var(--space-2xs);
   }
 
-  .section-intro p {
-    color: var(--color-text-muted);
-    margin: 0;
-  }
-
-  .section-intro__hint {
-    font-size: 0.85rem;
-    font-style: italic;
-    margin-top: var(--space-2xs) !important;
-  }
-
   .adventures-heading {
     display: flex;
     flex-direction: column;
@@ -385,28 +322,14 @@ const closingBg = {
     vector-effect: non-scaling-stroke;
   }
 
-  /* ---------- Adventures index ---------- */
-  /* Dark chapter treatment (same as About Us/Our Fleet/booking elsewhere
-     on the site) so the page's main content reads as a distinct, focused
-     zone rather than a plain continuation of the hero. */
+  /* ---------- Adventures listing ---------- */
+  /* White, like the rest of the page's non-photo backgrounds — the hero
+     photo and the closing photo band are the only places colour/darkness
+     carries the page now. */
   .adventures-section {
     padding-block: var(--space-2xl);
     scroll-margin-top: 5rem;
-    background: var(--color-earth-700);
-    background-image: var(--gradient-dusk);
-    color: var(--color-text-on-dark);
-  }
-
-  .adventures-section h2 {
-    color: var(--color-text-on-dark);
-  }
-
-  .adventures-section .section-intro p {
-    color: var(--color-sand-200);
-  }
-
-  .adventures-section .book-link {
-    color: var(--color-text-on-dark);
+    background: var(--color-surface);
   }
 
   .adventure-group {
@@ -417,246 +340,49 @@ const closingBg = {
     margin-bottom: 0;
   }
 
-  /* Each chapter opens with its own full-width photo banner (the
-     spotlight tour's own photo, shown large) instead of a plain text
-     row — a real, specific image sets the tone for that chapter before
-     the name list even loads, which reads as far more alive than an
-     eyebrow + one line of copy ever could. */
-  .adventure-group__banner {
-    position: relative;
-    margin-bottom: var(--space-lg);
-    border-radius: var(--radius-lg);
-    overflow: hidden;
-    box-shadow: var(--shadow-md);
-    aspect-ratio: 21 / 9;
+  /* Plain text header per chapter — no photo banner. Real photography
+     lives on every card in the grid below now (not just one shared
+     spotlight image), so a banner here would just repeat a photo already
+     shown a moment later at a smaller, one-of-several size. */
+  .adventure-group__header {
+    max-width: var(--content-width-narrow);
+    margin-bottom: var(--space-md);
   }
 
-  .adventure-group__banner-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .adventure-group__banner-gradient {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      100deg,
-      rgba(31, 18, 14, 0.92) 0%,
-      rgba(31, 18, 14, 0.6) 40%,
-      rgba(31, 18, 14, 0.15) 75%
-    );
-  }
-
-  .adventure-group__banner-content {
-    position: relative;
-    z-index: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--space-2xs);
-    max-width: 26rem;
-    padding: var(--space-lg) var(--space-xl);
-  }
-
-  .adventure-group__eyebrow {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(1.5rem, 3vw, 2rem);
-    color: var(--color-text-on-dark);
-    margin: 0;
+  .adventure-group__header h3 {
+    margin: 0 0 var(--space-2xs);
   }
 
   .adventure-group__intro {
-    font-size: 0.95rem;
+    font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-sand-200);
+    color: var(--color-text-muted);
     margin: 0;
+  }
+
+  /* Same grid rhythm as the AdventureCard component preview: a photo grid
+     with one larger `featured` card per chapter (its flagship activity)
+     for visual hierarchy, everything else an equal-weight tile — fills
+     the page with real photography without 13 identically-sized tiles
+     competing for attention at once. */
+  .adventure-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-auto-rows: 240px;
+    grid-auto-flow: dense;
+    gap: var(--space-md);
+  }
+
+  @media (max-width: 960px) {
+    .adventure-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
   }
 
   @media (max-width: 640px) {
-    .adventure-group__banner {
-      aspect-ratio: 4 / 5;
-    }
-
-    .adventure-group__banner-gradient {
-      background: linear-gradient(
-        0deg,
-        rgba(31, 18, 14, 0.92) 0%,
-        rgba(31, 18, 14, 0.55) 55%,
-        rgba(31, 18, 14, 0.1) 85%
-      );
-    }
-
-    .adventure-group__banner-content {
-      justify-content: flex-end;
-      max-width: none;
-    }
-  }
-
-  /* ---------- Adventures index + preview ---------- */
-  /* A compact name list beside one large shared photo, instead of a wall
-     of same-sized cards — picking a name (hover/focus/tap) swaps the
-     photo and caption next to it. List stays before the preview in DOM
-     order (a control before what it controls), independent of which
-     visually sits first at each breakpoint. */
-  .adventure-index {
-    display: grid;
-    grid-template-columns: minmax(240px, 320px) 1fr;
-    grid-template-areas: 'list preview';
-    gap: var(--space-xl);
-    align-items: start;
-  }
-
-  .adventure-index__list-wrap {
-    grid-area: list;
-  }
-
-  .adventure-index__list-label {
-    font-size: 0.72rem;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--color-ochre-400);
-    margin: 0 0 0.6rem;
-  }
-
-  .adventure-index__list {
-    display: flex;
-    flex-direction: column;
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 0 var(--space-md);
-    box-shadow: var(--shadow-sm);
-  }
-
-  .adventure-index__item {
-    display: flex;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 0.5rem 0.6rem;
-    width: 100%;
-    background: none;
-    border: none;
-    border-top: 1px solid var(--color-border);
-    padding: 0.85rem 0.1rem;
-    margin: 0;
-    font-family: var(--font-body);
-    text-align: left;
-    color: var(--color-text-muted);
-    cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-index__item:first-child {
-    border-top: none;
-  }
-
-  .adventure-index__item:hover,
-  .adventure-index__item:focus-visible,
-  .adventure-index__item.is-active {
-    color: var(--color-accent-strong);
-  }
-
-  .adventure-index__mark {
-    flex-shrink: 0;
-    display: flex;
-    color: var(--color-border);
-    opacity: 0.7;
-    transition: color var(--duration-fast) var(--ease-out), opacity var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-index__item:hover .adventure-index__mark,
-  .adventure-index__item:focus-visible .adventure-index__mark,
-  .adventure-index__item.is-active .adventure-index__mark {
-    color: var(--color-accent-strong);
-    opacity: 1;
-  }
-
-  .adventure-index__name {
-    font-family: var(--font-display);
-    font-size: 1.25rem;
-    color: var(--color-text);
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .adventure-index__item:hover .adventure-index__name,
-  .adventure-index__item:focus-visible .adventure-index__name,
-  .adventure-index__item.is-active .adventure-index__name {
-    color: var(--color-accent-strong);
-  }
-
-  .adventure-index__badge {
-    font-size: 0.65rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 600;
-    color: var(--color-accent-strong);
-    background: var(--color-sand-100);
-    border-radius: 999px;
-    padding: 0.2rem 0.55rem;
-  }
-
-  .adventure-index__duration {
-    margin-left: auto;
-    font-size: 0.75rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-  }
-
-  .adventure-index__preview {
-    grid-area: preview;
-  }
-
-  .adventure-index__photo {
-    position: relative;
-    aspect-ratio: 16 / 10;
-    box-shadow: var(--shadow-md);
-  }
-
-  .adventure-index__preview-body {
-    padding-top: var(--space-sm);
-    max-width: 42rem;
-  }
-
-  .adventure-index__preview-duration {
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--color-accent-strong);
-    margin: 0 0 0.3rem;
-  }
-
-  .adventure-index__preview-body h3 {
-    color: var(--color-text-on-dark);
-    margin: 0 0 0.5rem;
-  }
-
-  .adventure-index__preview-body p:not(.adventure-index__preview-duration) {
-    color: var(--color-sand-200);
-    line-height: var(--lh-normal);
-    margin: 0 0 var(--space-sm);
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  @media (max-width: 860px) {
-    .adventure-index {
+    .adventure-grid {
       grid-template-columns: 1fr;
-      grid-template-areas: 'preview' 'list';
-      gap: var(--space-md);
-    }
-
-    .adventure-index__photo {
-      aspect-ratio: 16 / 11;
+      grid-auto-rows: 280px;
     }
   }
 

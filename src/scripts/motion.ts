@@ -199,135 +199,26 @@ function setupLogbookSlideshow(reduceMotion: boolean) {
   start();
 }
 
-// Adventures index: replaces a wall of same-sized cards with a compact
-// name list beside one large shared photo per themed group — picking a
-// name (hover, focus, or tap) crossfades the photo/caption beside it. The
-// page can hold more than one group, so every `[data-adventure-index]`
-// root gets its own independent list+preview pair. A short fade-out/in
-// (not a straight cut) is deliberate here — Jakub Krehel's guidance that
-// even small state changes read as more polished with a brief transition
-// than an instant swap — but stays quick since this fires on hover, which
-// can happen often in one visit. The exit is shorter than the enter (the
-// user's attention is already moving toward the new content).
-//
-// Each list also auto-advances on its own (a first-time visitor has no
-// reason to know the names are clickable otherwise), pausing on
-// hover/focus and stopping for good the moment someone actually picks a
-// name themselves — from then on it's their choice, not the timer's.
-function setupAdventureIndex(reduceMotion: boolean) {
-  const roots = document.querySelectorAll<HTMLElement>('[data-adventure-index]');
-
-  for (const root of roots) {
-    const items = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-index-item]'));
-    const preview = root.querySelector<HTMLElement>('[data-index-preview]');
-    if (!items.length || !preview) continue;
-
-    const previewImg = preview.querySelector<HTMLImageElement>('[data-preview-img]');
-    const previewDuration = preview.querySelector<HTMLElement>('[data-preview-duration]');
-    const previewName = preview.querySelector<HTMLElement>('[data-preview-name]');
-    const previewDesc = preview.querySelector<HTMLElement>('[data-preview-desc]');
-    const previewCta = preview.querySelector<HTMLAnchorElement>('[data-preview-cta]');
-
-    let active = items.find((i) => i.classList.contains('is-active')) ?? items[0];
-
-    const applyContent = (item: HTMLButtonElement) => {
-      const { name, duration, desc, img, slug } = item.dataset;
-      if (previewImg && img) {
-        previewImg.src = img;
-        previewImg.alt = name ?? '';
-      }
-      if (previewDuration) {
-        previewDuration.textContent = duration ?? '';
-        previewDuration.hidden = !duration;
-      }
-      if (previewName && name) previewName.textContent = name;
-      if (previewDesc && desc) previewDesc.textContent = desc;
-      if (previewCta && slug) previewCta.href = `/booking?tour=${slug}`;
-    };
-
-    const activate = (item: HTMLButtonElement) => {
-      if (item === active) return;
-      active = item;
-      items.forEach((i) => {
-        const isActive = i === item;
-        i.classList.toggle('is-active', isActive);
-        i.setAttribute('aria-current', String(isActive));
-      });
-
-      if (reduceMotion) {
-        applyContent(item);
-        return;
-      }
-
-      gsap.to(preview, {
-        opacity: 0,
-        y: 6,
-        duration: 0.18,
-        ease: 'power1.in',
-        onComplete: () => {
-          applyContent(item);
-          gsap.to(preview, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
-        },
-      });
-    };
-
-    let timer: ReturnType<typeof setInterval> | undefined;
-    let stopped = false; // true once a person has picked a name themselves
-
-    const advance = () => {
-      const nextIndex = (items.indexOf(active) + 1) % items.length;
-      activate(items[nextIndex]);
-    };
-    const startTimer = () => {
-      if (stopped || reduceMotion || items.length < 2) return;
-      timer = setInterval(advance, 5000);
-    };
-    const pauseTimer = () => clearInterval(timer);
-    const stopTimer = () => {
-      stopped = true;
-      clearInterval(timer);
-    };
-
-    items.forEach((item) => {
-      // Hover/focus only pause (handled at the root below) — someone's
-      // mouse can graze a name on its way to the photo without meaning
-      // anything. A click (or a keyboard Enter/Space, which fires one too)
-      // is the actual "I'm choosing this" signal, so only that permanently
-      // hands control to the person and retires the timer for good.
-      item.addEventListener('mouseenter', () => activate(item));
-      item.addEventListener('focus', () => activate(item));
-      item.addEventListener('click', () => {
-        activate(item);
-        stopTimer();
-      });
-    });
-
-    startTimer();
-    root.addEventListener('mouseenter', pauseTimer);
-    root.addEventListener('mouseleave', startTimer);
-    root.addEventListener('focusin', pauseTimer);
-    root.addEventListener('focusout', startTimer);
-  }
-
-  // Hand-drawn underline beneath the Adventures heading, drawn in once on
-  // scroll — same technique as the itinerary threads and Route lines above.
+// Hand-drawn underline beneath the Adventures heading, drawn in once on
+// scroll — same technique as the itinerary threads and Route lines above.
+function setupAdventuresHeadingLine(reduceMotion: boolean) {
   const headingLine = document.querySelector<SVGPathElement>('[data-heading-line] path');
-  if (headingLine) {
-    const length = headingLine.getTotalLength();
+  if (!headingLine) return;
 
-    if (reduceMotion) {
-      gsap.set(headingLine, { strokeDasharray: length, strokeDashoffset: 0 });
-      return;
-    }
+  const length = headingLine.getTotalLength();
 
-    gsap.set(headingLine, { strokeDasharray: length, strokeDashoffset: length });
-    ScrollTrigger.create({
-      trigger: '#adventures',
-      start: 'top 80%',
-      once: true,
-      onEnter: () => gsap.to(headingLine, { strokeDashoffset: 0, duration: 0.8, ease: 'power1.inOut' }),
-    });
+  if (reduceMotion) {
+    gsap.set(headingLine, { strokeDasharray: length, strokeDashoffset: 0 });
+    return;
   }
+
+  gsap.set(headingLine, { strokeDasharray: length, strokeDashoffset: length });
+  ScrollTrigger.create({
+    trigger: '#adventures',
+    start: 'top 80%',
+    once: true,
+    onEnter: () => gsap.to(headingLine, { strokeDashoffset: 0, duration: 0.8, ease: 'power1.inOut' }),
+  });
 }
 
 // "Create Your Own Combo" builder: clicking a chip toggles it in/out of a
@@ -949,7 +840,7 @@ export function initMotion() {
     setupAboutCard(false);
     setupTourRows(false);
     setupAdventureCards();
-    setupAdventureIndex(false);
+    setupAdventuresHeadingLine(false);
     setupComboBuilder(false);
     setupTourRecapSlideshow(false);
     setupTourMapGrowth();
@@ -1008,7 +899,7 @@ export function initMotion() {
     setupAboutCard(true);
     setupTourRows(true);
     setupAdventureCardsReducedMotion();
-    setupAdventureIndex(true);
+    setupAdventuresHeadingLine(true);
     setupComboBuilder(true);
     setupTourRecapSlideshow(true);
   });
