@@ -178,6 +178,14 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
                   </span>
                 </p>
 
+                {
+                  tour.campingUpgrade && (
+                    <p class="tour-reveal__camping-upsell">
+                      <a href={tour.campingUpgrade.href}>{tour.campingUpgrade.text}</a>
+                    </p>
+                  )
+                }
+
                 <a class="btn btn-primary" href={`/booking?tour=${tour.slug}`}>Book this tour</a>
 
                 {/* Mobile-only fallback: a small static piece map inline
@@ -664,6 +672,24 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   .tour-reveal__included-label {
     font-weight: 600;
     color: var(--color-earth-900);
+  }
+
+  .tour-reveal__camping-upsell {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    margin: 0 0 var(--space-md);
+  }
+
+  .tour-reveal__camping-upsell a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  }
+
+  .tour-reveal__camping-upsell a:hover {
+    text-decoration-color: currentColor;
   }
 
   .tour-reveal__photo {

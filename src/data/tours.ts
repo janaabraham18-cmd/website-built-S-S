@@ -12,6 +12,15 @@ export interface Tour {
   description: string;
   duration?: string;
   note?: string;
+  /**
+   * A one-line cross-sell to the camping Journey that covers this same
+   * destination overnight, for the handful of full-day tours a guest could
+   * naturally extend into a camping trip. Kept as a distinct field rather
+   * than reusing `note` — `note` is logistics (pickup times, minimum pax),
+   * this is a cross-sell prompt, and conflating the two would make future
+   * data entries ambiguous about which one they're writing.
+   */
+  campingUpgrade?: { text: string; href: string };
   included: string[];
   imageUrl?: string;
   imageCredit?: { name: string; username: string };
@@ -72,6 +81,10 @@ export const tours: Tour[] = [
     description:
       "Join us to explore Namibia's iconic red dunes and stunning desert landscapes. Join our Sossusvlei Tour to experience towering sand dunes, Deadvlei, and the unique beauty of the Namib Desert.",
     duration: 'Full-day',
+    campingUpgrade: {
+      text: 'Camp overnight and catch sunrise on the dunes before the crowds — see our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
     included: [
       'Transport',
       'Scenic desert drive',
@@ -131,6 +144,10 @@ export const tours: Tour[] = [
     description:
       "Ready to explore Namibia's stunning granite peaks? Join our Spitzkoppe Tour to experience breathtaking rock formations, ancient rock art, and stunning desert landscapes under wide open skies.",
     duration: 'Full-day',
+    campingUpgrade: {
+      text: 'Turn this into an overnight — ask about camping under the arches on our 6-Day Spitzkoppe & Sossusvlei Camping Safari.',
+      href: '/journeys#6-day-spitzkoppe-sossusvlei-camping-safari',
+    },
     included: [
       'Transport',
       'Scenic desert & mountain drive',

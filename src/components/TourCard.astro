@@ -29,6 +29,14 @@ const { tour, reverse = false } = Astro.props;
 
     {tour.note && <p class="tour-row__meta">{tour.note}</p>}
 
+    {
+      tour.campingUpgrade && (
+        <p class="tour-row__camping-upsell">
+          <a href={tour.campingUpgrade.href}>{tour.campingUpgrade.text}</a>
+        </p>
+      )
+    }
+
     <p class="tour-row__included">
       <span class="tour-row__included-label">Includes</span> {tour.included.join(', ')}
     </p>
@@ -132,6 +140,25 @@ const { tour, reverse = false } = Astro.props;
     font-weight: 600;
     color: var(--color-accent-strong);
     margin: 0;
+  }
+
+  .tour-row__camping-upsell {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    margin: 0;
+    max-width: 32rem;
+  }
+
+  .tour-row__camping-upsell a {
+    color: var(--color-accent-strong);
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: transparent;
+    transition: text-decoration-color var(--duration-fast) var(--ease-out);
+  }
+
+  .tour-row__camping-upsell a:hover {
+    text-decoration-color: currentColor;
   }
 
   .tour-row__included {
