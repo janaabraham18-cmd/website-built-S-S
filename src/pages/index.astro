@@ -235,17 +235,24 @@ const logbookStories = [
   },
 ];
 
-// Placeholder lineup — swap in real fleet photos once supplied.
 interface FleetVehicle {
   name: string;
   imageUrl?: string;
+  /** Only needed for the 4.0 V6's dune/coastline shot — a portrait photo
+   * cropped into this grid's 4:3 cards, biased down a little so the crop
+   * keeps the vehicle instead of centering on mostly sky. */
+  imagePosition?: string;
   imageCredit?: { name: string; username?: string; href?: string; source?: string; sourceHref?: string };
 }
 
 const fleetVehicles: FleetVehicle[] = [
-  { name: 'Toyota Land Cruiser 79 Pickup' },
-  { name: 'Toyota Fortuner 2.8 GD-6' },
-  { name: 'Toyota Fortuner 4.0 V6' },
+  { name: 'Toyota Land Cruiser 79 Pickup', imageUrl: '/images/fleet-land-cruiser-79.jpg' },
+  { name: 'Toyota Fortuner 2.8 GD-6', imageUrl: '/images/fleet-fortuner-a.jpg' },
+  {
+    name: 'Toyota Fortuner 4.0 V6',
+    imageUrl: '/images/fleet-fortuner-b.jpg',
+    imagePosition: 'center 65%',
+  },
 ];
 
 // Real guest reviews, transcribed verbatim from Salt and Sun Tours' Google
@@ -475,7 +482,13 @@ const testimonials = [
             <div class="fleet-card">
               {v.imageUrl ? (
                 <div class="fleet-card__photo photo-frame">
-                  <img src={v.imageUrl} alt={v.name} loading="lazy" decoding="async" />
+                  <img
+                    src={v.imageUrl}
+                    alt={v.name}
+                    loading="lazy"
+                    decoding="async"
+                    style={v.imagePosition ? `object-position: ${v.imagePosition}` : undefined}
+                  />
                 </div>
               ) : (
                 <div class="fleet-card__photo fleet-card__photo--placeholder">
