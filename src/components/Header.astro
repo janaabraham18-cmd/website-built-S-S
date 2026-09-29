@@ -145,12 +145,16 @@ const navLinks = [
     padding: 0;
   }
 
+  /* Same display font as the logo right next to it — previously these
+     inherited the plain body font, so the header read as two different
+     typographic voices side by side instead of one connected unit. */
   .site-header__links a {
     position: relative;
     display: inline-block;
     text-decoration: none;
+    font-family: var(--font-display);
     font-size: var(--fs-sm);
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: var(--color-text-muted);
@@ -218,8 +222,9 @@ const navLinks = [
 
   .site-header__mobile-nav a {
     text-decoration: none;
+    font-family: var(--font-display);
     font-size: var(--fs-md);
-    font-weight: 600;
+    font-weight: 700;
     color: var(--color-text);
   }
 
