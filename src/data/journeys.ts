@@ -263,7 +263,7 @@ export const journeys: Journey[] = [
     tagline:
       "Our flagship route across Namibia's desert, coast and wildlife — from the dunes of Sossusvlei to the game drives of Etosha.",
     durationDays: 10,
-    regions: ['Windhoek', 'Sossusvlei', 'Swakopmund', 'Spitzkoppe', 'Damaraland', 'Etosha'],
+    regions: ['Windhoek', 'Sossusvlei', 'Swakopmund', 'Walvis Bay', 'Spitzkoppe', 'Damaraland', 'Etosha'],
     tripType: 'guided',
     heroImage:
       'https://images.unsplash.com/photo-1689917945545-bf7e6f744e10?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
@@ -391,7 +391,7 @@ export const journeys: Journey[] = [
     tagline:
       'A flexible Windhoek-to-coast trip where you choose the day trips that interest you most, from wildlife sanctuaries to dune adventures.',
     durationDays: 8,
-    regions: ['Windhoek', 'Swakopmund', 'Walvis Bay'],
+    regions: ['Windhoek', 'Swakopmund', 'Walvis Bay', 'Henties Bay'],
     tripType: 'guided',
     heroImage:
       'https://images.unsplash.com/photo-1693921148392-387157fc9a1b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
@@ -489,7 +489,18 @@ export const journeys: Journey[] = [
     tagline:
       "Namibia's full spectrum in one grand safari — the far south, the great dunes, the Atlantic coast, Damaraland's rock art, and Etosha's wildlife.",
     durationDays: 13,
-    regions: ['Windhoek', 'Kalahari', 'Fish River Canyon', 'Sossusvlei', 'Swakopmund', 'Damaraland', 'Etosha'],
+    regions: [
+      'Windhoek',
+      'Kalahari',
+      'Keetmanshoop',
+      'Fish River Canyon',
+      'Lüderitz',
+      'Sossusvlei',
+      'Swakopmund',
+      'Damaraland',
+      'Etosha',
+      'Okahandja',
+    ],
     tripType: 'guided',
     heroImage:
       'https://images.unsplash.com/photo-1739036177683-47c806ab4761?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',

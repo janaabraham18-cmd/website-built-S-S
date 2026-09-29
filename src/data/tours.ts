@@ -355,7 +355,7 @@ export const tours: Tour[] = [
     category: 'adventure',
     name: 'Sandwich Harbour Tour (Half-day)',
     description:
-      'This iconic tour is a photographer\'s dream. This is a 4×4 tour past the Salt Pans and into the Namib-Naukluft Park "where ocean and desert meet." Our last stop is the Sandwich Harbour Lagoon. This is an exciting tour where guides will show off their skills while scaling gigantic sand dunes.',
+      'The same dune-scaling run to Sandwich Harbour Lagoon as our full-day tour — a 4×4 past the Salt Pans and into the Namib-Naukluft Park "where ocean and desert meet" — condensed into a half-day with a light lunch and drinks instead of the full excursion.',
     note: 'Half-day tour',
     included: [
       'Light lunch',
