@@ -239,7 +239,7 @@ const logbookStories = [
 interface FleetVehicle {
   name: string;
   imageUrl?: string;
-  /** Only needed for the 4.0 V6's dune/coastline shot — a portrait photo
+  /** Only needed for the 2.8 GD-6's dune/coastline shot — a portrait photo
    * cropped into this grid's 4:3 cards, biased down a little so the crop
    * keeps the vehicle instead of centering on mostly sky. */
   imagePosition?: string;
@@ -248,12 +248,12 @@ interface FleetVehicle {
 
 const fleetVehicles: FleetVehicle[] = [
   { name: 'Toyota Land Cruiser 79 Pickup', imageUrl: '/images/fleet-land-cruiser-79.jpg' },
-  { name: 'Toyota Fortuner 2.8 GD-6', imageUrl: '/images/fleet-fortuner-a.jpg' },
   {
-    name: 'Toyota Fortuner 4.0 V6',
+    name: 'Toyota Fortuner 2.8 GD-6',
     imageUrl: '/images/fleet-fortuner-b.jpg',
     imagePosition: 'center 65%',
   },
+  { name: 'Toyota Fortuner 4.0 V6', imageUrl: '/images/fleet-fortuner-a.jpg' },
 ];
 
 // Real guest reviews, transcribed verbatim from Salt and Sun Tours' Google
