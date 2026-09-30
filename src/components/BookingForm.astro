@@ -4,7 +4,11 @@ import { categoryLabels, toursByCategory } from '../data/tours';
 // Replace YOUR_FORM_ID with the real Formspree endpoint once created.
 const FORMSPREE_ID = 'YOUR_FORM_ID';
 
-const categories = (['tour', 'adventure', 'combo'] as const).map((category) => ({
+// No 'combo' category here — we no longer sell premade combos, only what
+// the Chart Your Own Day builder assembles (that flow still selects the
+// standing "Custom combo" option below and writes the picks into the
+// message field, so it isn't affected by this).
+const categories = (['tour', 'adventure'] as const).map((category) => ({
   label: categoryLabels[category].label,
   tours: toursByCategory(category),
 }));
@@ -37,7 +41,7 @@ const categories = (['tour', 'adventure', 'combo'] as const).map((category) => (
     <div class="form-row">
       <label for="tour-select">Preferred tour</label>
       <select id="tour-select" name="tour" required>
-        <option value="" disabled selected>Choose a tour, adventure, or combo</option>
+        <option value="" disabled selected>Choose a tour or adventure</option>
         <option value="Custom combo" data-slug="custom">Custom combo (see message below)</option>
         {
           categories.map((group) => (

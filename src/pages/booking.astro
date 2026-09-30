@@ -16,10 +16,6 @@ const bgPhoto = {
 // it elsewhere.
 const builderTours = toursByCategory('tour');
 const builderAdventures = toursByCategory('adventure');
-const buildComboBg = {
-  url: 'https://images.unsplash.com/photo-1761205930562-e176cfa86e64?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-  credit: { name: 'Nathalie Lays', username: 'nath_lays' },
-};
 ---
 
 <BaseLayout title="Booking" description="Request a tour booking with Salt and Sun Tours in Swakopmund and Walvis Bay, Namibia.">
@@ -49,7 +45,7 @@ const buildComboBg = {
     </section>
 
     <section class="build-combo reveal" id="build-your-own">
-      <div class="build-combo__bg" style={`background-image:url('${buildComboBg.url}')`} aria-hidden="true"></div>
+      <div class="build-combo__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
       <div class="build-combo__scrim" aria-hidden="true"></div>
 
       <div class="container">
