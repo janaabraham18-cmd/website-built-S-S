@@ -412,49 +412,61 @@ const testimonials = [
       <div class="about-card" data-about-pages>
         <div class="about-card__pages">
           <div class="about-card__page is-active" data-about-page>
-            <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
+            <div class="about-card__body">
+              <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
 
-            <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
+              <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
 
-            <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+              <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
 
-            <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
+              <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
+            </div>
 
-            <p class="about-copy__pull">It is about the person you become along the way.</p>
+            <div class="about-card__pull">
+              <p class="about-copy__pull">It is about the person you become along the way.</p>
+            </div>
           </div>
 
           <div class="about-card__page" data-about-page>
-            <p>Life leaves people carrying stories that are often never spoken — pain, disappointment, loss, rejection, fear, and experiences that shape who we become. My own journey taught me that sometimes healing begins when we finally have a safe place to be heard.</p>
+            <div class="about-card__body">
+              <p>Life leaves people carrying stories that are often never spoken — pain, disappointment, loss, rejection, fear, and experiences that shape who we become. My own journey taught me that sometimes healing begins when we finally have a safe place to be heard.</p>
 
-            <p>That is what we want Salt and Sun Tours to be.</p>
+              <p>That is what we want Salt and Sun Tours to be.</p>
 
-            <p class="about-copy__list">
-              A place where strangers can become companions.<br />
-              Where conversations go deeper than the road ahead.<br />
-              Where stories can be shared without judgement.<br />
-              Where we can laugh, reflect, encourage one another, and sometimes simply sit in silence beneath the African sky.
-            </p>
+              <p class="about-copy__list">
+                A place where strangers can become companions.<br />
+                Where conversations go deeper than the road ahead.<br />
+                Where stories can be shared without judgement.<br />
+                Where we can laugh, reflect, encourage one another, and sometimes simply sit in silence beneath the African sky.
+              </p>
+            </div>
 
-            <p class="about-copy__pull">
-              You may arrive looking for Namibia.<br />
-              You may leave having found a little more of yourself.
-            </p>
+            <div class="about-card__pull">
+              <p class="about-copy__pull">
+                You may arrive looking for Namibia.<br />
+                You may leave having found a little more of yourself.
+              </p>
+            </div>
           </div>
 
           <div class="about-card__page" data-about-page>
-            <p>We believe that every person has value, regardless of their past, their mistakes, or what they have been through. And sometimes, one person's testimony can become another person's reason to keep going.</p>
+            <div class="about-card__body">
+              <p>We believe that every person has value, regardless of their past, their mistakes, or what they have been through. And sometimes, one person's testimony can become another person's reason to keep going.</p>
 
-            <p>So when you travel with us, you are not just booking a tour.</p>
+              <p>So when you travel with us, you are not just booking a tour.</p>
+            </div>
 
-            <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
+            <div class="about-card__pull">
+              <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
 
-            <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
+              <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
 
-            <p>And perhaps, somewhere between the desert and the stars, you will discover that the greatest destination was never a place — it was becoming who you were created to be.</p>
+              <p class="about-card__pull-note">And perhaps, somewhere between the desert and the stars, you will discover that the greatest destination was never a place — it was becoming who you were created to be.</p>
 
-            <div class="about-copy__signoff">
-              <p class="about-copy__signoff-name">Salt and Sun Tours</p>
-              <p class="about-copy__signoff-tag">More than a tour. A journey that leaves a mark.</p>
+              <div class="about-copy__signoff">
+                <p class="about-copy__signoff-name">Salt and Sun Tours</p>
+                <p class="about-copy__signoff-tag">More than a tour. A journey that leaves a mark.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -783,22 +795,32 @@ const testimonials = [
     background: var(--color-surface);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    padding: var(--space-xl);
+    /* No padding here — .about-card__body and .about-card__pull each pad
+       themselves, so the tinted pull zone below can run full-bleed to the
+       card's own edges and still get clipped to its rounded corners. */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
   }
 
   /* Every page occupies the same grid cell (stacked, not stacked in
      document flow) so the card's height is set once, by the tallest
-     page, and never changes as pages swap — required for the scroll
-     pin above to stay stable; swapping "active" page is a pure opacity
-     crossfade, nothing reflows. */
+     page, and never changes as pages swap — required for the scroll pin
+     above to stay stable; swapping "active" page is a pure opacity
+     crossfade, nothing reflows. Grid's default stretch then makes every
+     page (including shorter ones) fill that same height, which used to
+     just leave blank space below short pages — now .about-card__page is
+     a flex column and .about-card__pull's margin-top: auto pushes the
+     tinted pull-quote zone down to fill it instead, so the extra room
+     reads as a designed zone rather than dead space. */
   .about-card__pages {
     display: grid;
   }
 
   .about-card__page {
     grid-area: 1 / 1;
+    display: flex;
+    flex-direction: column;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -809,6 +831,10 @@ const testimonials = [
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
+  }
+
+  .about-card__body {
+    padding: var(--space-xl) var(--space-xl) 0;
   }
 
   .about-card__page p {
@@ -830,13 +856,22 @@ const testimonials = [
     margin-bottom: 1.25rem !important;
   }
 
+  /* The tinted zone each page's closing pull-quote sits in — see the
+     .about-card__pages comment above for why this is what fills the
+     leftover space on shorter pages instead of leaving it blank. */
+  .about-card__pull {
+    margin-top: auto;
+    background: var(--color-bg-alt);
+    padding: var(--space-lg) var(--space-xl);
+  }
+
   .about-copy__pull {
     font-family: var(--font-display);
     font-style: italic;
     font-size: clamp(1.15rem, 2vw, 1.35rem);
     line-height: 1.5;
     color: var(--color-accent-strong);
-    margin: 1.5rem 0 !important;
+    margin: 0 0 1.1rem !important;
   }
 
   .about-copy__list {
@@ -873,14 +908,17 @@ const testimonials = [
 
   /* Same prev/counter/next pattern as the Postcards testimonial carousel
      elsewhere on this page, just its own instance/selectors since this
-     card paginates prose, not photo cards. */
+     card paginates prose, not photo cards. Same tinted background as
+     .about-card__pull (and no gap above it) so it reads as the bottom of
+     that one zone rather than a separate strip — only a hairline divider
+     marks where the quote ends and the controls begin. */
   .about-card__controls {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1.25rem;
-    margin-top: var(--space-lg);
-    padding-top: var(--space-md);
+    background: var(--color-bg-alt);
+    padding: var(--space-md) var(--space-xl) var(--space-xl);
     border-top: 1px solid var(--color-border);
   }
 
