@@ -1,5 +1,6 @@
 ---
 import { categoryLabels, toursByCategory } from '../data/tours';
+import { journeys } from '../data/journeys';
 
 // Replace YOUR_FORM_ID with the real Formspree endpoint once created.
 const FORMSPREE_ID = 'YOUR_FORM_ID';
@@ -41,7 +42,7 @@ const categories = (['tour', 'adventure'] as const).map((category) => ({
     <div class="form-row">
       <label for="tour-select">Preferred tour</label>
       <select id="tour-select" name="tour" required>
-        <option value="" disabled selected>Choose a tour or adventure</option>
+        <option value="" disabled selected>Choose a tour, adventure, or journey</option>
         <option value="Custom combo" data-slug="custom">Custom combo (see message below)</option>
         {
           categories.map((group) => (
@@ -54,6 +55,13 @@ const categories = (['tour', 'adventure'] as const).map((category) => ({
             </optgroup>
           ))
         }
+        <optgroup label="Journeys">
+          {journeys.map((journey) => (
+            <option value={journey.name} data-slug={journey.slug}>
+              {journey.name}
+            </option>
+          ))}
+        </optgroup>
       </select>
     </div>
     <div class="form-row">
@@ -126,17 +134,26 @@ const categories = (['tour', 'adventure'] as const).map((category) => ({
   }
 
   // Deep-link support: /booking?journey=<name> (used by "Book this Journey"
-  // buttons on the Journeys pages) — same standing "Custom combo" option,
-  // since a multi-day Journey has no matching entry in this single-day list
-  // either, but its own message phrasing rather than the combo-builder text.
+  // buttons on the Journeys pages) — Journeys are now real options in this
+  // select, so this just matches the option with that exact name. Falls
+  // back to the old "Custom combo" + message behavior only if the name
+  // doesn't match anything listed (e.g. a Journey renamed or removed since
+  // a link was shared).
   const journey = params.get('journey');
   if (journey && select) {
-    const customOption = Array.from(select.options).find((option) => option.dataset.slug === 'custom');
-    if (customOption) select.value = customOption.value;
+    const options = Array.from(select.options);
+    const match = options.find((option) => option.value === journey);
 
-    const message = document.getElementById('message') as HTMLTextAreaElement | null;
-    if (message && !message.value) {
-      message.value = `I'd like to book the following Journey: ${journey}`;
+    if (match) {
+      select.value = match.value;
+    } else {
+      const customOption = options.find((option) => option.dataset.slug === 'custom');
+      if (customOption) select.value = customOption.value;
+
+      const message = document.getElementById('message') as HTMLTextAreaElement | null;
+      if (message && !message.value) {
+        message.value = `I'd like to book the following Journey: ${journey}`;
+      }
     }
   }
 </script>
