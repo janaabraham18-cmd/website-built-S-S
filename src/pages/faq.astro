@@ -7,62 +7,79 @@ const bgPhoto = {
   credit: { name: 'Alan J. Hendry', username: 'imedianamibia' },
 };
 
-const faqItems = [
+// Split into two categories, shown as side-by-side columns (see
+// .faq-categories below) instead of one long single list — booking
+// logistics specific to us on the left, general Namibia trip-prep
+// questions on the right. Each category label is a 2-word heading, so
+// per the site's one-accent-word rule it's the last word that gets hl().
+const faqCategories = [
   {
-    q: 'Do I need to book in advance?',
-    a: "Most tours can be arranged with a few days' notice, but popular dates fill up faster in peak season.",
+    label: 'Booking & Planning',
+    accentWord: 'Planning',
+    items: [
+      {
+        q: 'Do I need to book in advance?',
+        a: "Most tours can be arranged with a few days' notice, but popular dates fill up faster in peak season.",
+      },
+      {
+        q: 'Where do tours depart from?',
+        a: "Most tours depart from Swakopmund or Walvis Bay; we'll confirm your pick-up point when we plan your day.",
+      },
+      {
+        q: 'Can tours be combined?',
+        a: 'Yes — many guests pair a tour with a shorter adventure or a combo deal; see the tours page for options.',
+      },
+      {
+        q: 'How and when do I pay?',
+        a: "There's no payment due when you submit a booking request — it's a no-obligation enquiry. We'll confirm availability and payment details with you directly once we've planned out your day (or your Journey).",
+      },
+      {
+        q: 'What if the weather turns, or I need to cancel?',
+        a: "Some activities — skydiving and paragliding especially — are weather-dependent, and we'll always reschedule rather than run something unsafe. Get in touch as early as you can if your plans change; we handle cancellations case by case rather than a one-size-fits-all policy.",
+      },
+      {
+        q: 'Do I need a group to book, or can I travel solo?',
+        a: 'Most tours and adventures welcome solo travelers — a handful need a minimum headcount to run, which is noted on the tour itself and flagged when you enquire. Self-drive Journeys work for any group size, including one.',
+      },
+      {
+        q: 'Are your tours suitable for children or travelers with mobility needs?',
+        a: "It depends on the activity — vehicle-based tours and Journeys are generally easy to adapt, while things like sandboarding, quad biking, or skydiving have their own age and fitness guidelines. Tell us about your group when you enquire and we'll help you find the right fit.",
+      },
+    ],
   },
   {
-    q: 'Where do tours depart from?',
-    a: "Most tours depart from Swakopmund or Walvis Bay; we'll confirm your pick-up point when we plan your day.",
-  },
-  {
-    q: 'Can tours be combined?',
-    a: 'Yes — many guests pair a tour with a shorter adventure or a combo deal; see the tours page for options.',
-  },
-  {
-    q: 'What should I bring?',
-    a: "Comfortable shoes, sun protection, and a camera; we'll flag anything tour-specific when we confirm your booking.",
-  },
-  {
-    q: 'How and when do I pay?',
-    a: "There's no payment due when you submit a booking request — it's a no-obligation enquiry. We'll confirm availability and payment details with you directly once we've planned out your day (or your Journey).",
-  },
-  {
-    q: 'What if the weather turns, or I need to cancel?',
-    a: "Some activities — skydiving and paragliding especially — are weather-dependent, and we'll always reschedule rather than run something unsafe. Get in touch as early as you can if your plans change; we handle cancellations case by case rather than a one-size-fits-all policy.",
-  },
-  {
-    q: 'Do I need a group to book, or can I travel solo?',
-    a: 'Most tours and adventures welcome solo travelers — a handful need a minimum headcount to run, which is noted on the tour itself and flagged when you enquire. Self-drive Journeys work for any group size, including one.',
-  },
-  {
-    q: 'Are your tours suitable for children or travelers with mobility needs?',
-    a: "It depends on the activity — vehicle-based tours and Journeys are generally easy to adapt, while things like sandboarding, quad biking, or skydiving have their own age and fitness guidelines. Tell us about your group when you enquire and we'll help you find the right fit.",
-  },
-  {
-    q: 'Is tipping expected?',
-    a: "Gratuities aren't included in any tour or Journey and are entirely up to you — most guests tip their guide or driver for a day well spent, but it's never expected.",
-  },
-  {
-    q: 'What do I need to bring or arrange for a self-drive Journey?',
-    a: "A valid driver's license and a vehicle suited to Namibia's gravel roads — a 4x4 for our camping safaris. We plan the route and book the stops either way; for camping Journeys we can also point you to vehicle and camping-gear hire. Each Journey's own page lists exactly what's included and what isn't.",
-  },
-  {
-    q: 'What currency should I bring?',
-    a: "Namibia's currency is the Namibian Dollar, pegged 1:1 to the South African Rand — Rand notes are accepted everywhere too. Cards work fine in Swakopmund and Walvis Bay, but it's worth carrying some cash for tips, fuel, and small stops along the way.",
-  },
-  {
-    q: 'Do I need a visa to visit Namibia?',
-    a: "It depends on your passport — many nationalities can enter Namibia visa-free for tourist stays, but requirements change, so check with the Namibian Ministry of Home Affairs or your nearest embassy before you travel. You'll also need a passport valid for at least 6 months beyond your travel dates.",
-  },
-  {
-    q: 'What language do your guides speak?',
-    a: "English — it's Namibia's official language, so it's also what you'll hear day-to-day around Swakopmund and Walvis Bay. Let us know when booking if you'd like anything arranged in another language.",
-  },
-  {
-    q: 'Can I bring a drone?',
-    a: "Drones are restricted in Namibia's national parks — Etosha, the Skeleton Coast, and Namib-Naukluft among them — and usually need a permit arranged in advance. Let us know if you're planning to fly one so we can advise for the areas your tour or Journey covers.",
+    label: 'Travel Essentials',
+    accentWord: 'Essentials',
+    items: [
+      {
+        q: 'What should I bring?',
+        a: "Comfortable shoes, sun protection, and a camera; we'll flag anything tour-specific when we confirm your booking.",
+      },
+      {
+        q: 'Is tipping expected?',
+        a: "Gratuities aren't included in any tour or Journey and are entirely up to you — most guests tip their guide or driver for a day well spent, but it's never expected.",
+      },
+      {
+        q: 'What do I need to bring or arrange for a self-drive Journey?',
+        a: "A valid driver's license and a vehicle suited to Namibia's gravel roads — a 4x4 for our camping safaris. We plan the route and book the stops either way; for camping Journeys we can also point you to vehicle and camping-gear hire. Each Journey's own page lists exactly what's included and what isn't.",
+      },
+      {
+        q: 'What currency should I bring?',
+        a: "Namibia's currency is the Namibian Dollar, pegged 1:1 to the South African Rand — Rand notes are accepted everywhere too. Cards work fine in Swakopmund and Walvis Bay, but it's worth carrying some cash for tips, fuel, and small stops along the way.",
+      },
+      {
+        q: 'Do I need a visa to visit Namibia?',
+        a: "It depends on your passport — many nationalities can enter Namibia visa-free for tourist stays, but requirements change, so check with the Namibian Ministry of Home Affairs or your nearest embassy before you travel. You'll also need a passport valid for at least 6 months beyond your travel dates.",
+      },
+      {
+        q: 'What language do your guides speak?',
+        a: "English — it's Namibia's official language, so it's also what you'll hear day-to-day around Swakopmund and Walvis Bay. Let us know when booking if you'd like anything arranged in another language.",
+      },
+      {
+        q: 'Can I bring a drone?',
+        a: "Drones are restricted in Namibia's national parks — Etosha, the Skeleton Coast, and Namib-Naukluft among them — and usually need a permit arranged in advance. Let us know if you're planning to fly one so we can advise for the areas your tour or Journey covers.",
+      },
+    ],
   },
 ];
 ---
@@ -88,13 +105,20 @@ const faqItems = [
 
     <section class="faq-section reveal">
       <div class="container">
-        <div class="faq-list reveal-item">
+        <div class="faq-categories reveal-item">
           {
-            faqItems.map((item) => (
-              <details class="faq-item">
-                <summary>{item.q}</summary>
-                <p>{item.a}</p>
-              </details>
+            faqCategories.map((category) => (
+              <div class="faq-category">
+                <h2 class="faq-category__title" set:html={hl(category.label, category.accentWord)} />
+                <div class="faq-list">
+                  {category.items.map((item) => (
+                    <details class="faq-item">
+                      <summary>{item.q}</summary>
+                      <p>{item.a}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
             ))
           }
         </div>
@@ -165,11 +189,33 @@ const faqItems = [
     padding-block: var(--space-xl) var(--space-2xl);
   }
 
-  .faq-list {
-    max-width: var(--content-width-narrow, 720px);
+  .faq-categories {
+    max-width: var(--content-width);
     margin-inline: auto;
     display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+    gap: var(--space-xl);
+  }
+
+  .faq-category__title {
+    color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
+    font-size: var(--fs-lg);
+    margin: 0 0 var(--space-md);
+  }
+
+  .faq-list {
+    display: grid;
     gap: 0.75rem;
+    align-content: start;
+  }
+
+  @media (max-width: 860px) {
+    .faq-categories {
+      grid-template-columns: 1fr;
+      gap: var(--space-2xl);
+    }
   }
 
   .faq-item {
