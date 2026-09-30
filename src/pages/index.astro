@@ -507,6 +507,10 @@ const testimonials = [
           ))
         }
       </div>
+      <p class="fleet-note">
+        Traveling as a larger group? We partner with trusted local operators to bring in extra vehicles, so
+        everyone stays in one convoy.
+      </p>
     </div>
   </section>
 
@@ -1108,15 +1112,23 @@ const testimonials = [
 
   /* ---------- 05 Our Fleet ---------- */
   .stamps-block {
-    background: var(--color-earth-900);
-    background-image: var(--gradient-dusk);
-    color: var(--color-text-on-dark);
+    /* Light section with a soft warm glow, same --gradient-glow-warm
+       treatment already used behind the Adventures teaser (#home-adventures)
+       — client didn't want this section as a flat dark-brown banner. */
+    background-color: var(--color-bg);
+    background-image: var(--gradient-glow-warm);
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 8vw, 6rem);
   }
 
   .stamps-inner { max-width: 960px; margin-inline: auto; text-align: center; }
-  .stamps-inner .eyebrow { color: var(--color-sand-100); }
-  .stamps-inner .section-title { color: var(--color-text-on-dark); margin-inline: auto; margin-bottom: 2.5rem; }
+  .stamps-inner .section-title { margin-inline: auto; margin-bottom: 2.5rem; }
+
+  .fleet-note {
+    margin: 2rem auto 0;
+    max-width: 640px;
+    font-size: var(--fs-sm);
+    color: var(--color-text-muted);
+  }
 
   .fleet-grid {
     display: grid;
