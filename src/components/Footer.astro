@@ -114,8 +114,13 @@ const socialLinks = {
   }
 
   .site-footer__logo {
+    /* Same wordmark treatment as .site-header__logo (uppercase + letter-
+       spacing on the display font), not just the font swapped — a plain-
+       case display font barely reads as different from the body font. */
     font-family: var(--font-display);
     font-size: var(--fs-lg);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
     margin: 0 0 var(--space-2xs);
   }
 
@@ -171,10 +176,17 @@ const socialLinks = {
     gap: var(--space-2xs);
   }
 
+  /* Same display font as the header's nav links — previously these
+     inherited the plain body font, so the footer's nav read as a
+     different typographic voice from the rest of the site's navigation. */
   .site-footer__nav a {
     text-decoration: none;
     color: var(--color-sand-100);
     font-size: var(--fs-sm);
+    font-family: var(--font-display);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
 
   .site-footer__nav a:hover {
