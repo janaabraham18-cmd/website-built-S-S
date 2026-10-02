@@ -3,7 +3,22 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import { tours, categoryLabels } from '../data/tours';
 import { journeys } from '../data/journeys';
 
+const heroPhoto = {
+  url: 'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
+  credit: { name: 'Joshua Kettle', username: 'joshuakettle' },
+};
+
 type GalleryCategory = 'tour' | 'adventure' | 'combo' | 'journey';
+
+// Short singular label for the badge shown on each tile — categoryLabels
+// is plural ("Tours", "Adventures") for the filter pills, this is its own
+// small map rather than singularizing that string at render time.
+const badgeLabels: Record<GalleryCategory, string> = {
+  tour: 'Tour',
+  adventure: 'Adventure',
+  combo: 'Combo',
+  journey: 'Journey',
+};
 
 interface GalleryItem {
   slug: string;
@@ -51,8 +66,11 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
   title="Gallery"
   description="Photos from every tour, adventure, combo and Journey Salt and Sun Tours offers in Swakopmund and Walvis Bay, Namibia."
 >
-  <header class="gallery-header">
-    <div class="container">
+  <section class="gallery-hero">
+    <div class="gallery-hero__bg" style={`background-image:url('${heroPhoto.url}')`} aria-hidden="true"></div>
+    <div class="gallery-hero__scrim" aria-hidden="true"></div>
+
+    <div class="container gallery-hero__content">
       <p class="eyebrow">The Photo Roll</p>
       <h1>Gallery</h1>
       <p class="gallery-header__body">
@@ -72,7 +90,7 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
         ))}
       </div>
     </div>
-  </header>
+  </section>
 
   <section class="gallery-grid-section reveal">
     <div class="container">
@@ -82,6 +100,7 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
             <a class="gallery-tile__link" href={item.href}>
               <div class="photo-frame gallery-tile__photo">
                 <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" />
+                <span class="gallery-tile__badge">{badgeLabels[item.category]}</span>
               </div>
               <p class="gallery-tile__name">{item.name}</p>
             </a>
@@ -97,19 +116,66 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
 </BaseLayout>
 
 <style>
-  .gallery-header {
+  /* Bounded hero (not the whole page) with its own photo + scrim — text
+     sits at the top of the photo and nothing below it needs to stay
+     clear, so a flatter gradient clearing by ~80% (same treatment as
+     the Adventures hero) rather than the page-length photo other inner
+     pages use. The grid section below stays on the plain light page
+     background. */
+  .gallery-hero {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-earth-700);
     padding-block: var(--space-2xl) var(--space-xl);
-    background: var(--color-bg-alt);
   }
 
-  .gallery-header h1 {
+  .gallery-hero__bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background-size: cover;
+    background-position: center 55%;
+  }
+
+  .gallery-hero__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    background: linear-gradient(180deg, rgba(31, 18, 14, 0.78) 0%, rgba(31, 18, 14, 0.3) 50%, rgba(31, 18, 14, 0) 80%);
+  }
+
+  .gallery-hero__content {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* This page never had a base .eyebrow rule — the label rendered as a
+     plain paragraph with none of the small-caps treatment every other
+     page's eyebrow gets. */
+  .eyebrow {
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+  }
+
+  .gallery-hero .eyebrow {
+    color: var(--color-sand-100);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+  }
+
+  .gallery-hero h1 {
+    color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     margin: 0 0 var(--space-sm);
   }
 
   .gallery-header__body {
     font-size: var(--fs-md);
     line-height: var(--lh-normal);
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
     max-width: var(--content-width-narrow);
     margin: 0 0 var(--space-lg);
   }
@@ -130,6 +196,10 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
     border-radius: 999px;
     padding: 0.5rem 1.1rem;
     cursor: pointer;
+    /* Now sitting on a photo instead of a flat background — a bit of
+       lift keeps the pills reading as controls rather than blending
+       into whatever's behind them. */
+    box-shadow: var(--shadow-sm);
     transition: background var(--duration-fast) var(--ease-out),
       border-color var(--duration-fast) var(--ease-out),
       color var(--duration-fast) var(--ease-out);
@@ -166,6 +236,26 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
     aspect-ratio: 4 / 3;
     box-shadow: var(--shadow-sm);
     margin-bottom: var(--space-sm);
+  }
+
+  /* .photo-frame (global.css) is already position: relative, overflow:
+     hidden — this just pins the badge to it. Mainly useful when "All"
+     is selected, so each tile still reads at a glance without reaching
+     for the filter pills. */
+  .gallery-tile__badge {
+    position: absolute;
+    top: var(--space-sm);
+    left: var(--space-sm);
+    z-index: 1;
+    background: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.25rem 0.6rem;
+    border-radius: 999px;
+    box-shadow: var(--shadow-sm);
   }
 
   .gallery-tile__name {
