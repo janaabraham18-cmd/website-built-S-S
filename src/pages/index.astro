@@ -414,7 +414,10 @@ const testimonials = [
 
               <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
 
-              <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+              <div class="about-card__scripture">
+                <p class="about-card__scripture-label">Our Foundation</p>
+                <p class="about-card__scripture-text">Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
+              </div>
 
               <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
             </div>
@@ -698,13 +701,19 @@ const testimonials = [
   }
 
   /* ---------- 04 About Us ---------- */
-  /* Plain flat section — the background dune photo got removed, so this
-     is just a tinted surface like Adventures (#home-adventures) rather
-     than a photo band. The bio card sits in normal document flow — it no
-     longer pins the section and ties its 3 pages to scroll progress,
-     just plain prev/next buttons (see setupAboutCard in motion.ts). */
+  /* Quieter than the journal treatment this replaced: a faint cracked-
+     earth texture (echoing the Etosha salt pan his own story mentions)
+     instead of a flat tint, a plainly framed photo instead of a mounted
+     print, and the Matthew 5:13-16 line pulled into its own small inset
+     card using the site's one cool accent (--color-salt-700, otherwise
+     reserved for the Tours page) — restraint doing the work decoration
+     did before. No card shell around the bio text itself: the scripture
+     inset is the one considered "card" on the page, so it isn't
+     competing with a boxed container around everything else. */
   .about-block {
     background-color: var(--color-bg-alt);
+    background-image: repeating-linear-gradient(60deg, var(--color-border) 0 1px, transparent 1px 86px),
+      repeating-linear-gradient(-60deg, var(--color-border) 0 1px, transparent 1px 86px);
   }
 
   .about-block__intro {
@@ -722,35 +731,10 @@ const testimonials = [
     align-items: start;
   }
 
-  /* The founder photo reads as a print mounted on the page rather than a
-     plain framed image: tilted slightly, a washi-tape accent holding it
-     down, the name/role sitting in the same cream mount like a caption
-     written under a pasted-in photo. */
-  .about-photo {
-    position: relative;
-    transform: rotate(-3deg);
-    background: var(--color-surface);
-    padding: var(--space-xs) var(--space-xs) var(--space-sm);
-    box-shadow: var(--shadow-md);
-  }
-
-  .about-photo::before {
-    content: '';
-    position: absolute;
-    top: -0.6rem;
-    left: 28%;
-    width: 3.5rem;
-    height: 1.25rem;
-    background: var(--color-accent);
-    opacity: 0.85;
-    transform: rotate(-8deg);
-    box-shadow: 0 2px 4px rgba(58, 35, 28, 0.25);
-  }
-
   .about-photo__frame {
     aspect-ratio: 1;
     overflow: hidden;
-    border: 1px solid var(--color-border);
+    border: 2px solid var(--color-accent);
   }
 
   .about-photo__frame img {
@@ -760,10 +744,9 @@ const testimonials = [
     display: block;
     /* The founder photo is hotlinked from a since-dead host and currently
        fails to load — without this, a broken <img> falls back to its alt
-       text spilling across the frame, which wrecked the mounted-print
-       look. text-indent/overflow hide that fallback text, and the
-       background paints a plain muted placeholder in its place so the
-       mount still reads cleanly until a working photo replaces this. */
+       text spilling across the frame. text-indent/overflow hide that
+       fallback text, and the background paints a plain muted placeholder
+       in its place until a working photo replaces this. */
     color: transparent;
     text-indent: 100%;
     white-space: nowrap;
@@ -773,15 +756,17 @@ const testimonials = [
   }
 
   .about-photo__name {
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 600;
+    font-family: var(--font-body);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
     color: var(--color-text);
     margin: 0.85rem 0 0;
   }
 
   .about-photo__role {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--color-text-muted);
@@ -789,63 +774,14 @@ const testimonials = [
   }
 
   .about-card {
-    position: relative;
-    background-color: var(--color-surface);
-    /* A second, dashed line just right of the warm spine (::before below)
-       — like the stitching on a bound journal's spine — drawn as a
-       background layer so it needs no extra markup. */
-    background-image: repeating-linear-gradient(to bottom, var(--color-ochre-500) 0 6px, transparent 6px 13px);
-    background-position: 9px top;
-    background-size: 1px 100%;
-    background-repeat: no-repeat;
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--color-border);
-    box-shadow: var(--shadow-lg);
-    /* No padding here — .about-card__body and .about-card__pull each pad
-       themselves, so the pull zone below can run full-bleed to the
-       card's own edges and still get clipped to its rounded corners. */
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-  }
-
-  /* A thin warm spine down the left edge, like a bound journal, and a
-     folded paper corner at the top right — a plain white rectangle
-     didn't read as a "page" the way the prev/next/counter controls
-     below imply it is, so the edges now carry that idea instead of
-     just a box-shadow. */
-  .about-card::before {
-    content: '';
-    position: absolute;
-    inset: 0 auto 0 0;
-    width: 5px;
-    background: var(--gradient-warm);
-    z-index: 1;
-  }
-
-  .about-card::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 0;
-    height: 0;
-    border-style: solid;
-    border-width: 0 34px 34px 0;
-    border-color: transparent var(--color-bg-alt) transparent transparent;
-    filter: drop-shadow(-2px 2px 3px rgba(58, 35, 28, 0.2));
-    z-index: 1;
   }
 
   /* Every page occupies the same grid cell (stacked, not stacked in
      document flow) so the card's height is set once, by the tallest
      page, and never changes as pages swap — swapping "active" page is a
-     pure opacity crossfade, nothing reflows. Grid's default stretch then
-     makes every page (including shorter ones) fill that same height,
-     which used to just leave blank space below short pages — now
-     .about-card__page is a flex column and .about-card__pull's
-     margin-top: auto pushes the pull-quote zone down to fill it instead,
-     so the extra room reads as a designed zone rather than dead space. */
+     pure opacity crossfade, nothing reflows. */
   .about-card__pages {
     display: grid;
   }
@@ -866,10 +802,6 @@ const testimonials = [
     pointer-events: auto;
   }
 
-  .about-card__body {
-    padding: var(--space-xl) var(--space-xl) 0;
-  }
-
   .about-card__page p {
     font-size: 1rem;
     line-height: 1.7;
@@ -883,42 +815,57 @@ const testimonials = [
 
   .about-copy__lead {
     font-family: var(--font-display);
+    font-style: italic;
     font-size: clamp(1.4rem, 2.6vw, 1.75rem);
     line-height: 1.4;
     color: var(--color-text);
     margin-bottom: 1.25rem !important;
   }
 
-  /* The zone each page's closing pull-quote sits in — see the
-     .about-card__pages comment above for why this is what fills the
-     leftover space on shorter pages instead of leaving it blank. Pure
-     white like the rest of the card (was a cream tint) — the italic
-     accent-colored quote and the divider above it already mark this as
-     its own zone, without needing a background change too. */
-  .about-card__pull {
-    position: relative;
-    margin-top: auto;
+  /* The one inset card on the page — a quiet, distinct zone for the
+     founder's scripture reference, in the site's cool accent instead of
+     the usual warm terracotta, so it reads as a deliberate, singular
+     note rather than more decoration. */
+  .about-card__scripture {
     background: var(--color-surface);
-    border-top: 1px solid var(--color-border);
-    padding: var(--space-lg) var(--space-xl);
+    border-top: 3px solid var(--color-salt-700);
+    box-shadow: var(--shadow-sm);
+    padding: var(--space-sm) var(--space-md);
+    margin: 0 0 1.1rem;
   }
 
-  /* An oversized, barely-there quotation mark behind the pull-quote —
-     the italic accent text alone didn't quite read as a "quote" the way
-     an actual quote mark does. Purely decorative, so it's excluded from
-     the accessibility tree. */
-  .about-card__pull::before {
-    content: '\201C';
-    position: absolute;
-    top: -2.9rem;
-    left: 0.25rem;
+  .about-card__scripture-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-salt-700);
+    margin: 0 0 0.4rem;
+  }
+
+  .about-card__scripture-text {
     font-family: var(--font-display);
-    font-size: 6.5rem;
-    line-height: 1;
-    color: var(--color-accent);
-    opacity: 0.18;
-    pointer-events: none;
-    z-index: 0;
+    font-style: italic;
+    font-size: 1.05rem;
+    color: var(--color-text);
+    margin: 0 !important;
+  }
+
+  /* Fills the leftover space on shorter pages (see .about-card__pages
+     above) via margin-top: auto, same as before — just without the
+     white card/divider framing it used to sit in. */
+  .about-card__pull {
+    margin-top: auto;
+    padding-top: var(--space-md);
+  }
+
+  .about-card__pull::before {
+    content: '';
+    display: block;
+    width: 1.75rem;
+    height: 2px;
+    background: var(--color-salt-700);
+    margin-bottom: 0.9rem;
   }
 
   .about-copy__pull {
@@ -926,7 +873,7 @@ const testimonials = [
     font-style: italic;
     font-size: clamp(1.15rem, 2vw, 1.35rem);
     line-height: 1.5;
-    color: var(--color-accent-strong);
+    color: var(--color-text);
     margin: 0 0 1.1rem !important;
   }
 
@@ -962,39 +909,33 @@ const testimonials = [
     margin: 0;
   }
 
-  /* Same prev/counter/next pattern as the Postcards testimonial carousel
-     elsewhere on this page, just its own instance/selectors since this
-     card paginates prose, not photo cards. Pure white like the rest of
-     the card now — a hairline divider is what marks where the quote
-     ends and the controls begin, not a background change. */
+  /* Plain, muted icon buttons instead of the previous filled circles —
+     quieter, left-aligned under the text rather than a centered footer
+     bar, since there's no card edge here to anchor a footer to. */
   .about-card__controls {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    gap: 1.25rem;
-    background: var(--color-surface);
-    padding: var(--space-md) var(--space-xl) var(--space-xl);
-    border-top: 1px solid var(--color-border);
+    gap: 1rem;
+    margin-top: var(--space-md);
   }
 
   .about-card__arrow {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
-    border: 1px solid var(--color-border);
-    background: var(--color-surface);
-    color: var(--color-accent-strong);
+    border: none;
+    background: none;
+    color: var(--color-text-muted);
     cursor: pointer;
-    transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
+    transition: color var(--duration-fast) var(--ease-out);
   }
 
   .about-card__arrow:hover {
-    background: var(--color-accent);
-    color: var(--color-text-on-dark);
-    transform: scale(1.06);
+    color: var(--color-salt-700);
   }
 
   .about-card__arrow svg {
@@ -1014,20 +955,9 @@ const testimonials = [
     }
 
     .about-photo {
-      position: static;
       display: flex;
       align-items: center;
       gap: 1rem;
-      /* The tilted "mounted print" treatment doesn't suit this compact
-         inline row — back to a plain thumbnail next to the name/role. */
-      transform: none;
-      background: none;
-      padding: 0;
-      box-shadow: none;
-    }
-
-    .about-photo::before {
-      display: none;
     }
 
     .about-photo__frame {
