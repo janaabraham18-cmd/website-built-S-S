@@ -29,10 +29,46 @@ interface GalleryItem {
   href: string;
 }
 
+// Real photos from an actual Salt and Sun Tours outing (shared by Lenga),
+// not stock — kept as their own entries rather than forced onto a single
+// tour's one-imageUrl slot in tours.ts, since a few of these don't map
+// to one specific tour.
+const fromTheRoadItems: GalleryItem[] = [
+  {
+    slug: 'from-the-road-sandwich-harbour-lookout',
+    name: 'Sandwich Harbour Lookout',
+    category: 'tour',
+    imageUrl: '/images/gallery-sandwich-harbour-lookout.jpg',
+    href: '/tours',
+  },
+  {
+    slug: 'from-the-road-sandwich-harbour-overlook',
+    name: 'Where Ocean Meets Desert',
+    category: 'tour',
+    imageUrl: '/images/gallery-sandwich-harbour-overlook.jpg',
+    href: '/tours',
+  },
+  {
+    slug: 'from-the-road-sandwich-harbour-view',
+    name: 'Taking In the View',
+    category: 'tour',
+    imageUrl: '/images/gallery-sandwich-harbour-view.jpg',
+    href: '/tours',
+  },
+  {
+    slug: 'from-the-road-beach-picnic',
+    name: 'Sundowners by the Bay',
+    category: 'tour',
+    imageUrl: '/images/gallery-beach-picnic.jpg',
+    href: '/tours',
+  },
+];
+
 // Every real photo already sourced for the tours/adventures/combos and
 // journeys, gathered into one browsable set rather than re-sourced —
 // this page is a way to see them all together, not a new photo shoot.
 const galleryItems: GalleryItem[] = [
+  ...fromTheRoadItems,
   ...tours
     .filter((tour): tour is typeof tour & { imageUrl: string } => !!tour.imageUrl)
     .map((tour) => ({
