@@ -336,46 +336,41 @@ function setupPostcards() {
   });
 }
 
-// About Us card: pages advance by clicking prev/next, or — for visitors
-// who haven't asked for reduced motion — automatically as they scroll,
-// since the whole section pins in place for a stretch of scroll and each
-// third of that pinned range shows one page (same pin + ScrollTrigger
-// pattern as the .section--pinned background pan elsewhere on this
-// page). Reduced motion drops the pin entirely; the arrows are the only
-// way through either way, so state (index/render) is shared between both
-// paths rather than duplicated.
 // Plain click-through pagination — no longer pinned/scroll-tied to the
 // page's main scroll (it used to hold the section in place and advance
 // pages as the visitor scrolled past), so the section now sits in normal
-// document flow like everything else and the arrows are the only way
-// through, same as the reduced-motion fallback always worked.
+// document flow like everything else. The old prev/next arrows are gone
+// too, replaced by a numbered rail (01/02/03) that jumps straight to a
+// page rather than stepping through — the rail lives outside
+// [data-about-pages] (it's positioned against the whole section, not the
+// card), so it's queried from `section` rather than `root`.
 function setupAboutCard() {
   const section = document.querySelector<HTMLElement>('.about-block');
   const root = section?.querySelector<HTMLElement>('[data-about-pages]');
   if (!section || !root) return;
 
   const pages = Array.from(root.querySelectorAll<HTMLElement>('[data-about-page]'));
-  const prevBtn = root.querySelector<HTMLButtonElement>('[data-about-prev]');
-  const nextBtn = root.querySelector<HTMLButtonElement>('[data-about-next]');
-  const counter = root.querySelector<HTMLElement>('[data-about-current]');
-  if (!pages.length || !prevBtn || !nextBtn) return;
+  const railItems = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-about-jump]'));
+  if (!pages.length || !railItems.length) return;
 
   let index = 0;
 
   function render() {
     pages.forEach((page, i) => page.classList.toggle('is-active', i === index));
-    if (counter) counter.textContent = String(index + 1);
+    railItems.forEach((item, i) => {
+      item.classList.toggle('is-active', i === index);
+      item.setAttribute('aria-current', i === index ? 'true' : 'false');
+    });
   }
 
-  prevBtn.addEventListener('click', () => {
-    index = (index - 1 + pages.length) % pages.length;
-    render();
+  railItems.forEach((item, i) => {
+    item.addEventListener('click', () => {
+      index = i;
+      render();
+    });
   });
 
-  nextBtn.addEventListener('click', () => {
-    index = (index + 1) % pages.length;
-    render();
-  });
+  render();
 }
 
 // Tours page closing recap: small auto-cycling slideshow through the

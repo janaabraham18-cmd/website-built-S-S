@@ -393,37 +393,19 @@ const testimonials = [
     </div>
 
     <div class="about-layout reveal-item">
-      <div class="about-photo">
-        <div class="about-photo__frame">
-          <img
-            src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
-            alt="Lenga Shihueka, founder of Salt and Sun Tours"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-        <p class="about-photo__name">Lenga Shihueka</p>
-        <p class="about-photo__role">Founder</p>
-      </div>
-
       <div class="about-card" data-about-pages>
         <div class="about-card__pages">
           <div class="about-card__page is-active" data-about-page>
             <div class="about-card__body">
-              <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
+              <p>My name is Lenga, and Lenga means King. My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
 
-              <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
-
-              <div class="about-card__scripture">
-                <p class="about-card__scripture-label">Our Foundation</p>
-                <p class="about-card__scripture-text">Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
-              </div>
+              <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
 
               <p>For us, a tour is not simply about driving through the dunes, watching wildlife, camping beneath the stars, enjoying a picnic, or experiencing the thrill of an adventure.</p>
             </div>
 
             <div class="about-card__pull">
-              <p class="about-copy__pull">It is about the person you become along the way.</p>
+              <p class="about-copy__pull">It is about the <span class="about-copy__accent">person<svg viewBox="0 0 120 14" class="about-copy__accent-underline" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 35,13 52,7 C68,1 85,12 102,6 C110,4 114,6 118,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg></span> you become along the way.</p>
             </div>
           </div>
 
@@ -444,7 +426,7 @@ const testimonials = [
             <div class="about-card__pull">
               <p class="about-copy__pull">
                 You may arrive looking for Namibia.<br />
-                You may leave having found a little more of yourself.
+                You may leave having found a little more of <span class="about-copy__accent">yourself<svg viewBox="0 0 120 14" class="about-copy__accent-underline" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 35,13 52,7 C68,1 85,12 102,6 C110,4 114,6 118,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg></span>.
               </p>
             </div>
           </div>
@@ -457,7 +439,7 @@ const testimonials = [
             </div>
 
             <div class="about-card__pull">
-              <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
+              <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and <span class="about-copy__accent">transformation<svg viewBox="0 0 120 14" class="about-copy__accent-underline" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 35,13 52,7 C68,1 85,12 102,6 C110,4 114,6 118,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg></span>.</p>
 
               <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
 
@@ -470,17 +452,28 @@ const testimonials = [
             </div>
           </div>
         </div>
-
-        <div class="about-card__controls">
-          <button type="button" class="about-card__arrow" data-about-prev aria-label="Previous page">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </button>
-          <p class="about-card__counter"><span data-about-current>1</span> / 3</p>
-          <button type="button" class="about-card__arrow" data-about-next aria-label="Next page">
-            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-          </button>
-        </div>
       </div>
+
+      <div class="about-photo">
+        <div class="about-photo__frame">
+          <img
+            src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
+            alt="Lenga Shihueka, founder of Salt and Sun Tours"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="about-photo__name">Lenga Shihueka</p>
+        <p class="about-photo__role">Founder</p>
+      </div>
+    </div>
+
+    <div class="about-rail" role="tablist" aria-label="Founder's story, page">
+      <button type="button" class="about-rail__item is-active" data-about-jump="0" aria-label="Page 1 of 3">01</button>
+      <span class="about-rail__tick" aria-hidden="true"></span>
+      <button type="button" class="about-rail__item" data-about-jump="1" aria-label="Page 2 of 3">02</button>
+      <span class="about-rail__tick" aria-hidden="true"></span>
+      <button type="button" class="about-rail__item" data-about-jump="2" aria-label="Page 3 of 3">03</button>
     </div>
   </section>
 
@@ -701,19 +694,41 @@ const testimonials = [
   }
 
   /* ---------- 04 About Us ---------- */
-  /* Quieter than the journal treatment this replaced: a faint cracked-
-     earth texture (echoing the Etosha salt pan his own story mentions)
-     instead of a flat tint, a plainly framed photo instead of a mounted
-     print, and the Matthew 5:13-16 line pulled into its own small inset
-     card using the site's one cool accent (--color-salt-700, otherwise
-     reserved for the Tours page) — restraint doing the work decoration
-     did before. No card shell around the bio text itself: the scripture
-     inset is the one considered "card" on the page, so it isn't
-     competing with a boxed container around everything else. */
+  /* Editorial rather than another "card" treatment: a huge, barely-there
+     word bleeds behind the whole section (its own ::before — BECOME, the
+     last word of the first page's pull-quote), the bio text opens on a
+     real drop cap, and the founder photo is cut into an arch instead of
+     a rectangle, offset down and to the right rather than sitting in a
+     tidy grid column. Pagination becomes a numbered rail (01/02/03) along
+     the right edge that jumps straight to a page, replacing the old
+     prev/next arrows — see setupAboutCard in motion.ts. */
   .about-block {
-    background-color: var(--color-bg-alt);
-    background-image: repeating-linear-gradient(60deg, var(--color-border) 0 1px, transparent 1px 86px),
-      repeating-linear-gradient(-60deg, var(--color-border) 0 1px, transparent 1px 86px);
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-bg);
+  }
+
+  .about-block::before {
+    content: 'Become';
+    position: absolute;
+    left: -0.5rem;
+    top: 18%;
+    z-index: 0;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(5rem, 15vw, 15.5rem);
+    line-height: 0.8;
+    letter-spacing: -0.03em;
+    color: var(--color-accent);
+    opacity: 0.07;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  .about-block__intro,
+  .about-layout {
+    position: relative;
+    z-index: 1;
   }
 
   .about-block__intro {
@@ -725,16 +740,33 @@ const testimonials = [
   }
 
   .about-layout {
-    display: grid;
-    grid-template-columns: minmax(200px, 260px) 1fr;
+    display: flex;
+    align-items: flex-start;
     gap: var(--space-xl);
-    align-items: start;
+    padding-right: 2.5rem;
   }
 
+  .about-card {
+    flex: 1 1 55%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .about-photo {
+    flex: 0 0 auto;
+    width: 15rem;
+    max-width: 38%;
+    margin-left: auto;
+    margin-top: 3.5rem;
+  }
+
+  /* An arch instead of a rectangle — a plain crop didn't carry any of the
+     sun-over-horizon shape the rest of the brand uses. */
   .about-photo__frame {
-    aspect-ratio: 1;
+    aspect-ratio: 4 / 5;
     overflow: hidden;
-    border: 2px solid var(--color-accent);
+    border-radius: 50% 50% 4px 4px / 62% 62% 4px 4px;
   }
 
   .about-photo__frame img {
@@ -758,10 +790,9 @@ const testimonials = [
   .about-photo__name {
     font-family: var(--font-body);
     font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    font-size: 0.9rem;
     color: var(--color-text);
+    text-align: center;
     margin: 0.85rem 0 0;
   }
 
@@ -770,12 +801,8 @@ const testimonials = [
     text-transform: uppercase;
     letter-spacing: 0.08em;
     color: var(--color-text-muted);
+    text-align: center;
     margin: 0.15rem 0 0;
-  }
-
-  .about-card {
-    display: flex;
-    flex-direction: column;
   }
 
   /* Every page occupies the same grid cell (stacked, not stacked in
@@ -803,8 +830,8 @@ const testimonials = [
   }
 
   .about-card__page p {
-    font-size: 1rem;
-    line-height: 1.7;
+    font-size: 1.03rem;
+    line-height: 1.75;
     color: var(--color-text-muted);
     margin: 0 0 1.1rem;
   }
@@ -813,68 +840,49 @@ const testimonials = [
     margin-bottom: 0;
   }
 
-  .about-copy__lead {
+  /* The real flourish: a drop cap on the opening paragraph of whichever
+     page is showing, standing in for the card/border decoration used
+     before. Sized off the body text so it scales with it. */
+  .about-card__body > p:first-child::first-letter {
+    float: left;
     font-family: var(--font-display);
-    font-style: italic;
-    font-size: clamp(1.4rem, 2.6vw, 1.75rem);
-    line-height: 1.4;
-    color: var(--color-text);
-    margin-bottom: 1.25rem !important;
-  }
-
-  /* The one inset card on the page — a quiet, distinct zone for the
-     founder's scripture reference, in the site's cool accent instead of
-     the usual warm terracotta, so it reads as a deliberate, singular
-     note rather than more decoration. */
-  .about-card__scripture {
-    background: var(--color-surface);
-    border-top: 3px solid var(--color-salt-700);
-    box-shadow: var(--shadow-sm);
-    padding: var(--space-sm) var(--space-md);
-    margin: 0 0 1.1rem;
-  }
-
-  .about-card__scripture-label {
-    font-size: 0.7rem;
     font-weight: 700;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--color-salt-700);
-    margin: 0 0 0.4rem;
+    font-size: 4.2em;
+    line-height: 0.72;
+    color: var(--color-accent);
+    margin: 0.04em 0.12em 0 0;
   }
 
-  .about-card__scripture-text {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-size: 1.05rem;
-    color: var(--color-text);
-    margin: 0 !important;
-  }
-
-  /* Fills the leftover space on shorter pages (see .about-card__pages
-     above) via margin-top: auto, same as before — just without the
-     white card/divider framing it used to sit in. */
   .about-card__pull {
     margin-top: auto;
     padding-top: var(--space-md);
   }
 
-  .about-card__pull::before {
-    content: '';
-    display: block;
-    width: 1.75rem;
-    height: 2px;
-    background: var(--color-salt-700);
-    margin-bottom: 0.9rem;
-  }
-
   .about-copy__pull {
     font-family: var(--font-display);
     font-style: italic;
-    font-size: clamp(1.15rem, 2vw, 1.35rem);
-    line-height: 1.5;
+    font-weight: 700;
+    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+    line-height: 1.3;
     color: var(--color-text);
     margin: 0 0 1.1rem !important;
+  }
+
+  /* The one accent word in each pull-quote — color plus a hand-drawn
+     underline instead of boxing the whole quote in a card. */
+  .about-copy__accent {
+    position: relative;
+    color: var(--color-accent);
+    white-space: nowrap;
+  }
+
+  .about-copy__accent-underline {
+    position: absolute;
+    left: 0;
+    bottom: -0.45rem;
+    width: 100%;
+    height: 0.65rem;
+    color: var(--color-accent);
   }
 
   .about-copy__list {
@@ -909,66 +917,89 @@ const testimonials = [
     margin: 0;
   }
 
-  /* Plain, muted icon buttons instead of the previous filled circles —
-     quieter, left-aligned under the text rather than a centered footer
-     bar, since there's no card edge here to anchor a footer to. */
-  .about-card__controls {
+  /* The numbered rail standing in for prev/next + counter — pinned to
+     the section's right edge rather than tucked under the card, since
+     there's no card edge left to anchor a footer to. */
+  .about-rail {
+    position: absolute;
+    right: 0.5rem;
+    top: 15rem;
+    z-index: 1;
     display: flex;
-    justify-content: flex-start;
+    flex-direction: column;
     align-items: center;
-    gap: 1rem;
-    margin-top: var(--space-md);
+    gap: 1.1rem;
   }
 
-  .about-card__arrow {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 2rem;
-    height: 2rem;
-    border-radius: 50%;
+  .about-rail__item {
     border: none;
     background: none;
-    color: var(--color-text-muted);
+    padding: 0;
+    font-family: var(--font-body);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--color-border);
     cursor: pointer;
     transition: color var(--duration-fast) var(--ease-out);
   }
 
-  .about-card__arrow:hover {
-    color: var(--color-salt-700);
+  .about-rail__item.is-active {
+    color: var(--color-accent);
   }
 
-  .about-card__arrow svg {
-    width: 1rem;
-    height: 1rem;
+  .about-rail__item:hover {
+    color: var(--color-accent-strong);
   }
 
-  .about-card__counter {
-    font-size: 0.85rem;
-    color: var(--color-text-muted);
-    margin: 0;
+  .about-rail__tick {
+    width: 1px;
+    height: 1.1rem;
+    background: var(--color-border);
   }
 
   @media (max-width: 760px) {
+    .about-block::before {
+      top: 8%;
+      opacity: 0.06;
+    }
+
     .about-layout {
-      grid-template-columns: 1fr;
+      flex-direction: column;
+      padding-right: 0;
     }
 
     .about-photo {
+      order: -1;
+      width: auto;
+      max-width: none;
+      margin: 0 0 1.5rem;
       display: flex;
       align-items: center;
       gap: 1rem;
     }
 
     .about-photo__frame {
-      width: 96px;
-      height: 96px;
+      width: 76px;
+      height: 95px;
       flex-shrink: 0;
     }
 
     .about-photo__name,
     .about-photo__role {
       margin: 0;
+      text-align: left;
+    }
+
+    .about-rail {
+      position: static;
+      flex-direction: row;
+      justify-content: center;
+      margin-top: var(--space-lg);
+    }
+
+    .about-rail__tick {
+      width: 1.1rem;
+      height: 1px;
     }
   }
 
