@@ -722,12 +722,35 @@ const testimonials = [
     align-items: start;
   }
 
+  /* The founder photo reads as a print mounted on the page rather than a
+     plain framed image: tilted slightly, a washi-tape accent holding it
+     down, the name/role sitting in the same cream mount like a caption
+     written under a pasted-in photo. */
+  .about-photo {
+    position: relative;
+    transform: rotate(-3deg);
+    background: var(--color-surface);
+    padding: var(--space-xs) var(--space-xs) var(--space-sm);
+    box-shadow: var(--shadow-md);
+  }
+
+  .about-photo::before {
+    content: '';
+    position: absolute;
+    top: -0.6rem;
+    left: 28%;
+    width: 3.5rem;
+    height: 1.25rem;
+    background: var(--color-accent);
+    opacity: 0.85;
+    transform: rotate(-8deg);
+    box-shadow: 0 2px 4px rgba(58, 35, 28, 0.25);
+  }
+
   .about-photo__frame {
     aspect-ratio: 1;
-    border-radius: var(--radius-lg);
     overflow: hidden;
-    box-shadow: var(--shadow-md);
-    border: 3px solid var(--color-surface);
+    border: 1px solid var(--color-border);
   }
 
   .about-photo__frame img {
@@ -755,7 +778,14 @@ const testimonials = [
 
   .about-card {
     position: relative;
-    background: var(--color-surface);
+    background-color: var(--color-surface);
+    /* A second, dashed line just right of the warm spine (::before below)
+       — like the stitching on a bound journal's spine — drawn as a
+       background layer so it needs no extra markup. */
+    background-image: repeating-linear-gradient(to bottom, var(--color-ochre-500) 0 6px, transparent 6px 13px);
+    background-position: 9px top;
+    background-size: 1px 100%;
+    background-repeat: no-repeat;
     border-radius: var(--radius-lg);
     border: 1px solid var(--color-border);
     box-shadow: var(--shadow-lg);
@@ -854,10 +884,28 @@ const testimonials = [
      accent-colored quote and the divider above it already mark this as
      its own zone, without needing a background change too. */
   .about-card__pull {
+    position: relative;
     margin-top: auto;
     background: var(--color-surface);
     border-top: 1px solid var(--color-border);
     padding: var(--space-lg) var(--space-xl);
+  }
+
+  /* An oversized, barely-there quotation mark behind the pull-quote —
+     the italic accent text alone didn't quite read as a "quote" the way
+     an actual quote mark does. Purely decorative, so it's excluded from
+     the accessibility tree. */
+  .about-card__pull::before {
+    content: '\201C';
+    position: absolute;
+    top: -0.9rem;
+    left: 1rem;
+    font-family: var(--font-display);
+    font-size: 5.5rem;
+    line-height: 1;
+    color: var(--color-accent);
+    opacity: 0.16;
+    pointer-events: none;
   }
 
   .about-copy__pull {
@@ -957,6 +1005,16 @@ const testimonials = [
       display: flex;
       align-items: center;
       gap: 1rem;
+      /* The tilted "mounted print" treatment doesn't suit this compact
+         inline row — back to a plain thumbnail next to the name/role. */
+      transform: none;
+      background: none;
+      padding: 0;
+      box-shadow: none;
+    }
+
+    .about-photo::before {
+      display: none;
     }
 
     .about-photo__frame {
