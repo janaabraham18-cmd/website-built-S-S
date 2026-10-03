@@ -109,6 +109,13 @@ const adventuresJourneysBreak = {
   imageCredit: { name: 'Ria Truter', username: 'metaldawn' },
 };
 
+// About Us background — the founder photo and bio card sit on top of
+// this, "fully defined" (no scrim), same treatment as booking/contact.
+const aboutBgPhoto = {
+  url: 'https://images.unsplash.com/photo-1696894134220-cfc38c3bf7a1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2400',
+  credit: { name: 'Taylor Wright', username: 'taylorwright22' },
+};
+
 // "The Logbook" — eight landmarks that carry real weight in Namibia's
 // human and geological history, each tied to a confirmed photo of the
 // actual place rather than a generic stand-in. Order is a loose
@@ -387,17 +394,35 @@ const testimonials = [
 
   <!-- ============ 04 · ABOUT US ============ -->
   <section class="block about-block reveal" id="about">
+    <div class="about-block__bg" style={`background-image:url('${aboutBgPhoto.url}')`} aria-hidden="true"></div>
+    <div class="about-block__scrim" aria-hidden="true"></div>
+
     <div class="about-block__intro">
       <p class="eyebrow">About Us</p>
       <h2 class="section-title" set:html={hl('More than a journey', 'journey')} />
     </div>
 
     <div class="about-layout reveal-item">
+      <div class="about-photo">
+        <div class="about-photo__frame">
+          <img
+            src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
+            alt="Lenga Shihueka, founder of Salt and Sun Tours"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+        <p class="about-photo__name">Lenga Shihueka</p>
+        <p class="about-photo__role">Founder</p>
+      </div>
+
       <div class="about-card" data-about-pages>
         <div class="about-card__pages">
           <div class="about-card__page is-active" data-about-page>
             <div class="about-card__body">
-              <p>My name is Lenga, and Lenga means King. My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
+              <p class="about-copy__lead">My name is Lenga, and Lenga means King.</p>
+
+              <p>My roots are in Etosha, where the earth carries one of Namibia's greatest wonders — the Etosha salt pan. That is where the heart of Salt and Sun Tours begins: from the salt of the earth, under the Namibian sun, and grounded in a purpose greater than tourism.</p>
 
               <p>Our foundation is inspired by Matthew 5:13–16 — to be salt and light in the world.</p>
 
@@ -405,7 +430,7 @@ const testimonials = [
             </div>
 
             <div class="about-card__pull">
-              <p class="about-copy__pull">It is about the <span class="about-copy__accent">person<svg viewBox="0 0 120 14" class="about-copy__accent-underline" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 35,13 52,7 C68,1 85,12 102,6 C110,4 114,6 118,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg></span> you become along the way.</p>
+              <p class="about-copy__pull">It is about the person you become along the way.</p>
             </div>
           </div>
 
@@ -426,7 +451,7 @@ const testimonials = [
             <div class="about-card__pull">
               <p class="about-copy__pull">
                 You may arrive looking for Namibia.<br />
-                You may leave having found a little more of <span class="about-copy__accent">yourself<svg viewBox="0 0 120 14" class="about-copy__accent-underline" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 35,13 52,7 C68,1 85,12 102,6 C110,4 114,6 118,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg></span>.
+                You may leave having found a little more of yourself.
               </p>
             </div>
           </div>
@@ -439,7 +464,7 @@ const testimonials = [
             </div>
 
             <div class="about-card__pull">
-              <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and <span class="about-copy__accent">transformation<svg viewBox="0 0 120 14" class="about-copy__accent-underline" preserveAspectRatio="none" aria-hidden="true"><path d="M2,8 C20,2 35,13 52,7 C68,1 85,12 102,6 C110,4 114,6 118,8" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" /></svg></span>.</p>
+              <p class="about-copy__pull">You are joining a journey of connection, discovery, healing and transformation.</p>
 
               <p class="about-copy__invite">Come experience the salt. Feel the sun. Meet the wilderness. Share the journey.</p>
 
@@ -452,28 +477,17 @@ const testimonials = [
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="about-photo">
-        <div class="about-photo__frame">
-          <img
-            src="https://saltandsuntours.com.na/wp-content/uploads/2026/04/WhatsApp-Image-2025-10-24-at-4.58.13-PM.jpeg"
-            alt="Lenga Shihueka, founder of Salt and Sun Tours"
-            loading="lazy"
-            decoding="async"
-          />
+        <div class="about-card__controls">
+          <button type="button" class="about-card__arrow" data-about-prev aria-label="Previous page">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
+          <p class="about-card__counter"><span data-about-current>1</span> / 3</p>
+          <button type="button" class="about-card__arrow" data-about-next aria-label="Next page">
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+          </button>
         </div>
-        <p class="about-photo__name">Lenga Shihueka</p>
-        <p class="about-photo__role">Founder</p>
       </div>
-    </div>
-
-    <div class="about-rail" role="tablist" aria-label="Founder's story, page">
-      <button type="button" class="about-rail__item is-active" data-about-jump="0" aria-label="Page 1 of 3">01</button>
-      <span class="about-rail__tick" aria-hidden="true"></span>
-      <button type="button" class="about-rail__item" data-about-jump="1" aria-label="Page 2 of 3">02</button>
-      <span class="about-rail__tick" aria-hidden="true"></span>
-      <button type="button" class="about-rail__item" data-about-jump="2" aria-label="Page 3 of 3">03</button>
     </div>
   </section>
 
@@ -694,79 +708,69 @@ const testimonials = [
   }
 
   /* ---------- 04 About Us ---------- */
-  /* Editorial rather than another "card" treatment: a huge, barely-there
-     word bleeds behind the whole section (its own ::before — BECOME, the
-     last word of the first page's pull-quote), the bio text opens on a
-     real drop cap, and the founder photo is cut into an arch instead of
-     a rectangle, offset down and to the right rather than sitting in a
-     tidy grid column. Pagination becomes a numbered rail (01/02/03) along
-     the right edge that jumps straight to a page, replacing the old
-     prev/next arrows — see setupAboutCard in motion.ts. */
+  /* A real Namibia dune photo behind the whole section, shown "fully
+     defined" (full strength, no scrim — same treatment as booking/
+     contact): the heading gets its own small opaque card and the
+     founder photo + bio card are already opaque, so only the caption
+     under the photo needs a text-shadow to stay legible over the
+     photo directly. The bio card sits in normal document flow — it no
+     longer pins the section and ties its 3 pages to scroll progress,
+     just plain prev/next buttons (see setupAboutCard in motion.ts). */
   .about-block {
     position: relative;
-    overflow: hidden;
-    background-color: var(--color-bg-alt);
-  }
-
-  .about-block::before {
-    content: 'Become';
-    position: absolute;
-    left: -0.5rem;
-    top: 18%;
     z-index: 0;
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: clamp(5rem, 15vw, 15.5rem);
-    line-height: 0.8;
-    letter-spacing: -0.03em;
-    color: var(--color-accent);
-    opacity: 0.07;
-    white-space: nowrap;
-    pointer-events: none;
+    overflow: hidden;
+    background-color: var(--color-earth-700);
   }
 
-  .about-block__intro,
-  .about-layout {
-    position: relative;
-    z-index: 1;
+  .about-block__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-size: cover;
+    background-position: center;
+  }
+
+  /* No card behind the intro text — a soft gradient darkens just the top
+     of the photo (where the eyebrow/heading sit) and clears by the time
+     the about-layout row starts, so the text reads directly against the
+     photo instead of sitting in a boxed enclosure. */
+  .about-block__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(31, 18, 14, 0.75) 0%, rgba(31, 18, 14, 0.35) 32%, rgba(31, 18, 14, 0) 58%);
   }
 
   .about-block__intro {
     margin-bottom: var(--space-xl);
   }
 
+  .about-block__intro .eyebrow {
+    color: var(--color-sand-100);
+    margin-bottom: 0.4rem;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+  }
+
   .about-block__intro .section-title {
+    color: var(--color-text-on-dark);
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.45);
     margin: 0;
   }
 
   .about-layout {
-    display: flex;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: minmax(200px, 260px) 1fr;
     gap: var(--space-xl);
-    padding-right: 2.5rem;
+    align-items: start;
   }
 
-  .about-card {
-    flex: 1 1 55%;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .about-photo {
-    flex: 0 0 auto;
-    width: 15rem;
-    max-width: 38%;
-    margin-left: auto;
-    margin-top: 3.5rem;
-  }
-
-  /* An arch instead of a rectangle — a plain crop didn't carry any of the
-     sun-over-horizon shape the rest of the brand uses. */
   .about-photo__frame {
-    aspect-ratio: 4 / 5;
+    aspect-ratio: 1;
+    border-radius: var(--radius-lg);
     overflow: hidden;
-    border-radius: 50% 50% 4px 4px / 62% 62% 4px 4px;
+    box-shadow: var(--shadow-md);
+    border: 3px solid var(--color-surface);
   }
 
   .about-photo__frame img {
@@ -774,44 +778,77 @@ const testimonials = [
     height: 100%;
     object-fit: cover;
     display: block;
-    /* The founder photo is hotlinked from a since-dead host and currently
-       fails to load — without this, a broken <img> falls back to its alt
-       text spilling across the frame. text-indent/overflow hide that
-       fallback text, and the background paints a plain muted placeholder
-       in its place until a working photo replaces this. */
-    color: transparent;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-    /* color-sand-200, not color-bg-alt — the section background is now
-       color-bg-alt itself, and the arch needs to read as its own shape
-       rather than blend invisibly into the page behind it. */
-    background: var(--color-sand-200) center/34% no-repeat
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b3a2c' stroke-width='1.4'><rect x='3' y='4' width='18' height='16' rx='2'/><circle cx='8.5' cy='9.5' r='1.5'/><path d='M21 16l-5-5-4 4-3-3-6 6'/></svg>");
   }
 
   .about-photo__name {
-    font-family: var(--font-body);
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--color-text);
-    text-align: center;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--color-text-on-dark);
+    text-shadow: 0 1px 8px rgba(31, 18, 14, 0.6);
     margin: 0.85rem 0 0;
   }
 
   .about-photo__role {
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    color: var(--color-text-muted);
-    text-align: center;
+    color: var(--color-sand-200);
+    text-shadow: 0 1px 8px rgba(31, 18, 14, 0.6);
     margin: 0.15rem 0 0;
+  }
+
+  .about-card {
+    position: relative;
+    background: var(--color-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-lg);
+    /* No padding here — .about-card__body and .about-card__pull each pad
+       themselves, so the pull zone below can run full-bleed to the
+       card's own edges and still get clipped to its rounded corners. */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* A thin warm spine down the left edge, like a bound journal, and a
+     folded paper corner at the top right — a plain white rectangle
+     didn't read as a "page" the way the prev/next/counter controls
+     below imply it is, so the edges now carry that idea instead of
+     just a box-shadow. */
+  .about-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: var(--gradient-warm);
+    z-index: 1;
+  }
+
+  .about-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 34px 34px 0;
+    border-color: transparent var(--color-bg-alt) transparent transparent;
+    filter: drop-shadow(-2px 2px 3px rgba(58, 35, 28, 0.2));
+    z-index: 1;
   }
 
   /* Every page occupies the same grid cell (stacked, not stacked in
      document flow) so the card's height is set once, by the tallest
      page, and never changes as pages swap — swapping "active" page is a
-     pure opacity crossfade, nothing reflows. */
+     pure opacity crossfade, nothing reflows. Grid's default stretch then
+     makes every page (including shorter ones) fill that same height,
+     which used to just leave blank space below short pages — now
+     .about-card__page is a flex column and .about-card__pull's
+     margin-top: auto pushes the pull-quote zone down to fill it instead,
+     so the extra room reads as a designed zone rather than dead space. */
   .about-card__pages {
     display: grid;
   }
@@ -832,9 +869,13 @@ const testimonials = [
     pointer-events: auto;
   }
 
+  .about-card__body {
+    padding: var(--space-xl) var(--space-xl) 0;
+  }
+
   .about-card__page p {
-    font-size: 1.03rem;
-    line-height: 1.75;
+    font-size: 1rem;
+    line-height: 1.7;
     color: var(--color-text-muted);
     margin: 0 0 1.1rem;
   }
@@ -843,49 +884,34 @@ const testimonials = [
     margin-bottom: 0;
   }
 
-  /* The real flourish: a drop cap on the opening paragraph of whichever
-     page is showing, standing in for the card/border decoration used
-     before. Sized off the body text so it scales with it. */
-  .about-card__body > p:first-child::first-letter {
-    float: left;
+  .about-copy__lead {
     font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 4.2em;
-    line-height: 0.72;
-    color: var(--color-accent);
-    margin: 0.04em 0.12em 0 0;
+    font-size: clamp(1.4rem, 2.6vw, 1.75rem);
+    line-height: 1.4;
+    color: var(--color-text);
+    margin-bottom: 1.25rem !important;
   }
 
+  /* The zone each page's closing pull-quote sits in — see the
+     .about-card__pages comment above for why this is what fills the
+     leftover space on shorter pages instead of leaving it blank. Pure
+     white like the rest of the card (was a cream tint) — the italic
+     accent-colored quote and the divider above it already mark this as
+     its own zone, without needing a background change too. */
   .about-card__pull {
     margin-top: auto;
-    padding-top: var(--space-md);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
+    padding: var(--space-lg) var(--space-xl);
   }
 
   .about-copy__pull {
     font-family: var(--font-display);
     font-style: italic;
-    font-weight: 700;
-    font-size: clamp(1.4rem, 2.2vw, 1.9rem);
-    line-height: 1.3;
-    color: var(--color-text);
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    line-height: 1.5;
+    color: var(--color-accent-strong);
     margin: 0 0 1.1rem !important;
-  }
-
-  /* The one accent word in each pull-quote — color plus a hand-drawn
-     underline instead of boxing the whole quote in a card. */
-  .about-copy__accent {
-    position: relative;
-    color: var(--color-accent);
-    white-space: nowrap;
-  }
-
-  .about-copy__accent-underline {
-    position: absolute;
-    left: 0;
-    bottom: -0.45rem;
-    width: 100%;
-    height: 0.65rem;
-    color: var(--color-accent);
   }
 
   .about-copy__list {
@@ -920,89 +946,73 @@ const testimonials = [
     margin: 0;
   }
 
-  /* The numbered rail standing in for prev/next + counter — pinned to
-     the section's right edge rather than tucked under the card, since
-     there's no card edge left to anchor a footer to. */
-  .about-rail {
-    position: absolute;
-    right: 0.5rem;
-    top: 15rem;
-    z-index: 1;
+  /* Same prev/counter/next pattern as the Postcards testimonial carousel
+     elsewhere on this page, just its own instance/selectors since this
+     card paginates prose, not photo cards. Pure white like the rest of
+     the card now — a hairline divider is what marks where the quote
+     ends and the controls begin, not a background change. */
+  .about-card__controls {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
-    gap: 1.1rem;
+    gap: 1.25rem;
+    background: var(--color-surface);
+    padding: var(--space-md) var(--space-xl) var(--space-xl);
+    border-top: 1px solid var(--color-border);
   }
 
-  .about-rail__item {
-    border: none;
-    background: none;
-    padding: 0;
-    font-family: var(--font-body);
-    font-size: 0.8rem;
-    font-weight: 700;
-    color: var(--color-border);
-    cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-out);
-  }
-
-  .about-rail__item.is-active {
-    color: var(--color-accent);
-  }
-
-  .about-rail__item:hover {
+  .about-card__arrow {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
     color: var(--color-accent-strong);
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out), transform var(--duration-fast) var(--ease-out);
   }
 
-  .about-rail__tick {
-    width: 1px;
-    height: 1.1rem;
-    background: var(--color-border);
+  .about-card__arrow:hover {
+    background: var(--color-accent);
+    color: var(--color-text-on-dark);
+    transform: scale(1.06);
+  }
+
+  .about-card__arrow svg {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  .about-card__counter {
+    font-size: 0.85rem;
+    color: var(--color-text-muted);
+    margin: 0;
   }
 
   @media (max-width: 760px) {
-    .about-block::before {
-      top: 8%;
-      opacity: 0.06;
-    }
-
     .about-layout {
-      flex-direction: column;
-      padding-right: 0;
+      grid-template-columns: 1fr;
     }
 
     .about-photo {
-      order: -1;
-      width: auto;
-      max-width: none;
-      margin: 0 0 1.5rem;
+      position: static;
       display: flex;
       align-items: center;
       gap: 1rem;
     }
 
     .about-photo__frame {
-      width: 76px;
-      height: 95px;
+      width: 96px;
+      height: 96px;
       flex-shrink: 0;
     }
 
     .about-photo__name,
     .about-photo__role {
       margin: 0;
-      text-align: left;
-    }
-
-    .about-rail {
-      position: static;
-      flex-direction: row;
-      justify-content: center;
-      margin-top: var(--space-lg);
-    }
-
-    .about-rail__tick {
-      width: 1.1rem;
-      height: 1px;
     }
   }
 

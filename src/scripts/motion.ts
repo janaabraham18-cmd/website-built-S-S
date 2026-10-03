@@ -339,38 +339,35 @@ function setupPostcards() {
 // Plain click-through pagination — no longer pinned/scroll-tied to the
 // page's main scroll (it used to hold the section in place and advance
 // pages as the visitor scrolled past), so the section now sits in normal
-// document flow like everything else. The old prev/next arrows are gone
-// too, replaced by a numbered rail (01/02/03) that jumps straight to a
-// page rather than stepping through — the rail lives outside
-// [data-about-pages] (it's positioned against the whole section, not the
-// card), so it's queried from `section` rather than `root`.
+// document flow like everything else and the arrows are the only way
+// through, same as the reduced-motion fallback always worked.
 function setupAboutCard() {
   const section = document.querySelector<HTMLElement>('.about-block');
   const root = section?.querySelector<HTMLElement>('[data-about-pages]');
   if (!section || !root) return;
 
   const pages = Array.from(root.querySelectorAll<HTMLElement>('[data-about-page]'));
-  const railItems = Array.from(section.querySelectorAll<HTMLButtonElement>('[data-about-jump]'));
-  if (!pages.length || !railItems.length) return;
+  const prevBtn = root.querySelector<HTMLButtonElement>('[data-about-prev]');
+  const nextBtn = root.querySelector<HTMLButtonElement>('[data-about-next]');
+  const counter = root.querySelector<HTMLElement>('[data-about-current]');
+  if (!pages.length || !prevBtn || !nextBtn) return;
 
   let index = 0;
 
   function render() {
     pages.forEach((page, i) => page.classList.toggle('is-active', i === index));
-    railItems.forEach((item, i) => {
-      item.classList.toggle('is-active', i === index);
-      item.setAttribute('aria-current', i === index ? 'true' : 'false');
-    });
+    if (counter) counter.textContent = String(index + 1);
   }
 
-  railItems.forEach((item, i) => {
-    item.addEventListener('click', () => {
-      index = i;
-      render();
-    });
+  prevBtn.addEventListener('click', () => {
+    index = (index - 1 + pages.length) % pages.length;
+    render();
   });
 
-  render();
+  nextBtn.addEventListener('click', () => {
+    index = (index + 1) % pages.length;
+    render();
+  });
 }
 
 // Tours page closing recap: small auto-cycling slideshow through the
