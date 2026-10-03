@@ -500,23 +500,26 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
     opacity: 0;
     overflow: hidden;
     border-radius: var(--radius-lg);
-    background-color: var(--color-beige-300);
+    background-color: var(--color-sand-50);
     box-shadow: var(--shadow-lg);
   }
 
+  /* Real photo (the Walvis Bay jetty) instead of the old stock shot —
+     cooler blue/grey tones read as a clean neutral wash once blurred,
+     rather than the warm sandy-beige this band used to settle into. */
   .tour-recap-band__photo {
     position: absolute;
     inset: -40px;
-    background-image: url('https://images.unsplash.com/photo-1785270100674-e610ec45f3a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1800');
+    background-image: url('/images/gallery-walvis-bay-jetty.jpg');
     background-size: cover;
     background-position: center;
-    filter: blur(4px);
+    filter: blur(5px);
   }
 
   .tour-recap-band__wash {
     position: absolute;
     inset: 0;
-    background-color: rgba(227, 203, 167, 0.72);
+    background-color: rgba(251, 247, 241, 0.82);
     background-image: var(--gradient-dusk);
   }
 

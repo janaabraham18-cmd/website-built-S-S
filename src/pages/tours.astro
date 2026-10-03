@@ -33,6 +33,8 @@ import { hl } from '../utils/text';
   </section>
 
   <section class="tours-closing reveal">
+    <div class="tours-closing__bg" aria-hidden="true"></div>
+    <div class="tours-closing__wash" aria-hidden="true"></div>
     <div class="container tours-closing__inner reveal-item">
       <h2 set:html={hl('Ready to book, or still deciding?', 'deciding')} />
       <p>Either way, get in touch — we'll help you build the right day.</p>
@@ -127,12 +129,34 @@ import { hl } from '../utils/text';
   }
 
   /* ---------- Closing ---------- */
-  /* Final, darkest band in the page's progression — dark enough that
-     the default earth-900 body text and text-muted no longer have
-     contrast against it, so both flip to the light on-dark tokens here. */
+  /* Final band in the page's progression — used to be a flat solid
+     earth-700 block; now a blurred real photo (the group celebrating in
+     the dunes) with a warm translucent wash over it, same oversized
+     inset + blur technique as .postcards-block__bg on the home page.
+     The wash is lighter than the old flat color but still dark enough
+     that the on-dark text tokens below keep their contrast. */
   .tours-closing {
+    position: relative;
+    z-index: 0;
+    overflow: hidden;
     padding-block: var(--space-2xl);
-    background: var(--color-earth-700);
+  }
+
+  .tours-closing__bg {
+    position: absolute;
+    inset: -40px;
+    background-image: url('/images/gallery-the-whole-crew.jpg');
+    background-size: cover;
+    background-position: center;
+    filter: blur(5px);
+    z-index: -1;
+  }
+
+  .tours-closing__wash {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(107, 58, 44, 0.58);
   }
 
   .tours-closing__inner {
