@@ -1,23 +1,19 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import { tours, categoryLabels } from '../data/tours';
-import { journeys } from '../data/journeys';
+import { tours } from '../data/tours';
 
 const heroPhoto = {
   url: 'https://images.unsplash.com/photo-1666837147745-1c9dea9908a4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'Joshua Kettle', username: 'joshuakettle' },
 };
 
-type GalleryCategory = 'tour' | 'adventure' | 'combo' | 'journey';
+// Only real, locally-hosted photos ever reach this page now — every
+// placeholder used stock Unsplash photography, so there's only ever
+// one category left to badge.
+type GalleryCategory = 'tour';
 
-// Short singular label for the badge shown on each tile — categoryLabels
-// is plural ("Tours", "Adventures") for the filter pills, this is its own
-// small map rather than singularizing that string at render time.
 const badgeLabels: Record<GalleryCategory, string> = {
   tour: 'Tour',
-  adventure: 'Adventure',
-  combo: 'Combo',
-  journey: 'Journey',
 };
 
 interface GalleryItem {
@@ -106,43 +102,31 @@ const fromTheRoadItems: GalleryItem[] = [
   },
 ];
 
-// Every real photo already sourced for the tours/adventures/combos and
-// journeys, gathered into one browsable set rather than re-sourced —
-// this page is a way to see them all together, not a new photo shoot.
+// Real photos only — every tour/adventure/combo/journey placeholder used
+// stock Unsplash photography, so this page now shows just the genuine
+// shots from an actual outing: the "From the Road" set above, plus any
+// tour that has its own real (non-Unsplash) photo.
 const galleryItems: GalleryItem[] = [
   ...fromTheRoadItems,
   ...tours
-    .filter((tour): tour is typeof tour & { imageUrl: string } => !!tour.imageUrl)
+    .filter(
+      (tour): tour is typeof tour & { imageUrl: string } =>
+        !!tour.imageUrl && !tour.imageUrl.startsWith('https://images.unsplash.com')
+    )
     .map((tour) => ({
       slug: tour.slug,
       name: tour.name,
-      category: tour.category,
+      category: 'tour' as const,
       imageUrl: tour.imageUrl,
       imageCredit: tour.imageCredit,
       href: '/tours',
     })),
-  ...journeys.map((journey) => ({
-    slug: journey.slug,
-    name: journey.name,
-    category: 'journey' as const,
-    imageUrl: journey.heroImage,
-    imageCredit: journey.imageCredit,
-    href: `/journeys#${journey.slug}`,
-  })),
-];
-
-const filters: { key: 'all' | GalleryCategory; label: string }[] = [
-  { key: 'all', label: 'All' },
-  { key: 'tour', label: categoryLabels.tour.label },
-  { key: 'adventure', label: categoryLabels.adventure.label },
-  { key: 'combo', label: categoryLabels.combo.label },
-  { key: 'journey', label: 'Journeys' },
 ];
 ---
 
 <BaseLayout
   title="Gallery"
-  description="Photos from every tour, adventure, combo and Journey Salt and Sun Tours offers in Swakopmund and Walvis Bay, Namibia."
+  description="Real photos from our tours — guests, landmarks and wildlife around Swakopmund and Walvis Bay, Namibia."
 >
   <section class="gallery-hero">
     <div class="gallery-hero__bg" style={`background-image:url('${heroPhoto.url}')`} aria-hidden="true"></div>
@@ -152,21 +136,9 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
       <p class="eyebrow">The Photo Roll</p>
       <h1>Gallery</h1>
       <p class="gallery-header__body">
-        Every tour, adventure, combo and Journey we run — gathered in one place.
-        Tap a filter to narrow it down, or a photo to see where it leads.
+        Real moments from the road — guests, landmarks and wildlife from the
+        tours we run. Tap a photo to see where it leads.
       </p>
-
-      <div class="gallery-filters" role="group" aria-label="Filter gallery by category">
-        {filters.map((filter, i) => (
-          <button
-            type="button"
-            class:list={['gallery-filters__pill', i === 0 && 'is-active']}
-            data-gallery-filter={filter.key}
-          >
-            {filter.label}
-          </button>
-        ))}
-      </div>
     </div>
   </section>
 
@@ -174,7 +146,7 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
     <div class="container">
       <div class="gallery-grid reveal-item">
         {galleryItems.map((item) => (
-          <div class="gallery-tile" data-gallery-item data-category={item.category}>
+          <div class="gallery-tile">
             <a class="gallery-tile__link" href={item.href}>
               <div class="photo-frame gallery-tile__photo">
                 <img src={item.imageUrl} alt={item.name} loading="lazy" decoding="async" />
@@ -185,10 +157,6 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
           </div>
         ))}
       </div>
-
-      <p class="gallery-empty" data-gallery-empty hidden>
-        Nothing in this category yet — try a different filter.
-      </p>
     </div>
   </section>
 </BaseLayout>
@@ -258,42 +226,6 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
     margin: 0 0 var(--space-lg);
   }
 
-  .gallery-filters {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-
-  .gallery-filters__pill {
-    font-family: var(--font-body);
-    font-size: 0.82rem;
-    font-weight: 600;
-    color: var(--color-text-muted);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: 999px;
-    padding: 0.5rem 1.1rem;
-    cursor: pointer;
-    /* Now sitting on a photo instead of a flat background — a bit of
-       lift keeps the pills reading as controls rather than blending
-       into whatever's behind them. */
-    box-shadow: var(--shadow-sm);
-    transition: background var(--duration-fast) var(--ease-out),
-      border-color var(--duration-fast) var(--ease-out),
-      color var(--duration-fast) var(--ease-out);
-  }
-
-  .gallery-filters__pill:hover {
-    border-color: var(--color-accent-strong);
-    color: var(--color-accent-strong);
-  }
-
-  .gallery-filters__pill.is-active {
-    background: var(--color-accent-strong);
-    border-color: var(--color-accent-strong);
-    color: var(--color-text-on-dark);
-  }
-
   .gallery-grid-section {
     padding-block: var(--space-xl) var(--space-2xl);
   }
@@ -317,9 +249,7 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
   }
 
   /* .photo-frame (global.css) is already position: relative, overflow:
-     hidden — this just pins the badge to it. Mainly useful when "All"
-     is selected, so each tile still reads at a glance without reaching
-     for the filter pills. */
+     hidden — this just pins the badge to it. */
   .gallery-tile__badge {
     position: absolute;
     top: var(--space-sm);
@@ -346,21 +276,6 @@ const filters: { key: 'all' | GalleryCategory; label: string }[] = [
 
   .gallery-tile__link:hover .gallery-tile__name {
     color: var(--color-accent-strong);
-  }
-
-  .gallery-tile[hidden] {
-    display: none;
-  }
-
-  .gallery-empty {
-    text-align: center;
-    color: var(--color-text-muted);
-    padding-block: var(--space-2xl);
-    margin: 0;
-  }
-
-  .gallery-empty[hidden] {
-    display: none;
   }
 
   @media (max-width: 640px) {
