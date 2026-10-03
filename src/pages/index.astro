@@ -256,11 +256,11 @@ const fleetVehicles: FleetVehicle[] = [
   { name: 'Toyota Fortuner 4.0 V6', imageUrl: '/images/fleet-fortuner-a.jpg' },
 ];
 
-// Real tire tracks shot from above during a desert safari — replaces the
+// Real tire tracks shot looking straight down at the sand — replaces the
 // hand-drawn chaotic tire-mark SVG with an actual photo of the thing itself.
 const fleetBgPhoto = {
-  url: 'https://images.unsplash.com/photo-1771839535027-865f757ae09c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920',
-  credit: { name: 'Darla Hueske', username: 'dhueske' },
+  url: 'https://images.unsplash.com/photo-1596512667203-a23e7b5c8df0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920',
+  credit: { name: 'Mick Haupt', username: 'rocinante_11' },
 };
 
 // Real guest reviews, transcribed verbatim from Salt and Sun Tours' Google
@@ -1191,10 +1191,11 @@ const testimonials = [
   .stamps-block {
     /* Hand-drawn tire-mark SVGs (first a neat tiled pattern, then a more
        chaotic single piece of art) got replaced with the real thing: an
-       actual aerial photo of tire tracks cut into desert sand. The scrim
-       lightens it with the same warm cream as the section's old flat fill
-       so the eyebrow/heading/note text — sitting directly on this
-       background, not inside a card — stays as legible as it was before. */
+       actual photo of tire tracks pressed into sand, shot looking straight
+       down. Client wants the photo itself clearly visible, not washed out,
+       so the scrim below is barely there — just enough of a lift right
+       behind the eyebrow/heading (plus the text-shadow on them) to keep
+       that text readable, not a blanket wash over the whole image. */
     position: relative;
     z-index: 0;
     background-color: var(--color-bg);
@@ -1214,12 +1215,12 @@ const testimonials = [
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(
-      180deg,
-      rgba(251, 247, 241, 0.85) 0%,
-      rgba(251, 247, 241, 0.6) 35%,
-      rgba(251, 247, 241, 0.75) 100%
-    );
+    background: linear-gradient(180deg, rgba(251, 247, 241, 0.55) 0%, rgba(251, 247, 241, 0) 45%);
+  }
+
+  .stamps-inner .eyebrow,
+  .stamps-inner .section-title {
+    text-shadow: 0 1px 10px rgba(251, 247, 241, 0.9), 0 1px 2px rgba(251, 247, 241, 0.9);
   }
 
   .stamps-inner { max-width: 960px; margin-inline: auto; text-align: center; }
@@ -1230,6 +1231,7 @@ const testimonials = [
     max-width: 640px;
     font-size: var(--fs-sm);
     color: var(--color-text-muted);
+    text-shadow: 0 1px 8px rgba(251, 247, 241, 0.85);
   }
 
   .fleet-grid {
