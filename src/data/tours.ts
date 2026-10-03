@@ -330,7 +330,7 @@ export const tours: Tour[] = [
     category: 'adventure',
     name: 'Sandboarding',
     description:
-      'Those wanting speed and an adrenaline-filled activity should choose this! We offer lie-down or stand-up sandboarding. No experience needed. Check out our combo deals for more sandboarding options.',
+      'Those wanting speed and an adrenaline-filled activity should choose this! We offer lie-down or stand-up sandboarding. No experience needed.',
     note: 'Lie-down or stand-up. Pick-up time from 9h30, tour completed around 13h30. Minimum 4 pax.',
     included: ['Transfers', 'Safety gear', 'All equipment', 'Water', 'Light lunch'],
     imageUrl:
