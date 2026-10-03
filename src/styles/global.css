@@ -23,6 +23,10 @@
   --color-salt-100: #e4ece9;
   --color-salt-700: #27403e;
 
+  /* Neutral dark charcoal — for spots that need a solid dark background
+     that's neither another shade of brown nor the cool Salt teal. */
+  --color-charcoal-900: #262524;
+
   /* --- Color: semantic roles --- */
   --color-bg: var(--color-sand-50);
   --color-bg-alt: var(--color-sand-100);

@@ -83,13 +83,15 @@ const socialLinks = {
 
 <style>
   .site-footer {
-    /* Terracotta dusk: the same warm sunset-glow treatment already used
-       on the photo CTA (--gradient-dusk), tinted with terracotta instead
-       of ochre so it reads a little deeper/dustier this low on the page,
-       layered over the same earth-900 base the sections above the
-       footer use so the two still read as one continuous dark close. */
+    /* Terracotta dusk glow (same warm sunset treatment as the photo CTA's
+       --gradient-dusk, tinted terracotta so it reads a little deeper this
+       low on the page) layered over a neutral dark charcoal instead of
+       the old earth-900 brown base — not another shade of brown, but
+       not the cool Salt teal either. Scoped to just the footer — the
+       sections directly above it on some pages are still brown, so
+       there's a visible seam there by choice, not oversight. */
     background: radial-gradient(1200px 500px at 15% -12%, rgba(156, 77, 51, 0.4), transparent 60%),
-      var(--color-earth-900);
+      var(--color-charcoal-900);
     color: var(--color-text-on-dark);
     /* No top margin: the page's closing sections are already dark
        (Passport Stamps, the photo CTA's dark overlay), so any gap here
