@@ -136,10 +136,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
 
 <div class="tour-journey">
   <div class="tour-journey__grid">
-    <div class="tour-recap-band" data-recap-band aria-hidden="true">
-      <div class="tour-recap-band__photo"></div>
-      <div class="tour-recap-band__wash"></div>
-    </div>
+    <div class="tour-recap-band" data-recap-band aria-hidden="true"></div>
 
     <div class="tour-journey__sections">
       {
@@ -486,41 +483,20 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
   /* Positioned/sized by setupTourMapGrowth once the map settles into its
      complete form (see the finalSlot trigger in motion.ts) — spans the
      grid's full width so the recap card and the settled map beside it
-     share one background instead of the card carrying its own. Same
-     blurred-photo technique as the homepage Reviews section and the
-     tours page intro (oversized child layer + blur filter), with a
-     translucent warm wash on top since — unlike Reviews, where content
-     sits on its own opaque card — the recap heading/lede sit directly
-     on this background and still need to read clearly. */
+     share one background instead of the card carrying its own. A flat
+     solid color rather than a photo: a cool, pale "salt" teal — the
+     palette's one deliberate cool note, standing in for the other half
+     of the company name (the warm ochre/terracotta runs everywhere
+     else) — rather than another sandy/beige tone or a background photo. */
   .tour-recap-band {
     position: absolute;
     left: 0;
     right: 0;
     z-index: -1;
     opacity: 0;
-    overflow: hidden;
     border-radius: var(--radius-lg);
-    background-color: var(--color-sand-50);
+    background-color: var(--color-salt-100);
     box-shadow: var(--shadow-lg);
-  }
-
-  /* Real photo (the Walvis Bay jetty) instead of the old stock shot —
-     cooler blue/grey tones read as a clean neutral wash once blurred,
-     rather than the warm sandy-beige this band used to settle into. */
-  .tour-recap-band__photo {
-    position: absolute;
-    inset: -40px;
-    background-image: url('/images/gallery-walvis-bay-jetty.jpg');
-    background-size: cover;
-    background-position: center;
-    filter: blur(5px);
-  }
-
-  .tour-recap-band__wash {
-    position: absolute;
-    inset: 0;
-    background-color: rgba(251, 247, 241, 0.82);
-    background-image: var(--gradient-dusk);
   }
 
   .tour-journey__sections {

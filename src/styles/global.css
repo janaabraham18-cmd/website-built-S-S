@@ -16,6 +16,13 @@
   --color-earth-700: #6b3a2c;
   --color-earth-900: #3a231c;
 
+  /* The palette's one deliberate cool note — "Salt" to the warm "Sun"
+     ochre/terracotta/earth tones used everywhere else. Reserved for the
+     couple of spots (Tours page closing bands) that explicitly needed a
+     solid color that wasn't another shade of brown/sand. */
+  --color-salt-100: #e4ece9;
+  --color-salt-700: #27403e;
+
   /* --- Color: semantic roles --- */
   --color-bg: var(--color-sand-50);
   --color-bg-alt: var(--color-sand-100);
