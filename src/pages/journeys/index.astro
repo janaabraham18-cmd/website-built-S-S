@@ -28,10 +28,6 @@ const mapBgPhoto = {
   url: 'https://images.unsplash.com/photo-1639402477646-e88e811eef21?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
   credit: { name: 'Andrew Svk', username: 'andrew_svk' },
 };
-const selfDriveBg = {
-  url: 'https://images.unsplash.com/photo-1565204630921-bbafec59a229?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=2200',
-  credit: { name: 'Vicky Sim', username: 'vicky49' },
-};
 ---
 
 <BaseLayout
@@ -203,62 +199,59 @@ const selfDriveBg = {
               <p>Seven routes charted across Namibia — tap a name to jump straight to its itinerary above.</p>
             </div>
 
-            <div class="journeys-map reveal-item">
-              <div class="journeys-map__canvas">
-                <NamibiaMap routes={journeyRoutes} />
+            <div class="journeys-map-row reveal-item">
+              <div class="journeys-self-drive__inner">
+                <h2 set:html={hl('Want to explore at your own pace?', 'pace')} />
+                <p>
+                  Our 6-Day Spitzkoppe & Sossusvlei Camping Safari is bookable fully-outfitted or
+                  self-drive — or tell us what you have in mind and we'll help you plan a custom route.
+                </p>
+                <div class="journeys-self-drive__ctas">
+                  <a class="btn btn-primary" href="/journeys#6-day-spitzkoppe-sossusvlei-camping-safari">
+                    See the Camping Safari
+                  </a>
+                  <a class="btn btn-outline" href="/contact">Plan a custom self-drive trip</a>
+                </div>
               </div>
 
-              <ul class="journeys-map__key">
-                {journeys.map((journey) => {
-                  const route = journeyRoutes.find((r) => r.slug === journey.slug);
-                  if (!route) return null;
-                  return (
-                    <li>
-                      <a href={`#${journey.slug}`}>
-                        <svg class="journeys-map__key-swatch" width="28" height="10" aria-hidden="true">
-                          <line
-                            x1="0"
-                            y1="5"
-                            x2="28"
-                            y2="5"
-                            stroke={route.color}
-                            stroke-width="3.5"
-                            stroke-dasharray={route.dash}
-                            stroke-linecap="round"
-                          />
-                        </svg>
-                        <span>
-                          <strong>{journey.durationDays}-Day</strong> {journey.name.replace(/^\d+-Day /, '')}
-                        </span>
-                      </a>
-                    </li>
-                  );
-                })}
-              </ul>
+              <div class="journeys-map">
+                <div class="journeys-map__canvas">
+                  <NamibiaMap routes={journeyRoutes} />
+                </div>
+
+                <ul class="journeys-map__key">
+                  {journeys.map((journey) => {
+                    const route = journeyRoutes.find((r) => r.slug === journey.slug);
+                    if (!route) return null;
+                    return (
+                      <li>
+                        <a href={`#${journey.slug}`}>
+                          <svg class="journeys-map__key-swatch" width="28" height="10" aria-hidden="true">
+                            <line
+                              x1="0"
+                              y1="5"
+                              x2="28"
+                              y2="5"
+                              stroke={route.color}
+                              stroke-width="3.5"
+                              stroke-dasharray={route.dash}
+                              stroke-linecap="round"
+                            />
+                          </svg>
+                          <span>
+                            <strong>{journey.durationDays}-Day</strong> {journey.name.replace(/^\d+-Day /, '')}
+                          </span>
+                        </a>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
       )
     }
-
-    <section class="journeys-self-drive reveal">
-      <div class="journeys-self-drive__bg" style={`background-image:url('${selfDriveBg.url}')`} aria-hidden="true"></div>
-      <div class="journeys-self-drive__scrim" aria-hidden="true"></div>
-
-      <div class="container journeys-self-drive__inner reveal-item">
-        <h2 set:html={hl('Want to explore at your own pace?', 'pace')} />
-        <p>
-          Our 6-Day Spitzkoppe & Sossusvlei Camping Safari is bookable fully-outfitted or
-          self-drive — or tell us what you have in mind and we'll help you plan a custom route.
-        </p>
-        <div class="journeys-self-drive__ctas">
-          <a class="btn btn-primary" href="/journeys#6-day-spitzkoppe-sossusvlei-camping-safari">
-            See the Camping Safari
-          </a>
-          <a class="btn btn-outline" href="/contact">Plan a custom self-drive trip</a>
-        </div>
-      </div>
-    </section>
   </div>
 </BaseLayout>
 
@@ -772,16 +765,28 @@ const selfDriveBg = {
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
   }
 
-  .journeys-map {
+  /* Self-drive copy (left) + the map card (right, shifted off-center and
+     a touch smaller than when it had the row to itself) — was its own
+     section below this one with its own photo background; folded in
+     here so the Route Book's photo is the only background left on the
+     page, with no separate section to meet the footer through. */
+  .journeys-map-row {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) 260px;
+    grid-template-columns: minmax(220px, 300px) minmax(0, 1fr);
     gap: var(--space-2xl);
     align-items: center;
     margin-top: var(--space-lg);
+  }
+
+  .journeys-map {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: var(--space-lg);
+    align-items: center;
     background: var(--color-surface);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
   }
 
   .journeys-map__canvas {
@@ -818,6 +823,12 @@ const selfDriveBg = {
     font-weight: 400;
   }
 
+  @media (max-width: 900px) {
+    .journeys-map-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
   @media (max-width: 780px) {
     .journeys-map {
       grid-template-columns: 1fr;
@@ -832,39 +843,11 @@ const selfDriveBg = {
   }
 
   /* ---------- Self-drive / car hire / camping callout ---------- */
-  /* A real gravel-road photo now that this points at an actual bookable
-     product instead of just a "contact us" line — centered text with
-     opaque content (the footer) below it, so a flatter, more uniform
-     wash is the right scrim shape here (see .build-combo__scrim on the
-     Booking page for the same case). No card behind the text, per house
-     style — text-shadow is the only legibility backup. */
-  .journeys-self-drive {
-    position: relative;
-    z-index: 0;
-    overflow: hidden;
-    padding-block: var(--space-2xl);
-    background: var(--color-earth-700);
-  }
-
-  .journeys-self-drive__bg {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background-size: cover;
-    background-position: center;
-  }
-
-  .journeys-self-drive__scrim {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    background: linear-gradient(180deg, rgba(31, 18, 14, 0.68) 0%, rgba(31, 18, 14, 0.5) 100%);
-  }
-
+  /* Used to be its own section below, with its own gravel-road photo
+     background — now the left column of .journeys-map-row, sitting
+     directly on the Route Book's photo instead, so left-aligned like
+     the rest of this section's text rather than centered. */
   .journeys-self-drive__inner {
-    max-width: 640px;
-    margin-inline: auto;
-    text-align: center;
     color: var(--color-text-on-dark);
   }
 
@@ -883,7 +866,6 @@ const selfDriveBg = {
   .journeys-self-drive__ctas {
     display: flex;
     gap: var(--space-md);
-    justify-content: center;
     flex-wrap: wrap;
   }
 </style>
