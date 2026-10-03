@@ -704,11 +704,9 @@ const testimonials = [
      contact): the heading gets its own small opaque card and the
      founder photo + bio card are already opaque, so only the caption
      under the photo needs a text-shadow to stay legible over the
-     photo directly. The photo + card pin in place while the visitor
-     scrolls past (see setupAboutCard in motion.ts) and the 3 bio pages
-     crossfade in step with that scroll — arrows still work too, and
-     under reduced motion the pin/scroll-tie drops entirely, leaving
-     the arrows as the only way through. */
+     photo directly. The bio card sits in normal document flow — it no
+     longer pins the section and ties its 3 pages to scroll progress,
+     just plain prev/next buttons (see setupAboutCard in motion.ts). */
   .about-block {
     position: relative;
     z-index: 0;
@@ -792,27 +790,56 @@ const testimonials = [
   }
 
   .about-card {
+    position: relative;
     background: var(--color-surface);
     border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
     box-shadow: var(--shadow-lg);
     /* No padding here — .about-card__body and .about-card__pull each pad
-       themselves, so the tinted pull zone below can run full-bleed to the
+       themselves, so the pull zone below can run full-bleed to the
        card's own edges and still get clipped to its rounded corners. */
     overflow: hidden;
     display: flex;
     flex-direction: column;
   }
 
+  /* A thin warm spine down the left edge, like a bound journal, and a
+     folded paper corner at the top right — a plain white rectangle
+     didn't read as a "page" the way the prev/next/counter controls
+     below imply it is, so the edges now carry that idea instead of
+     just a box-shadow. */
+  .about-card::before {
+    content: '';
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: var(--gradient-warm);
+    z-index: 1;
+  }
+
+  .about-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 34px 34px 0;
+    border-color: transparent var(--color-bg-alt) transparent transparent;
+    filter: drop-shadow(-2px 2px 3px rgba(58, 35, 28, 0.2));
+    z-index: 1;
+  }
+
   /* Every page occupies the same grid cell (stacked, not stacked in
      document flow) so the card's height is set once, by the tallest
-     page, and never changes as pages swap — required for the scroll pin
-     above to stay stable; swapping "active" page is a pure opacity
-     crossfade, nothing reflows. Grid's default stretch then makes every
-     page (including shorter ones) fill that same height, which used to
-     just leave blank space below short pages — now .about-card__page is
-     a flex column and .about-card__pull's margin-top: auto pushes the
-     tinted pull-quote zone down to fill it instead, so the extra room
-     reads as a designed zone rather than dead space. */
+     page, and never changes as pages swap — swapping "active" page is a
+     pure opacity crossfade, nothing reflows. Grid's default stretch then
+     makes every page (including shorter ones) fill that same height,
+     which used to just leave blank space below short pages — now
+     .about-card__page is a flex column and .about-card__pull's
+     margin-top: auto pushes the pull-quote zone down to fill it instead,
+     so the extra room reads as a designed zone rather than dead space. */
   .about-card__pages {
     display: grid;
   }
@@ -856,12 +883,16 @@ const testimonials = [
     margin-bottom: 1.25rem !important;
   }
 
-  /* The tinted zone each page's closing pull-quote sits in — see the
+  /* The zone each page's closing pull-quote sits in — see the
      .about-card__pages comment above for why this is what fills the
-     leftover space on shorter pages instead of leaving it blank. */
+     leftover space on shorter pages instead of leaving it blank. Pure
+     white like the rest of the card (was a cream tint) — the italic
+     accent-colored quote and the divider above it already mark this as
+     its own zone, without needing a background change too. */
   .about-card__pull {
     margin-top: auto;
-    background: var(--color-bg-alt);
+    background: var(--color-surface);
+    border-top: 1px solid var(--color-border);
     padding: var(--space-lg) var(--space-xl);
   }
 
@@ -908,16 +939,15 @@ const testimonials = [
 
   /* Same prev/counter/next pattern as the Postcards testimonial carousel
      elsewhere on this page, just its own instance/selectors since this
-     card paginates prose, not photo cards. Same tinted background as
-     .about-card__pull (and no gap above it) so it reads as the bottom of
-     that one zone rather than a separate strip — only a hairline divider
-     marks where the quote ends and the controls begin. */
+     card paginates prose, not photo cards. Pure white like the rest of
+     the card now — a hairline divider is what marks where the quote
+     ends and the controls begin, not a background change. */
   .about-card__controls {
     display: flex;
     justify-content: center;
     align-items: center;
     gap: 1.25rem;
-    background: var(--color-bg-alt);
+    background: var(--color-surface);
     padding: var(--space-md) var(--space-xl) var(--space-xl);
     border-top: 1px solid var(--color-border);
   }

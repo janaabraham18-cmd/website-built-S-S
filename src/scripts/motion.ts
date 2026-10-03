@@ -344,7 +344,12 @@ function setupPostcards() {
 // page). Reduced motion drops the pin entirely; the arrows are the only
 // way through either way, so state (index/render) is shared between both
 // paths rather than duplicated.
-function setupAboutCard(reduceMotion: boolean) {
+// Plain click-through pagination — no longer pinned/scroll-tied to the
+// page's main scroll (it used to hold the section in place and advance
+// pages as the visitor scrolled past), so the section now sits in normal
+// document flow like everything else and the arrows are the only way
+// through, same as the reduced-motion fallback always worked.
+function setupAboutCard() {
   const section = document.querySelector<HTMLElement>('.about-block');
   const root = section?.querySelector<HTMLElement>('[data-about-pages]');
   if (!section || !root) return;
@@ -370,25 +375,6 @@ function setupAboutCard(reduceMotion: boolean) {
   nextBtn.addEventListener('click', () => {
     index = (index + 1) % pages.length;
     render();
-  });
-
-  if (reduceMotion || pages.length < 2) return;
-
-  const steps = pages.length - 1;
-  ScrollTrigger.create({
-    trigger: section,
-    start: 'top top',
-    end: `+=${steps * 100}%`,
-    pin: true,
-    pinSpacing: true,
-    scrub: true,
-    onUpdate: (self) => {
-      const next = Math.min(steps, Math.round(self.progress * steps));
-      if (next !== index) {
-        index = next;
-        render();
-      }
-    },
   });
 }
 
@@ -743,6 +729,7 @@ export function initMotion() {
   setupTourPhotoBleed();
   setupGalleryFilter();
   setupPostcards();
+  setupAboutCard();
   setupLogbookSlideshow(reduceMotion);
 
   let lenis: Lenis | undefined;
@@ -787,7 +774,6 @@ export function initMotion() {
     }
 
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
-    setupAboutCard(false);
     setupTourRows(false);
     setupAdventuresHeadingLine(false);
     setupComboBuilder(false);
@@ -845,7 +831,6 @@ export function initMotion() {
   // Reduced motion: simple opacity fades, no parallax, no pin, no autoplay drift.
   mm.add('(prefers-reduced-motion: reduce)', () => {
     setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
-    setupAboutCard(true);
     setupTourRows(true);
     setupAdventuresHeadingLine(true);
     setupComboBuilder(true);
