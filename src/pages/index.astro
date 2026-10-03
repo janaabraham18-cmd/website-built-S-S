@@ -256,6 +256,13 @@ const fleetVehicles: FleetVehicle[] = [
   { name: 'Toyota Fortuner 4.0 V6', imageUrl: '/images/fleet-fortuner-a.jpg' },
 ];
 
+// Real tire tracks shot from above during a desert safari — replaces the
+// hand-drawn chaotic tire-mark SVG with an actual photo of the thing itself.
+const fleetBgPhoto = {
+  url: 'https://images.unsplash.com/photo-1771839535027-865f757ae09c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1920',
+  credit: { name: 'Darla Hueske', username: 'dhueske' },
+};
+
 // Real guest reviews, transcribed verbatim from Salt and Sun Tours' Google
 // Business profile. Add more entries here as they're supplied — don't mix
 // in placeholder text once a real review is in the array.
@@ -486,6 +493,8 @@ const testimonials = [
 
   <!-- ============ 05 · OUR FLEET ============ -->
   <section class="stamps-block reveal" id="fleet">
+    <div class="stamps-block__bg" style={`background-image:url('${fleetBgPhoto.url}')`} aria-hidden="true" />
+    <div class="stamps-block__scrim" aria-hidden="true" />
     <div class="stamps-inner">
       <p class="eyebrow">Our Fleet</p>
       <h2 class="section-title" set:html={hl('What gets you there', 'there')} />
@@ -1180,22 +1189,37 @@ const testimonials = [
 
   /* ---------- 05 Our Fleet ---------- */
   .stamps-block {
-    /* Light section with a soft warm glow, same --gradient-glow-warm
-       treatment already used behind the Adventures teaser (#home-adventures)
-       — client didn't want this section as a flat dark-brown banner. A
-       second layer is one single piece of art (not a repeating tile, which
-       read as too neat/orderly) showing 5 separate black tire tracks at
-       different angles, widths and lengths crossing each other, a couple
-       with scuffed/dashed rails and burnout smudges — meant to read as
-       several vehicles having torn through, not a tidy pattern. Kept
-       low-opacity so it never competes with the vehicle photos. */
+    /* Hand-drawn tire-mark SVGs (first a neat tiled pattern, then a more
+       chaotic single piece of art) got replaced with the real thing: an
+       actual aerial photo of tire tracks cut into desert sand. The scrim
+       lightens it with the same warm cream as the section's old flat fill
+       so the eyebrow/heading/note text — sitting directly on this
+       background, not inside a card — stays as legible as it was before. */
+    position: relative;
+    z-index: 0;
     background-color: var(--color-bg);
-    background-image: var(--gradient-glow-warm),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1400' height='500'><path d='M30,10 L160,120 L250,200 L410,360' stroke='%23000000' stroke-opacity='0.3' stroke-width='5' stroke-linecap='round' fill='none'/><path d='M46,26 L178,134 L268,220 L428,378' stroke='%23000000' stroke-opacity='0.3' stroke-width='5' stroke-linecap='round' fill='none'/><path d='M90,65 L106,81' stroke='%23000000' stroke-opacity='0.26' stroke-width='4' stroke-linecap='round'/><path d='M205,160 L221,176' stroke='%23000000' stroke-opacity='0.26' stroke-width='4' stroke-linecap='round'/><path d='M330,280 L346,296' stroke='%23000000' stroke-opacity='0.26' stroke-width='4' stroke-linecap='round'/><path d='M250,60 L430,90 L600,70 L820,110' stroke='%23000000' stroke-opacity='0.2' stroke-width='4' stroke-linecap='round' fill='none'/><path d='M250,78 L430,108 L600,88 L826,128' stroke='%23000000' stroke-opacity='0.2' stroke-width='4' stroke-linecap='round' fill='none'/><path d='M340,74 L340,92' stroke='%23000000' stroke-opacity='0.18' stroke-width='3' stroke-linecap='round'/><path d='M560,79 L560,97' stroke='%23000000' stroke-opacity='0.18' stroke-width='3' stroke-linecap='round'/><path d='M710,90 L712,118' stroke='%23000000' stroke-opacity='0.18' stroke-width='3' stroke-linecap='round'/><path d='M600,450 Q750,380 850,420 T1100,380' stroke='%23000000' stroke-opacity='0.24' stroke-width='4.5' stroke-linecap='round' fill='none'/><path d='M616,466 Q766,396 866,436 T1116,396' stroke='%23000000' stroke-opacity='0.24' stroke-width='4.5' stroke-linecap='round' fill='none' stroke-dasharray='16 7'/><path d='M700,430 L716,446' stroke='%23000000' stroke-opacity='0.2' stroke-width='3.4' stroke-linecap='round'/><path d='M980,392 L996,408' stroke='%23000000' stroke-opacity='0.2' stroke-width='3.4' stroke-linecap='round'/><path d='M120,480 L140,380 L110,300' stroke='%23000000' stroke-opacity='0.3' stroke-width='5.5' stroke-linecap='round' fill='none'/><path d='M142,482 L162,382 L132,302' stroke='%23000000' stroke-opacity='0.3' stroke-width='5.5' stroke-linecap='round' fill='none'/><path d='M128,440 L150,442' stroke='%23000000' stroke-opacity='0.24' stroke-width='3.6' stroke-linecap='round'/><path d='M122,350 L144,352' stroke='%23000000' stroke-opacity='0.24' stroke-width='3.6' stroke-linecap='round'/><path d='M100,505 Q115,482 142,498 Q163,516 128,527 Q102,522 100,505 Z' fill='%23000000' fill-opacity='0.26'/><path d='M1350,30 L1150,160 L980,260 L760,420 L560,470' stroke='%23000000' stroke-opacity='0.34' stroke-width='6' stroke-linecap='round' fill='none' stroke-dasharray='22 9'/><path d='M1366,48 L1164,176 L996,276 L776,434 L574,486' stroke='%23000000' stroke-opacity='0.34' stroke-width='6' stroke-linecap='round' fill='none'/><path d='M1250,100 L1266,116' stroke='%23000000' stroke-opacity='0.28' stroke-width='4.2' stroke-linecap='round'/><path d='M1060,220 L1076,236' stroke='%23000000' stroke-opacity='0.28' stroke-width='4.2' stroke-linecap='round'/><path d='M860,340 L876,356' stroke='%23000000' stroke-opacity='0.28' stroke-width='4.2' stroke-linecap='round'/><path d='M650,445 L666,461' stroke='%23000000' stroke-opacity='0.28' stroke-width='4.2' stroke-linecap='round'/><path d='M960,60 L972,48' stroke='%23000000' stroke-opacity='0.16' stroke-width='3' stroke-linecap='round'/><path d='M1180,330 L1196,345' stroke='%23000000' stroke-opacity='0.16' stroke-width='3' stroke-linecap='round'/><path d='M480,170 L470,184' stroke='%23000000' stroke-opacity='0.16' stroke-width='3' stroke-linecap='round'/></svg>");
-    background-repeat: no-repeat, no-repeat;
-    background-position: center top, center;
-    background-size: auto, cover;
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 8vw, 6rem);
+  }
+
+  .stamps-block__bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-color: var(--color-bg);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .stamps-block__scrim {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(
+      180deg,
+      rgba(251, 247, 241, 0.85) 0%,
+      rgba(251, 247, 241, 0.6) 35%,
+      rgba(251, 247, 241, 0.75) 100%
+    );
   }
 
   .stamps-inner { max-width: 960px; margin-inline: auto; text-align: center; }
