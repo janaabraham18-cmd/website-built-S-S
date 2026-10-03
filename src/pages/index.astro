@@ -1183,13 +1183,15 @@ const testimonials = [
     /* Light section with a soft warm glow, same --gradient-glow-warm
        treatment already used behind the Adventures teaser (#home-adventures)
        — client didn't want this section as a flat dark-brown banner. A
-       second layer underneath adds a faint repeating contour-line pattern
-       (terrain/route lines, echoing "what gets you there") so the section
-       reads as its own designed spot rather than a plain cream fill — kept
-       very low-opacity so it never competes with the vehicle photos. */
+       second layer underneath tiles an actual off-road tire-track motif:
+       two parallel rutted rails with chevron tread rungs between them,
+       repeated at a diagonal so criss-crossing "passes" show through, like
+       tracks left in the sand — leaning into "what gets you there" harder
+       than a plain line pattern. Kept low-opacity so it never competes
+       with the vehicle photos. */
     background-color: var(--color-bg);
     background-image: var(--gradient-glow-warm),
-      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='220'><path d='M0,30 Q50,10 100,30 T200,30 T300,30 T400,30' fill='none' stroke='%239c4d33' stroke-opacity='0.14' stroke-width='1.3'/><path d='M0,75 Q50,100 100,75 T200,75 T300,75 T400,75' fill='none' stroke='%239c4d33' stroke-opacity='0.1' stroke-width='1.3'/><path d='M0,120 Q50,98 100,120 T200,120 T300,120 T400,120' fill='none' stroke='%239c4d33' stroke-opacity='0.12' stroke-width='1.3'/><path d='M0,165 Q50,190 100,165 T200,165 T300,165 T400,165' fill='none' stroke='%239c4d33' stroke-opacity='0.09' stroke-width='1.3'/><path d='M0,205 Q50,185 100,205 T200,205 T300,205 T400,205' fill='none' stroke='%239c4d33' stroke-opacity='0.13' stroke-width='1.3'/></svg>");
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><path d='M0,150 L150,0' stroke='%239c4d33' stroke-opacity='0.18' stroke-width='3' stroke-linecap='round' fill='none'/><path d='M6,156 L156,6' stroke='%239c4d33' stroke-opacity='0.18' stroke-width='3' stroke-linecap='round' fill='none'/><path d='M21,119 L27,125' stroke='%239c4d33' stroke-opacity='0.16' stroke-width='2.4' stroke-linecap='round'/><path d='M49,91 L55,97' stroke='%239c4d33' stroke-opacity='0.16' stroke-width='2.4' stroke-linecap='round'/><path d='M77,63 L83,69' stroke='%239c4d33' stroke-opacity='0.16' stroke-width='2.4' stroke-linecap='round'/><path d='M105,35 L111,41' stroke='%239c4d33' stroke-opacity='0.16' stroke-width='2.4' stroke-linecap='round'/><path d='M126,14 L132,20' stroke='%239c4d33' stroke-opacity='0.16' stroke-width='2.4' stroke-linecap='round'/></svg>");
     background-repeat: no-repeat, repeat;
     background-position: center top, center;
     padding: clamp(3rem, 7vw, 5rem) clamp(1.25rem, 8vw, 6rem);
