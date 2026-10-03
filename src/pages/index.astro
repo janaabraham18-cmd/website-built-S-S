@@ -758,6 +758,18 @@ const testimonials = [
     height: 100%;
     object-fit: cover;
     display: block;
+    /* The founder photo is hotlinked from a since-dead host and currently
+       fails to load — without this, a broken <img> falls back to its alt
+       text spilling across the frame, which wrecked the mounted-print
+       look. text-indent/overflow hide that fallback text, and the
+       background paints a plain muted placeholder in its place so the
+       mount still reads cleanly until a working photo replaces this. */
+    color: transparent;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    background: var(--color-bg-alt) center/34% no-repeat
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b3a2c' stroke-width='1.4'><rect x='3' y='4' width='18' height='16' rx='2'/><circle cx='8.5' cy='9.5' r='1.5'/><path d='M21 16l-5-5-4 4-3-3-6 6'/></svg>");
   }
 
   .about-photo__name {
@@ -898,14 +910,15 @@ const testimonials = [
   .about-card__pull::before {
     content: '\201C';
     position: absolute;
-    top: -0.9rem;
-    left: 1rem;
+    top: -2.9rem;
+    left: 0.25rem;
     font-family: var(--font-display);
-    font-size: 5.5rem;
+    font-size: 6.5rem;
     line-height: 1;
     color: var(--color-accent);
-    opacity: 0.16;
+    opacity: 0.18;
     pointer-events: none;
+    z-index: 0;
   }
 
   .about-copy__pull {
