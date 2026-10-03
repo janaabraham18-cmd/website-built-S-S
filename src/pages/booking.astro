@@ -40,6 +40,11 @@ const builderAdventures = toursByCategory('adventure');
       <div class="container">
         <div class="booking-panel reveal-item" id="booking-form">
           <BookingForm />
+          <p class="booking-panel__note">
+            A note on pricing: we don't quote a flat rate here, since cost depends on group
+            size, which tour or combination you choose, and a few other factors. Send your
+            request and we'll work out a quote for your trip and follow up directly.
+          </p>
         </div>
       </div>
 
@@ -204,6 +209,16 @@ const builderAdventures = toursByCategory('adventure');
     .booking-panel {
       padding: var(--space-lg) var(--space-md);
     }
+  }
+
+  .booking-panel__note {
+    font-size: var(--fs-sm);
+    line-height: var(--lh-normal);
+    color: var(--color-text-muted);
+    max-width: var(--content-width-narrow);
+    margin: var(--space-lg) 0 0;
+    padding-top: var(--space-md);
+    border-top: 1px solid var(--color-border);
   }
 
   /* ---------- Chart Your Own Day (same builder as /tours) ---------- */
