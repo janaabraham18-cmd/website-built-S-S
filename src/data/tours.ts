@@ -392,6 +392,43 @@ export const tours: Tour[] = [
       'https://images.unsplash.com/photo-1659901981145-dbc056431a8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Kamil Pietrzak', username: 'kamilpphotos' },
   },
+  // --- Family Fun ---
+  {
+    slug: 'go-karting',
+    category: 'adventure',
+    name: 'Go Karting',
+    description:
+      "Strap in and race the clock — or each other — on the go-kart track. A short, high-energy burst of fun that works for a mixed group, no experience needed.",
+    duration: '20 min',
+    included: ['Helmet & safety briefing', 'Track time'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1640084347692-e8f6b84caa7c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Appic', username: 'appic_cc' },
+  },
+  {
+    slug: 'putt-putt-golf',
+    category: 'adventure',
+    name: 'Putt Putt Golf',
+    description:
+      "A relaxed round of mini golf for every age and skill level — no itinerary, no rush, just a fun afternoon putting your way around the course with the whole family in tow.",
+    duration: '45 min',
+    included: ['Putter & ball', 'Scorecard'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1783305828942-927765b1866c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Compagnons', username: 'sigmund' },
+  },
+  {
+    slug: 'trampoline-park',
+    category: 'adventure',
+    name: 'Trampoline Park',
+    description:
+      'Wall-to-wall trampolines and foam pits — the kind of just-bounce-it-out fun that tires out kids (and more than a few adults) in the best way.',
+    duration: '1 hour',
+    included: ['Jump socks', 'Safety briefing'],
+    imageUrl:
+      'https://images.unsplash.com/photo-1751235640841-d8d1035a80f0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Lawrence Crayton', username: 'lawrencecrayton' },
+  },
 ];
 
 export function toursByCategory(category: Tour['category']): Tour[] {
