@@ -749,7 +749,7 @@ export const journeys: Journey[] = [
         accentWord: 'Canyon',
         location: 'Sossusvlei → Walvis Bay',
         description:
-          'A full day among the red dunes — Sesriem Canyon, the climb up Big Daddy, and the ghostly white pan of Dead Vlei — before the drive back to Walvis Bay for your departure.',
+          "The trip's grand finale — Sesriem Canyon's cool corridors in the morning, then the climb up Big Daddy and the walk out to Dead Vlei's bone-white pan, before the drive back to Walvis Bay for your departure.",
       },
     ],
     includes: ['Accommodation, sharing basis', 'Activities listed in the itinerary'],
