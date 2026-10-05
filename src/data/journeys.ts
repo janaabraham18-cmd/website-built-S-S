@@ -139,7 +139,7 @@ export const journeys: Journey[] = [
       {
         day: 6,
         title: 'Windhoek & Departure',
-        accentWord: '',
+        accentWord: 'Departure',
         location: 'Windhoek',
         description: 'A free morning in Windhoek before your transfer to the airport.',
       },
