@@ -86,6 +86,28 @@ const faqCategories = [
     ],
   },
 ];
+
+// FAQPage structured data — the single highest-leverage schema for
+// getting cited verbatim by AI answer engines (ChatGPT, Perplexity,
+// Google AI Overviews) and classic rich-result FAQ snippets, since it
+// hands them the exact question/answer pairs instead of requiring them
+// to parse prose. Flattens both categories into one list — schema.org's
+// FAQPage has no concept of category grouping, and search engines only
+// care about the Q/A pairs themselves.
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqCategories.flatMap((category) =>
+    category.items.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: item.a,
+      },
+    }))
+  ),
+};
 ---
 
 <BaseLayout
@@ -93,6 +115,7 @@ const faqCategories = [
   description="Answers to common questions about booking, departures, transport, and planning a tour with Salt and Sun Tours in Swakopmund and Walvis Bay."
   image={bgPhoto.url}
 >
+  <script type="application/ld+json" set:html={JSON.stringify(faqSchema)} is:inline />
   <div class="faq-page">
     <div class="faq-page__bg" style={`background-image:url('${bgPhoto.url}')`} aria-hidden="true"></div>
     <div class="faq-page__scrim" aria-hidden="true"></div>
