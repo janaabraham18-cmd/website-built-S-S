@@ -353,8 +353,8 @@ export const tours: Tour[] = [
       'Transfers at additional cost',
     ],
     imageUrl:
-      'https://images.unsplash.com/photo-1786379290568-8c1e1429f76b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Aurora Song', username: 'auroras13' },
+      'https://images.unsplash.com/photo-1768116439689-ddbcf440c58c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Tommy Shen', username: 'ghostlikei' },
   },
   {
     slug: 'fat-bike-tour',
