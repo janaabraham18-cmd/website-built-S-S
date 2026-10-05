@@ -36,6 +36,41 @@ const socialLinks = {
       </p>
       <p class="site-footer__tagline">Where Life and Light Meet Adventure</p>
 
+      <img
+        class="site-footer__badge"
+        src="/images/namibia-tourism-board-badge.png"
+        alt="Namibia Tourism Board — Registered"
+        loading="lazy"
+        decoding="async"
+        width="72"
+        height="72"
+      />
+    </div>
+
+    <nav class="site-footer__nav" aria-label="Footer">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/tours">Tours</a></li>
+        <li><a href="/adventures">Adventures</a></li>
+        <li><a href="/journeys">Journeys</a></li>
+        <li><a href="/gallery">Gallery</a></li>
+        <li><a href="/booking">Booking</a></li>
+        <li><a href="/faq">FAQ</a></li>
+        <li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+
+    <div class="site-footer__meta">
+      <p>
+        <a href="tel:+264818242282">+264 81 824 2282</a><br />
+        <a href="tel:+264817540940">+264 81 754 0940</a>
+      </p>
+      <p><a href="mailto:bookings@saltandsuntours.com.na">bookings@saltandsuntours.com.na</a></p>
+      <p>1st Street East, Walvis Bay, Namibia</p>
+      <p>&copy; {year} Salt and Sun Tours. All rights reserved.</p>
+    </div>
+
+    <div class="site-footer__bottom">
       <ul class="site-footer__social">
         <li>
           <a
@@ -77,39 +112,6 @@ const socialLinks = {
           </a>
         </li>
       </ul>
-
-      <img
-        class="site-footer__badge"
-        src="/images/namibia-tourism-board-badge.png"
-        alt="Namibia Tourism Board — Registered"
-        loading="lazy"
-        decoding="async"
-        width="72"
-        height="72"
-      />
-    </div>
-
-    <nav class="site-footer__nav" aria-label="Footer">
-      <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/tours">Tours</a></li>
-        <li><a href="/adventures">Adventures</a></li>
-        <li><a href="/journeys">Journeys</a></li>
-        <li><a href="/gallery">Gallery</a></li>
-        <li><a href="/booking">Booking</a></li>
-        <li><a href="/faq">FAQ</a></li>
-        <li><a href="/contact">Contact</a></li>
-      </ul>
-    </nav>
-
-    <div class="site-footer__meta">
-      <p>
-        <a href="tel:+264818242282">+264 81 824 2282</a><br />
-        <a href="tel:+264817540940">+264 81 754 0940</a>
-      </p>
-      <p><a href="mailto:bookings@saltandsuntours.com.na">bookings@saltandsuntours.com.na</a></p>
-      <p>1st Street East, Walvis Bay, Namibia</p>
-      <p>&copy; {year} Salt and Sun Tours. All rights reserved.</p>
     </div>
   </div>
 </footer>
@@ -178,11 +180,20 @@ const socialLinks = {
     margin: 0;
   }
 
+  /* Full-width row below all three columns — not part of the brand
+     column anymore — so it sits at the true bottom of the footer,
+     left-aligned under the brand/nav columns rather than tucked under
+     the tagline. */
+  .site-footer__bottom {
+    grid-column: 1 / -1;
+    margin-top: var(--space-lg);
+  }
+
   .site-footer__social {
     display: flex;
     gap: var(--space-sm);
     list-style: none;
-    margin: var(--space-md) 0 0;
+    margin: 0;
     padding: 0;
   }
 
