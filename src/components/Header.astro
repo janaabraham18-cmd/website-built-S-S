@@ -279,21 +279,3 @@ const navLinks = [
     }
   }
 </style>
-
-<script>
-  const header = document.querySelector('.site-header');
-  const toggle = document.getElementById('nav-toggle');
-
-  toggle?.addEventListener('click', () => {
-    const isOpen = header?.classList.toggle('is-open');
-    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-  });
-
-  const SCROLL_FADE_THRESHOLD = 40;
-  const updateScrolledState = () => {
-    header?.classList.toggle('is-scrolled', window.scrollY > SCROLL_FADE_THRESHOLD);
-  };
-
-  updateScrolledState();
-  window.addEventListener('scroll', updateScrolledState, { passive: true });
-</script>

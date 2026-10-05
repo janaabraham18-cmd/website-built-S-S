@@ -485,6 +485,18 @@ p {
   }
 }
 
+/* Spam honeypot (see BookingForm.astro/ContactForm.astro) — position:
+   absolute takes it out of the .form grid's flow entirely (no stray gap),
+   and the off-screen placement hides it without display:none/visibility,
+   which some bots specifically check for and skip past. */
+.form-honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+}
+
 .form label {
   font-size: var(--fs-sm);
   font-weight: 600;

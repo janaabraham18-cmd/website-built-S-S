@@ -308,6 +308,28 @@ function setupGalleryLightbox() {
 // button to a disabled "Sending…" + spinner state the instant submit
 // fires; native HTML5 validation (the required fields) already runs
 // before this event, so an invalid form never reaches it.
+// Moved here from a standalone inline <script> in Header.astro — keeping
+// it in this externally-bundled file (rather than inline in the HTML)
+// means the site's CSP can use a plain script-src 'self' with no
+// inline-script exception.
+function setupHeaderNav() {
+  const header = document.querySelector('.site-header');
+  const toggle = document.getElementById('nav-toggle');
+
+  toggle?.addEventListener('click', () => {
+    const isOpen = header?.classList.toggle('is-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+
+  const SCROLL_FADE_THRESHOLD = 40;
+  const updateScrolledState = () => {
+    header?.classList.toggle('is-scrolled', window.scrollY > SCROLL_FADE_THRESHOLD);
+  };
+
+  updateScrolledState();
+  window.addEventListener('scroll', updateScrolledState, { passive: true });
+}
+
 function setupFormSubmitLoading() {
   document.querySelectorAll<HTMLFormElement>('.form').forEach((form) => {
     const button = form.querySelector<HTMLButtonElement>('.form-submit');
@@ -739,6 +761,7 @@ export function initMotion() {
     '(prefers-reduced-motion: reduce)'
   ).matches;
 
+  setupHeaderNav();
   setupHeroPanelSlideshow(reduceMotion);
   setupTourIntroMap(reduceMotion);
   setupTourPhotoBleed();
