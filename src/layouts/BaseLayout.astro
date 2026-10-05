@@ -6,14 +6,53 @@ import '../styles/global.css';
 interface Props {
   title: string;
   description?: string;
+  /** Absolute image URL for social-share previews (og:image/twitter:image).
+   * Falls back to a representative sitewide photo rather than nothing, so
+   * every page still gets a real preview image when shared. */
+  image?: string;
+  /** Internal/design-preview pages set this so search engines skip them
+   * entirely, instead of indexing content meant only for this team. */
+  noindex?: boolean;
 }
 
 const {
   title,
   description = 'Tours and adventures around Swakopmund and Walvis Bay, Namibia — where life and light meet adventure.',
+  image = 'https://images.unsplash.com/photo-1667389861341-3f1c749cdf39?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1400',
+  noindex = false,
 } = Astro.props;
 
 const pageTitle = `${title} | Salt and Sun Tours`;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+// Sitewide business entity markup — same on every page (standard practice
+// for a single-location business; nothing page-specific belongs here).
+// Real contact details match the footer exactly: Footer.astro is the
+// source of truth, kept in sync by hand since structured data can't
+// import from a .astro component's frontmatter.
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'TravelAgency',
+  name: 'Salt and Sun Tours',
+  url: Astro.site?.toString(),
+  logo: new URL('/favicon.svg', Astro.site).toString(),
+  image,
+  description: 'Tours, adventures, and self-drive journeys around Swakopmund and Walvis Bay, Namibia.',
+  telephone: '+264818242282',
+  email: 'bookings@saltandsuntours.com.na',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: '1st Street East',
+    addressLocality: 'Walvis Bay',
+    addressCountry: 'NA',
+  },
+  areaServed: ['Swakopmund', 'Walvis Bay', 'Namibia'],
+  sameAs: [
+    'https://www.instagram.com/salt_and_sun_tours/',
+    'https://www.facebook.com/share/1QJ556S6SA/?mibextid=wwXIfr',
+    'https://www.tiktok.com/@salt.and.sun.tours',
+  ],
+};
 ---
 
 <!doctype html>
@@ -22,6 +61,8 @@ const pageTitle = `${title} | Salt and Sun Tours`;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,6 +72,22 @@ const pageTitle = `${title} | Salt and Sun Tours`;
       rel="stylesheet"
     />
     <title>{pageTitle}</title>
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Salt and Sun Tours" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={image} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={image} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(businessSchema)} is:inline />
   </head>
   <body>
     <Header />
