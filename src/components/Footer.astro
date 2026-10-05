@@ -186,11 +186,10 @@ const socialLinks = {
     padding: 0;
   }
 
-  /* Brand-colored badges, not the site's own accent color — these need to
-     read instantly as "the Instagram/Facebook/TikTok icon" at a glance
-     (client specifically asked for real app colors so older visitors
-     recognize them), which a monochrome outline in our terracotta accent
-     doesn't achieve as reliably. */
+  /* Matches the footer's own palette rather than each app's brand colors
+     — a single consistent tone (the same one the logo/tagline/nav use
+     in this column) instead of three different badge colors competing
+     with the rest of the brand column. */
   .site-footer__social a {
     display: inline-flex;
     align-items: center;
@@ -198,33 +197,15 @@ const socialLinks = {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    color: #fff;
-    transition: transform var(--duration-fast) var(--ease-out),
-      filter var(--duration-fast) var(--ease-out);
+    border: 1px solid rgba(58, 35, 28, 0.3);
+    color: var(--color-text);
+    transition: color var(--duration-fast) var(--ease-out),
+      border-color var(--duration-fast) var(--ease-out);
   }
 
   .site-footer__social a:hover {
-    transform: scale(1.08);
-    filter: brightness(1.08);
-  }
-
-  .site-footer__social-link--instagram {
-    background: radial-gradient(
-      circle at 30% 107%,
-      #fdf497 0%,
-      #fdf497 5%,
-      #fd5949 45%,
-      #d6249f 60%,
-      #285aeb 90%
-    );
-  }
-
-  .site-footer__social-link--facebook {
-    background: #0866ff;
-  }
-
-  .site-footer__social-link--tiktok {
-    background: #000;
+    color: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
   }
 
   /* height-only, not a fixed square: the Facebook glyph's own viewBox
