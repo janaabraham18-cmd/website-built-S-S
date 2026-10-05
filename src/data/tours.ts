@@ -326,7 +326,7 @@ export const tours: Tour[] = [
   },
   {
     slug: 'township-tour',
-    category: 'adventure',
+    category: 'tour',
     name: 'Township Tour',
     description:
       "Are you eager for a cultural immersion, ready to learn something new? Then try our tour to Swakopmund's Damara, Herero and Ovambo sectors of the township to experience the local Namibian traditional cuisine and culture of these tribes.",

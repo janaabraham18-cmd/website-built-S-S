@@ -39,6 +39,7 @@ const tourAccentWords: Record<string, string> = {
   'cape-cross': 'Cross',
   'living-desert-tour': 'Desert',
   'dolphin-seal-catamaran-cruise': 'Dolphin',
+  'township-tour': 'Tour',
 };
 
 const stopsWithTours = mapJourney.map((pin) => {
@@ -61,6 +62,7 @@ const highlightsBySlug: Record<string, string[]> = {
   'moonlandscape-tour': ['Moonscape valley views', 'Lichen fields', 'Welwitschia plants'],
   'cape-cross': ['Cape fur seal colony', 'Historic post office & railway', 'Lichen fields', 'Zeila Shipwreck'],
   'living-desert-tour': ['Sidewinder snakes', 'White Lady spiders', 'Namaqua chameleons', 'Dancing lizards'],
+  'township-tour': ['Damara, Herero & Ovambo sectors', 'Traditional Namibian cuisine', 'Local tribal culture'],
 };
 
 // Every piece is the same fixed-size crop (in map units) of the exact
@@ -115,7 +117,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
       <p class="tour-intro__eyebrow">Salt and Sun Tours</p>
       <h1 class="tour-intro__heading">Tours</h1>
       <p class="tour-intro__body">
-        Ten signature destinations across three regions, plus the
+        Eleven signature destinations across three regions, plus the
         shorter adventures we run out of Swakopmund and
         Walvis Bay. <a href="/contact">Contact us for current rates</a>.
       </p>
@@ -127,7 +129,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
       <div class="tour-intro__map-frame" data-tour-intro-map>
         <NamibiaMap pins={mapJourney} />
       </div>
-      <p class="tour-intro__map-caption">3 regions · 10 signature stops</p>
+      <p class="tour-intro__map-caption">3 regions · 11 signature stops</p>
     </div>
   </div>
 
@@ -207,7 +209,7 @@ const FULL_MAP_H = Math.round(growthWidth * (740 / 751));
            beside it can keep using the same non-sticky
            margin-top-repositioning trick to end up level with it. -->
       <div class="tour-recap reveal" data-map-final>
-        <h2 class="tour-recap__heading reveal-item" set:html={hl('Ten tours, three regions', 'regions')} />
+        <h2 class="tour-recap__heading reveal-item" set:html={hl('Eleven tours, three regions', 'regions')} />
         <p class="tour-recap__lede reveal-item">
           Every tour, together on one map — see exactly where each one takes you.
         </p>

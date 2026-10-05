@@ -37,6 +37,8 @@ export const mapStops: MapStop[] = [
       { slug: 'living-desert-tour', x: 192, y: 382 },
       // North along the coast past Henties Bay, still inside Erongo.
       { slug: 'cape-cross', x: 160, y: 322 },
+      // Swakopmund's township itself — same coastal cluster.
+      { slug: 'township-tour', x: 185, y: 370 },
     ],
   },
   {
