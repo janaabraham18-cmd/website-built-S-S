@@ -1,4 +1,20 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <circle cx="16" cy="16" r="16" fill="#b5623f" />
-  <path d="M8 20 L16 8 L24 20 Z" fill="#f6ede1" />
+  <defs>
+    <clipPath id="favicon-mark-clip">
+      <circle cx="16" cy="16" r="16" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#favicon-mark-clip)">
+    <rect x="0" y="0" width="32" height="16" fill="#d1754a" />
+    <!-- Reflection lines: true chords of the r=16 circle, same tapering
+         geometry as the header mark (src/components/Header.astro),
+         scaled down from its r=19 version. -->
+    <rect x="0.09" y="17.68" width="31.82" height="1.09" rx="0.55" fill="#8b6762" />
+    <rect x="0.46" y="19.79" width="31.09" height="1.09" rx="0.55" fill="#8b6762" />
+    <rect x="1.13" y="21.89" width="29.75" height="1.09" rx="0.55" fill="#8b6762" />
+    <rect x="2.14" y="24" width="27.71" height="1.09" rx="0.55" fill="#8b6762" />
+    <rect x="3.6" y="26.11" width="24.81" height="1.09" rx="0.55" fill="#8b6762" />
+    <rect x="5.66" y="28.21" width="20.68" height="1.09" rx="0.55" fill="#8b6762" />
+    <rect x="8.85" y="30.32" width="14.29" height="1.09" rx="0.55" fill="#8b6762" />
+  </g>
 </svg>
