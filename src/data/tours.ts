@@ -7,7 +7,7 @@
 
 export interface Tour {
   slug: string;
-  category: 'tour' | 'adventure' | 'combo';
+  category: 'tour' | 'adventure';
   name: string;
   description: string;
   duration?: string;
@@ -24,16 +24,6 @@ export interface Tour {
   included: string[];
   imageUrl?: string;
   imageCredit?: { name: string; username: string };
-  /**
-   * For `combo` entries only: the slugs of the tour/adventure entries this
-   * combo actually pairs, in the order its own description mentions them.
-   * The source rate sheet never states this structurally — each pairing
-   * below is inferred from that combo's own description/note prose (see
-   * the combo entries themselves for the sentence each mapping is read
-   * from) so the tours page can show the two real component cards
-   * side by side instead of leaving the pairing as unlinked text.
-   */
-  pairs?: string[];
 }
 
 export const categoryLabels: Record<Tour['category'], { label: string; description: string }> = {
@@ -44,10 +34,6 @@ export const categoryLabels: Record<Tour['category'], { label: string; descripti
   adventure: {
     label: 'Adventures',
     description: 'An hour or an afternoon — the short, sharp stuff right around Swakopmund and Walvis Bay.',
-  },
-  combo: {
-    label: 'Combos',
-    description: 'Two experiences, one day — or chart something that’s entirely yours.',
   },
 };
 
@@ -420,142 +406,6 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1659901981145-dbc056431a8b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Kamil Pietrzak', username: 'kamilpphotos' },
-  },
-  // --- Combo deals ---
-  {
-    slug: 'explorer-combo',
-    category: 'combo',
-    name: 'Explorer Combo',
-    description:
-      'Wow — the ultimate combo! Experience an adrenaline-filled quad bike ride, along with some action-packed lie-down sandboarding, with a third part of the tour being a more relaxed quad bike ride where you get to see animals and plant life of the desert.',
-    duration: '3h30min',
-    note: 'Pick-up time 8h30, Sundays 9h30',
-    included: ['Transfers', 'Safety gear', 'Water'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1765416320238-910536a59da3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Margaret Szarzynski', username: 'margoszar' },
-    pairs: ['quad-bike-tour', 'sandboarding', 'explorer-tour'],
-  },
-  {
-    slug: 'unity-combo',
-    category: 'combo',
-    name: 'Unity Combo',
-    description:
-      'Experience a catamaran cruise in Walvis Bay and an adrenaline-filled quad bike ride in the desert in Swakopmund. These trips can be done on the same day, or on different days. A fantastic combo where you can experience the best Namibia has to offer.',
-    note: 'Combines a 1 hour quad bike ride with a 3h30min catamaran cruise',
-    included: [
-      'Drinks',
-      'Oysters',
-      'Light lunch',
-      'Sparkling wine',
-      'Transfers at additional cost (subject to availability)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1593536284003-ef3103cff953?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Alix Greenman', username: 'alixgreenman' },
-    pairs: ['dolphin-seal-catamaran-cruise', 'quad-bike-tour'],
-  },
-  {
-    slug: 'freedom-combo',
-    category: 'combo',
-    name: 'Freedom Combo',
-    description:
-      'Enjoy a catamaran cruise in Walvis Bay and a relaxing camel ride in the desert in Swakopmund. These trips can be done on the same day, or on different days. A fun combo for the whole family to enjoy.',
-    note: 'Combines a 30 min camel ride with a 3h30min catamaran cruise',
-    included: [
-      'Drinks',
-      'Oysters',
-      'Light lunch',
-      'Sparkling wine',
-      'Transfers at additional cost (subject to availability)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1535190823090-3c159ed10a97?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Y K', username: 'yokeboy' },
-    pairs: ['dolphin-seal-catamaran-cruise', 'camel-ride'],
-  },
-  {
-    slug: 'quad-bike-sandboarding-combo',
-    category: 'combo',
-    name: 'Quad Bike / Sandboarding Combo',
-    description:
-      'Want to get the ultimate desert experience while in Namibia? Try our combo deal! You can choose between a 2 or 3 hour excursion. Both options offer 1hr lie-down sandboarding, and the rest of the time is for you to enjoy on your quad bike!',
-    duration: '2 hrs or 3 hrs',
-    included: ['Transfers', 'Safety gear', 'All equipment', 'Water'],
-    imageUrl:
-      'https://images.unsplash.com/photo-1742237281789-c37c5b38e0a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Humphrey M', username: 'good_citizen' },
-    pairs: ['quad-bike-tour', 'sandboarding'],
-  },
-  {
-    slug: 'surf-and-turf',
-    category: 'combo',
-    name: 'Surf & Turf',
-    description:
-      'This combo package takes you from the towering dunes of the Namib to the refreshing ocean breeze of the Atlantic. Guests are transferred to Walvis Bay to enjoy an unforgettable catamaran cruise in the morning, then finish the day with an adrenaline-packed quad bike ride in Swakopmund!',
-    note: 'Combines a 90 min quad bike ride with a 3h30min catamaran cruise',
-    included: [
-      'Drinks',
-      'Oysters',
-      'Light lunch',
-      'Sparkling wine',
-      'Transfers at additional cost (subject to availability)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1504813205186-380b1235a5d2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Matthias Jordan', username: 'iammatthias' },
-    pairs: ['dolphin-seal-catamaran-cruise', 'quad-bike-tour'],
-  },
-  {
-    slug: 'kayak-catamaran-combo',
-    category: 'combo',
-    name: 'Kayak / Catamaran Combo',
-    description:
-      "Enjoy a half day kayaking experience at the Pelican Point seal colonies and a catamaran dolphin cruise. Tours can be done on the same day (PM catamaran cruise) or on different days. A great combo if you're a sea-lover and want to experience what Namibia's coast has to offer.",
-    note: 'No kayaking for kids under 4',
-    included: [
-      'Kayak: sandwich and hot/cold beverages',
-      'Catamaran: snacks, oysters, hot/cold beverages, sparkling wine',
-      'Transfers at additional cost (subject to availability)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1778379591293-36b4cb24324f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Amanda Swanepoel', username: 'amandaswanepoel' },
-    pairs: ['kayaking', 'dolphin-seal-catamaran-cruise'],
-  },
-  {
-    slug: 'kayak-sandwich-harbour-combo',
-    category: 'combo',
-    name: 'Kayak / Sandwich Harbour Combo',
-    description:
-      'From an ocean experience to the towering sand dunes of the Namib — best of both worlds. Enjoy a kayaking experience in the morning at Pelican Point followed by a half-day Sandwich Harbour 4x4 tour.',
-    note: 'Minimum 3 pax. No kayaking for kids under 4.',
-    included: [
-      'Kayak: sandwich and hot/cold beverages',
-      'Sandwich Harbour: refreshments',
-      'Transfers at additional cost (subject to availability)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1762947240379-150d9a6ee659?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Jan Suchánek', username: 'johnny_slav' },
-    pairs: ['kayaking', 'sandwich-harbour-half-day'],
-  },
-  {
-    slug: 'catamaran-sandwich-harbour-combo',
-    category: 'combo',
-    name: 'Catamaran / Sandwich Harbour Combo',
-    description:
-      'From an ocean experience to the towering sand dunes of the Namib — best of both worlds. Enjoy a catamaran experience in the morning departing from Walvis Bay followed by a half-day Sandwich Harbour 4x4 tour.',
-    note: 'Minimum 3 pax',
-    included: [
-      'Sandwich Harbour: refreshments',
-      'Catamaran: snacks, oysters, hot/cold beverages, sparkling wine',
-      'Transfers at additional cost (subject to availability)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1717054373388-b405bfd27707?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Jay Alexander', username: 'jasont378' },
-    pairs: ['dolphin-seal-catamaran-cruise', 'sandwich-harbour-half-day'],
   },
 ];
 
