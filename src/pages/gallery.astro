@@ -321,19 +321,25 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
         <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" />
       </svg>
     </button>
-    <button type="button" class="lightbox__arrow lightbox__arrow--prev" data-lightbox-prev aria-label="Previous photo">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-    </button>
     <figure class="lightbox__frame">
-      <img class="lightbox__image" data-lightbox-image src="" alt="" />
+      <!-- Prev/next live right on the image's own box (not the
+           full-viewport overlay), so they sit off the picture's actual
+           edges rather than the screen edges — otherwise a narrower
+           photo on a wide viewport leaves them stranded far from it. -->
+      <div class="lightbox__image-wrap">
+        <img class="lightbox__image" data-lightbox-image src="" alt="" />
+        <button type="button" class="lightbox__arrow lightbox__arrow--prev" data-lightbox-prev aria-label="Previous photo">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+        <button type="button" class="lightbox__arrow lightbox__arrow--next" data-lightbox-next aria-label="Next photo">
+          <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+        </button>
+      </div>
       <figcaption class="lightbox__caption">
         <span data-lightbox-caption></span>
         <span class="lightbox__counter"><span data-lightbox-current></span> / {galleryItems.length}</span>
       </figcaption>
     </figure>
-    <button type="button" class="lightbox__arrow lightbox__arrow--next" data-lightbox-next aria-label="Next photo">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-    </button>
   </div>
 </BaseLayout>
 
@@ -602,7 +608,18 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
     align-items: center;
   }
 
+  /* Shrink-wraps to the image's own rendered size (inline-block, no
+     intrinsic size of its own) so the arrows below — absolutely
+     positioned against this wrap — sit on the photo's actual edges
+     instead of the frame's, which would also span the caption's width. */
+  .lightbox__image-wrap {
+    position: relative;
+    display: inline-block;
+    max-width: 100%;
+  }
+
   .lightbox__image {
+    display: block;
     max-width: 100%;
     max-height: 70vh;
     width: auto;
@@ -665,19 +682,25 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
     transform: scale(1.06);
   }
 
+  /* Positioned against .lightbox__image-wrap (sized to the photo itself),
+     sitting just outside its edges — a constant gap in proportion to the
+     button's own size (the -130%/130% translate), not a fixed viewport
+     offset, so they stay right next to the picture whatever size it
+     renders at. */
   .lightbox__arrow {
     position: absolute;
     top: 50%;
     z-index: 2;
-    transform: translateY(-50%);
   }
 
   .lightbox__arrow--prev {
-    left: var(--space-md);
+    left: 0;
+    transform: translate(-130%, -50%);
   }
 
   .lightbox__arrow--next {
-    right: var(--space-md);
+    right: 0;
+    transform: translate(130%, -50%);
   }
 
   @media (max-width: 640px) {
@@ -691,12 +714,17 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
       height: 2.25rem;
     }
 
+    /* No room off-frame at this width (the image already runs close to
+       the viewport edge), so the arrows overlap the photo's own corners
+       instead of floating beside it. */
     .lightbox__arrow--prev {
       left: var(--space-2xs);
+      transform: translateY(-50%);
     }
 
     .lightbox__arrow--next {
       right: var(--space-2xs);
+      transform: translateY(-50%);
     }
 
     .lightbox__caption {
