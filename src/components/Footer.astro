@@ -105,20 +105,17 @@ const socialLinks = {
 
 <style>
   .site-footer {
-    /* Terracotta dusk glow (same warm sunset treatment as the photo CTA's
-       --gradient-dusk, tinted terracotta so it reads a little deeper this
-       low on the page) layered over a neutral dark charcoal instead of
-       the old earth-900 brown base — not another shade of brown, but
-       not the cool Salt teal either. Scoped to just the footer — the
-       sections directly above it on some pages are still brown, so
-       there's a visible seam there by choice, not oversight. */
-    background: radial-gradient(1200px 500px at 15% -12%, rgba(156, 77, 51, 0.4), transparent 60%),
-      var(--color-charcoal-900);
-    color: var(--color-text-on-dark);
-    /* No top margin: the page's closing sections are already dark
-       (Passport Stamps, the photo CTA's dark overlay), so any gap here
-       exposes a stray strip of the sand-colored page background between
-       two sections that should read as one continuous dark close. */
+    /* Orange-to-white brand gradient, richest over the logo in the top
+       left and settling to plain sand by the nav/contact columns — keeps
+       the bulk of the footer's text on a near-white base for contrast
+       rather than washing the whole bar in saturated orange. */
+    background: linear-gradient(
+      135deg,
+      var(--color-terracotta-500) 0%,
+      var(--color-ochre-400) 26%,
+      var(--color-sand-50) 62%
+    );
+    color: var(--color-text);
     margin-top: 0;
   }
 
@@ -161,7 +158,7 @@ const socialLinks = {
   }
 
   .site-footer__tagline {
-    color: var(--color-sand-200);
+    color: var(--color-text-muted);
     font-size: var(--fs-sm);
     margin: 0;
   }
@@ -181,15 +178,15 @@ const socialLinks = {
     width: 2.25rem;
     height: 2.25rem;
     border-radius: 50%;
-    border: 1px solid rgba(251, 247, 241, 0.3);
-    color: var(--color-sand-100);
+    border: 1px solid rgba(58, 35, 28, 0.3);
+    color: var(--color-text);
     transition: color var(--duration-fast) var(--ease-out),
       border-color var(--duration-fast) var(--ease-out);
   }
 
   .site-footer__social a:hover {
-    color: var(--color-ochre-400);
-    border-color: var(--color-ochre-400);
+    color: var(--color-accent-strong);
+    border-color: var(--color-accent-strong);
   }
 
   .site-footer__social svg {
@@ -217,7 +214,7 @@ const socialLinks = {
      different typographic voice from the rest of the site's navigation. */
   .site-footer__nav a {
     text-decoration: none;
-    color: var(--color-sand-100);
+    color: var(--color-text);
     font-size: var(--fs-sm);
     font-family: var(--font-display);
     font-weight: 700;
@@ -226,12 +223,12 @@ const socialLinks = {
   }
 
   .site-footer__nav a:hover {
-    color: var(--color-ochre-400);
+    color: var(--color-accent-strong);
   }
 
   .site-footer__meta {
     font-size: var(--fs-sm);
-    color: var(--color-sand-200);
+    color: var(--color-text-muted);
   }
 
   .site-footer__meta p {
@@ -240,10 +237,11 @@ const socialLinks = {
 
   .site-footer__meta a {
     text-decoration: none;
+    color: var(--color-text);
   }
 
   .site-footer__meta a:hover {
-    color: var(--color-ochre-400);
+    color: var(--color-accent-strong);
     text-decoration: underline;
   }
 
