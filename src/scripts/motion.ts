@@ -42,52 +42,6 @@ function setupReveals(opts: {
   }
 }
 
-// Editorial tour rows (TourCard): the info panel slides out from behind
-// its image once, on scroll — desktop slides horizontally into its own
-// grid column, mobile expands downward instead since there's no second
-// column to slide into. Under reduced motion, both fall back to a plain
-// opacity fade with no transform.
-function setupTourRows(reduceMotion: boolean) {
-  const rows = gsap.utils.toArray<HTMLElement>('.tour-row');
-  const isMobile = window.matchMedia('(max-width: 768px)').matches;
-
-  for (const row of rows) {
-    const panel = row.querySelector<HTMLElement>('.tour-row__panel');
-    if (!panel) continue;
-
-    if (reduceMotion) {
-      gsap.set(panel, { opacity: 0 });
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top 85%',
-        once: true,
-        onEnter: () => gsap.to(panel, { opacity: 1, duration: 0.3, ease: 'power1.out' }),
-      });
-      continue;
-    }
-
-    if (isMobile) {
-      gsap.set(panel, { height: 0, opacity: 0, overflow: 'hidden' });
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top 75%',
-        once: true,
-        onEnter: () =>
-          gsap.to(panel, { height: 'auto', opacity: 1, duration: 0.9, ease: 'power2.out' }),
-      });
-    } else {
-      const reverse = row.classList.contains('tour-row--reverse');
-      gsap.set(panel, { xPercent: reverse ? 100 : -100 });
-      ScrollTrigger.create({
-        trigger: row,
-        start: 'top 75%',
-        once: true,
-        onEnter: () => gsap.to(panel, { xPercent: 0, duration: 0.9, ease: 'power2.out' }),
-      });
-    }
-  }
-}
-
 // The Logbook: a single filmstrip carousel — all 8 landmark photos live
 // on one flex track and the track is translated by whole slide-widths,
 // so the incoming photo visibly slides in from the side rather than
@@ -836,7 +790,6 @@ export function initMotion() {
     }
 
     setupReveals({ y: 40, duration: 0.8, ease: 'power2.out', stagger: 0.12, maxCascade: 1 });
-    setupTourRows(false);
     setupAdventuresHeadingLine(false);
     setupComboBuilder(false);
     setupTourRecapSlideshow(false);
@@ -893,7 +846,6 @@ export function initMotion() {
   // Reduced motion: simple opacity fades, no parallax, no pin, no autoplay drift.
   mm.add('(prefers-reduced-motion: reduce)', () => {
     setupReveals({ y: 0, duration: 0.3, ease: 'power1.out', stagger: 0.05, maxCascade: 0.5 });
-    setupTourRows(true);
     setupAdventuresHeadingLine(true);
     setupComboBuilder(true);
     setupTourRecapSlideshow(true);

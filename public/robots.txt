@@ -1,6 +1,5 @@
 User-agent: *
 Allow: /
 Disallow: /preview-adventure-cards
-Disallow: /preview-tour-rows
 
 Sitemap: https://saltandsuntours.com.na/sitemap-index.xml
