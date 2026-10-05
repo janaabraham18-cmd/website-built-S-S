@@ -9,12 +9,6 @@ interface Props {
 
 const { tour, featured = false } = Astro.props;
 
-// Some tours' `duration` field is a real sentence (pickup times, a
-// scheduling note) rather than a short "30 min"/"2h30min" — those read as
-// exactly the long-sentence-on-a-card problem this component exists to
-// avoid, so only genuinely short values get shown here at all.
-const shortDuration = tour.duration && tour.duration.length <= 16 ? tour.duration : undefined;
-
 // One accent word per card title, same rule as every other heading
 // sitewide (see CLAUDE.md) — keyed here rather than passed in from each
 // page, since the word choice is a property of the tour's own name, not
@@ -53,7 +47,6 @@ const adventureAccentWords: Record<string, string> = {
     </div>
     <div class="adventure-card__caption">
       <h3 class="adventure-card__title" set:html={hl(tour.name, adventureAccentWords[tour.slug])} />
-      {shortDuration && <span class="adventure-card__duration">{shortDuration}</span>}
     </div>
   </a>
 </article>
@@ -90,10 +83,6 @@ const adventureAccentWords: Record<string, string> = {
   }
 
   .adventure-card__caption {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: var(--space-sm);
     margin-top: var(--space-sm);
   }
 
@@ -110,17 +99,5 @@ const adventureAccentWords: Record<string, string> = {
 
   .adventure-card__link:hover .adventure-card__title {
     color: var(--color-accent-strong);
-  }
-
-  .adventure-card__duration {
-    flex-shrink: 0;
-    max-width: 40%;
-    font-size: 0.72rem;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--color-text-muted);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 </style>

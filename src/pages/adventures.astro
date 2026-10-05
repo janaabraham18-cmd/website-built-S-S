@@ -114,10 +114,6 @@ const closingBg = {
           <p class="adventures-stats__num">220<span>km/h</span></p>
           <p class="adventures-stats__label">Freefall speed</p>
         </div>
-        <div class="adventures-stats__stat">
-          <p class="adventures-stats__num">30<span>min</span></p>
-          <p class="adventures-stats__label">Shortest activity</p>
-        </div>
       </div>
     </section>
 
@@ -298,7 +294,7 @@ const closingBg = {
 
   .adventures-stats__row {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: var(--space-md);
   }
 
@@ -421,9 +417,8 @@ const closingBg = {
      featured card spans two columns for a wider photo instead of
      spanning two rows. minmax(0, 1fr), not plain 1fr: a bare 1fr track
      won't shrink below its content's min-content width, so one card
-     with an unusually long duration string (nowrap, by design) would
-     blow out its whole column — and every other card sharing that
-     column index, in any row. */
+     with an unusually long title would blow out its whole column —
+     and every other card sharing that column index, in any row. */
   .adventure-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
