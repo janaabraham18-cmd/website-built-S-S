@@ -509,7 +509,7 @@ export const journeys: Journey[] = [
       {
         day: 1,
         title: 'Arrival in Windhoek',
-        accentWord: 'Windhoek',
+        accentWord: 'Arrival',
         location: 'Windhoek',
         description: 'Airport pickup and a relaxed first day.',
       },
@@ -524,7 +524,7 @@ export const journeys: Journey[] = [
       {
         day: 3,
         title: 'Bushmen Wisdom & Quivertree Forest',
-        accentWord: 'Quivertree',
+        accentWord: 'Wisdom',
         location: 'Kalahari → Keetmanshoop',
         description:
           "A San Bushmen cultural experience, then the Quivertree Forest and Giant's Playground rock formations.",
@@ -547,14 +547,14 @@ export const journeys: Journey[] = [
       {
         day: 6,
         title: 'Sossusvlei & Dead Vlei',
-        accentWord: 'Vlei',
+        accentWord: 'Dead',
         location: 'Sossusvlei',
         description: 'A full day exploring Sossusvlei, Dead Vlei, Big Daddy Dune and Dune 45.',
       },
       {
         day: 7,
         title: 'To Swakopmund via the Moon Landscape',
-        accentWord: 'Moon',
+        accentWord: 'Swakopmund',
         location: 'Sossusvlei → Swakopmund',
         description:
           "Departure through Solitaire and the Kuiseb Pass's moon landscape, arriving in Swakopmund for an afternoon of quad biking in the dunes.",
