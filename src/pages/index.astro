@@ -708,14 +708,15 @@ const testimonials = [
   }
 
   /* ---------- 04 About Us ---------- */
-  /* A real Namibia dune photo behind the whole section, shown "fully
-     defined" (full strength, no scrim — same treatment as booking/
-     contact): the heading gets its own small opaque card and the
-     founder photo + bio card are already opaque, so only the caption
-     under the photo needs a text-shadow to stay legible over the
-     photo directly. The bio card sits in normal document flow — it no
-     longer pins the section and ties its 3 pages to scroll progress,
-     just plain prev/next buttons (see setupAboutCard in motion.ts). */
+  /* A real Namibia dune photo behind the whole section, with
+     .about-block__scrim (a gradient, not a card) darkening the zone
+     behind the heading/eyebrow so they stay legible without boxing them
+     in — the founder photo + bio card are already opaque, so only the
+     caption under the photo needs a text-shadow to stay legible over
+     the photo directly. The bio card sits in normal document flow — it
+     no longer pins the section and ties its 3 pages to scroll
+     progress, just plain prev/next buttons (see setupAboutCard in
+     motion.ts). */
   .about-block {
     position: relative;
     z-index: 0;
