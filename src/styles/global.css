@@ -194,6 +194,12 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Toggled by the Gallery lightbox (src/scripts/motion.ts) while it's
+   open, so the page behind the fixed overlay can't be scrolled. */
+body.lightbox-open {
+  overflow: hidden;
+}
+
 /* Fine sand-grain texture over the whole page, fixed so it doesn't repaint
    on scroll — this is what keeps the large section glows below from
    reading as flat "AI-gradient" blur; it reads as paper/sand grain

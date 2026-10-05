@@ -277,26 +277,73 @@ function setupComboBuilder(reduceMotion: boolean) {
 // hiding non-matching tour rows via the `hidden` attribute rather than
 // animating them out — a filter change is a direct result of a click, not
 // a moment that needs its own motion.
-// Gallery page: clicking a category pill shows/hides matching tiles, plus
-// an empty-state message for a category that (for now) has nothing in it.
-function setupGalleryFilter() {
-  const pills = document.querySelectorAll<HTMLButtonElement>('[data-gallery-filter]');
-  const items = document.querySelectorAll<HTMLElement>('[data-gallery-item]');
-  const empty = document.querySelector<HTMLElement>('[data-gallery-empty]');
-  if (!pills.length || !items.length) return;
+// Gallery page: every tile opens the same overlay instead of linking out,
+// with prev/next (click, arrow keys, or Escape to close) to browse the
+// whole set in place — click-driven UI switching like Postcards' carousel
+// below, so it isn't gated behind reduced motion either. Triggers carry
+// their own image/name via data attributes rather than this script
+// importing the gallery's data module, same reasoning as the combo
+// builder reading each chip's dataset.
+function setupGalleryLightbox() {
+  const overlay = document.querySelector<HTMLElement>('[data-lightbox]');
+  const triggers = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-lightbox-trigger]'));
+  if (!overlay || !triggers.length) return;
 
-  pills.forEach((pill) => {
-    pill.addEventListener('click', () => {
-      pills.forEach((p) => p.classList.toggle('is-active', p === pill));
-      const filter = pill.dataset.galleryFilter;
-      let visibleCount = 0;
-      items.forEach((item) => {
-        const show = filter === 'all' || item.dataset.category === filter;
-        item.hidden = !show;
-        if (show) visibleCount++;
-      });
-      if (empty) empty.hidden = visibleCount > 0;
-    });
+  const image = overlay.querySelector<HTMLImageElement>('[data-lightbox-image]');
+  const caption = overlay.querySelector<HTMLElement>('[data-lightbox-caption]');
+  const counter = overlay.querySelector<HTMLElement>('[data-lightbox-current]');
+  const closeBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-close]');
+  const prevBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-prev]');
+  const nextBtn = overlay.querySelector<HTMLButtonElement>('[data-lightbox-next]');
+  const backdrop = overlay.querySelector<HTMLElement>('[data-lightbox-backdrop]');
+  if (!image || !caption || !counter || !closeBtn || !prevBtn || !nextBtn || !backdrop) return;
+
+  const total = triggers.length;
+  let index = 0;
+  let lastTrigger: HTMLButtonElement | null = null;
+
+  function render() {
+    const trigger = triggers[index];
+    const name = trigger.dataset.lightboxName ?? '';
+    image!.src = trigger.dataset.lightboxImg ?? '';
+    image!.alt = name;
+    caption!.textContent = name;
+    counter!.textContent = String(index + 1);
+  }
+
+  function goTo(next: number) {
+    index = (next + total) % total;
+    render();
+  }
+
+  function open(i: number, trigger: HTMLButtonElement) {
+    lastTrigger = trigger;
+    goTo(i);
+    overlay!.hidden = false;
+    document.body.classList.add('lightbox-open');
+    closeBtn!.focus();
+  }
+
+  function close() {
+    overlay!.hidden = true;
+    document.body.classList.remove('lightbox-open');
+    lastTrigger?.focus();
+  }
+
+  triggers.forEach((trigger, i) => {
+    trigger.addEventListener('click', () => open(i, trigger));
+  });
+
+  closeBtn.addEventListener('click', close);
+  backdrop.addEventListener('click', close);
+  prevBtn.addEventListener('click', () => goTo(index - 1));
+  nextBtn.addEventListener('click', () => goTo(index + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (overlay!.hidden) return;
+    if (e.key === 'Escape') close();
+    if (e.key === 'ArrowLeft') goTo(index - 1);
+    if (e.key === 'ArrowRight') goTo(index + 1);
   });
 }
 
@@ -719,7 +766,7 @@ export function initMotion() {
   setupHeroPanelSlideshow(reduceMotion);
   setupTourIntroMap(reduceMotion);
   setupTourPhotoBleed();
-  setupGalleryFilter();
+  setupGalleryLightbox();
   setupPostcards();
   setupAboutCard();
   setupLogbookSlideshow(reduceMotion);
