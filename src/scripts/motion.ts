@@ -347,6 +347,28 @@ function setupGalleryLightbox() {
   });
 }
 
+// Booking and Contact forms: both submit as a plain POST to Formspree (a
+// full navigation, not fetch), so there's a real gap between the click and
+// the browser actually leaving the page — long enough on a slow connection
+// to look like nothing happened and invite a second click. This swaps the
+// button to a disabled "Sending…" + spinner state the instant submit
+// fires; native HTML5 validation (the required fields) already runs
+// before this event, so an invalid form never reaches it.
+function setupFormSubmitLoading() {
+  document.querySelectorAll<HTMLFormElement>('.form').forEach((form) => {
+    const button = form.querySelector<HTMLButtonElement>('.form-submit');
+    const label = button?.querySelector<HTMLElement>('[data-submit-label]');
+    const spinner = button?.querySelector<HTMLElement>('[data-submit-spinner]');
+    if (!button || !label || !spinner) return;
+
+    form.addEventListener('submit', () => {
+      button.disabled = true;
+      label.textContent = 'Sending…';
+      spinner.hidden = false;
+    });
+  });
+}
+
 // Postcards from the Road: one review visible at a time, cycled with
 // prev/next — click-driven UI switching, not scroll motion, so it isn't
 // gated behind reduced motion (the crossfade is a plain CSS opacity
@@ -767,6 +789,7 @@ export function initMotion() {
   setupTourIntroMap(reduceMotion);
   setupTourPhotoBleed();
   setupGalleryLightbox();
+  setupFormSubmitLoading();
   setupPostcards();
   setupAboutCard();
   setupLogbookSlideshow(reduceMotion);

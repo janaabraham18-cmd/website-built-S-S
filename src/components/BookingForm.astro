@@ -74,7 +74,10 @@ const categories = (['tour', 'adventure'] as const).map((category) => ({
     <textarea id="message" name="message" placeholder="Anything else we should know?"></textarea>
   </div>
 
-  <button type="submit" class="btn btn-primary form-submit">Request booking</button>
+  <button type="submit" class="btn btn-primary form-submit">
+    <span data-submit-label>Request booking</span>
+    <span class="btn__spinner" data-submit-spinner aria-hidden="true" hidden></span>
+  </button>
 </form>
 
 <style>

@@ -18,5 +18,8 @@ const FORMSPREE_ID = 'xnpjqayr';
     <textarea id="contact-message" name="message" required></textarea>
   </div>
 
-  <button type="submit" class="btn btn-primary form-submit">Send message</button>
+  <button type="submit" class="btn btn-primary form-submit">
+    <span data-submit-label>Send message</span>
+    <span class="btn__spinner" data-submit-spinner aria-hidden="true" hidden></span>
+  </button>
 </form>
