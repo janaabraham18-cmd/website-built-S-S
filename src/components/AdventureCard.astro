@@ -21,8 +21,6 @@ const shortDuration = tour.duration && tour.duration.length <= 16 ? tour.duratio
 // of wherever the card happens to be shown. Covers every adventure-
 // category tour, not just the ones the live Adventures page currently
 // displays, so the component stays correct if that selection changes.
-// 'sandwich-harbour-half-day' reuses 'Harbour', matching the accent
-// word tourAccentWords already picked for its full-day sibling.
 const adventureAccentWords: Record<string, string> = {
   'quad-bike-tour': 'Quad',
   'explorer-tour': 'Explorer',
@@ -32,7 +30,6 @@ const adventureAccentWords: Record<string, string> = {
   'special-quad-90min': 'Quad',
   sandboarding: '',
   'township-tour': 'Tour',
-  'sandwich-harbour-half-day': 'Harbour',
   kayaking: '',
   'fat-bike-tour': 'Fat',
   fishing: '',

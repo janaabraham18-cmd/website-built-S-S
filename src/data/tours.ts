@@ -109,10 +109,11 @@ export const tours: Tour[] = [
   {
     slug: 'sandwich-harbour-full-day',
     category: 'tour',
-    name: 'Sandwich Harbour Tour (Full-day)',
+    name: 'Sandwich Harbour Tour',
     description:
-      'This iconic tour is a photographer\'s dream. This is a 4×4 tour past the Salt Pans and into the Namib-Naukluft Park "where ocean and desert meet." Our last stop is the Sandwich Harbour Lagoon. This is an exciting tour where guides will show off their skills while scaling gigantic sand dunes.',
-    duration: 'Full-day',
+      'This iconic tour is a photographer\'s dream — a 4×4 run past the Salt Pans and into the Namib-Naukluft Park "where ocean and desert meet," finishing at the Sandwich Harbour Lagoon. Guides show off their skills scaling gigantic sand dunes along the way. Choose a morning, afternoon, or sunset departure.',
+    duration: '4 hours',
+    note: 'Morning, afternoon, or sunset departures available — let us know your preference when booking.',
     included: [
       '4x4 scenic dune drive',
       'Pink Lake',
@@ -335,22 +336,6 @@ export const tours: Tour[] = [
     imageUrl:
       'https://images.unsplash.com/photo-1603703182693-51a19941fa59?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
     imageCredit: { name: 'Ken kahiri', username: 'kahiriken' },
-  },
-  {
-    slug: 'sandwich-harbour-half-day',
-    category: 'adventure',
-    name: 'Sandwich Harbour Tour (Half-day)',
-    description:
-      'The same dune-scaling run to Sandwich Harbour Lagoon as our full-day tour — a 4×4 past the Salt Pans and into the Namib-Naukluft Park "where ocean and desert meet" — condensed into a half-day with a light lunch and drinks instead of the full excursion.',
-    note: 'Half-day tour',
-    included: [
-      'Light lunch',
-      'Drinks',
-      'Transfers available at additional cost (subject to availability, please enquire)',
-    ],
-    imageUrl:
-      'https://images.unsplash.com/photo-1667666670938-4e89397d7c06?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Florian Delée', username: 'florian_delee' },
   },
   {
     slug: 'kayaking',
