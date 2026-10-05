@@ -129,12 +129,15 @@ const closingBg = {
         </div>
 
         {
-          adventureGroups.map((group) => (
+          adventureGroups.map((group, groupIndex) => (
             <div class="adventure-group">
+              {groupIndex > 0 && <hr class="adventure-group__divider" aria-hidden="true" />}
               <div class="adventure-group__header reveal-item">
-                <p class="eyebrow">{group.items.length} Activities</p>
-                <h3 set:html={hl(group.eyebrow, group.accentWord)} />
-                <p class="adventure-group__intro">{group.intro}</p>
+                <span class="adventure-group__num" aria-hidden="true">{String(groupIndex + 1).padStart(2, '0')}</span>
+                <div>
+                  <h3 set:html={hl(group.eyebrow, group.accentWord)} />
+                  <p class="adventure-group__intro">{group.intro}</p>
+                </div>
               </div>
 
               <div class="adventure-grid reveal-item">
@@ -164,15 +167,6 @@ const closingBg = {
 </BaseLayout>
 
 <style>
-  .eyebrow {
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    color: var(--color-text-muted);
-    font-weight: 600;
-    margin-bottom: 0.6rem;
-  }
-
   .adventures-page {
     position: relative;
     z-index: 0;
@@ -379,21 +373,45 @@ const closingBg = {
     background: var(--color-surface);
   }
 
+  /* Tighter than the old --space-2xl, and chapters 2/3 get a divider
+     instead of a blank gap — three chapters each resetting with a big
+     gap and their own fresh heading read as three disconnected mini-
+     pages rather than one continuous list. */
   .adventure-group {
-    margin-bottom: var(--space-2xl);
+    margin-bottom: var(--space-xl);
   }
 
   .adventure-group:last-child {
     margin-bottom: 0;
   }
 
+  .adventure-group__divider {
+    border: none;
+    border-top: 1px solid var(--color-border);
+    margin: 0 0 var(--space-xl);
+  }
+
   /* Plain text header per chapter — no photo banner. Real photography
      lives on every card in the grid below now (not just one shared
      spotlight image), so a banner here would just repeat a photo already
-     shown a moment later at a smaller, one-of-several size. */
+     shown a moment later at a smaller, one-of-several size. The 01/02/03
+     number (same device as .orientation__num on the Tours page) reads as
+     "step N of one list" rather than each chapter looking like its own
+     standalone section — replaces the old separate "N Activities" badge. */
   .adventure-group__header {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
     max-width: var(--content-width-narrow);
     margin-bottom: var(--space-md);
+  }
+
+  .adventure-group__num {
+    flex-shrink: 0;
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    line-height: 1.3;
+    color: var(--color-accent-soft);
   }
 
   .adventure-group__header h3 {
