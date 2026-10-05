@@ -261,7 +261,7 @@ export const journeys: Journey[] = [
     slug: '10-day-namibia-grand-tour',
     name: '10-Day Namibia Grand Tour',
     tagline:
-      "Our flagship route across Namibia's desert, coast and wildlife — from the dunes of Sossusvlei to the game drives of Etosha.",
+      "Our most complete route across Namibia's desert, coast and wildlife — from the dunes of Sossusvlei to the game drives of Etosha.",
     durationDays: 10,
     regions: ['Windhoek', 'Sossusvlei', 'Swakopmund', 'Walvis Bay', 'Spitzkoppe', 'Damaraland', 'Etosha'],
     tripType: 'guided',
