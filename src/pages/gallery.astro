@@ -675,8 +675,7 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
     height: 1.1rem;
   }
 
-  .lightbox__close:hover,
-  .lightbox__arrow:hover {
+  .lightbox__close:hover {
     background: var(--color-accent-strong);
     color: var(--color-text-on-dark);
     transform: scale(1.06);
@@ -686,7 +685,11 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
      sitting just outside its edges — a constant gap in proportion to the
      button's own size (the -130%/130% translate), not a fixed viewport
      offset, so they stay right next to the picture whatever size it
-     renders at. */
+     renders at. Each arrow's hover rule re-states that same translate
+     alongside the hover scale — `transform` isn't additive, so a bare
+     `scale(1.06)` on hover would overwrite the positioning translate
+     entirely and the button would jump to a different spot the instant
+     the pointer reached it, rather than growing in place. */
   .lightbox__arrow {
     position: absolute;
     top: 50%;
@@ -698,9 +701,21 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
     transform: translate(-130%, -50%);
   }
 
+  .lightbox__arrow--prev:hover {
+    background: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
+    transform: translate(-130%, -50%) scale(1.06);
+  }
+
   .lightbox__arrow--next {
     right: 0;
     transform: translate(130%, -50%);
+  }
+
+  .lightbox__arrow--next:hover {
+    background: var(--color-accent-strong);
+    color: var(--color-text-on-dark);
+    transform: translate(130%, -50%) scale(1.06);
   }
 
   @media (max-width: 640px) {
@@ -722,9 +737,17 @@ const collagePhotos = Array.from({ length: galleryItems.length * 6 }, (_, i) => 
       transform: translateY(-50%);
     }
 
+    .lightbox__arrow--prev:hover {
+      transform: translateY(-50%) scale(1.06);
+    }
+
     .lightbox__arrow--next {
       right: var(--space-2xs);
       transform: translateY(-50%);
+    }
+
+    .lightbox__arrow--next:hover {
+      transform: translateY(-50%) scale(1.06);
     }
 
     .lightbox__caption {
