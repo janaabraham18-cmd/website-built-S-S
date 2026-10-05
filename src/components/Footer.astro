@@ -105,17 +105,19 @@ const socialLinks = {
 
 <style>
   .site-footer {
-    /* Orange-to-white brand gradient — deeper terracotta at the logo,
-       carrying through ochre across most of the bar, with white only as
-       a thin clearing at the far edge rather than taking over by the
-       nav/contact columns. --color-text still reads at AA contrast or
-       better against every stop here, ochre-400 included. */
+    /* Dusk gradient: terracotta brightening to ochre at the logo/nav
+       columns, then dimming into the brand doc's "Driftwood Ink" dark
+       brown-black by the contact column — not a return to the old flat
+       charcoal, but a deliberate dark anchor instead of fading to white.
+       --color-text (dark) covers the brand/nav columns over the warm
+       stops; .site-footer__meta overrides back to light text for the
+       dark stop it sits on (see below). */
     background: linear-gradient(
       135deg,
       var(--color-terracotta-600) 0%,
-      var(--color-terracotta-500) 22%,
-      var(--color-ochre-400) 55%,
-      var(--color-sand-50) 96%
+      var(--color-ochre-400) 42%,
+      #4a3b33 72%,
+      #3a2f29 100%
     );
     color: var(--color-text);
     margin-top: 0;
@@ -229,8 +231,11 @@ const socialLinks = {
   }
 
   .site-footer__meta {
+    /* This column lands on the gradient's dark Driftwood Ink end, so it
+       overrides back to light-on-dark rather than inheriting the dark
+       text the brand/nav columns use over the warm stops. */
     font-size: var(--fs-sm);
-    color: var(--color-text-muted);
+    color: var(--color-sand-200);
   }
 
   .site-footer__meta p {
@@ -239,11 +244,11 @@ const socialLinks = {
 
   .site-footer__meta a {
     text-decoration: none;
-    color: var(--color-text);
+    color: var(--color-text-on-dark);
   }
 
   .site-footer__meta a:hover {
-    color: var(--color-accent-strong);
+    color: var(--color-ochre-400);
     text-decoration: underline;
   }
 
