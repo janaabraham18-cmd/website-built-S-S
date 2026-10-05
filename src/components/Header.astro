@@ -21,15 +21,17 @@ const navLinks = [
           </clipPath>
         </defs>
         <g clip-path="url(#logo-mark-clip)">
-          <rect x="0" y="0" width="40" height="19.5" fill="#e2884d" />
-          <rect x="0" y="20.5" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="23" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="25.5" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="28" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="30.5" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="33" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="35.5" width="40" height="1.6" rx="0.8" fill="#a68885" />
-          <rect x="0" y="38" width="40" height="1.6" rx="0.8" fill="#a68885" />
+          <rect x="0" y="0" width="40" height="20" fill="#d1754a" />
+          <!-- Reflection lines: each is a true chord of the r=19 circle at
+               its y, so the taper comes from the geometry rather than a
+               hand-picked width per line. -->
+          <rect x="1.11" y="22" width="37.79" height="1.3" rx="0.65" fill="#8b6762" />
+          <rect x="1.54" y="24.5" width="36.92" height="1.3" rx="0.65" fill="#8b6762" />
+          <rect x="2.34" y="27" width="35.33" height="1.3" rx="0.65" fill="#8b6762" />
+          <rect x="3.55" y="29.5" width="32.91" height="1.3" rx="0.65" fill="#8b6762" />
+          <rect x="5.27" y="32" width="29.46" height="1.3" rx="0.65" fill="#8b6762" />
+          <rect x="7.72" y="34.5" width="24.56" height="1.3" rx="0.65" fill="#8b6762" />
+          <rect x="11.51" y="37" width="16.97" height="1.3" rx="0.65" fill="#8b6762" />
         </g>
       </svg>
       Salt and Sun Tours
@@ -120,7 +122,11 @@ const navLinks = [
     display: flex;
     align-items: center;
     gap: var(--space-2xs);
-    font-family: var(--font-display);
+    /* Besley: the refined brand concept's wordmark serif — brought in
+       just for this lockup rather than swapped into --font-display
+       sitewide, since only the logo itself was asked to change. */
+    font-family: "Besley", Georgia, "Times New Roman", serif;
+    font-weight: 600;
     font-size: var(--fs-lg);
     text-decoration: none;
     text-transform: uppercase;
