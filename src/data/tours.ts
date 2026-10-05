@@ -377,8 +377,8 @@ export const tours: Tour[] = [
     note: 'Boat or shore. Pick-up from 08h15, tour ends around 13h00.',
     included: ['Transfers', 'All equipment and permits', 'Lunch', 'Drinks'],
     imageUrl:
-      'https://images.unsplash.com/photo-1622713486130-aa0177e64542?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
-    imageCredit: { name: 'Paul Einerhand', username: 'pauleinerhand' },
+      'https://images.unsplash.com/photo-1781642945439-1746febf3e6b?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=900',
+    imageCredit: { name: 'Patti Black', username: 'pattib' },
   },
   {
     slug: 'tandem-skydive',
