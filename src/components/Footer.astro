@@ -105,15 +105,17 @@ const socialLinks = {
 
 <style>
   .site-footer {
-    /* Orange-to-white brand gradient, richest over the logo in the top
-       left and settling to plain sand by the nav/contact columns — keeps
-       the bulk of the footer's text on a near-white base for contrast
-       rather than washing the whole bar in saturated orange. */
+    /* Orange-to-white brand gradient — deeper terracotta at the logo,
+       carrying through ochre across most of the bar, with white only as
+       a thin clearing at the far edge rather than taking over by the
+       nav/contact columns. --color-text still reads at AA contrast or
+       better against every stop here, ochre-400 included. */
     background: linear-gradient(
       135deg,
-      var(--color-terracotta-500) 0%,
-      var(--color-ochre-400) 26%,
-      var(--color-sand-50) 62%
+      var(--color-terracotta-600) 0%,
+      var(--color-terracotta-500) 22%,
+      var(--color-ochre-400) 55%,
+      var(--color-sand-50) 96%
     );
     color: var(--color-text);
     margin-top: 0;
