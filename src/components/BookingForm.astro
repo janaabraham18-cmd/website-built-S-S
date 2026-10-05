@@ -42,6 +42,7 @@ const categories = (['tour', 'adventure'] as const).map((category) => ({
       <label for="tour-select">Preferred tour</label>
       <select id="tour-select" name="tour" required>
         <option value="" disabled selected>Choose a tour, adventure, or journey</option>
+        <option value="Transport only (no tour)" data-slug="transport">Transport only — no tour (see message below)</option>
         <option value="Custom combo" data-slug="custom">Custom combo (see message below)</option>
         {
           categories.map((group) => (
