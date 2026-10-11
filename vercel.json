@@ -1,4 +1,61 @@
 {
+  "redirects": [
+    {
+      "source": "/sandwich-harbour-tours",
+      "destination": "/tours",
+      "permanent": true
+    },
+    {
+      "source": "/sandwich-harbour-tours/",
+      "destination": "/tours",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/luxury-namibia-tour",
+      "destination": "/journeys",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/luxury-namibia-tour/",
+      "destination": "/journeys",
+      "permanent": true
+    },
+    {
+      "source": "/our-services",
+      "destination": "/tours",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/",
+      "destination": "/tours",
+      "permanent": true
+    },
+    {
+      "source": "/our-services/:path*",
+      "destination": "/tours",
+      "permanent": true
+    },
+    {
+      "source": "/about-us",
+      "destination": "/#about",
+      "permanent": true
+    },
+    {
+      "source": "/about-us/",
+      "destination": "/#about",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us",
+      "destination": "/contact",
+      "permanent": true
+    },
+    {
+      "source": "/contact-us/",
+      "destination": "/contact",
+      "permanent": true
+    }
+  ],
   "headers": [
     {
       "source": "/(.*)",
