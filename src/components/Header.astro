@@ -207,6 +207,10 @@ const navLinks = [
     border: none;
     cursor: pointer;
     padding: 0;
+    /* Never let the logo squeeze the menu button — on phones it used to
+       collapse to 0-33px wide, leaving almost nothing to tap. */
+    flex-shrink: 0;
+    margin-left: var(--space-sm);
   }
 
   .site-header__toggle span {
@@ -276,6 +280,21 @@ const navLinks = [
 
     .site-header__mobile-nav {
       display: block;
+    }
+  }
+
+  /* Phones only: at full size the wordmark is ~309px wide, more than a
+     360-390px screen has left beside the menu button. Scale it with the
+     viewport, floored so it stays legible at 320px and capped at the
+     normal size so tablets and up are untouched. */
+  @media (max-width: 600px) {
+    .site-header__logo {
+      font-size: clamp(0.95rem, 4.6vw, var(--fs-lg));
+    }
+
+    .site-header__mark {
+      width: 32px;
+      height: 32px;
     }
   }
 </style>
